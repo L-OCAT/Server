@@ -60,4 +60,6 @@ src/generated/
 
 ### Properties ###
 **/main/resources/certificates
-**/main/resources/application-*.yaml
+
+### Local Development ###
+docker-compose.yaml
