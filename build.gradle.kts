@@ -15,8 +15,14 @@ java {
     }
 }
 
+dependencyManagement {
+    imports {
+        mavenBom("org.springframework.cloud:spring-cloud-dependencies:2023.0.1")
+        mavenBom("software.amazon.awssdk:bom:2.21.0")
+    }
+}
+
 val jjwtVersion by extra("0.11.5")
-val awssdkVersion by extra("2.21.0")
 
 repositories {
     mavenCentral()
@@ -30,18 +36,19 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
-    implementation(platform("software.amazon.awssdk:bom:$awssdkVersion"))
+    implementation(platform("software.amazon.awssdk:bom"))
     implementation("software.amazon.awssdk:dynamodb-enhanced")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-cache")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-mail")
+    implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
     implementation("org.springframework.boot:spring-boot-configuration-processor")
     implementation("io.jsonwebtoken:jjwt-api:$jjwtVersion")
     implementation("io.jsonwebtoken:jjwt-impl:$jjwtVersion")
     implementation("io.jsonwebtoken:jjwt-jackson:$jjwtVersion")
-    implementation("org.flywaydb:flyway-core")
     implementation("org.projectlombok:lombok")
+//    implementation("org.flywaydb:flyway-core") // DataBase Schema Migration
     runtimeOnly("com.mysql:mysql-connector-j")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 
