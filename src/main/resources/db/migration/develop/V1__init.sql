@@ -1,0 +1,161 @@
+CREATE TABLE USER
+(
+    id           INT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '사용자 ID',
+    oAuthId      VARCHAR(100) NOT NULL COMMENT '소셜 로그인 ID',
+    email        VARCHAR(100) NOT NULL COMMENT '이메일',
+    nickname     VARCHAR(100) NOT NULL COMMENT '닉네임',
+    profileImage VARCHAR(255)                          DEFAULT null COMMENT '프로필 이미지',
+    userType     ENUM ('USER', 'ADMIN')                DEFAULT 'USER' COMMENT '권한',
+    statusType   ENUM ('ACTIVE', 'INACTIVE', 'BANNED') DEFAULT 'ACTIVE' COMMENT '상태',
+    createdAt    DATETIME                              DEFAULT CURRENT_TIMESTAMP COMMENT '생성일',
+    createdBy    INT UNSIGNED NOT NULL COMMENT '생성자',
+    updatedAt    DATETIME                              DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일',
+    updatedBy    INT UNSIGNED                          DEFAULT NULL COMMENT '수정자',
+    deletedAt    DATETIME                              DEFAULT null COMMENT '탈퇴일',
+    UNIQUE KEY unique_oauth_id (oAuthId),
+    UNIQUE KEY unique_email (email),
+    UNIQUE KEY unique_nickname (nickname)
+) COMMENT '사용자 정보',
+    CHARSET = 'UTF8MB4',
+    COLLATE = 'UTF8MB4_GENERAL_CI',
+    ROW_FORMAT = Dynamic,
+    ENGINE = InnoDB;
+
+CREATE TABLE USER_WITHDRAWAL_LOG
+(
+    id        INT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '탈퇴 ID',
+    userId    INT UNSIGNED NOT NULL COMMENT '사용자 ID',
+    reason    TINYTEXT     NOT NULL COMMENT '탈퇴 사유',
+    createdAt DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '생성일',
+    createdBy INT UNSIGNED NOT NULL COMMENT '생성자',
+    updatedAt DATETIME     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일',
+    updatedBy INT UNSIGNED DEFAULT NULL COMMENT '수정자'
+) COMMENT '사용자 탈퇴 정보'
+    CHARSET = 'UTF8MB4',
+    COLLATE = 'UTF8MB4_GENERAL_CI',
+    ROW_FORMAT = Dynamic,
+    ENGINE = InnoDB;
+
+CREATE TABLE USER_TERMS_AGREEMENT
+(
+    id        INT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '동의 ID',
+    userId    INT UNSIGNED NOT NULL COMMENT '사용자 ID',
+    termsId   INT UNSIGNED NOT NULL COMMENT '약관 ID',
+    createdAt DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '생성일',
+    createdBy INT UNSIGNED NOT NULL COMMENT '생성자',
+    updatedAt DATETIME     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일',
+    updatedBy INT UNSIGNED DEFAULT NULL COMMENT '수정자',
+    UNIQUE KEY unique_user_terms (userId, termsId)
+) COMMENT '사용자 약관 동의 정보'
+    CHARSET = 'UTF8MB4',
+    COLLATE = 'UTF8MB4_GENERAL_CI',
+    ENGINE = InnoDB;
+
+CREATE TABLE TERMS
+(
+    id        INT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '약관 ID',
+    type      ENUM ('SERVICE', 'PRIVACY', 'LOCATION', 'MARKETING') NOT NULL COMMENT '약관 종류',
+    title     VARCHAR(150)                                         NOT NULL COMMENT '약관 제목',
+    content   TEXT                                                 NOT NULL COMMENT '약관 내용',
+    version   VARCHAR(30)                                          NOT NULL COMMENT '약관 버전',
+    createdAt DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '생성일',
+    createdBy INT UNSIGNED                                         NOT NULL COMMENT '생성자',
+    updatedAt DATETIME     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일',
+    updatedBy INT UNSIGNED DEFAULT NULL COMMENT '수정자',
+    UNIQUE KEY unique_type_version (type, version)
+) COMMENT '약관 정보'
+    CHARSET = 'UTF8MB4',
+    COLLATE = 'UTF8MB4_GENERAL_CI',
+    ROW_FORMAT = Dynamic,
+    ENGINE = InnoDB;
+
+CREATE TABLE CATEGORY
+(
+    id        INT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '카테고리 ID',
+    name      VARCHAR(80)  NOT NULL COMMENT '카테고리 이름',
+    parentId  INT UNSIGNED DEFAULT null COMMENT '상위 카테고리 ID',
+    createdAt DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '생성일',
+    createdBy INT UNSIGNED NOT NULL COMMENT '생성자',
+    updatedAt DATETIME     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일',
+    updatedBy INT UNSIGNED DEFAULT NULL COMMENT '수정자'
+) COMMENT '카테고리 정보'
+    CHARSET = 'UTF8MB4',
+    COLLATE = 'UTF8MB4_GENERAL_CI',
+    ROW_FORMAT = Dynamic,
+    ENGINE = InnoDB;
+
+/*
+CREATE TABLE LOST
+(
+    id         INT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '분실물 ID',
+    userId     INT UNSIGNED NOT NULL COMMENT '사용자 ID',
+    categoryId INT UNSIGNED NOT NULL COMMENT '카테고리 ID',
+    colorId    INT UNSIGNED NOT NULL COMMENT '색상 ID',
+    title      VARCHAR(100) NOT NULL COMMENT '제목',
+    content    TEXT         NOT NULL COMMENT '내용',
+    location   VARCHAR(100) NOT NULL COMMENT '분실 장소',
+    lostAt     DATETIME     NOT NULL COMMENT '분실 일자',
+    createdAt  DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '생성일',
+    updatedAt  DATETIME     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일',
+    createdBy  INT UNSIGNED NOT NULL COMMENT '생성자',
+    updatedBy  INT UNSIGNED DEFAULT NULL COMMENT '수정자'
+#     FOREIGN KEY (userId) REFERENCES USER (id),
+#     FOREIGN KEY (categoryId) REFERENCES CATEGORY (id),
+#     FOREIGN KEY (colorId) REFERENCES COLOR (id)
+) COMMENT '분실물 정보'
+    CHARSET = 'UTF8MB4',
+    COLLATE = 'UTF8MB4_GENERAL_CI',
+    ENGINE = InnoDB;
+
+CREATE TABLE FOUND
+(
+    id         INT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '습득물 ID',
+    userId     INT UNSIGNED NOT NULL COMMENT '사용자 ID',
+    categoryId INT UNSIGNED NOT NULL COMMENT '카테고리 ID',
+    title      VARCHAR(100) NOT NULL COMMENT '제목',
+    content    TEXT         NOT NULL COMMENT '내용',
+    location   VARCHAR(100) NOT NULL COMMENT '습득 장소',
+    foundAt    DATETIME     NOT NULL COMMENT '습득 일자',
+    createdAt  DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '생성일',
+    updatedAt  DATETIME     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일',
+    createdBy  INT UNSIGNED NOT NULL COMMENT '생성자 ID',
+    updatedBy  INT UNSIGNED DEFAULT NULL COMMENT '수정자 ID'
+#     FOREIGN KEY (userId) REFERENCES USER (id),
+#     FOREIGN KEY (categoryId) REFERENCES CATEGORY (id)
+) COMMENT '습득물 정보'
+    CHARSET = 'UTF8MB4',
+    COLLATE = 'UTF8MB4_GENERAL_CI',
+    ENGINE = InnoDB;
+*/
+
+CREATE TABLE CONTACT_CENTER
+(
+    id        INT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '분실물센터 ID',
+    name      VARCHAR(100) NOT NULL COMMENT '분실물센터 이름',
+    contact   VARCHAR(100) NOT NULL COMMENT '연락처',
+    address   VARCHAR(255) NOT NULL COMMENT '주소',
+    createdAt  DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '생성일',
+    createdBy  INT UNSIGNED NOT NULL COMMENT '생성자',
+    updatedAt  DATETIME     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일',
+    updatedBy  INT UNSIGNED DEFAULT NULL COMMENT '수정자'
+) COMMENT '분실물센터 정보'
+    CHARSET = 'UTF8MB4',
+    COLLATE = 'UTF8MB4_GENERAL_CI',
+    ROW_FORMAT = Dynamic,
+    ENGINE = InnoDB;
+
+CREATE TABLE APP_SETTING -- 앱 & 알림 설정
+(
+    id        INT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT '설정 ID',
+    name      VARCHAR(100) NOT NULL COMMENT '설정 이름',
+    value     TEXT         NOT NULL COMMENT '설정 값',
+    createdAt  DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '생성일',
+    createdBy  INT UNSIGNED NOT NULL COMMENT '생성자',
+    updatedAt  DATETIME     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일',
+    updatedBy  INT UNSIGNED DEFAULT NULL COMMENT '수정자',
+    UNIQUE KEY unique_name (name)
+) COMMENT '애플리케이션 설정'
+    CHARSET = 'UTF8MB4',
+    COLLATE = 'UTF8MB4_GENERAL_CI',
+    ROW_FORMAT = Dynamic,
+    ENGINE = InnoDB;
