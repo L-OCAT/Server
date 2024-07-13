@@ -24,6 +24,8 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class AdminNotifierAdvice {
 
+  public static final String MESSAGE_PREFIX = "[관리자 알림] ";
+
   @Value("${discord.webhook.server-id}")
   private String serverId;
 
@@ -38,7 +40,7 @@ public class AdminNotifierAdvice {
     Object methodResult = joinPoint.proceed();
 
     if (shouldNotify(joinPoint, requireAdminNotify, methodResult)) {
-      String message = requireAdminNotify.message();
+      String message = MESSAGE_PREFIX.concat(requireAdminNotify.message());
       WebhookRequest request = new WebhookRequest(message);
       discordClient.send(serverId, webhookToken, request);
     }

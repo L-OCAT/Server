@@ -1,6 +1,5 @@
 package com.locat.api.global.annotations;
 
-import com.locat.api.global.event.AdminNotifierEvent;
 import com.locat.api.global.utils.LocatSpelParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 
@@ -16,8 +15,6 @@ import java.lang.annotation.*;
  *      // do something
  * }
  * }</pre>
- *
- * @see AdminNotifierEvent 관리자 알림 이벤트
  */
 @Documented
 @Target(ElementType.METHOD)
