@@ -3,7 +3,7 @@ plugins {
     id("org.springframework.boot") version "3.3.0"
     id("io.spring.dependency-management") version "1.1.5"
     id("com.diffplug.spotless") version "6.25.0"
-    id("org.flywaydb.flyway") version "10.12.0"
+    id("org.flywaydb.flyway") version "10.15.0"
 }
 
 group = "com.locat"
@@ -23,6 +23,7 @@ dependencyManagement {
 }
 
 val jjwtVersion by extra("0.11.5")
+val flywayDBVersion by extra("10.15.0")
 
 repositories {
     mavenCentral()
@@ -36,8 +37,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
-    implementation(platform("software.amazon.awssdk:bom"))
-    implementation("software.amazon.awssdk:dynamodb-enhanced")
+//    implementation(platform("software.amazon.awssdk:bom"))
+//    implementation("software.amazon.awssdk:dynamodb-enhanced")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-cache")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
@@ -47,13 +48,19 @@ dependencies {
     implementation("io.jsonwebtoken:jjwt-api:$jjwtVersion")
     implementation("io.jsonwebtoken:jjwt-impl:$jjwtVersion")
     implementation("io.jsonwebtoken:jjwt-jackson:$jjwtVersion")
-    implementation("org.projectlombok:lombok")
-//    implementation("org.flywaydb:flyway-core") // DataBase Schema Migration
     runtimeOnly("com.mysql:mysql-connector-j")
-    developmentOnly("org.springframework.boot:spring-boot-devtools")
+
+    // Lombok
+    implementation("org.projectlombok:lombok")
+    annotationProcessor("org.projectlombok:lombok")
+
+    // DataBase Schema Migration
+    implementation("org.flywaydb:flyway-mysql:$flywayDBVersion")
+    implementation("org.flywaydb:flyway-core:$flywayDBVersion")
 
     // Local Development
-    runtimeOnly("org.springframework.boot:spring-boot-docker-compose")
+    developmentOnly("org.springframework.boot:spring-boot-devtools")
+    developmentOnly("org.springframework.boot:spring-boot-docker-compose")
 
     // Testing
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
@@ -68,16 +75,8 @@ dependencies {
 
 spotless {
     java {
-        importOrder(
-            "java|javax|jakarta",
-            "org.springframework",
-            "lombok",
-            "com.locat",
-            "",
-            "org.junit|org.mockito",
-            "\\#",
-            "\\#org.junit|org.assertj"
-        )
+        googleJavaFormat()
+            .formatJavadoc(true)
         endWithNewline()
         formatAnnotations()
         removeUnusedImports()

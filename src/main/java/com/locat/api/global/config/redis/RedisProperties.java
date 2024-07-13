@@ -11,16 +11,12 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConfigurationProperties(prefix = "spring.data.redis")
 public class RedisProperties {
-    /**
-     * Redis 서버 호스트 주소
-     */
-    private String host;
-    /**
-     * Redis 서버 포트
-     */
-    private Integer port;
-    /**
-     * Redis 서버 비밀번호 <i>Local 환경 등에서는 nullable</i>
-     */
-    @Nullable private String password;
+  /** Redis 서버 호스트 주소 */
+  private String host;
+
+  /** Redis 서버 포트 */
+  private Integer port;
+
+  /** Redis 서버 비밀번호 <i>Local 환경 등에서는 nullable</i> */
+  @Nullable private String password;
 }

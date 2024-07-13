@@ -11,18 +11,17 @@ import org.springframework.stereotype.Component;
 @Slf4j(topic = "exceptionLogger")
 public class ExceptionLoggingAdvice {
 
-    @AfterThrowing(pointcut = "execution(* com.locat.api..*.*(..))", throwing = "ex")
-    public void logAfterThrowing(JoinPoint joinPoint, Throwable ex) {
-        doLogExceptionInternal(joinPoint, ex);
-    }
+  @AfterThrowing(pointcut = "execution(* com.locat.api..*.*(..))", throwing = "ex")
+  public void logAfterThrowing(JoinPoint joinPoint, Throwable ex) {
+    doLogExceptionInternal(joinPoint, ex);
+  }
 
-    private void doLogExceptionInternal(JoinPoint joinPoint, Throwable ex) {
-        log.error("Resolve exception {} during execution of {} with message: {} from {}",
-                ex.getClass().getSimpleName(),
-                joinPoint.getSignature().toShortString(),
-                ex.getMessage(),
-                joinPoint.getSignature().getDeclaringTypeName()
-        );
-    }
-
+  private void doLogExceptionInternal(JoinPoint joinPoint, Throwable ex) {
+    log.error(
+        "Resolve exception {} during execution of {} with message: {} from {}",
+        ex.getClass().getSimpleName(),
+        joinPoint.getSignature().toShortString(),
+        ex.getMessage(),
+        joinPoint.getSignature().getDeclaringTypeName());
+  }
 }

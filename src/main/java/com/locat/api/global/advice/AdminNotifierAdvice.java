@@ -14,8 +14,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 /**
- * {@link RequireAdminNotification} 어노테이션이 붙은 메소드의 실행 결과에 따라 관리자에게 알림을 보내는 Advice
- * <br>
+ * {@link RequireAdminNotification} 어노테이션이 붙은 메소드의 실행 결과에 따라 관리자에게 알림을 보내는 Advice <br>
  * 상용 환경({@code @Profile("prod")})에서만 동작하도록 설정되어 있습니다.
  */
 @Aspect
@@ -24,32 +23,37 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class AdminNotifierAdvice {
 
-    private final ApplicationEventPublisher eventPublisher;
+  private final ApplicationEventPublisher eventPublisher;
 
-    @Around("@annotation(requireAdminNotify)")
-    public Object handleNotification(ProceedingJoinPoint joinPoint, RequireAdminNotification requireAdminNotify) throws Throwable {
-        Object methodResult = joinPoint.proceed();
+  @Around("@annotation(requireAdminNotify)")
+  public Object handleNotification(
+      ProceedingJoinPoint joinPoint, RequireAdminNotification requireAdminNotify) throws Throwable {
+    Object methodResult = joinPoint.proceed();
 
-        if (shouldNotify(joinPoint, requireAdminNotify, methodResult)) {
-            String message = requireAdminNotify.message();
-            doPublishEventWith(message);
-        }
-
-        return methodResult;
+    if (shouldNotify(joinPoint, requireAdminNotify, methodResult)) {
+      String message = requireAdminNotify.message();
+      doPublishEventWith(message);
     }
 
-    private boolean shouldNotify(ProceedingJoinPoint joinPoint, RequireAdminNotification requireAdminNotify, Object methodResult) {
-        String condition = requireAdminNotify.condition();
-        return StringUtils.isBlank(condition) || evaluateCondition(condition, joinPoint, methodResult);
-    }
+    return methodResult;
+  }
 
-    private boolean evaluateCondition(String expression, ProceedingJoinPoint joinPoint, Object methodResult) {
-        MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
-        return LocatSpelParser.evaluateExpression(expression, methodSignature.getParameterNames(), methodResult);
-    }
+  private boolean shouldNotify(
+      ProceedingJoinPoint joinPoint,
+      RequireAdminNotification requireAdminNotify,
+      Object methodResult) {
+    String condition = requireAdminNotify.condition();
+    return StringUtils.isBlank(condition) || evaluateCondition(condition, joinPoint, methodResult);
+  }
 
-    private void doPublishEventWith(String message) {
-        eventPublisher.publishEvent(new AdminNotifierEvent(this, message));
-    }
+  private boolean evaluateCondition(
+      String expression, ProceedingJoinPoint joinPoint, Object methodResult) {
+    MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
+    return LocatSpelParser.evaluateExpression(
+        expression, methodSignature.getParameterNames(), methodResult);
+  }
 
+  private void doPublishEventWith(String message) {
+    eventPublisher.publishEvent(new AdminNotifierEvent(this, message));
+  }
 }
