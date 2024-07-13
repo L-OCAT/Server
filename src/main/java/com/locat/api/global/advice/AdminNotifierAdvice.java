@@ -1,15 +1,16 @@
 package com.locat.api.global.advice;
 
 import com.locat.api.global.annotations.RequireAdminNotification;
-import com.locat.api.global.event.AdminNotifierEvent;
 import com.locat.api.global.utils.LocatSpelParser;
+import com.locat.api.infrastructure.external.DiscordClient;
+import com.locat.api.infrastructure.external.WebhookRequest;
 import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
@@ -23,7 +24,13 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class AdminNotifierAdvice {
 
-  private final ApplicationEventPublisher eventPublisher;
+  @Value("${discord.webhook.server-id}")
+  private String serverId;
+
+  @Value("${discord.webhook.token}")
+  private String webhookToken;
+
+  private final DiscordClient discordClient;
 
   @Around("@annotation(requireAdminNotify)")
   public Object handleNotification(
@@ -32,7 +39,8 @@ public class AdminNotifierAdvice {
 
     if (shouldNotify(joinPoint, requireAdminNotify, methodResult)) {
       String message = requireAdminNotify.message();
-      doPublishEventWith(message);
+      WebhookRequest request = new WebhookRequest(message);
+      discordClient.send(serverId, webhookToken, request);
     }
 
     return methodResult;
@@ -51,9 +59,5 @@ public class AdminNotifierAdvice {
     MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
     return LocatSpelParser.evaluateExpression(
         expression, methodSignature.getParameterNames(), methodResult);
-  }
-
-  private void doPublishEventWith(String message) {
-    eventPublisher.publishEvent(new AdminNotifierEvent(this, message));
   }
 }
