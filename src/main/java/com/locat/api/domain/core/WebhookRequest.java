@@ -1,4 +1,4 @@
-package com.locat.api.infrastructure.external;
+package com.locat.api.domain.core;
 
 /**
  * Discord Webhook 요청 DTO

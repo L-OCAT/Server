@@ -1,5 +1,6 @@
 package com.locat.api.infrastructure.external;
 
+import com.locat.api.domain.core.WebhookRequest;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
