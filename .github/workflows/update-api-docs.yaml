@@ -1,0 +1,43 @@
+name: Update API Docs
+on:
+  workflow_dispatch: # 수동으로 실행
+  workflow_run: # CI가 완료되면
+    workflows:
+      - "LOCAT CI"
+    types:
+      - completed
+
+jobs:
+  update-urls:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run AutoUpdate Script
+        run: node ./docs/autoUpdate.js
+
+      - name: Commit & Push If Changes Detected
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          if git diff --quiet; then
+            echo "No changes detected!"
+            exit 0
+          fi
+          git add src/main/resources/dist/swagger-initializer.js
+          git commit -m 'Auto-Update API Docs'
+          git push origin HEAD:${{ github.ref }}
