@@ -1,6 +1,6 @@
 package com.locat.api.domain.core;
 
-import com.locat.api.global.utils.LocatAuditorAware;
+import com.locat.api.global.security.LocatAuditorAware;
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
