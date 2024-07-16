@@ -4,33 +4,40 @@
     <property name="LOG_FILE_PREFIX" value="application"/>
     <property name="LOG_FILE_EXT" value="log"/>
 
-    <appender name="LOCAT_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_PATH}/${LOG_FILE_PREFIX}.${LOG_FILE_EXT}</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_PATH}/${LOG_FILE_PREFIX}_%d{yyyyMMdd}_%i.${LOG_FILE_EXT}</fileNamePattern>
-            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <maxFileSize>100MB</maxFileSize>
-            </timeBasedFileNamingAndTriggeringPolicy>
-            <maxHistory>1</maxHistory>
-        </rollingPolicy>
-        <encoder>
-            <charset>UTF-8</charset>
-            <pattern>%date %highlight(%level) [%thread] %logger{36} [%file:%line] %X{mdcKey} %msg%n</pattern>
-        </encoder>
-    </appender>
-
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>%d{HH:mm:ss.SSS} [%thread] %highlight(%-5level) %logger{10} - %msg%n</pattern>
         </encoder>
     </appender>
 
-    <logger name="FILE_LOGGER" level="DEBUG" additivity="false">
-        <appender-ref ref="LOCAT_LOG"/>
-    </logger>
+    <springProfile name="!local">
+        <appender name="LOCAT_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>${LOG_PATH}/${LOG_FILE_PREFIX}.${LOG_FILE_EXT}</file>
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <fileNamePattern>${LOG_PATH}/${LOG_FILE_PREFIX}_%d{yyyyMMdd}_%i.${LOG_FILE_EXT}</fileNamePattern>
+                <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                    <maxFileSize>100MB</maxFileSize>
+                </timeBasedFileNamingAndTriggeringPolicy>
+                <maxHistory>1</maxHistory>
+            </rollingPolicy>
+            <encoder>
+                <charset>UTF-8</charset>
+                <pattern>%date %highlight(%level) [%thread] %logger{36} [%file:%line] %X{mdcKey} %msg%n</pattern>
+            </encoder>
+        </appender>
+
+        <logger name="FILE_LOGGER" level="DEBUG" additivity="false">
+            <appender-ref ref="LOCAT_LOG"/>
+        </logger>
+    </springProfile>
 
     <root level="INFO">
         <appender-ref ref="STDOUT"/>
-        <appender-ref ref="LOCAT_LOG"/>
     </root>
+
+    <springProfile name="!local">
+        <root level="ERROR">
+            <appender-ref ref="LOCAT_LOG"/>
+        </root>
+    </springProfile>
 </configuration>

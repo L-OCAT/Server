@@ -1,0 +1,111 @@
+name: Deploy to EC2         # 더 좋은 name이 있다면 바꾸기
+
+on:
+  push:
+    branches: ["main", "develop" ]    # main만?
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Gradle caching          # 의존성 캐싱 용도
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      # Github Secret에 있는 설정 파일 가져오기 - 이 부분이 우리 프로젝트 설정과 맞는가?
+      # git-crypt를 사용하는 경우도 이렇게 하는 게 맞나...
+      - name: Make application-develop.yaml
+        if: contains(github.ref, 'develop')
+        run: |
+          cd ./src/main/resources
+          touch ./application-develop.yaml
+          echo "${{ secrets.PROPERTIES }}" > ./application-develop.yaml
+
+      - name: Make application-prod.yaml
+        if: contains(github.ref, 'main')
+        run: |
+          cd ./src/main/resources
+          touch ./application-prod.yaml
+          echo "${{ secrets.PROPERTIES }}" > ./application-prod.yaml
+
+      - name: Grant execute permission for gradlew    # 실행 권한 추가
+        run: chmod +x gradlew
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
+
+      - name: Build with Gradle Wrapper
+        run: ./gradlew clean build -x test    # test는 제외하고 build
+
+      - name: Docker login
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      # dev/prod 구분하기 위해 image에 tag 지정
+      # 여기서 애초에 repository를 나누고 tag에 버전을 지정해 주는 게 나은가?
+      - name: Docker build & push to develop
+        uses: docker/build-push-action@v5.1.0
+        if: contains(github.ref, 'develop')
+        run: |
+          docker build -f Dockerfile -t ${{ secrets.DOCKER_REPO }}/dev .
+          docker push ${{ secrets.DOCKER_REPO }}/dev
+
+      - name: Docker build & push to prod
+        uses: docker/build-push-action@v5.1.0
+        if: contains(github.ref, 'main')
+        run: |
+          docker build -f Dockerfile -t ${{ secrets.DOCKER_REPO }}/prod .
+          docker push ${{ secrets.DOCKER_REPO }}/prod
+
+      # develop은 배포까지 갈 필요가 없지 않나?
+      # branches에서 main만 남기고 다 지워도 되나?
+      # 그런데 서비스가 커지면 develop도 CI/CD 과정이 필요할 것 같기도
+      - name: Deploy to dev
+        uses: appleboy/ssh-action@master
+        id: deploy-dev
+        if: contains(github.ref, 'develop')
+        with:
+          host: ${{ secrets.HOST_DEV }}
+          username: ubuntu
+          key: ${{ secrets.KEY_DEV }}
+          envs: GITHUB_SHA
+          # docker run or docker-compose?
+          script: |
+            sudo docker rm -f $(docker ps -qa)
+            sudo docker pull ${{ secrets.DOCKER_REPO }}/dev
+            docker-compose up -d  
+            docker image prune -f
+
+      - name: Deploy to prod
+        uses: appleboy/ssh-action@master
+        id: deploy-prod
+        if: contains(github.ref, 'main')
+        with:
+          host: ${{ secrets.HOST_PROD }}
+          username: ubuntu
+          key: ${{ secrets.KEY_PROD }}
+          envs: GITHUB_SHA
+          script: |
+            sudo docker rm -f $(docker ps -qa)
+            sudo docker pull ${{ secrets.DOCKER_REPO }}/prod
+            docker-compose up -d
+            docker image prune -f
