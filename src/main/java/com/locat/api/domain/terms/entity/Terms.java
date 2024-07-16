@@ -9,7 +9,13 @@ import lombok.*;
 @Entity
 @Getter
 @Builder
-@Table(name = "terms")
+@Table(
+    name = "terms",
+    uniqueConstraints = {
+      @UniqueConstraint(
+          name = "unique_type_version",
+          columnNames = {"type", "version"})
+    })
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Terms extends SecuredBaseEntity {

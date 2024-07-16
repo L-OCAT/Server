@@ -9,7 +9,13 @@ import lombok.*;
 @Entity
 @Getter
 @Builder
-@Table(name = "app_setting")
+@Table(
+    name = "app_setting",
+    uniqueConstraints = {
+      @UniqueConstraint(
+          name = "unique_name",
+          columnNames = {"name"})
+    })
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AppSetting extends SecuredBaseEntity {
@@ -19,13 +25,10 @@ public class AppSetting extends SecuredBaseEntity {
   private Long id;
 
   @Size(max = 100)
-  @NotNull
-  @Column(name = "name", nullable = false, length = 100)
+  @NotNull @Column(name = "name", nullable = false, length = 100)
   private String name;
 
-  @NotNull
-  @Lob
+  @NotNull @Lob
   @Column(name = "default_value", nullable = false)
   private String defaultValue;
-
 }

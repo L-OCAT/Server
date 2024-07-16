@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLSelect;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ import java.util.List;
     })
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SQLDelete(sql = "UPDATE user SET deleted_at = NOW() WHERE id = ?")
+@SQLSelect(sql = "SELECT * FROM user WHERE deleted_at IS NULL")
 public class User extends SecuredBaseEntity {
 
   @Id

@@ -8,7 +8,13 @@ import lombok.*;
 @Entity
 @Getter
 @Builder
-@Table(name = "user_terms_agreement")
+@Table(
+    name = "user_terms_agreement",
+    uniqueConstraints = {
+      @UniqueConstraint(
+          name = "unique_user_terms",
+          columnNames = {"user_id", "terms_id"})
+    })
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserTermsAgreement extends SecuredBaseEntity {
@@ -18,11 +24,11 @@ public class UserTermsAgreement extends SecuredBaseEntity {
   @Column(name = "id", columnDefinition = "int UNSIGNED not null")
   private Long id;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(name = "user_id", nullable = false)
   private User user;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(name = "terms_id", nullable = false)
   private Terms terms;
 }
