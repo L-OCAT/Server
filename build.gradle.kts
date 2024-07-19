@@ -4,6 +4,7 @@ plugins {
     id("io.spring.dependency-management") version "1.1.5"
     id("com.diffplug.spotless") version "6.25.0"
     id("org.flywaydb.flyway") version "10.15.0"
+    id("jacoco")
 }
 
 group = "com.locat"
@@ -90,4 +91,43 @@ tasks.withType<Test> {
     reports.junitXml.required.set(false)
     maxParallelForks = (Runtime.getRuntime().availableProcessors() / 2).coerceAtLeast(1)
 }
+
+jacoco {
+    toolVersion = "0.8.11"
+}
+
+tasks.withType<Test> {
+    finalizedBy (tasks.jacocoTestReport)
+    useJUnitPlatform()
+//    jacoco {
+//        excludes.set(listOf("com/locat/ExcludedClass*", "com/locat/anotherpackage/*"))
+//    }
+}
+
+tasks.jacocoTestReport {
+    reports {
+        xml.required = true
+        csv.required = false
+        html.required = true
+
+//        xml.destination = file("${buildDir}/reports/jacoco/xml/jacocoTestReport.xml")
+//        html.destination = file("${buildDir}/reports/jacoco/html")
+    }
+}
+
+tasks.jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            enabled = false // 추후에 true로 바꾸기
+            element = "CLASS" // 커버리지 측정 대상
+
+            limit {
+                counter = "LINE"   // 커버리지 측정의 기준 단위
+                value = "COVEREDRATIO"  // 커버리지 기준 측정 방식
+                minimum = BigDecimal(0.8)
+            }
+        }
+    }
+}
+
 
