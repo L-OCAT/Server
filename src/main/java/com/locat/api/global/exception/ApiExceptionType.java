@@ -9,13 +9,16 @@ import org.springframework.http.HttpStatus;
 public enum ApiExceptionType {
   BAD_REQUEST(400, "Bad Request", 400000),
   FILE_EXTENSION_NOT_PROVIDED(400, "File Extension Not Provided", 400001),
+  FILE_SIZE_LIMIT_EXCEEDED(400, "File Size Limit Exceeded", 400002),
+  FILE_EXTENSION_NOT_SUPPORTED(400, "File Extension Not Supported", 400003),
 
   UNAUTHORIZED(401, "Unauthorized", 401000),
 
   FORBIDDEN(403, "Forbidden", 403000),
 
   NOT_FOUND(404, "Not Found", 404000),
-  NOT_FOUND_USER(404, "Not Found User", 404001),
+  NOT_FOUND_USER(404, "User Not Found", 404001),
+  NOT_FOUND_FILE(404, "File Not Found", 404002),
 
   NOT_ALLOWED_METHOD(405, "Method Not Allowed", 405000),
 
