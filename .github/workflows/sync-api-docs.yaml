@@ -1,0 +1,31 @@
+name: Sync OpenAPI YAML to API Docs
+
+on:
+  pull_request:
+    branches:
+      - develop
+    paths:
+      - 'docs/api/**/*.yaml'
+
+jobs:
+  synchronize:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Trigger API Docs Sync via Octokit
+        uses: actions/github-script@v7.0.1
+        with:
+          github-token: ${{ secrets.ADMIN_PAT }}
+          script: |
+            github.request('POST /repos/L-OCAT/api-docs/dispatches', {
+             event_type: 'sync-api-docs',
+             client_payload: {
+               unit: false,
+               integration: true
+             },
+             headers: {
+               'X-GitHub-Api-Version': '2022-11-28'
+             }
+            });
