@@ -1,4 +1,4 @@
-package com.locat.api.global.utils;
+package com.locat.api.global.security;
 
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.Authentication;
