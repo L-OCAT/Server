@@ -12,8 +12,8 @@ import org.springframework.mock.web.MockMultipartFile;
 
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 class FileValidatorTest {
 
@@ -27,9 +27,9 @@ class FileValidatorTest {
       Class<? extends LocatApiException> expectedException,
       String testName) {
     if (expectedException == null) {
-      assertDoesNotThrow(() -> FileValidator.validate(file));
+      assertThatCode(() -> FileValidator.validate(file)).doesNotThrowAnyException();
     } else {
-      assertThrowsExactly(expectedException, () -> FileValidator.validate(file));
+      assertThatThrownBy(() -> FileValidator.validate(file)).isExactlyInstanceOf(expectedException);
     }
   }
 

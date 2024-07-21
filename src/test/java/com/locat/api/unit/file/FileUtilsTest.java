@@ -5,8 +5,8 @@ import com.locat.api.global.file.FileUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 class FileUtilsTest {
 
@@ -25,14 +25,9 @@ class FileUtilsTest {
     String generatedFileName3 = FileUtils.generateTimeBasedName(directoryPath, originalFilename3);
 
     // Then
-    assertTrue(generatedFileName1.startsWith(directoryPath));
-    assertTrue(generatedFileName1.endsWith(".txt"));
-
-    assertTrue(generatedFileName2.startsWith(directoryPath));
-    assertTrue(generatedFileName2.endsWith(".jpg"));
-
-    assertTrue(generatedFileName3.startsWith(directoryPath));
-    assertTrue(generatedFileName3.endsWith(".png"));
+    assertThat(generatedFileName1).startsWith(directoryPath).endsWith(".txt");
+    assertThat(generatedFileName2).startsWith(directoryPath).endsWith(".jpg");
+    assertThat(generatedFileName3).startsWith(directoryPath).endsWith(".png");
   }
 
   @Test
@@ -45,14 +40,11 @@ class FileUtilsTest {
     String originalFilename3 = "file3.";
 
     // When & Then
-    assertThrows(
-        FileOperationFailedException.class,
-        () -> FileUtils.generateTimeBasedName(directoryPath, originalFilename1));
-    assertThrows(
-        FileOperationFailedException.class,
-        () -> FileUtils.generateTimeBasedName(directoryPath, originalFilename2));
-    assertThrows(
-        FileOperationFailedException.class,
-        () -> FileUtils.generateTimeBasedName(directoryPath, originalFilename3));
+    assertThatThrownBy(() -> FileUtils.generateTimeBasedName(directoryPath, originalFilename1))
+        .isInstanceOf(FileOperationFailedException.class);
+    assertThatThrownBy(() -> FileUtils.generateTimeBasedName(directoryPath, originalFilename2))
+        .isInstanceOf(FileOperationFailedException.class);
+    assertThatThrownBy(() -> FileUtils.generateTimeBasedName(directoryPath, originalFilename3))
+        .isInstanceOf(FileOperationFailedException.class);
   }
 }

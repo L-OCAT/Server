@@ -23,8 +23,8 @@ import software.amazon.awssdk.services.s3.model.S3Exception;
 
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -52,11 +52,11 @@ class FileServiceTest {
         new MockMultipartFile("file", "test.jpg", "image/jpeg", new byte[1024 * 1024 * 51]); // 51MB
 
     return Stream.of(
-        testUploadValidFile(validFile),
-        testDeleteValidFile(),
-        testUploadInvalidFormatFile(invalidFormatFile),
-        testUploadTooLargeFile(tooLargeFile),
-        testS3Exception(validFile));
+        this.testUploadValidFile(validFile),
+        this.testDeleteValidFile(),
+        this.testUploadInvalidFormatFile(invalidFormatFile),
+        this.testUploadTooLargeFile(tooLargeFile),
+        this.testS3Exception(validFile));
   }
 
   private DynamicTest testUploadValidFile(MockMultipartFile file) {
@@ -67,7 +67,7 @@ class FileServiceTest {
           String fileName = fileService.upload("test-directory", file);
 
           // Then
-          assertNotNull(fileName);
+          assertThat(fileName).isNotNull();
         });
   }
 
@@ -88,8 +88,8 @@ class FileServiceTest {
         "유효하지 않은 포맷의 파일을 업로드하면, 예외를 던져야 한다.",
         () -> {
           // When & Then
-          assertThrows(
-              FileOperationFailedException.class, () -> fileService.upload("test-directory", file));
+          assertThatThrownBy(() -> fileService.upload("test-directory", file))
+              .isInstanceOf(FileOperationFailedException.class);
         });
   }
 
@@ -98,8 +98,8 @@ class FileServiceTest {
         "파일 크기가 50MB를 초과하면, 예외를 던져야 한다.",
         () -> {
           // When & Then
-          assertThrows(
-              FileOperationFailedException.class, () -> fileService.upload("test-directory", file));
+          assertThatThrownBy(() -> fileService.upload("test-directory", file))
+              .isInstanceOf(FileOperationFailedException.class);
         });
   }
 
@@ -113,8 +113,8 @@ class FileServiceTest {
               .putObject(any(PutObjectRequest.class), any(RequestBody.class));
 
           // When & Then
-          assertThrows(
-              FileOperationFailedException.class, () -> fileService.upload("test-directory", file));
+          assertThatThrownBy(() -> fileService.upload("test-directory", file))
+              .isInstanceOf(FileOperationFailedException.class);
         });
   }
 
