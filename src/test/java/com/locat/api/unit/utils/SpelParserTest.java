@@ -1,4 +1,4 @@
-package com.locat.api.unit;
+package com.locat.api.unit.utils;
 
 import com.locat.api.global.utils.LocatSpelParser;
 import org.junit.jupiter.api.Test;
