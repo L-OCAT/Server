@@ -20,7 +20,7 @@ public final class FileValidator {
    */
   public static void validate(MultipartFile multipartFile) {
     validateFileExistence(multipartFile);
-    validateFileFormat(multipartFile.getOriginalFilename());
+    validateFileFormat(multipartFile);
     validateFileSize(multipartFile.getSize());
   }
 
@@ -30,8 +30,8 @@ public final class FileValidator {
     }
   }
 
-  private static void validateFileFormat(String originalFilename) {
-    final String extension = FileUtils.extractExtension(originalFilename);
+  private static void validateFileFormat(MultipartFile multipartFile) {
+    final String extension = FileUtils.extractExtension(multipartFile);
     if (!SUPPORTED_FILE_EXTENSION.contains(extension)) {
       throw new FileOperationFailedException(ApiExceptionType.FILE_EXTENSION_NOT_SUPPORTED);
     }

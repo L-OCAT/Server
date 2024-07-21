@@ -30,9 +30,8 @@ public class FileServiceImpl implements FileService {
   @Override
   public String upload(String directoryPath, MultipartFile file) {
     FileValidator.validate(file);
-
-    final String newFileName =
-        FileUtils.generateTimeBasedName(directoryPath, file.getOriginalFilename());
+    final String extension = FileUtils.extractExtension(file);
+    final String newFileName = FileUtils.generateTimeBasedName(directoryPath, extension);
     PutObjectRequest request =
         PutObjectRequest.builder().bucket(DEFAULT_BUCKET_NAME).key(newFileName).build();
     this.putObjectInternal(request, file);
@@ -57,6 +56,10 @@ public class FileServiceImpl implements FileService {
   }
 
   private void deleteObjectInternal(DeleteObjectRequest request) {
-    this.s3Client.deleteObject(request);
+    try {
+      this.s3Client.deleteObject(request);
+    } catch (SdkException e) {
+      throw new FileOperationFailedException(ApiExceptionType.S3_ERROR);
+    }
   }
 }

@@ -34,7 +34,7 @@ public class MailServiceImpl implements MailService {
       message.addRecipient(TO, new InternetAddress(to));
       message.setSubject(subject, MAILER_CHARSET);
       message.setText(content, MAILER_CHARSET, MAILER_SUBTYPE);
-      mailSender.send(message);
+      this.mailSender.send(message);
     } catch (MessagingException e) {
       throw new MailOperationFailedException(ApiExceptionType.FAIL_TO_CONSTRUCT_EMAIL);
     } catch (MailException e) {
