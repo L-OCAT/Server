@@ -40,7 +40,6 @@ jobs:
             sudo docker pull ${{ secrets.DOCKER_REPO }}/prod:latest
             sudo docker run -d \
               --name locat-server \
-              --env-file .env \
               -p 80:80 \
               ${{ secrets.DOCKER_REPO }}/prod:latest
             docker image prune -f
