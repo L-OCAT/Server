@@ -19,11 +19,9 @@ public class Category extends SecuredBaseEntity {
   private Long id;
 
   @Size(max = 80)
-  @NotNull
-  @Column(name = "name", nullable = false, length = 80)
+  @NotNull @Column(name = "name", nullable = false, length = 80)
   private String name;
 
   @Column(name = "parent_id", columnDefinition = "int UNSIGNED")
   private Long parentId;
-
 }
