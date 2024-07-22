@@ -64,6 +64,14 @@ jobs:
         run: ./gradlew test jacocoTestReport
         continue-on-error: false
 
+#      알림 설정
+#      - name: Notify Discord on Test Failure
+#        if: failure()
+#        uses: Ilshidur/action-discord@v2
+#        with:
+#          webhook: ${{ secrets.DISCORD_WEBHOOK_URL }}
+#          message: "⚠️ Tests failed in the CI pipeline!"
+
       - name: Check Coverage  # Test coverage 체크, 미달 시 진행하지 않기
         run: ./gradlew jacocoTestCoverageVerification
         continue-on-error: false
