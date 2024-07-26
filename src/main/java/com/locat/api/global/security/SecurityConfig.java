@@ -16,6 +16,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
@@ -38,7 +39,8 @@ public class SecurityConfig {
 
   /** 상용 환경에서 사용하는 SecurityFilterChain을 설정합니다. */
   @Bean
-  @Profile("!dev")
+//  @Profile("!dev")
+  @Profile("!local")
   protected SecurityFilterChain configure(HttpSecurity http) throws Exception {
     return http.httpBasic(AbstractHttpConfigurer::disable)
         .csrf(AbstractHttpConfigurer::disable)
@@ -50,12 +52,11 @@ public class SecurityConfig {
         .authorizeHttpRequests(
             authorize ->
                 authorize
-                    .requestMatchers("/api/**")
-                    .permitAll()
-                    .requestMatchers("/actuator/**")
-                    .access(localHostOnly)
-                    .anyRequest()
-                    .denyAll())
+                    .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+                    .requestMatchers("/login/**", "/oauth2/**").permitAll() // 로그인 화면
+                    .requestMatchers("/api/**").authenticated()   // 인증 관련 설정 추가 필요
+                    .requestMatchers("/actuator/**").access(localHostOnly)
+                    .anyRequest().denyAll())
         .exceptionHandling(
             exception ->
                 exception
@@ -72,7 +73,8 @@ public class SecurityConfig {
    * <li>localhost의 모든 요청을 허용
    */
   @Bean
-  @Profile("dev")
+//  @Profile("dev")
+  @Profile("local")
   protected SecurityFilterChain configureDev(HttpSecurity http) throws Exception {
     return http.httpBasic(AbstractHttpConfigurer::disable)
         .csrf(AbstractHttpConfigurer::disable)
@@ -87,7 +89,7 @@ public class SecurityConfig {
   @Bean
   protected CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration corsConfiguration = new CorsConfiguration();
-    corsConfiguration.addAllowedOriginPattern("*");
+    corsConfiguration.addAllowedOriginPattern("*");   // update 필요
     corsConfiguration.addAllowedHeader("*");
     corsConfiguration.setAllowedMethods(DEFAULT_PERMIT_METHODS);
     corsConfiguration.setAllowCredentials(true);
