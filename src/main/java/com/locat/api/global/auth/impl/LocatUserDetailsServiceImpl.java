@@ -1,5 +1,6 @@
-package com.locat.api.global.auth;
+package com.locat.api.global.auth.impl;
 
+import com.locat.api.global.auth.LocatUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;

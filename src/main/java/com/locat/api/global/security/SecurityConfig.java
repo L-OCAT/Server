@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.authorization.AuthorizationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -48,14 +49,20 @@ public class SecurityConfig {
         .cors(cors -> cors.configurationSource(corsConfigurationSource()))
         .sessionManagement(
             session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .oauth2Client(Customizer.withDefaults())
         .authorizeHttpRequests(
             authorize ->
                 authorize
-                    .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                    .requestMatchers("/login/**", "/oauth2/**").permitAll()
-                    .requestMatchers("/api/**").authenticated()
-                    .requestMatchers("/actuator/**").access(localHostOnly)
-                    .anyRequest().denyAll())
+                    .requestMatchers(CorsUtils::isPreFlightRequest)
+                    .permitAll()
+                    .requestMatchers("/login/**", "/oauth2/**")
+                    .permitAll()
+                    .requestMatchers("/api/**")
+                    .authenticated()
+                    .requestMatchers("/actuator/**")
+                    .access(localHostOnly)
+                    .anyRequest()
+                    .denyAll())
         .exceptionHandling(
             exception ->
                 exception
@@ -87,7 +94,7 @@ public class SecurityConfig {
   @Bean
   protected CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration corsConfiguration = new CorsConfiguration();
-    corsConfiguration.addAllowedOriginPattern("*");   // update 필요
+    corsConfiguration.addAllowedOriginPattern("*"); // update 필요
     corsConfiguration.addAllowedHeader("*");
     corsConfiguration.setAllowedMethods(DEFAULT_PERMIT_METHODS);
     corsConfiguration.setAllowCredentials(true);
