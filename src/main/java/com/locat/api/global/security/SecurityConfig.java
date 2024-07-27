@@ -1,5 +1,6 @@
 package com.locat.api.global.security;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -8,12 +9,17 @@ import org.springframework.security.authorization.AuthorizationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.web.HttpSessionOAuth2AuthorizationRequestRepository;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -25,10 +31,25 @@ import static org.springframework.http.HttpMethod.*;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = true)
+@RequiredArgsConstructor
 public class SecurityConfig {
 
   private static final List<String> DEFAULT_PERMIT_METHODS =
       List.of(GET.name(), HEAD.name(), POST.name(), PATCH.name(), DELETE.name());
+
+  private final JwtTokenProvider jwtTokenProvider;
+
+  /** Spring security를 적용하지 않을 엔드포인트 **/
+  @Bean
+  public WebSecurityCustomizer webSecurityCustomizer() {
+    return web -> web.ignoring().
+            requestMatchers(
+                    "/error",
+                    "/fabicon.ico",
+                    "/static/**",
+                    "/css/**",
+                    "/js/**");
+  }
 
   /** 비밀번호 등 해시화를 위한 PasswordEncoder */
   @Bean
@@ -50,12 +71,19 @@ public class SecurityConfig {
         .authorizeHttpRequests(
             authorize ->
                 authorize
+                    .requestMatchers("/login/**", "/oauth2/**").permitAll() // 로그인 화면
                     .requestMatchers("/api/**")
                     .permitAll()
                     .requestMatchers("/actuator/**")
-                    .access(localHostOnly)
+                    .access(this.localHostOnly)
                     .anyRequest()
                     .denyAll())
+        .oauth2Login(oauth2 -> oauth2
+                .loginPage("/login")
+                .successHandler(new SimpleUrlAuthenticationSuccessHandler("/"))
+                .failureHandler(new SimpleUrlAuthenticationFailureHandler("/login?error")))
+            .addFilterBefore(new JwtAuthenticationFilter(this.jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(new JwtExceptionFilter(), JwtAuthenticationFilter.class)
         .exceptionHandling(
             exception ->
                 exception
@@ -79,7 +107,7 @@ public class SecurityConfig {
         .formLogin(AbstractHttpConfigurer::disable)
         .sessionManagement(
             session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .authorizeHttpRequests(authorize -> authorize.anyRequest().access(localHostOnly))
+        .authorizeHttpRequests(authorize -> authorize.anyRequest().access(this.localHostOnly))
         .build();
   }
 
