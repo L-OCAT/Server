@@ -17,4 +17,3 @@ jobs:
           platform: discord
           webhook-url: ${{ secrets.WEBHOOK_URL }}
           remind-time: 24
-          repo-token: ${{ secrets.ADMIN_PAT }}
