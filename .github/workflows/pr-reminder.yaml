@@ -15,5 +15,5 @@ jobs:
         uses: SeongHo5/pr-reminder@v1.4
         with:
           platform: discord
-          webhook-url: ${{ secrets.ADMIN_PAT }}
+          webhook-url: ${{ secrets.WEBHOOK_URL }}
           remind-time: 24
