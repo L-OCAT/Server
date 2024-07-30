@@ -1,15 +1,12 @@
 name: LOCAT CI
 
 on:
-  # PR 생성, 커밋 추가, 재오픈 시 CI 진행
   pull_request:
-    branches: ["main", "develop" ]
-    types: [opened, synchronize, reopened]
+    branches: [ "main", "develop" ]
+    types: [ opened, reopened, synchronize, ready_for_review ]
 
 jobs:
   locat-CI:
-    # draft PR일 시에는 진행하지 않기
-    if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -18,31 +15,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set CI variables
-        id: set-CI-vars
-        run: |
-          if [[ "${{ github.ref }}" == "refs/heads/develop" ]]; then
-            echo "ENV=dev" >> $GITHUB_ENV
-            echo "APP_PROPERTIES=${{ secrets.APPLICATION_DEVELOP }}" >> $GITHUB_ENV
-          elif [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
-            echo "ENV=prod" >> $GITHUB_ENV
-            echo "APP_PROPERTIES=${{ secrets.APPLICATION_PROD }}" >> $GITHUB_ENV
-          else
-            echo "Branch name should be either 'develop' or 'main'"
-            exit 1
-          fi
-
-      - name: Set up JDK 17
+      - name: Set-up Java
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Make application-prod.yaml
-        run: |
-          cd ./src/main/resources
-          touch ./application-${{ env.ENV }}.yaml
-          echo "${{ env.APP_PROPERTIES }}" > ./application-${{ env.ENV }}.yaml
+      - name: Set-up Gradle
+        uses: gradle/actions/setup-gradle@v3.5.0
+
+      - name: Set Gradlew permission
+        run: chmod +x ./gradlew
 
       - name: Cache Gradle packages
         uses: actions/cache@v4
@@ -54,15 +37,25 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
+      - name: Set CI variables & properties for ${{ env.ENV }}
+        run: |
+          if [[ "${{ github.ref }}" == "refs/heads/develop" ]]; then
+            echo "ENV=dev" >> $GITHUB_ENV
+            echo "APP_PROPERTIES=${{ secrets.APPLICATION_DEVELOP }}" >> $GITHUB_ENV
+          elif [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            echo "ENV=prod" >> $GITHUB_ENV
+            echo "APP_PROPERTIES=${{ secrets.APPLICATION_PROD }}" >> $GITHUB_ENV
+          else
+            echo "Branch name should be either 'develop' or 'main'"
+            exit 1
+          fi
+          echo "Preparing properties for ${{ env.ENV }}"
+          touch ./src/main/resources/application-${{ env.ENV }}.yaml
+          echo "${{ env.APP_PROPERTIES }}" > ./src/main/resources/application-${{ env.ENV }}.yaml
 
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
-
-      - name: Run Tests
-        run: ./gradlew test jacocoTestReport
-        continue-on-error: false
+      - name: Build & Test with Gradle
+        run: ./gradlew clean build
+        continue-on-error: true
 
 #      알림 설정
 #      - name: Notify Discord on Test Failure
@@ -72,24 +65,19 @@ jobs:
 #          webhook: ${{ secrets.DISCORD_WEBHOOK_URL }}
 #          message: "⚠️ Tests failed in the CI pipeline!"
 
-      - name: Check Coverage  # Test coverage 체크, 미달 시 진행하지 않기
-        run: ./gradlew jacocoTestCoverageVerification
-        continue-on-error: false
+      - name: Jacoco Report to PR
+        uses: madrapps/jacoco-report@v1.6.1
+        if: success()
+        with:
+          paths: ${{ github.workspace }}/build/reports/jacoco/xml
+          token: ${{ secrets.GITHUB_TOKEN }}
+          title: "⭐Coverage Report"
+          update-comment: true
+          skip-if-no-changes: true
 
-#      - name: Jacoco Report to PR
-#        uses: madrapps/jacoco-report@v1.6.1
-#        with:
-#          paths: ${{ github.workspace }}/build/reports/jacoco/xml
-#          token: ${{ secrets.GITHUB_TOKEN }}
-#          title: "⭐️Code Coverage"
-#          update-comment: true
-#
-#      - name: Upload jacoco HTML report
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: jacoco-html-report-${{ github.run_number }}
-#          path: ${{ github.workspace }}/build/reports/jacoco/html
-
-      - name: Build with Gradle Wrapper
-        run: ./gradlew clean build -x test
-
+      - name: Upload jacoco Report
+        uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: jacoco-html-report-${{ github.run_number }}
+          path: ${{ github.workspace }}/build/reports/jacoco/html

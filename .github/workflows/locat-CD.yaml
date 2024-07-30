@@ -1,45 +1,55 @@
 name: LOCAT CD
 
 on:
-  # main에 merge 될 때만 진행
   push:
-    branches: ["main" ]
+    branches: [ "main" ]
 
 jobs:
   locat-CD:
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: read
     steps:
-      - name: Docker login
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set deployment variables
+        run: |
+          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            echo "ENV=prod" >> $GITHUB_ENV
+            echo "APP_PROPERTIES=${{ secrets.APPLICATION_PROD }}" >> $GITHUB_ENV
+          else
+            echo "Branch name should be either 'develop' or 'main'"
+            core.setFailed('Branch name should be either "develop" or "main"')
+            exit 1
+          fi
+          echo "Preparing properties for ${{ env.ENV }}"
+          touch ./src/main/resources/application-${{ env.ENV }}.yaml
+          echo "${{ env.APP_PROPERTIES }}" > ./src/main/resources/application-${{ env.ENV }}.yaml
+
+      - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Docker build and push
+      - name: Docker Build & Push
         uses: docker/build-push-action@v5.1.0
         with:
-          context: .
-          file: Dockerfile
           push: true
           # 이미지를 두 가지 방식으로 접근하기 위함. 최신 버전 + 특정 커밋 버전 - 추적 및 롤백 용도
           tags: |
-            ${{ secrets.DOCKER_REPO }}/prod:latest
-            ${{ secrets.DOCKER_REPO }}/prod:${{ github.sha }}
+            ${{ secrets.DOCKER_REPO_PROD }}:latest
+            ${{ secrets.DOCKER_REPO_PROD }}:${{ github.sha }}
 
       - name: Deploy
         uses: appleboy/ssh-action@master
         id: deploy-prod
         with:
-          host: ${{ secrets.HOST_PROD }}
+          host: ${{ secrets.SERVER_HOST }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
           username: ubuntu
-          key: ${{ secrets.KEY_PROD }}
           envs: GITHUB_SHA
           script: |
-            sudo docker rm -f locat-server
-            sudo docker pull ${{ secrets.DOCKER_REPO }}/prod:latest
-            sudo docker run -d \
-              --name locat-server \
-              -p 80:80 \
-              ${{ secrets.DOCKER_REPO }}/prod:latest
-            docker image prune -f
+            sudo -i
+            ./deploy/deploy-docker.sh ${{ secrets.DOCKER_REPO }}
