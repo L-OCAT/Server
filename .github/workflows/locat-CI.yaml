@@ -37,21 +37,13 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      - name: Set CI variables & properties for ${{ env.ENV }}
+      - name: Set properties for CI
         run: |
-          if [[ "${{ github.ref }}" == "refs/heads/develop" ]]; then
-            echo "ENV=dev" >> $GITHUB_ENV
-            echo "APP_PROPERTIES=${{ secrets.APPLICATION_DEVELOP }}" >> $GITHUB_ENV
-          elif [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
-            echo "ENV=prod" >> $GITHUB_ENV
-            echo "APP_PROPERTIES=${{ secrets.APPLICATION_PROD }}" >> $GITHUB_ENV
-          else
-            echo "Branch name should be either 'develop' or 'main'"
-            exit 1
-          fi
-          echo "Preparing properties for ${{ env.ENV }}"
-          touch ./src/main/resources/application-${{ env.ENV }}.yaml
-          echo "${{ env.APP_PROPERTIES }}" > ./src/main/resources/application-${{ env.ENV }}.yaml
+          touch ./src/main/resources/application-develop.yaml
+          touch ./src/main/resources/application-prod.yaml
+          echo ${{ secrets.APPLICATION_DEVELOP }} > ./src/main/resources/application-develop.yaml
+          echo ${{ secrets.APPLICATION_PROD }} > ./src/main/resources/application-prod.yaml
+
 
       - name: Build & Test with Gradle
         run: ./gradlew clean build
