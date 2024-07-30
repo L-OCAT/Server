@@ -16,6 +16,10 @@ java {
     }
 }
 
+jacoco {
+    toolVersion = "0.8.11"
+}
+
 dependencyManagement {
     imports {
         mavenBom("org.springframework.cloud:spring-cloud-dependencies:2023.0.1")
@@ -85,49 +89,53 @@ spotless {
     }
 }
 
+tasks.jar {
+    isEnabled = false
+}
+
 tasks.withType<Test> {
     useJUnitPlatform()
-    reports.html.required.set(false)
-    reports.junitXml.required.set(false)
+    finalizedBy (tasks.jacocoTestReport, tasks.jacocoTestCoverageVerification)
+    reports {
+        html.required.set(false)
+        junitXml.required.set(false)
+    }
     maxParallelForks = (Runtime.getRuntime().availableProcessors() / 2).coerceAtLeast(1)
 }
 
-jacoco {
-    toolVersion = "0.8.11"
-}
-
-tasks.withType<Test> {
-    finalizedBy (tasks.jacocoTestReport)
-    useJUnitPlatform()
-//    jacoco {
-//        excludes.set(listOf("com/locat/ExcludedClass*", "com/locat/anotherpackage/*"))
-//    }
-}
-
 tasks.jacocoTestReport {
+    dependsOn(tasks.test)
     reports {
         xml.required = true
-        csv.required = false
         html.required = true
-
-//        xml.destination = file("${buildDir}/reports/jacoco/xml/jacocoTestReport.xml")
-//        html.destination = file("${buildDir}/reports/jacoco/html")
+        csv.required = false
+        xml.outputLocation.set(layout.buildDirectory.file("reports/jacoco/xml/jacocoTestReport.xml"))
+        html.outputLocation.set(layout.buildDirectory.dir("reports/jacoco/html"))
+    }
+    afterEvaluate {
+        classDirectories.setFrom(
+            files(classDirectories.files.map {
+                fileTree(it).matching {
+                    include("com/locat/api/**")
+                }
+            })
+        )
     }
 }
 
 tasks.jacocoTestCoverageVerification {
+    dependsOn(tasks.jacocoTestReport)
     violationRules {
         rule {
             enabled = false // 추후에 true로 바꾸기
-            element = "CLASS" // 커버리지 측정 대상
-
+            isFailOnViolation = true
+            includes = listOf("com.locat.*")
+            element = "CLASS"
             limit {
-                counter = "LINE"   // 커버리지 측정의 기준 단위
-                value = "COVEREDRATIO"  // 커버리지 기준 측정 방식
+                counter = "LINE"
+                value = "COVEREDRATIO"
                 minimum = BigDecimal(0.8)
             }
         }
     }
 }
-
-

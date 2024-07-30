@@ -64,7 +64,7 @@ src/generated/
 ### Local Development ###
 docker-compose.yaml
 
-### DS_Store ###
+### Misc ###
 .DS_Store
 ._.DS_Store
 **/.DS_Store
