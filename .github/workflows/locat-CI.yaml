@@ -8,8 +8,7 @@ on:
 jobs:
   locat-CI:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
+    permissions: read-all
 
     steps:
       - name: Checkout repository
@@ -41,6 +40,7 @@ jobs:
         run: |
           echo ${{ secrets.APPLICATION_DEVELOP }} > ./src/main/resources/application-develop.yaml
           echo ${{ secrets.APPLICATION_PROD }} > ./src/main/resources/application-prod.yaml
+        continue-on-error: true
 
       - name: Build & Test with Gradle
         run: ./gradlew clean build
