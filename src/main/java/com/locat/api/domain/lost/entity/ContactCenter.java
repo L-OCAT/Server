@@ -19,18 +19,14 @@ public class ContactCenter extends SecuredBaseEntity {
   private Long id;
 
   @Size(max = 100)
-  @NotNull
-  @Column(name = "name", nullable = false, length = 100)
+  @NotNull @Column(name = "name", nullable = false, length = 100)
   private String name;
 
   @Size(max = 100)
-  @NotNull
-  @Column(name = "contact", nullable = false, length = 100)
+  @NotNull @Column(name = "contact", nullable = false, length = 100)
   private String contact;
 
   @Size(max = 255)
-  @NotNull
-  @Column(name = "address", nullable = false)
+  @NotNull @Column(name = "address", nullable = false)
   private String address;
-
 }

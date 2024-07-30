@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "com.locat"
-version = "0.0.1-SNAPSHOT"
+version = "0.0.1"
 
 java {
     toolchain {
@@ -23,11 +23,11 @@ jacoco {
 dependencyManagement {
     imports {
         mavenBom("org.springframework.cloud:spring-cloud-dependencies:2023.0.1")
-        mavenBom("software.amazon.awssdk:bom:2.21.0")
     }
 }
 
 val jjwtVersion by extra("0.11.5")
+val j2htmlVersion by extra("1.6.0")
 val flywayDBVersion by extra("10.15.0")
 
 repositories {
@@ -42,40 +42,40 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
-//    implementation(platform("software.amazon.awssdk:bom"))
-//    implementation("software.amazon.awssdk:dynamodb-enhanced")
+    implementation(platform("software.amazon.awssdk:bom:2.24.0"))
+    implementation("software.amazon.awssdk:s3")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-cache")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
-    implementation("org.springframework.boot:spring-boot-starter-mail")
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
     implementation("org.springframework.boot:spring-boot-configuration-processor")
     implementation("io.jsonwebtoken:jjwt-api:$jjwtVersion")
     implementation("io.jsonwebtoken:jjwt-impl:$jjwtVersion")
     implementation("io.jsonwebtoken:jjwt-jackson:$jjwtVersion")
     runtimeOnly("com.mysql:mysql-connector-j")
-
     // Lombok
     implementation("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
-
+    // Mail
+    implementation("com.j2html:j2html:$j2htmlVersion")
+    implementation("org.springframework.boot:spring-boot-starter-mail")
     // DataBase Schema Migration
     implementation("org.flywaydb:flyway-mysql:$flywayDBVersion")
     implementation("org.flywaydb:flyway-core:$flywayDBVersion")
-
     // Local Development
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     developmentOnly("org.springframework.boot:spring-boot-docker-compose")
-
     // Testing
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.mockito:mockito-junit-jupiter")
     testImplementation("org.assertj:assertj-core")
-    testImplementation("org.testcontainers:mysql")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
+    // Test Containers
     testImplementation("org.springframework.boot:spring-boot-testcontainers")
+    testImplementation("org.testcontainers:mysql")
+    testImplementation("org.testcontainers:localstack")
 }
 
 spotless {
