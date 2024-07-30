@@ -39,9 +39,7 @@ jobs:
 
       - name: Set properties for CI
         run: |
-          touch ./src/main/resources/application-develop.yaml
           echo ${{ secrets.APPLICATION_DEVELOP }} > ./src/main/resources/application-develop.yaml
-          touch ./src/main/resources/application-prod.yaml
           echo ${{ secrets.APPLICATION_PROD }} > ./src/main/resources/application-prod.yaml
 
       - name: Build & Test with Gradle
