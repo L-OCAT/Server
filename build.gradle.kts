@@ -4,6 +4,7 @@ plugins {
     id("io.spring.dependency-management") version "1.1.5"
     id("com.diffplug.spotless") version "6.25.0"
     id("org.flywaydb.flyway") version "10.15.0"
+    id("jacoco")
 }
 
 group = "com.locat"
@@ -13,6 +14,10 @@ java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)
     }
+}
+
+jacoco {
+    toolVersion = "0.8.11"
 }
 
 dependencyManagement {
@@ -84,10 +89,53 @@ spotless {
     }
 }
 
+tasks.jar {
+    isEnabled = false
+}
+
 tasks.withType<Test> {
     useJUnitPlatform()
-    reports.html.required.set(false)
-    reports.junitXml.required.set(false)
+    finalizedBy (tasks.jacocoTestReport, tasks.jacocoTestCoverageVerification)
+    reports {
+        html.required.set(false)
+        junitXml.required.set(false)
+    }
     maxParallelForks = (Runtime.getRuntime().availableProcessors() / 2).coerceAtLeast(1)
 }
 
+tasks.jacocoTestReport {
+    dependsOn(tasks.test)
+    reports {
+        xml.required = true
+        html.required = true
+        csv.required = false
+        xml.outputLocation.set(layout.buildDirectory.file("reports/jacoco/xml/jacocoTestReport.xml"))
+        html.outputLocation.set(layout.buildDirectory.dir("reports/jacoco/html"))
+    }
+    afterEvaluate {
+        classDirectories.setFrom(
+            files(classDirectories.files.map {
+                fileTree(it).matching {
+                    include("com/locat/api/**")
+                }
+            })
+        )
+    }
+}
+
+tasks.jacocoTestCoverageVerification {
+    dependsOn(tasks.jacocoTestReport)
+    violationRules {
+        rule {
+            enabled = false // 추후에 true로 바꾸기
+            isFailOnViolation = true
+            includes = listOf("com.locat.*")
+            element = "CLASS"
+            limit {
+                counter = "LINE"
+                value = "COVEREDRATIO"
+                minimum = BigDecimal(0.8)
+            }
+        }
+    }
+}

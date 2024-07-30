@@ -1,0 +1,46 @@
+name: LOCAT CD
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  locat-CD:
+    runs-on: ubuntu-latest
+    permissions: read-all
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set properties for CD
+        run: |
+          echo ${{ secrets.APPLICATION_DEVELOP }} > ./src/main/resources/application-develop.yaml
+          echo ${{ secrets.APPLICATION_PROD }} > ./src/main/resources/application-prod.yaml
+        continue-on-error: true
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Docker Build & Push
+        uses: docker/build-push-action@v5.1.0
+        with:
+          push: true
+          # 이미지를 두 가지 방식으로 접근하기 위함. 최신 버전 + 특정 커밋 버전 - 추적 및 롤백 용도
+          tags: |
+            ${{ secrets.DOCKER_REPO_PROD }}:latest
+            ${{ secrets.DOCKER_REPO_PROD }}:${{ github.sha }}
+
+      - name: Deploy
+        uses: appleboy/ssh-action@master
+        id: deploy-prod
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          username: ubuntu
+          envs: GITHUB_SHA
+          script: |
+            sudo -i
+            ./deploy/deploy-docker.sh ${{ secrets.DOCKER_REPO }}
