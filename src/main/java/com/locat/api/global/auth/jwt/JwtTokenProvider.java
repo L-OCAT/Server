@@ -1,4 +1,4 @@
-package com.locat.api.global.security;
+package com.locat.api.global.auth.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -48,8 +48,10 @@ public class JwtTokenProvider {
      * @param authentication: 사용자 정보
      * @return 생성된 refresh token
      */
-    public String generateRefreshToken(Authentication authentication) {
-        return generateToken(authentication, REFRESH_TOKEN_EXPIRE_TIME);
+    public String generateRefreshToken(Authentication authentication, String accessToken) {
+        String refreshToken = generateToken(authentication, REFRESH_TOKEN_EXPIRE_TIME);
+        // (accessToken, refreshToken) 저장
+        return refreshToken;
     }
 
     /**
@@ -60,7 +62,7 @@ public class JwtTokenProvider {
      */
     private String generateToken(Authentication authentication, long expireTime) {
         // 사용자 정보 가져오기
-        UserDetails principal = (UserDetails) authentication.getPrincipal();    // 소셜로그인에 맞는 userdetails 구현 필요
+        PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
         String username = principal.getUsername();      // email을 식별자로 사용. (or oauthId)
         List<String> roles = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)        // user type -> grantedauthority로
@@ -80,4 +82,6 @@ public class JwtTokenProvider {
                 .signWith(this.secretKey, SignatureAlgorithm.HS512)
                 .compact();
     }
+
+
 }

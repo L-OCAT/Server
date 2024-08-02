@@ -1,5 +1,7 @@
 package com.locat.api.global.security;
 
+import com.locat.api.global.auth.LocatOAuth2UserService;
+import com.locat.api.global.auth.jwt.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,7 +17,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
-import org.springframework.security.oauth2.client.web.HttpSessionOAuth2AuthorizationRequestRepository;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
@@ -40,7 +41,7 @@ public class SecurityConfig {
 
   private final OAuth2SuccessHandler oAuth2SuccessHandler;
   private final JwtTokenProvider jwtTokenProvider;
-  private final OAuth2UserService oAuth2UserService;
+  private final LocatOAuth2UserService oAuth2UserService;
 
   /** Spring security를 적용하지 않을 엔드포인트 **/
   @Bean
@@ -81,9 +82,9 @@ public class SecurityConfig {
                     .anyRequest().denyAll())
         .oauth2Login(oauth2 -> oauth2
                 .loginPage("/login")
-                .userInfoEndpoint(c -> c.userService(this.oAuth2UserService))
+                .userInfoEndpoint(c-> c.userService(this.oAuth2UserService))
                 .successHandler(this.oAuth2SuccessHandler)
-                .failureHandler(new SimpleUrlAuthenticationFailureHandler("/login?error")))
+                .failureHandler(new OAuth2FailureHandler()))
         .addFilterBefore(new JwtAuthenticationFilter(this.jwtTokenProvider),
                     UsernamePasswordAuthenticationFilter.class)
         .addFilterBefore(new JwtExceptionFilter(), JwtAuthenticationFilter.class)
