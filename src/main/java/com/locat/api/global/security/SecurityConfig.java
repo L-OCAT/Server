@@ -14,14 +14,15 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.client.web.HttpSessionOAuth2AuthorizationRequestRepository;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
@@ -37,7 +38,9 @@ public class SecurityConfig {
   private static final List<String> DEFAULT_PERMIT_METHODS =
       List.of(GET.name(), HEAD.name(), POST.name(), PATCH.name(), DELETE.name());
 
+  private final OAuth2SuccessHandler oAuth2SuccessHandler;
   private final JwtTokenProvider jwtTokenProvider;
+  private final OAuth2UserService oAuth2UserService;
 
   /** Spring security를 적용하지 않을 엔드포인트 **/
   @Bean
@@ -45,7 +48,7 @@ public class SecurityConfig {
     return web -> web.ignoring().
             requestMatchers(
                     "/error",
-                    "/fabicon.ico",
+                    "/favicon.ico",
                     "/static/**",
                     "/css/**",
                     "/js/**");
@@ -59,7 +62,7 @@ public class SecurityConfig {
 
   /** 상용 환경에서 사용하는 SecurityFilterChain을 설정합니다. */
   @Bean
-  @Profile("!dev")
+  @Profile("!local")
   protected SecurityFilterChain configure(HttpSecurity http) throws Exception {
     return http.httpBasic(AbstractHttpConfigurer::disable)
         .csrf(AbstractHttpConfigurer::disable)
@@ -71,19 +74,19 @@ public class SecurityConfig {
         .authorizeHttpRequests(
             authorize ->
                 authorize
-                    .requestMatchers("/login/**", "/oauth2/**").permitAll() // 로그인 화면
-                    .requestMatchers("/api/**")
-                    .permitAll()
-                    .requestMatchers("/actuator/**")
-                    .access(this.localHostOnly)
-                    .anyRequest()
-                    .denyAll())
+                    .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+                    .requestMatchers("/login/**", "/oauth2/**").permitAll()
+                    .requestMatchers("/api/**").authenticated()
+                    .requestMatchers("/actuator/**").access(this.localHostOnly)
+                    .anyRequest().denyAll())
         .oauth2Login(oauth2 -> oauth2
                 .loginPage("/login")
-                .successHandler(new SimpleUrlAuthenticationSuccessHandler("/"))
+                .userInfoEndpoint(c -> c.userService(this.oAuth2UserService))
+                .successHandler(this.oAuth2SuccessHandler)
                 .failureHandler(new SimpleUrlAuthenticationFailureHandler("/login?error")))
-            .addFilterBefore(new JwtAuthenticationFilter(this.jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
-            .addFilterBefore(new JwtExceptionFilter(), JwtAuthenticationFilter.class)
+        .addFilterBefore(new JwtAuthenticationFilter(this.jwtTokenProvider),
+                    UsernamePasswordAuthenticationFilter.class)
+        .addFilterBefore(new JwtExceptionFilter(), JwtAuthenticationFilter.class)
         .exceptionHandling(
             exception ->
                 exception
@@ -100,7 +103,7 @@ public class SecurityConfig {
    * <li>localhost의 모든 요청을 허용
    */
   @Bean
-  @Profile("dev")
+  @Profile("local")
   protected SecurityFilterChain configureDev(HttpSecurity http) throws Exception {
     return http.httpBasic(AbstractHttpConfigurer::disable)
         .csrf(AbstractHttpConfigurer::disable)
