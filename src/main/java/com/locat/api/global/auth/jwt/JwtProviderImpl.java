@@ -18,6 +18,7 @@ import java.time.Instant;
 import java.util.Base64;
 import java.util.Date;
 
+import static com.locat.api.global.constant.AuthConstant.BEARER_PREFIX;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Component
@@ -25,7 +26,6 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 @RequiredArgsConstructor
 public class JwtProviderImpl implements JwtProvider {
 
-  public static final String BEARER_PREFIX = "Bearer ";
   public static final String AUTHORIZATION_KEY = "auth";
 
   public static final Duration ACCESS_TOKEN_EXPIRATION = Duration.ofHours(2);

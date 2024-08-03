@@ -80,7 +80,7 @@ public class SecurityConfig {
    */
   @Bean
   @Profile("local")
-  protected SecurityFilterChain configureDev(HttpSecurity http) throws Exception {
+  protected SecurityFilterChain configureLocal(HttpSecurity http) throws Exception {
     return http.httpBasic(AbstractHttpConfigurer::disable)
         .csrf(AbstractHttpConfigurer::disable)
         .formLogin(AbstractHttpConfigurer::disable)
