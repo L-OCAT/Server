@@ -61,7 +61,7 @@ public class JwtProviderImpl implements JwtProvider {
         (LocatUserDetails) userDetailsService.loadUserByUsername(userEmail);
     Authentication authentication = userDetailsService.createAuthentication(userEmail);
     String accessToken = this.createAccessToken(authentication);
-    String refreshToken = this.createRefreshToken();
+    String refreshToken = this.createRefreshToken(authentication.getName());
     this.cacheTokens(userDetails, accessToken, refreshToken);
     return LocatTokenDto.jwtBuilder()
         .grantType(BEARER_PREFIX)
@@ -111,8 +111,9 @@ public class JwtProviderImpl implements JwtProvider {
         .compact();
   }
 
-  private String createRefreshToken() {
+  private String createRefreshToken(String username) {
     return Jwts.builder()
+        .setSubject(username)
         .setExpiration(getExpirationDate(REFRESH_TOKEN_EXPIRATION))
         .signWith(Keys.hmacShaKeyFor(secretKey.getBytes()), signatureAlgorithm)
         .compact();
