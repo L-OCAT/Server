@@ -1,6 +1,7 @@
 package com.locat.api.domain.user.entity;
 
 import com.locat.api.domain.core.SecuredBaseEntity;
+import com.locat.api.domain.user.dto.OAuth2UserInfoDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -18,9 +19,6 @@ import java.util.List;
     name = "user",
     uniqueConstraints = {
       @UniqueConstraint(
-          name = "unique_oauth_id",
-          columnNames = {"oauth_id"}),
-      @UniqueConstraint(
           name = "unique_email",
           columnNames = {"email"}),
       @UniqueConstraint(
@@ -36,10 +34,6 @@ public class User extends SecuredBaseEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id", columnDefinition = "int UNSIGNED not null")
   private Long id;
-
-  @Size(max = 100)
-  @NotNull @Column(name = "oauth_id", nullable = false, length = 100)
-  private String oauthId;
 
   @Size(max = 100)
   @NotNull @Column(name = "email", nullable = false, updatable = false, length = 100)
@@ -64,11 +58,26 @@ public class User extends SecuredBaseEntity {
   @Column(name = "deleted_at")
   private ZonedDateTime deletedAt;
 
+  @OneToMany(
+      mappedBy = "user",
+      fetch = FetchType.EAGER,
+      cascade = CascadeType.ALL,
+      orphanRemoval = true)
+  private List<UserOAuth> userOAuths = new ArrayList<>();
+
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<UserSetting> userSettings = new ArrayList<>();
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<UserTermsAgreement> termsAgreements = new ArrayList<>();
+
+  public static User fromOAuth(OAuth2UserInfoDto userInfo) {
+    return User.builder()
+        .email(userInfo.getEmail())
+        .userType(UserType.USER)
+        .statusType(StatusType.PENDING)
+        .build();
+  }
 
   public void delete() {
     this.deletedAt = ZonedDateTime.now();

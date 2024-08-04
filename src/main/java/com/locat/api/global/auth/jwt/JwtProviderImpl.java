@@ -1,7 +1,7 @@
 package com.locat.api.global.auth.jwt;
 
-import com.locat.api.global.auth.LocatAccessToken;
-import com.locat.api.global.auth.LocatRefreshToken;
+import com.locat.api.domain.auth.entity.LocatAccessToken;
+import com.locat.api.domain.auth.entity.LocatRefreshToken;
 import com.locat.api.global.auth.LocatUserDetails;
 import com.locat.api.global.auth.LocatUserDetailsService;
 import com.locat.api.infrastructure.redis.LocatAccessTokenRepository;

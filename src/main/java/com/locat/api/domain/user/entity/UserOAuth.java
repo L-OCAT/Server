@@ -1,5 +1,6 @@
 package com.locat.api.domain.user.entity;
 
+import com.locat.api.domain.auth.entity.OAuth2ProviderToken;
 import com.locat.api.domain.core.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -37,7 +38,11 @@ public class UserOAuth extends BaseEntity {
   @NotNull @Column(name = "oauth_id", nullable = false, length = 100)
   private String oauthId;
 
-  public static UserOAuth from(User user) {
-    return UserOAuth.builder().user(user).build();
+  public static UserOAuth from(User user, OAuth2ProviderToken token) {
+    return UserOAuth.builder()
+        .user(user)
+        .oauthType(token.getProviderType())
+        .oauthId(token.getId())
+        .build();
   }
 }

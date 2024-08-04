@@ -16,6 +16,10 @@ public record LocatUserDetailsImpl(User user)
 
   @Serial private static final long serialVersionUID = 132581231927321L;
 
+  public static LocatUserDetails from(User user) {
+    return new LocatUserDetailsImpl(user);
+  }
+
   @Override
   public Map<String, Object> getAttributes() {
     return Map.of();
