@@ -13,7 +13,7 @@ public interface JwtProvider {
    * @param userEmail 사용자 이메일
    * @return 토큰 발급 응답 DTO
    */
-  JwtDto create(String userEmail);
+  LocatTokenDto create(String userEmail);
 
   /**
    * {@link HttpServletRequest}의 Authorization Header에서 토큰을 추출합니다.

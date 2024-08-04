@@ -1,6 +1,11 @@
 package com.locat.api.global.auth.jwt;
 
+import com.locat.api.global.auth.LocatAccessToken;
+import com.locat.api.global.auth.LocatRefreshToken;
+import com.locat.api.global.auth.LocatUserDetails;
 import com.locat.api.global.auth.LocatUserDetailsService;
+import com.locat.api.infrastructure.redis.LocatAccessTokenRepository;
+import com.locat.api.infrastructure.redis.LocatRefreshTokenRepository;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
@@ -32,8 +37,10 @@ public class JwtProviderImpl implements JwtProvider {
   public static final Duration REFRESH_TOKEN_EXPIRATION = Duration.ofDays(14);
 
   private final LocatUserDetailsService userDetailsService;
+  private final LocatAccessTokenRepository accessTokenRepository;
+  private final LocatRefreshTokenRepository refreshTokenRepository;
 
-  @Value("${auth.jwt.secret}")
+  @Value("${security.jwt.secret}")
   private String secretKey;
 
   private JwtParser parser;
@@ -49,15 +56,19 @@ public class JwtProviderImpl implements JwtProvider {
   }
 
   @Override
-  public JwtDto create(String userEmail) {
+  public LocatTokenDto create(String userEmail) {
+    LocatUserDetails userDetails =
+        (LocatUserDetails) userDetailsService.loadUserByUsername(userEmail);
     Authentication authentication = userDetailsService.createAuthentication(userEmail);
-    String accessToken = this.createAccessTOken(authentication);
+    String accessToken = this.createAccessToken(authentication);
     String refreshToken = this.createRefreshToken();
-    return JwtDto.jwtBuilder()
+    this.cacheTokens(userDetails, accessToken, refreshToken);
+    return LocatTokenDto.jwtBuilder()
         .grantType(BEARER_PREFIX)
         .accessToken(accessToken)
         .refreshToken(refreshToken)
-        .accessTokenExpiresIn(ACCESS_TOKEN_EXPIRATION.toMillis())
+        .accessTokenExpiresIn(ACCESS_TOKEN_EXPIRATION.toSeconds())
+        .refreshTokenExpiresIn(REFRESH_TOKEN_EXPIRATION.toSeconds())
         .create();
   }
 
@@ -91,7 +102,7 @@ public class JwtProviderImpl implements JwtProvider {
     }
   }
 
-  private String createAccessTOken(Authentication authentication) {
+  private String createAccessToken(Authentication authentication) {
     return Jwts.builder()
         .setSubject(authentication.getName())
         .claim(AUTHORIZATION_KEY, authentication.getAuthorities())
@@ -105,6 +116,13 @@ public class JwtProviderImpl implements JwtProvider {
         .setExpiration(getExpirationDate(REFRESH_TOKEN_EXPIRATION))
         .signWith(Keys.hmacShaKeyFor(secretKey.getBytes()), signatureAlgorithm)
         .compact();
+  }
+
+  private void cacheTokens(LocatUserDetails userDetails, String accessToken, String refreshToken) {
+    final long id = userDetails.getId();
+    final String email = userDetails.getUsername();
+    this.accessTokenRepository.save(LocatAccessToken.from(id, email, accessToken));
+    this.refreshTokenRepository.save(LocatRefreshToken.from(id, email, refreshToken));
   }
 
   private static Date getExpirationDate(Duration duration) {
