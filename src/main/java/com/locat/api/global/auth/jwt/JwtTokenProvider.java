@@ -70,7 +70,6 @@ public class JwtTokenProvider {
                 .setExpiration(validity)
                 .signWith(this.secretKey, SignatureAlgorithm.HS512)
                 .compact();
-//        return generateToken(authentication, ACCESS_TOKEN_EXPIRE_TIME);
     }
 
     /**
@@ -78,46 +77,18 @@ public class JwtTokenProvider {
      * @return 생성된 refresh token
      */
     public String generateRefreshToken(Authentication authentication, String accessToken) {
-//        String refreshToken = generateToken(authentication, REFRESH_TOKEN_EXPIRE_TIME);
-        // (accessToken, refreshToken) 저장 - redis?
         Date now = new Date();
         Date validity = new Date(now.getTime() + REFRESH_TOKEN_EXPIRE_TIME.toMillis());
 
-        return Jwts.builder()
+        String refreshToken = Jwts.builder()
                 .setIssuedAt(now)
                 .setExpiration(validity)
                 .signWith(this.secretKey, SignatureAlgorithm.HS512)
                 .compact();
-//        return refreshToken;
-    }
 
-//    /**
-//     * Token 생성 공통 메소드
-//     * @param authentication: 사용자 정보
-//     * @param expireTime: 토큰별 만료 기간
-//     * @return 생성된 JWT
-//     */
-//    private String generateToken(Authentication authentication, Duration expireTime) {
-//        // 사용자 정보 가져오기
-//        PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
-//        String username = principal.getUsername();      // email을 식별자로 사용. (or oauthId)
-//        List<String> roles = authentication.getAuthorities().stream()
-//                .map(GrantedAuthority::getAuthority)        // user type -> grantedauthority로
-//                .toList();
-//
-//        Claims claims = Jwts.claims().setSubject(username);
-//        claims.put("roles", roles);
-//
-//        Date now = new Date();
-//        Date validity = new Date(now.getTime() + expireTime.toMillis());
-//
-//        return Jwts.builder()
-//                .setClaims(claims)
-//                .setIssuedAt(now)
-//                .setExpiration(validity)
-//                .signWith(this.secretKey, SignatureAlgorithm.HS512)
-//                .compact();
-//    }
+        // (accessToken, refreshToken) 저장 - redis?
+        return refreshToken;
+    }
 
     /**
      * HTTP 요청에서 JWT token 추출
