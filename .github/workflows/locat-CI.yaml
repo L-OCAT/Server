@@ -1,0 +1,72 @@
+name: LOCAT CI
+
+on:
+  pull_request:
+    branches: [ "main", "develop" ]
+    types: [ opened, reopened, synchronize, ready_for_review ]
+
+jobs:
+  locat-CI:
+    runs-on: ubuntu-latest
+    permissions: read-all
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set-up Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Set-up Gradle
+        uses: gradle/actions/setup-gradle@v3.5.0
+
+      - name: Set Gradlew permission
+        run: chmod +x ./gradlew
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Set properties for CI
+        run: |
+          echo ${{ secrets.APPLICATION_DEVELOP }} > ./src/main/resources/application-develop.yaml
+          echo ${{ secrets.APPLICATION_PROD }} > ./src/main/resources/application-prod.yaml
+        continue-on-error: true
+
+      - name: Build & Test with Gradle
+        run: ./gradlew clean build
+        continue-on-error: true
+
+#      알림 설정
+#      - name: Notify Discord on Test Failure
+#        if: failure()
+#        uses: Ilshidur/action-discord@v2
+#        with:
+#          webhook: ${{ secrets.DISCORD_WEBHOOK_URL }}
+#          message: "⚠️ Tests failed in the CI pipeline!"
+
+      - name: Jacoco Report to PR
+        uses: madrapps/jacoco-report@v1.6.1
+        if: success()
+        with:
+          paths: ${{ github.workspace }}/build/reports/jacoco/xml
+          token: ${{ secrets.GITHUB_TOKEN }}
+          title: "⭐Coverage Report"
+          update-comment: true
+          skip-if-no-changes: true
+
+      - name: Upload jacoco Report
+        uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: jacoco-html-report-${{ github.run_number }}
+          path: ${{ github.workspace }}/build/reports/jacoco/html

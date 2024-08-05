@@ -3,7 +3,8 @@ package com.locat.api.unit.utils;
 import com.locat.api.global.utils.LocatSpelParser;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 class SpelParserTest {
 
@@ -29,9 +30,9 @@ class SpelParserTest {
 
     // Then
     assertAll(
-        () -> assertEquals(8, result1),
-        () -> assertEquals(2, result2),
-        () -> assertEquals(15, result3));
+        () -> assertThat(result1).isEqualTo(8),
+        () -> assertThat(result2).isEqualTo(2),
+        () -> assertThat(result3).isEqualTo(15));
   }
 
   @Test
@@ -61,9 +62,9 @@ class SpelParserTest {
 
     // Then
     assertAll(
-        () -> assertTrue(result1),
-        () -> assertTrue(result2),
-        () -> assertTrue(result3),
-        () -> assertTrue(result4));
+        () -> assertThat(result1).isTrue(),
+        () -> assertThat(result2).isTrue(),
+        () -> assertThat(result3).isTrue(),
+        () -> assertThat(result4).isTrue());
   }
 }
