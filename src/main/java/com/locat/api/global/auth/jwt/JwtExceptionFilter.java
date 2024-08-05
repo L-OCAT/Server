@@ -8,9 +8,13 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 public class JwtExceptionFilter extends OncePerRequestFilter {
 
@@ -28,8 +32,8 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
 
     private void handleException(HttpServletResponse response, LocatApiException ex) throws IOException {
         response.setStatus(ex.getHttpStatus().value()); // 예외의 HTTP 상태 코드 설정
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
+        response.setContentType(APPLICATION_JSON_VALUE);
+        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
 
         ErrorResponse errorResponse = ErrorResponse.fromException(ex); // ErrorResponse 객체 생성
         objectMapper.writeValue(response.getWriter(), errorResponse); // JSON 응답 작성

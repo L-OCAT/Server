@@ -1,7 +1,5 @@
 package com.locat.api.global.auth.jwt;
 
-import com.locat.api.global.exception.ApiExceptionType;
-import com.locat.api.global.exception.LocatApiException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
@@ -13,20 +11,17 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 import javax.crypto.SecretKey;
+import java.time.Duration;
 import java.util.Base64;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.locat.api.global.constant.AuthConstant.BEARER_PREFIX;
 import static com.locat.api.global.exception.ApiExceptionType.INVALID_TOKEN;
-import static com.locat.api.global.exception.ApiExceptionType.JWT_TOKEN_INVALID;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Component
@@ -36,8 +31,8 @@ public class JwtTokenProvider {
     @Value("${auth.jwt.secret}")
     private String jwtSecret;
     private SecretKey secretKey;
-    private final long ACCESS_TOKEN_EXPIRE_TIME = 30 * 60 * 1000L;
-    private final long REFRESH_TOKEN_EXPIRE_TIME =  7 * 24 * 60 * 60 * 1000L;
+    private final Duration ACCESS_TOKEN_EXPIRE_TIME = Duration.ofMinutes(30);
+    private final Duration REFRESH_TOKEN_EXPIRE_TIME = Duration.ofDays(7);
     private JwtParser parser;
 
     /**
@@ -57,27 +52,6 @@ public class JwtTokenProvider {
      * @return 생성된 access token
      */
     public String generateAccessToken(Authentication authentication) {
-        return generateToken(authentication, ACCESS_TOKEN_EXPIRE_TIME);
-    }
-
-    /**
-     * @param authentication: 사용자 정보
-     * @return 생성된 refresh token
-     */
-    public String generateRefreshToken(Authentication authentication, String accessToken) {
-        String refreshToken = generateToken(authentication, REFRESH_TOKEN_EXPIRE_TIME);
-        // (accessToken, refreshToken) 저장 - redis?
-        return refreshToken;
-    }
-
-    /**
-     * Token 생성 공통 메소드
-     * @param authentication: 사용자 정보
-     * @param expireTime: 토큰별 만료 기간
-     * @return 생성된 JWT
-     */
-    private String generateToken(Authentication authentication, long expireTime) {
-        // 사용자 정보 가져오기
         PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
         String username = principal.getUsername();      // email을 식별자로 사용. (or oauthId)
         List<String> roles = authentication.getAuthorities().stream()
@@ -88,7 +62,7 @@ public class JwtTokenProvider {
         claims.put("roles", roles);
 
         Date now = new Date();
-        Date validity = new Date(now.getTime() + expireTime);
+        Date validity = new Date(now.getTime() + ACCESS_TOKEN_EXPIRE_TIME.toMillis());
 
         return Jwts.builder()
                 .setClaims(claims)
@@ -96,7 +70,54 @@ public class JwtTokenProvider {
                 .setExpiration(validity)
                 .signWith(this.secretKey, SignatureAlgorithm.HS512)
                 .compact();
+//        return generateToken(authentication, ACCESS_TOKEN_EXPIRE_TIME);
     }
+
+    /**
+     * @param authentication: 사용자 정보
+     * @return 생성된 refresh token
+     */
+    public String generateRefreshToken(Authentication authentication, String accessToken) {
+//        String refreshToken = generateToken(authentication, REFRESH_TOKEN_EXPIRE_TIME);
+        // (accessToken, refreshToken) 저장 - redis?
+        Date now = new Date();
+        Date validity = new Date(now.getTime() + REFRESH_TOKEN_EXPIRE_TIME.toMillis());
+
+        return Jwts.builder()
+                .setIssuedAt(now)
+                .setExpiration(validity)
+                .signWith(this.secretKey, SignatureAlgorithm.HS512)
+                .compact();
+//        return refreshToken;
+    }
+
+//    /**
+//     * Token 생성 공통 메소드
+//     * @param authentication: 사용자 정보
+//     * @param expireTime: 토큰별 만료 기간
+//     * @return 생성된 JWT
+//     */
+//    private String generateToken(Authentication authentication, Duration expireTime) {
+//        // 사용자 정보 가져오기
+//        PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
+//        String username = principal.getUsername();      // email을 식별자로 사용. (or oauthId)
+//        List<String> roles = authentication.getAuthorities().stream()
+//                .map(GrantedAuthority::getAuthority)        // user type -> grantedauthority로
+//                .toList();
+//
+//        Claims claims = Jwts.claims().setSubject(username);
+//        claims.put("roles", roles);
+//
+//        Date now = new Date();
+//        Date validity = new Date(now.getTime() + expireTime.toMillis());
+//
+//        return Jwts.builder()
+//                .setClaims(claims)
+//                .setIssuedAt(now)
+//                .setExpiration(validity)
+//                .signWith(this.secretKey, SignatureAlgorithm.HS512)
+//                .compact();
+//    }
 
     /**
      * HTTP 요청에서 JWT token 추출
@@ -144,8 +165,10 @@ public class JwtTokenProvider {
     }
 
     private List<SimpleGrantedAuthority> getAuthorities(Claims claims) {
-        return Collections.singletonList(new SimpleGrantedAuthority(
-                claims.get("roles").toString()));
+        List<String> roles = claims.get("roles", List.class);
+        return roles.stream()
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
     }
 
     public String reissueAccessToken(String refreshToken) {
