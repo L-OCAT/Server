@@ -2,6 +2,7 @@ package com.locat.api.infrastructure.repository.user;
 
 import com.locat.api.domain.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
