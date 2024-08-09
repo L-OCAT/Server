@@ -1,0 +1,349 @@
+openapi: 3.0.0
+info:
+  title: User API
+  description: API for managing users.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/v1
+    description: Local server
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        oauthId:
+          type: string
+        email:
+          type: string
+          format: email
+        nickname:
+          type: string
+        profileImage:
+          type: string
+        userType:
+          type: string
+          enum:
+            - USER
+            - ADMIN
+        statusType:
+          type: string
+          enum:
+            - ACTIVE
+            - INACTIVE
+            - BANNED
+      required:
+        - ouathId
+        - nickname
+        - email
+    UserSetting:
+      type: object
+      properties:
+        id:
+          type: integer
+        user:
+          $ref: '#/components/schemas/User'
+        appSetting:
+          type: object
+          properties:
+            id:
+              type: integer
+        value:
+          type: string
+    UserTermsAgreement:
+      type: object
+      properties:
+        id:
+          type: integer
+        user:
+          $ref: '#/components/schemas/User'
+        terms:
+          type: object
+          properties:
+            id:
+              type: integer
+    UserWithdrawalLog:
+      type: object
+      properties:
+        id:
+          type: integer
+        userId:
+          type: integer
+        reason:
+          type: string
+
+paths:
+  /users:
+    get:
+      summary: Retrieve a list of users
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            format: int32
+            default: 1
+          description: Page number for pagination.
+        - in: query
+          name: size
+          schema:
+            type: integer
+            format: int32
+            default: 20
+          description: Number of users per page.
+        - in: query
+          name: sort
+          schema:
+            type: string
+            default: "id,desc"
+          description: Sort order for users
+        - in: query
+          name: email
+          schema:
+            type: string
+            format: email
+          description: Filter users by email.
+        - in: query
+          name: status
+          schema:
+            type: string
+            enum:
+              - ACTIVE
+              - INACTIVE
+              - BANNED
+          description: Filter users by status.
+      responses:
+        '200':
+          description: A list of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '400':
+          description: Bad request. Invalid parameters or missing required fields.
+        '500':
+          description: Internal server error. An unexpected condition was encountered.
+    post:
+      summary: Create a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Bad request. Invalid parameters or missing required fields.
+        '409':
+          description: Conflict. A user with the same email already exists.
+        '500':
+          description: Internal server error. An unexpected condition was encountered.
+
+  /users/{id}:
+    get:
+      summary: Retrieve a user by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: A user object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Bad request. Invalid parameters or missing required fields.
+        '401':
+          description: Unauthorized. Authentication is required to create a user.
+        '404':
+          description: User not found
+        '500':
+          description: Internal server error. An unexpected condition was encountered.
+      security:
+        - bearerAuth: [ ]
+    put:
+      summary: Update a user by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: User updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Bad request. Invalid user data or missing required fields.
+        '401':
+          description: Unauthorized. Authentication is required to create a user.
+        '404':
+          description: User not found
+        '500':
+          description: Internal server error. An unexpected condition was encountered.
+      security:
+        - bearerAuth: [ ]
+    delete:
+      summary: Delete a user by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: User deleted successfully
+        '400':
+          description: Bad request. Invalid user data or missing required fields.
+        '401':
+          description: Unauthorized. Authentication is required to create a user.
+        '404':
+          description: User not found
+        '500':
+          description: Internal server error. An unexpected condition was encountered.
+      security:
+        - bearerAuth: [ ]
+  # 여기서부터는 필요한지 확인 필요.
+  /users/{id}/settings:
+    get:
+      summary: Retrieve settings for a specific user
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: User settings
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserSetting'
+        '400':
+          description: Bad request. Invalid user data or missing required fields.
+        '401':
+          description: Unauthorized. Authentication is required to create a user.
+        '404':
+          description: User not found
+        '500':
+          description: Internal server error. An unexpected condition was encountered.
+      security:
+        - bearerAuth: [ ]
+  /users/{id}/terms:
+    get:
+      summary: Retrieve terms agreements for a specific user
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: User terms agreements
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserTermsAgreement'
+        '400':
+          description: Bad request. Invalid user data or missing required fields.
+        '401':
+          description: Unauthorized. Authentication is required to create a user.
+        '404':
+          description: User not found
+        '500':
+          description: Internal server error. An unexpected condition was encountered.
+      security:
+        - bearerAuth: [ ]
+  /user-withdrawal-logs:
+    get:
+      summary: Retrieve a list of user withdrawal logs
+      responses:
+        '200':
+          description: A list of user withdrawal logs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserWithdrawalLog'
+    post:
+      summary: Create a new user withdrawal log
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserWithdrawalLog'
+      responses:
+        '201':
+          description: User withdrawal log created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserWithdrawalLog'
+  /user-withdrawal-logs/{id}:
+    get:
+      summary: Retrieve a user withdrawal log by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: A user withdrawal log object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserWithdrawalLog'
+        '404':
+          description: User withdrawal log not found
+    delete:
+      summary: Delete a user withdrawal log by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: User withdrawal log deleted successfully
+        '404':
+          description: User withdrawal log not found
