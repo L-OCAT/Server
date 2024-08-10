@@ -5,8 +5,10 @@ import com.locat.api.domain.auth.template.OAuth2Template;
 import com.locat.api.domain.auth.template.OAuth2TemplateFactory;
 import com.locat.api.domain.user.dto.OAuth2UserInfoDto;
 import com.locat.api.domain.user.entity.User;
-import com.locat.api.domain.user.entity.UserOAuth;
-import com.locat.api.domain.user.service.*;
+import com.locat.api.domain.user.service.UserRegistrationService;
+import com.locat.api.domain.user.service.UserService;
+import com.locat.api.domain.user.service.UserSettingService;
+import com.locat.api.domain.user.service.UserTermsService;
 import com.locat.api.infrastructure.redis.OAuth2ProviderTokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,7 +22,6 @@ import java.util.concurrent.CompletableFuture;
 public class UserRegistrationServiceImpl implements UserRegistrationService {
 
   private final UserService userService;
-  private final UserOAuthService userOAuthService;
   private final UserTermsService userTermsService;
   private final UserSettingService userSettingService;
 
@@ -35,15 +36,13 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
 
     CompletableFuture<Void> userFuture =
         CompletableFuture.runAsync(() -> this.userService.save(user));
-    CompletableFuture<Void> userOAuthFuture =
-        userFuture.thenRunAsync(() -> this.userOAuthService.save(UserOAuth.from(user, token)));
     CompletableFuture<Void> userSettingFuture =
         userFuture.thenRunAsync(() -> this.userSettingService.registerDefaultSettings(user));
     CompletableFuture<Void> userTermsAgreementFuture =
         userFuture.thenRunAsync(() -> this.userTermsService.registerByOAuth(user, token));
 
     CompletableFuture.allOf(
-            userFuture, userOAuthFuture, userSettingFuture, userTermsAgreementFuture)
+            userFuture, userSettingFuture, userTermsAgreementFuture)
         .join();
     return user;
   }

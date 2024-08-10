@@ -5,12 +5,11 @@ import com.locat.api.domain.user.dto.OAuth2UserInfoDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.*;
-import org.hibernate.annotations.SQLSelect;
-
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.*;
+import org.hibernate.annotations.SQLSelect;
 
 @Entity
 @Getter
@@ -18,6 +17,9 @@ import java.util.List;
 @Table(
     name = "user",
     uniqueConstraints = {
+      @UniqueConstraint(
+          name = "unique_oauth_id",
+          columnNames = {"oauth_id"}),
       @UniqueConstraint(
           name = "unique_email",
           columnNames = {"email"}),
@@ -34,6 +36,13 @@ public class User extends SecuredBaseEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id", columnDefinition = "int UNSIGNED not null")
   private Long id;
+
+  @Column(name = "oauth_id", nullable = false, length = 100)
+  private String oauthId;
+
+  @Enumerated(EnumType.STRING)
+  @Column(name = "oauth_type")
+  private OAuth2ProviderType oauthType;
 
   @Size(max = 100)
   @NotNull @Column(name = "email", nullable = false, updatable = false, length = 100)
@@ -74,6 +83,8 @@ public class User extends SecuredBaseEntity {
   public static User fromOAuth(OAuth2UserInfoDto userInfo) {
     return User.builder()
         .email(userInfo.getEmail())
+        .oauthId(userInfo.getId())
+        .oauthType(userInfo.getProvider())
         .userType(UserType.USER)
         .statusType(StatusType.PENDING)
         .build();

@@ -1,6 +1,7 @@
 package com.locat.api.domain.user.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.locat.api.domain.user.entity.OAuth2ProviderType;
 
 public record KakaoUserInfoDto(String id, KakaoAccount kakaoAccount) implements OAuth2UserInfoDto {
 
@@ -12,6 +13,11 @@ public record KakaoUserInfoDto(String id, KakaoAccount kakaoAccount) implements 
   @Override
   public String getEmail() {
     return this.kakaoAccount.email();
+  }
+
+  @Override
+  public OAuth2ProviderType getProvider() {
+    return OAuth2ProviderType.KAKAO;
   }
 
   public record KakaoAccount(
