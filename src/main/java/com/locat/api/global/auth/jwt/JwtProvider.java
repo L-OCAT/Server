@@ -30,5 +30,4 @@ public interface JwtProvider {
    * @throws ExpiredJwtException 만료된 토큰을 사용할 경우
    */
   Claims parse(String token);
-
 }

@@ -42,5 +42,4 @@ public class UserTermsServiceImpl implements UserTermsService {
     OAuth2Template oAuth2Template = this.oAuth2TemplateFactory.getByType(token.getProviderType());
     return oAuth2Template.fetchTermsAgreement(token.getAccessToken());
   }
-
 }

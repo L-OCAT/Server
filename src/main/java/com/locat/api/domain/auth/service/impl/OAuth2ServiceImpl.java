@@ -25,7 +25,7 @@ public class OAuth2ServiceImpl implements OAuth2Service {
 
   @Override
   public LocatTokenDto authenticate(OAuth2ProviderType provider, String code) {
-    OAuth2Template oAuth2Template = oAuth2TemplateFactory.getByType(provider);
+    OAuth2Template oAuth2Template = this.oAuth2TemplateFactory.getByType(provider);
     OAuth2ProviderToken providerToken = oAuth2Template.issueToken(code);
     return this.createLocatToken(providerToken);
   }
@@ -37,6 +37,6 @@ public class OAuth2ServiceImpl implements OAuth2Service {
             .findByOauthId(providerToken.getId())
             .map(UserOAuth::getUser)
             .orElseGet(() -> this.userRegistrationService.registerByOAuth(oAuthId));
-    return jwtProvider.create(user.getEmail());
+    return this.jwtProvider.create(user.getEmail());
   }
 }

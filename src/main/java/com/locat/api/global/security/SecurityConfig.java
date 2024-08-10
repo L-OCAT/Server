@@ -71,7 +71,9 @@ public class SecurityConfig {
                     .access(localHostOnly)
                     .anyRequest()
                     .denyAll())
-        .addFilterBefore(new JwtAuthenticationFilter(jwtProvider, userDetailsService), UsernamePasswordAuthenticationFilter.class)
+        .addFilterBefore(
+            new JwtAuthenticationFilter(jwtProvider, userDetailsService),
+            UsernamePasswordAuthenticationFilter.class)
         .exceptionHandling(
             exception ->
                 exception

@@ -25,5 +25,4 @@ public class AuthController {
         this.oAuth2Service.authenticate(request.providerType(), request.code());
     return ResponseEntity.ok((BaseResponse.of(locatTokenDto)));
   }
-
 }

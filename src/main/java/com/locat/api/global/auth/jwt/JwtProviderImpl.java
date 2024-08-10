@@ -43,9 +43,7 @@ public class JwtProviderImpl implements JwtProvider {
 
   private static final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS512;
 
-  /**
-   * secretKey를 Base64로 인코딩합니다.
-   */
+  /** secretKey를 Base64로 인코딩합니다. */
   @PostConstruct
   private void init() {
     byte[] bytes = Base64.getDecoder().decode(secretKey);
@@ -56,18 +54,18 @@ public class JwtProviderImpl implements JwtProvider {
   @Override
   public LocatTokenDto create(String userEmail) {
     LocatUserDetails userDetails =
-      (LocatUserDetails) userDetailsService.loadUserByUsername(userEmail);
+        (LocatUserDetails) userDetailsService.loadUserByUsername(userEmail);
     Authentication authentication = userDetailsService.createAuthentication(userEmail);
     String accessToken = this.createAccessToken(authentication);
     String refreshToken = this.createRefreshToken(authentication.getName());
     this.saveRefreshToken(userDetails, refreshToken);
     return LocatTokenDto.jwtBuilder()
-      .grantType(BEARER_PREFIX)
-      .accessToken(accessToken)
-      .refreshToken(refreshToken)
-      .accessTokenExpiresIn(ACCESS_TOKEN_EXPIRATION.toSeconds())
-      .refreshTokenExpiresIn(REFRESH_TOKEN_EXPIRATION.toSeconds())
-      .create();
+        .grantType(BEARER_PREFIX)
+        .accessToken(accessToken)
+        .refreshToken(refreshToken)
+        .accessTokenExpiresIn(ACCESS_TOKEN_EXPIRATION.toSeconds())
+        .refreshTokenExpiresIn(REFRESH_TOKEN_EXPIRATION.toSeconds())
+        .create();
   }
 
   @Override
@@ -92,19 +90,19 @@ public class JwtProviderImpl implements JwtProvider {
 
   private String createAccessToken(Authentication authentication) {
     return Jwts.builder()
-      .setSubject(authentication.getName())
-      .claim(AUTHORIZATION_KEY, authentication.getAuthorities())
-      .setExpiration(getExpirationDate(ACCESS_TOKEN_EXPIRATION))
-      .signWith(Keys.hmacShaKeyFor(secretKey.getBytes()), signatureAlgorithm)
-      .compact();
+        .setSubject(authentication.getName())
+        .claim(AUTHORIZATION_KEY, authentication.getAuthorities())
+        .setExpiration(getExpirationDate(ACCESS_TOKEN_EXPIRATION))
+        .signWith(Keys.hmacShaKeyFor(secretKey.getBytes()), signatureAlgorithm)
+        .compact();
   }
 
   private String createRefreshToken(String username) {
     return Jwts.builder()
-      .setSubject(username)
-      .setExpiration(getExpirationDate(REFRESH_TOKEN_EXPIRATION))
-      .signWith(Keys.hmacShaKeyFor(secretKey.getBytes()), signatureAlgorithm)
-      .compact();
+        .setSubject(username)
+        .setExpiration(getExpirationDate(REFRESH_TOKEN_EXPIRATION))
+        .signWith(Keys.hmacShaKeyFor(secretKey.getBytes()), signatureAlgorithm)
+        .compact();
   }
 
   private void saveRefreshToken(LocatUserDetails userDetails, String refreshToken) {

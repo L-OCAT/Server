@@ -36,7 +36,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     filterChain.doFilter(request, response);
   }
 
-  private void processAuthentication(String token, HttpServletResponse response) throws IOException {
+  private void processAuthentication(String token, HttpServletResponse response)
+      throws IOException {
     try {
       Claims userInfo = jwtProvider.parse(token);
       this.setAuthentication(userInfo.getSubject());

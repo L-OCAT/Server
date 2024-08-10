@@ -49,12 +49,12 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
   }
 
   private OAuth2UserInfoDto fetchUserInfo(OAuth2ProviderToken token) {
-    OAuth2Template oAuth2Template = oAuth2TemplateFactory.getByType(token.getProviderType());
+    OAuth2Template oAuth2Template = this.oAuth2TemplateFactory.getByType(token.getProviderType());
     return oAuth2Template.fetchUserInfo(token.getAccessToken());
   }
 
   private OAuth2ProviderToken findTokenById(String oAuthId) {
-    return providerTokenRepository
+    return this.providerTokenRepository
         .findById(oAuthId)
         .orElseThrow(() -> new IllegalArgumentException("OAuth2ProviderToken not found"));
   }
