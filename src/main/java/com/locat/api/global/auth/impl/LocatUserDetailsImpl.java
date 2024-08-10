@@ -2,14 +2,13 @@ package com.locat.api.global.auth.impl;
 
 import com.locat.api.domain.user.entity.User;
 import com.locat.api.global.auth.LocatUserDetails;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.oauth2.core.user.OAuth2User;
-
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 public record LocatUserDetailsImpl(User user)
     implements LocatUserDetails, OAuth2User, Serializable {

@@ -10,12 +10,11 @@ import com.locat.api.domain.user.entity.UserTermsAgreement;
 import com.locat.api.domain.user.service.UserTermsService;
 import com.locat.api.infrastructure.repository.terms.TermsRepository;
 import com.locat.api.infrastructure.repository.user.UserTermsAgreementRepository;
+import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional

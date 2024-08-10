@@ -2,11 +2,10 @@ package com.locat.api;
 
 import com.locat.api.global.config.TimeConfig;
 import jakarta.annotation.PostConstruct;
+import java.util.TimeZone;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-
-import java.util.TimeZone;
 
 @SpringBootApplication
 @EnableConfigurationProperties

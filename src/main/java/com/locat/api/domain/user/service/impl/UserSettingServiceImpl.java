@@ -5,11 +5,10 @@ import com.locat.api.domain.user.entity.UserSetting;
 import com.locat.api.domain.user.service.UserSettingService;
 import com.locat.api.infrastructure.repository.setting.AppSettingRepository;
 import com.locat.api.infrastructure.repository.user.UserSettingRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @Transactional

@@ -5,11 +5,10 @@ import com.locat.api.domain.auth.template.impl.AppleOAuth2Template;
 import com.locat.api.domain.auth.template.impl.KakaoOAuth2Template;
 import com.locat.api.domain.user.entity.OAuth2ProviderType;
 import com.locat.api.infrastructure.redis.OAuth2ProviderTokenRepository;
-import org.springframework.stereotype.Component;
-
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.Map;
+import org.springframework.stereotype.Component;
 
 @Component
 public class OAuth2TemplateFactory {

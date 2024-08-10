@@ -1,9 +1,8 @@
 package com.locat.api.global.annotations;
 
 import com.locat.api.global.utils.LocatSpelParser;
-import org.springframework.expression.spel.standard.SpelExpressionParser;
-
 import java.lang.annotation.*;
+import org.springframework.expression.spel.standard.SpelExpressionParser;
 
 /**
  * 해당 메서드가 실행될 때 관리자가 알림을 받아야 함을 나타내는 어노테이션입니다.<br>

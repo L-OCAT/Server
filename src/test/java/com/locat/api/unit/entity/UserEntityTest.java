@@ -1,5 +1,7 @@
 package com.locat.api.unit.entity;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import com.locat.api.domain.user.entity.StatusType;
 import com.locat.api.domain.user.entity.User;
 import com.locat.api.domain.user.entity.UserType;
@@ -8,8 +10,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class UserEntityTest {
 

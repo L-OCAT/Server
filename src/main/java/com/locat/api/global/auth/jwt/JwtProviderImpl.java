@@ -1,5 +1,7 @@
 package com.locat.api.global.auth.jwt;
 
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+
 import com.locat.api.domain.auth.entity.LocatRefreshToken;
 import com.locat.api.global.auth.LocatUserDetails;
 import com.locat.api.global.auth.LocatUserDetailsService;
@@ -8,20 +10,17 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
+import java.security.Key;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.Base64;
+import java.util.Date;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
-import java.security.Key;
-import java.time.Duration;
-import java.time.Instant;
-import java.util.Base64;
-import java.util.Date;
-
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Component
 @Slf4j

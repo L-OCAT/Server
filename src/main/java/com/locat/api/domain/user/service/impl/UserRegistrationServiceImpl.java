@@ -10,11 +10,10 @@ import com.locat.api.domain.user.service.UserService;
 import com.locat.api.domain.user.service.UserSettingService;
 import com.locat.api.domain.user.service.UserTermsService;
 import com.locat.api.infrastructure.redis.OAuth2ProviderTokenRepository;
+import java.util.concurrent.CompletableFuture;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.concurrent.CompletableFuture;
 
 @Service
 @Transactional
@@ -41,9 +40,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     CompletableFuture<Void> userTermsAgreementFuture =
         userFuture.thenRunAsync(() -> this.userTermsService.registerByOAuth(user, token));
 
-    CompletableFuture.allOf(
-            userFuture, userSettingFuture, userTermsAgreementFuture)
-        .join();
+    CompletableFuture.allOf(userFuture, userSettingFuture, userTermsAgreementFuture).join();
     return user;
   }
 

@@ -1,12 +1,12 @@
 package com.locat.api.domain.auth.entity;
 
+import static com.locat.api.global.auth.jwt.JwtProviderImpl.REFRESH_TOKEN_EXPIRATION;
+
 import jakarta.persistence.Id;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.TimeToLive;
-
-import static com.locat.api.global.auth.jwt.JwtProviderImpl.REFRESH_TOKEN_EXPIRATION;
 
 @Getter
 @Builder

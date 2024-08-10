@@ -1,9 +1,8 @@
 package com.locat.api.infrastructure.repository.user;
 
 import com.locat.api.domain.user.entity.UserOAuth;
-import org.springframework.data.jpa.repository.JpaRepository;
-
 import java.util.Optional;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserOAuthRepository extends JpaRepository<UserOAuth, Long> {
 
