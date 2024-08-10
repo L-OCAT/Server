@@ -1,5 +1,8 @@
 package com.locat.api.global.security;
 
+import com.locat.api.global.auth.LocatUserDetailsService;
+import com.locat.api.global.auth.jwt.JwtProvider;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -15,6 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.CorsUtils;
@@ -27,10 +31,14 @@ import static org.springframework.http.HttpMethod.*;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = true)
+@RequiredArgsConstructor
 public class SecurityConfig {
 
   private static final List<String> DEFAULT_PERMIT_METHODS =
-      List.of(GET.name(), HEAD.name(), POST.name(), PATCH.name(), DELETE.name());
+      List.of(GET.name(), HEAD.name(), POST.name(), PUT.name(), PATCH.name(), DELETE.name());
+
+  private final JwtProvider jwtProvider;
+  private final LocatUserDetailsService userDetailsService;
 
   /** 비밀번호 등 해시화를 위한 PasswordEncoder */
   @Bean
@@ -63,6 +71,7 @@ public class SecurityConfig {
                     .access(localHostOnly)
                     .anyRequest()
                     .denyAll())
+        .addFilterBefore(new JwtAuthenticationFilter(jwtProvider, userDetailsService), UsernamePasswordAuthenticationFilter.class)
         .exceptionHandling(
             exception ->
                 exception

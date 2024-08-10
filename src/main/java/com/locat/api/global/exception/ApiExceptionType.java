@@ -13,6 +13,7 @@ public enum ApiExceptionType {
   FILE_EXTENSION_NOT_SUPPORTED(400, "File Extension Not Supported", 400003),
 
   UNAUTHORIZED(401, "Unauthorized", 401000),
+  INVALID_TOKEN(401, "Invalid JWT", 401001),
 
   FORBIDDEN(403, "Forbidden", 403000),
 

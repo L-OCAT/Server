@@ -1,0 +1,81 @@
+openapi: 3.0.0
+info:
+  title: Auth API
+  description: 사용자 인증 API를 정의하는 문서입니다.
+  version: 0.0.1
+servers:
+  - url: https://api.locat.com
+    description: Production
+paths:
+  /api/v1/auth:
+    description: OAuth2 사용자 인증 API
+    post:
+      summary: 소셜 로그인 기반 사용자 인증을 처리합니다.
+      requestBody:
+        $ref: "#/components/requestBodies/OAuth2AuthorizeRequest"
+      responses:
+        200:
+          $ref: "#/components/responses/LocatTokenDto"
+        500:
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: "schemas.yaml#/components/schemas/ErrorResponse"
+components:
+  requestBodies:
+    OAuth2AuthorizeRequest:
+      required: true
+      description: "OAuth2 인증 요청"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/OAuth2AuthorizeRequest"
+  responses:
+    LocatTokenDto:
+      description: "사용자 인증 성공"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/LocatTokenDto"
+  schemas:
+    LocatTokenDto:
+      description: "JWT 발급 응답"
+      type: object
+      properties:
+        grantType:
+          type: string
+          example: "Bearer"
+          description: "토큰 타입"
+        accessToken:
+          type: string
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.***"
+          description: "Access 토큰"
+        refreshToken:
+          type: string
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.***"
+          description: "Refresh 토큰"
+        accessTokenExpiresIn:
+          type: integer
+          example: 7200
+          description: "Access 토큰 만료 시간(초)"
+        refreshTokenExpiresIn:
+          type: integer
+          example: 604800
+          description: "Refresh 토큰 만료 시간(초)"
+    OAuth2AuthorizeRequest:
+      description: "OAuth2 인증 요청"
+      type: object
+      properties:
+        provider:
+          type: string
+          enum:
+            - "KAKAO"
+            - "APPLE"
+          description: "소셜 로그인 제공자"
+        code:
+          type: string
+          example: "OKR8jXv9ACEe2bBkOf05"
+          description: "소셜 로그인 인가 코드"
+
+

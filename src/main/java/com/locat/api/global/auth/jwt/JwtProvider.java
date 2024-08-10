@@ -2,7 +2,6 @@ package com.locat.api.global.auth.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.UnsupportedJwtException;
 import jakarta.servlet.http.HttpServletRequest;
 
 public interface JwtProvider {
@@ -32,12 +31,4 @@ public interface JwtProvider {
    */
   Claims parse(String token);
 
-  /**
-   * 토큰의 유효성을 검증하고, 상황에 따라 예외를 던집니다.
-   *
-   * @throws SecurityException 유효하지 않은 토큰을 사용할 경우
-   * @throws UnsupportedJwtException 지원되지 않는 토큰을 사용할 경우
-   * @throws ExpiredJwtException 만료된 토큰을 사용할 경우
-   */
-  void validate(String token);
 }

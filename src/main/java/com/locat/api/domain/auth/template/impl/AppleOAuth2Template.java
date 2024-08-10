@@ -11,6 +11,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class AppleOAuth2Template extends AbstractOAuth2Template {
 
+  private static final String NOT_IMPLEMENTED_YET = "Not implemented yet";
+
   public AppleOAuth2Template(
       OAuth2Properties oAuth2Properties, OAuth2ProviderTokenRepository providerTokenRepository) {
     super(oAuth2Properties, providerTokenRepository);
@@ -18,26 +20,26 @@ public class AppleOAuth2Template extends AbstractOAuth2Template {
 
   @Override
   public OAuth2ProviderToken issueToken(String code) {
-    throw new UnsupportedOperationException("Not implemented yet");
+    throw new UnsupportedOperationException(NOT_IMPLEMENTED_YET);
   }
 
   @Override
   public OAuth2UserInfoDto fetchUserInfo(String accessToken) {
-    throw new UnsupportedOperationException("Not implemented yet");
+    throw new UnsupportedOperationException(NOT_IMPLEMENTED_YET);
   }
 
   @Override
   public OAuth2UserInfoDto fetchUserInfoByAdmin(String userOAuthId) {
-    throw new UnsupportedOperationException("Not implemented yet");
+    throw new UnsupportedOperationException(NOT_IMPLEMENTED_YET);
   }
 
   @Override
   public OAuth2ProviderTermsAgreementDto fetchTermsAgreement(String accessToken) {
-    throw new UnsupportedOperationException("Not implemented yet");
+    throw new UnsupportedOperationException(NOT_IMPLEMENTED_YET);
   }
 
   @Override
   public OAuth2ProviderTermsAgreementDto fetchTermsAgreementByAdmin(String userOAuthId) {
-    throw new UnsupportedOperationException("Not implemented yet");
+    throw new UnsupportedOperationException(NOT_IMPLEMENTED_YET);
   }
 }

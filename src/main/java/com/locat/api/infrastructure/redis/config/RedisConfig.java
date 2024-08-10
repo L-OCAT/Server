@@ -1,4 +1,4 @@
-package com.locat.api.global.config.redis;
+package com.locat.api.infrastructure.redis.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

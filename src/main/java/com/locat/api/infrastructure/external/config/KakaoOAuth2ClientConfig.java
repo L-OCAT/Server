@@ -1,4 +1,4 @@
-package com.locat.api.infrastructure.config;
+package com.locat.api.infrastructure.external.config;
 
 import feign.RequestInterceptor;
 import org.springframework.context.annotation.Bean;
