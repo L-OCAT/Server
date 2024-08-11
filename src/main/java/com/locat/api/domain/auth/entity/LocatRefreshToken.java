@@ -27,4 +27,8 @@ public class LocatRefreshToken {
         .refreshTokenExpiresIn(REFRESH_TOKEN_EXPIRATION.toSeconds())
         .build();
   }
+
+  public boolean isNotMatched(final String refreshToken) {
+    return !this.refreshToken.equals(refreshToken);
+  }
 }

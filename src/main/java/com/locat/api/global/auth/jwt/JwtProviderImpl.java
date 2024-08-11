@@ -1,26 +1,29 @@
 package com.locat.api.global.auth.jwt;
 
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-
 import com.locat.api.domain.auth.entity.LocatRefreshToken;
 import com.locat.api.global.auth.LocatUserDetails;
 import com.locat.api.global.auth.LocatUserDetailsService;
+import com.locat.api.global.exception.ApiExceptionType;
 import com.locat.api.infrastructure.redis.LocatRefreshTokenRepository;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
-import java.security.Key;
-import java.time.Duration;
-import java.time.Instant;
-import java.util.Base64;
-import java.util.Date;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+
+import java.security.Key;
+import java.time.Clock;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.Base64;
+import java.util.Date;
+
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Component
 @Slf4j
@@ -32,6 +35,7 @@ public class JwtProviderImpl implements JwtProvider {
   public static final Duration ACCESS_TOKEN_EXPIRATION = Duration.ofHours(2);
   public static final Duration REFRESH_TOKEN_EXPIRATION = Duration.ofDays(14);
 
+  private final Clock clock;
   private final LocatUserDetailsService userDetailsService;
   private final LocatRefreshTokenRepository refreshTokenRepository;
 
@@ -55,8 +59,10 @@ public class JwtProviderImpl implements JwtProvider {
     LocatUserDetails userDetails =
         (LocatUserDetails) userDetailsService.loadUserByUsername(userEmail);
     Authentication authentication = userDetailsService.createAuthentication(userEmail);
+
     String accessToken = this.createAccessToken(authentication);
     String refreshToken = this.createRefreshToken(authentication.getName());
+
     this.saveRefreshToken(userDetails, refreshToken);
     return LocatTokenDto.jwtBuilder()
         .grantType(BEARER_PREFIX)
@@ -65,6 +71,36 @@ public class JwtProviderImpl implements JwtProvider {
         .accessTokenExpiresIn(ACCESS_TOKEN_EXPIRATION.toSeconds())
         .refreshTokenExpiresIn(REFRESH_TOKEN_EXPIRATION.toSeconds())
         .create();
+  }
+
+  @Override
+  public LocatTokenDto renew(String accessToken, String refreshToken) {
+    Claims claims = this.parse(accessToken);
+    String username = claims.getSubject();
+
+    this.validateRefreshToken(username, refreshToken);
+    Authentication authentication = userDetailsService.createAuthentication(username);
+
+    String newAccessToken = this.createAccessToken(authentication);
+    return LocatTokenDto.jwtBuilder()
+        .grantType(BEARER_PREFIX)
+        .accessToken(newAccessToken)
+        .accessTokenExpiresIn(ACCESS_TOKEN_EXPIRATION.toSeconds())
+        .create();
+  }
+
+  private void validateRefreshToken(String username, String refreshToken) {
+    this.refreshTokenRepository
+        .findByEmail(username)
+        .ifPresentOrElse(
+            t -> {
+              if (t.isNotMatched(refreshToken)) {
+                throw new TokenException(ApiExceptionType.INVALID_REFRESH_TOKEN);
+              }
+            },
+            () -> {
+              throw new TokenException(ApiExceptionType.INVALID_REFRESH_TOKEN);
+            });
   }
 
   @Override
@@ -91,6 +127,7 @@ public class JwtProviderImpl implements JwtProvider {
     return Jwts.builder()
         .setSubject(authentication.getName())
         .claim(AUTHORIZATION_KEY, authentication.getAuthorities())
+        .setIssuedAt(Date.from(Instant.now(clock)))
         .setExpiration(getExpirationDate(ACCESS_TOKEN_EXPIRATION))
         .signWith(Keys.hmacShaKeyFor(secretKey.getBytes()), signatureAlgorithm)
         .compact();
@@ -99,6 +136,7 @@ public class JwtProviderImpl implements JwtProvider {
   private String createRefreshToken(String username) {
     return Jwts.builder()
         .setSubject(username)
+        .setIssuedAt(Date.from(Instant.now(clock)))
         .setExpiration(getExpirationDate(REFRESH_TOKEN_EXPIRATION))
         .signWith(Keys.hmacShaKeyFor(secretKey.getBytes()), signatureAlgorithm)
         .compact();
