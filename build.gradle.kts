@@ -44,6 +44,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
     implementation(platform("software.amazon.awssdk:bom:2.24.0"))
     implementation("software.amazon.awssdk:s3")
+    implementation("software.amazon.awssdk:dynamodb-enhanced")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-cache")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
