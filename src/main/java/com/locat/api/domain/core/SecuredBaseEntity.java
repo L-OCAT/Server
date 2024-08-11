@@ -18,9 +18,9 @@ public abstract class SecuredBaseEntity extends BaseEntity {
 
   @CreatedBy
   @Column(nullable = false, updatable = false)
-  private String createdBy;
+  private Long createdBy;
 
   @LastModifiedBy
   @Column(nullable = false)
-  private String updatedBy;
+  private Long updatedBy;
 }
