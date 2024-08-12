@@ -1,9 +1,9 @@
 package com.locat.api.unit.utils;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
 import com.locat.api.global.utils.RandomCodeGenerator;
 import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 class RandomCodeGeneratorTest {
 

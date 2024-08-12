@@ -1,12 +1,12 @@
 package com.locat.api.unit.entity;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
 import com.locat.api.domain.auth.entity.VerificationCode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 class VerificationTokenTest {
 
@@ -19,11 +19,8 @@ class VerificationTokenTest {
   @BeforeEach
   void setUp() {
     // Given
-    verificationCode = VerificationCode.builder()
-      .email(EMAIL)
-      .code(CODE)
-      .timeToLive(TIME_TO_LIVE)
-      .build();
+    verificationCode =
+        VerificationCode.builder().email(EMAIL).code(CODE).timeToLive(TIME_TO_LIVE).build();
   }
 
   @Test
@@ -31,11 +28,10 @@ class VerificationTokenTest {
   void testVerificationCodeBuilder() {
     // When & Then
     assertAll(
-      () -> assertThat(verificationCode).isNotNull(),
-      () -> assertThat(verificationCode.getEmail()).isEqualTo(EMAIL),
-      () -> assertThat(verificationCode.getCode()).isEqualTo(CODE),
-      () -> assertThat(verificationCode.getTimeToLive()).isEqualTo(TIME_TO_LIVE)
-    );
+        () -> assertThat(verificationCode).isNotNull(),
+        () -> assertThat(verificationCode.getEmail()).isEqualTo(EMAIL),
+        () -> assertThat(verificationCode.getCode()).isEqualTo(CODE),
+        () -> assertThat(verificationCode.getTimeToLive()).isEqualTo(TIME_TO_LIVE));
   }
 
   @Test
@@ -47,14 +43,14 @@ class VerificationTokenTest {
     Long anotherTimeToLive = 600L;
 
     // When
-    VerificationCode newVerificationCode = VerificationCode.of(anotherEmail, anotherCode, anotherTimeToLive);
+    VerificationCode newVerificationCode =
+        VerificationCode.of(anotherEmail, anotherCode, anotherTimeToLive);
 
     // Then
     assertAll(
-      () -> assertThat(newVerificationCode).isNotNull(),
-      () -> assertThat(newVerificationCode.getEmail()).isEqualTo(anotherEmail),
-      () -> assertThat(newVerificationCode.getCode()).isEqualTo(anotherCode),
-      () -> assertThat(newVerificationCode.getTimeToLive()).isEqualTo(anotherTimeToLive)
-    );
+        () -> assertThat(newVerificationCode).isNotNull(),
+        () -> assertThat(newVerificationCode.getEmail()).isEqualTo(anotherEmail),
+        () -> assertThat(newVerificationCode.getCode()).isEqualTo(anotherCode),
+        () -> assertThat(newVerificationCode.getTimeToLive()).isEqualTo(anotherTimeToLive));
   }
 }

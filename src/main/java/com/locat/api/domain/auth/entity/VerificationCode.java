@@ -15,10 +15,6 @@ public class VerificationCode {
   @TimeToLive Long timeToLive;
 
   public static VerificationCode of(final String email, final String code, final Long timeToLive) {
-    return VerificationCode.builder()
-      .email(email)
-      .code(code)
-      .timeToLive(timeToLive)
-      .build();
+    return VerificationCode.builder().email(email).code(code).timeToLive(timeToLive).build();
   }
 }

@@ -1,5 +1,9 @@
 package com.locat.api.unit.security;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+
 import com.locat.api.global.auth.LocatUserDetailsService;
 import com.locat.api.global.auth.jwt.JwtProvider;
 import com.locat.api.global.security.JwtAuthenticationFilter;
@@ -9,6 +13,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,28 +26,17 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import java.io.IOException;
-
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
-
 class JwtAuthenticationFilterTest {
 
-  @Mock
-  private JwtProvider jwtProvider;
+  @Mock private JwtProvider jwtProvider;
 
-  @Mock
-  private LocatUserDetailsService userDetailsService;
+  @Mock private LocatUserDetailsService userDetailsService;
 
-  @Mock
-  private FilterChain filterChain;
+  @Mock private FilterChain filterChain;
 
-  @Mock
-  private Authentication authentication;
+  @Mock private Authentication authentication;
 
-  @InjectMocks
-  private JwtAuthenticationFilter jwtAuthenticationFilter;
+  @InjectMocks private JwtAuthenticationFilter jwtAuthenticationFilter;
 
   private MockHttpServletRequest request;
   private MockHttpServletResponse response;
@@ -56,7 +50,8 @@ class JwtAuthenticationFilterTest {
 
   @Test
   @DisplayName("유효한 토큰이 주어지면 인증을 설정한다.")
-  void givenValidToken_whenDoFilterInternal_thenSetAuthentication() throws ServletException, IOException {
+  void givenValidToken_whenDoFilterInternal_thenSetAuthentication()
+      throws ServletException, IOException {
     // Given
     String token = "validToken";
     String username = "user";
@@ -81,7 +76,8 @@ class JwtAuthenticationFilterTest {
 
   @Test
   @DisplayName("유효하지 않은 토큰이 주어지면 인증을 설정하지 않는다.")
-  void givenInvalidToken_whenDoFilterInternal_thenSendUnauthorized() throws ServletException, IOException {
+  void givenInvalidToken_whenDoFilterInternal_thenSendUnauthorized()
+      throws ServletException, IOException {
     // Given
     String token = "invalidToken";
 
@@ -100,7 +96,8 @@ class JwtAuthenticationFilterTest {
 
   @Test
   @DisplayName("토큰이 주어지지 않으면 인증을 설정하지 않는다.")
-  void givenNoToken_whenDoFilterInternal_thenDoNotSetAuthentication() throws ServletException, IOException {
+  void givenNoToken_whenDoFilterInternal_thenDoNotSetAuthentication()
+      throws ServletException, IOException {
     // Given
     when(jwtProvider.resolve(any(HttpServletRequest.class))).thenReturn(null);
 

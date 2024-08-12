@@ -1,14 +1,13 @@
 package com.locat.api.unit.entity;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
 import com.locat.api.domain.auth.entity.LocatRefreshToken;
+import java.time.Duration;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import java.time.Duration;
-
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 class LocatRefreshTokenTest {
 
@@ -22,12 +21,13 @@ class LocatRefreshTokenTest {
   @BeforeEach
   void setUp() {
     // Given
-    locatRefreshToken = LocatRefreshToken.builder()
-      .id(ID)
-      .email(EMAIL)
-      .refreshToken(REFRESH_TOKEN)
-      .refreshTokenExpiresIn(EXPIRATION_TIME.toSeconds())
-      .build();
+    locatRefreshToken =
+        LocatRefreshToken.builder()
+            .id(ID)
+            .email(EMAIL)
+            .refreshToken(REFRESH_TOKEN)
+            .refreshTokenExpiresIn(EXPIRATION_TIME.toSeconds())
+            .build();
   }
 
   @Test
@@ -35,12 +35,13 @@ class LocatRefreshTokenTest {
   void testLocatRefreshTokenBuilder() {
     // When & Then
     assertAll(
-      () -> assertThat(locatRefreshToken).isNotNull(),
-      () -> assertThat(locatRefreshToken.getId()).isEqualTo(ID),
-      () -> assertThat(locatRefreshToken.getEmail()).isEqualTo(EMAIL),
-      () -> assertThat(locatRefreshToken.getRefreshToken()).isEqualTo(REFRESH_TOKEN),
-      () -> assertThat(locatRefreshToken.getRefreshTokenExpiresIn()).isEqualTo(EXPIRATION_TIME.toSeconds())
-    );
+        () -> assertThat(locatRefreshToken).isNotNull(),
+        () -> assertThat(locatRefreshToken.getId()).isEqualTo(ID),
+        () -> assertThat(locatRefreshToken.getEmail()).isEqualTo(EMAIL),
+        () -> assertThat(locatRefreshToken.getRefreshToken()).isEqualTo(REFRESH_TOKEN),
+        () ->
+            assertThat(locatRefreshToken.getRefreshTokenExpiresIn())
+                .isEqualTo(EXPIRATION_TIME.toSeconds()));
   }
 
   @Test
@@ -54,13 +55,13 @@ class LocatRefreshTokenTest {
 
     // Then
     assertAll(
-      () -> assertThat(newToken).isNotNull(),
-      () -> assertThat(newToken.getId()).isEqualTo(ID),
-      () -> assertThat(newToken.getEmail()).isEqualTo(EMAIL),
-      () -> assertThat(newToken.getRefreshToken()).isEqualTo(REFRESH_TOKEN),
-      () -> assertThat(newToken.getRefreshTokenExpiresIn()).isNotNull(),
-      () -> assertThat(newToken.getRefreshTokenExpiresIn()).isEqualTo(expirationTime.toSeconds())
-    );
+        () -> assertThat(newToken).isNotNull(),
+        () -> assertThat(newToken.getId()).isEqualTo(ID),
+        () -> assertThat(newToken.getEmail()).isEqualTo(EMAIL),
+        () -> assertThat(newToken.getRefreshToken()).isEqualTo(REFRESH_TOKEN),
+        () -> assertThat(newToken.getRefreshTokenExpiresIn()).isNotNull(),
+        () ->
+            assertThat(newToken.getRefreshTokenExpiresIn()).isEqualTo(expirationTime.toSeconds()));
   }
 
   @Test
@@ -68,8 +69,7 @@ class LocatRefreshTokenTest {
   void testIsNotMatched() {
     // When & Then
     assertAll(
-      () -> assertThat(locatRefreshToken.isNotMatched("wrong_token")).isTrue(),
-      () -> assertThat(locatRefreshToken.isNotMatched(REFRESH_TOKEN)).isFalse()
-    );
+        () -> assertThat(locatRefreshToken.isNotMatched("wrong_token")).isTrue(),
+        () -> assertThat(locatRefreshToken.isNotMatched(REFRESH_TOKEN)).isFalse());
   }
 }

@@ -10,10 +10,9 @@ import com.locat.api.global.mail.MailService;
 import com.locat.api.global.mail.MailTemplate;
 import com.locat.api.global.utils.RandomCodeGenerator;
 import com.locat.api.infrastructure.redis.VerificationCodeRepository;
+import java.time.Duration;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.time.Duration;
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +33,8 @@ public class AuthServiceImpl implements AuthService {
   @Override
   public void sendVerificationEmail(String email) {
     final String verificationCode = RandomCodeGenerator.generate(VERIFICATION_CODE_LENGTH);
-    this.verificationCodeRepository.save(VerificationCode.of(email, verificationCode, VERIFICATION_CODE_EXPIRATION.toSeconds()));
+    this.verificationCodeRepository.save(
+        VerificationCode.of(email, verificationCode, VERIFICATION_CODE_EXPIRATION.toSeconds()));
     this.mailService.send(
         email,
         MailTemplate.MAIL_VERIFY_TITLE,
@@ -49,10 +49,13 @@ public class AuthServiceImpl implements AuthService {
   }
 
   private boolean isVerificationCodeInValid(String email, String code) {
-    final String cachedCode = this.verificationCodeRepository.findById(email)
-        .map(VerificationCode::getCode)
-        .orElseThrow(() -> new AuthenticationException(ApiExceptionType.INVALID_EMAIL_VERIFICATION_CODE));
+    final String cachedCode =
+        this.verificationCodeRepository
+            .findById(email)
+            .map(VerificationCode::getCode)
+            .orElseThrow(
+                () ->
+                    new AuthenticationException(ApiExceptionType.INVALID_EMAIL_VERIFICATION_CODE));
     return !code.equals(cachedCode);
   }
-
 }

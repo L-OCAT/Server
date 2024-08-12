@@ -25,34 +25,33 @@ class UserEntityTest {
 
   @BeforeEach
   void setUp() {
-      MockitoAnnotations.openMocks(this);
-      // Given
-      this.user =
-          User.builder()
-              .email(EMAIL)
-              .oauthId(OAUTH_ID)
-              .oauthType(OAUTH_TYPE)
-              .nickname(NICKNAME)
-              .profileImage(PROFILE_IMAGE)
-              .userType(USER_TYPE)
-              .statusType(STATUS_TYPE)
-              .build();
-
+    MockitoAnnotations.openMocks(this);
+    // Given
+    this.user =
+        User.builder()
+            .email(EMAIL)
+            .oauthId(OAUTH_ID)
+            .oauthType(OAUTH_TYPE)
+            .nickname(NICKNAME)
+            .profileImage(PROFILE_IMAGE)
+            .userType(USER_TYPE)
+            .statusType(STATUS_TYPE)
+            .build();
   }
 
   @Test
   @DisplayName("User Entity Builder Test")
   void testUserBuilder() {
     // When & Then
-      assertThat(user).isNotNull();
-      assertThat(user.getEmail()).isEqualTo(EMAIL);
-      assertThat(user.getNickname()).isEqualTo(NICKNAME);
-      assertThat(user.getProfileImage()).isEqualTo(PROFILE_IMAGE);
-      assertThat(user.getUserType()).isEqualTo(USER_TYPE);
-      assertThat(user.getStatusType()).isEqualTo(STATUS_TYPE);
-      assertThat(user.getOauthId()).isEqualTo(OAUTH_ID);
-      assertThat(user.getOauthType()).isEqualTo(OAUTH_TYPE);
-      assertThat(user.getDeletedAt()).isNull();
+    assertThat(user).isNotNull();
+    assertThat(user.getEmail()).isEqualTo(EMAIL);
+    assertThat(user.getNickname()).isEqualTo(NICKNAME);
+    assertThat(user.getProfileImage()).isEqualTo(PROFILE_IMAGE);
+    assertThat(user.getUserType()).isEqualTo(USER_TYPE);
+    assertThat(user.getStatusType()).isEqualTo(STATUS_TYPE);
+    assertThat(user.getOauthId()).isEqualTo(OAUTH_ID);
+    assertThat(user.getOauthType()).isEqualTo(OAUTH_TYPE);
+    assertThat(user.getDeletedAt()).isNull();
   }
 
   @Test
