@@ -1,12 +1,12 @@
 package com.locat.api.domain.auth.entity;
 
-import static com.locat.api.global.auth.jwt.JwtProviderImpl.REFRESH_TOKEN_EXPIRATION;
-
 import jakarta.persistence.Id;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.TimeToLive;
+
+import java.time.Duration;
 
 @Getter
 @Builder
@@ -19,12 +19,12 @@ public class LocatRefreshToken {
   @TimeToLive private Long refreshTokenExpiresIn;
 
   public static LocatRefreshToken from(
-      final Long id, final String email, final String refreshToken) {
+    final Long id, final String email, final String refreshToken, final Duration refreshTokenExpiresIn) {
     return LocatRefreshToken.builder()
         .id(id)
         .email(email)
         .refreshToken(refreshToken)
-        .refreshTokenExpiresIn(REFRESH_TOKEN_EXPIRATION.toSeconds())
+        .refreshTokenExpiresIn(refreshTokenExpiresIn.toSeconds())
         .build();
   }
 

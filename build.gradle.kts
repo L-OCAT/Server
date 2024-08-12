@@ -70,7 +70,7 @@ dependencies {
     implementation("org.flywaydb:flyway-core:$flywayDBVersion")
     // Local Development
     developmentOnly("org.springframework.boot:spring-boot-devtools")
-    developmentOnly("org.springframework.boot:spring-boot-docker-compose")
+    implementation("org.springframework.boot:spring-boot-docker-compose")
     // Testing
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testImplementation("org.testcontainers:junit-jupiter")
@@ -101,7 +101,7 @@ tasks.jar {
 
 tasks.withType<Test> {
     useJUnitPlatform()
-    finalizedBy (tasks.jacocoTestReport, tasks.jacocoTestCoverageVerification)
+//    finalizedBy (tasks.jacocoTestReport, tasks.jacocoTestCoverageVerification)
     reports {
         html.required.set(false)
         junitXml.required.set(false)

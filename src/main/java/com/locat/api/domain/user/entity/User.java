@@ -67,13 +67,6 @@ public class User extends SecuredBaseEntity {
   @Column(name = "deleted_at")
   private ZonedDateTime deletedAt;
 
-  @OneToMany(
-      mappedBy = "user",
-      fetch = FetchType.EAGER,
-      cascade = CascadeType.ALL,
-      orphanRemoval = true)
-  private List<UserOAuth> userOAuths = new ArrayList<>();
-
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<UserSetting> userSettings = new ArrayList<>();
 

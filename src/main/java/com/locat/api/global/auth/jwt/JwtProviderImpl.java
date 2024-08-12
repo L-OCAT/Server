@@ -145,7 +145,7 @@ public class JwtProviderImpl implements JwtProvider {
   private void saveRefreshToken(LocatUserDetails userDetails, String refreshToken) {
     final long id = userDetails.getId();
     final String email = userDetails.getUsername();
-    this.refreshTokenRepository.save(LocatRefreshToken.from(id, email, refreshToken));
+    this.refreshTokenRepository.save(LocatRefreshToken.from(id, email, refreshToken, REFRESH_TOKEN_EXPIRATION));
   }
 
   private static Date getExpirationDate(Duration duration) {

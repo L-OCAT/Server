@@ -1,7 +1,8 @@
 package com.locat.api.unit.entity;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
+import com.locat.api.domain.user.entity.OAuth2ProviderType;
 import com.locat.api.domain.user.entity.StatusType;
 import com.locat.api.domain.user.entity.User;
 import com.locat.api.domain.user.entity.UserType;
@@ -14,6 +15,8 @@ import org.mockito.MockitoAnnotations;
 class UserEntityTest {
 
   private static final String EMAIL = "user@example.com";
+  private static final String OAUTH_ID = "512351278326";
+  private static final OAuth2ProviderType OAUTH_TYPE = OAuth2ProviderType.APPLE;
   private static final String NICKNAME = "user123";
   private static final String PROFILE_IMAGE = "profile.jpg";
   private static final UserType USER_TYPE = UserType.ADMIN;
@@ -22,33 +25,34 @@ class UserEntityTest {
 
   @BeforeEach
   void setUp() {
-    try (AutoCloseable ignored = MockitoAnnotations.openMocks(this)) {
+      MockitoAnnotations.openMocks(this);
       // Given
       this.user =
           User.builder()
               .email(EMAIL)
+              .oauthId(OAUTH_ID)
+              .oauthType(OAUTH_TYPE)
               .nickname(NICKNAME)
               .profileImage(PROFILE_IMAGE)
               .userType(USER_TYPE)
               .statusType(STATUS_TYPE)
               .build();
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
+
   }
 
   @Test
   @DisplayName("User Entity Builder Test")
   void testUserBuilder() {
     // When & Then
-    assertAll(
-        () -> assertNotNull(user),
-        () -> assertEquals(EMAIL, user.getEmail()),
-        () -> assertEquals(NICKNAME, user.getNickname()),
-        () -> assertEquals(PROFILE_IMAGE, user.getProfileImage()),
-        () -> assertEquals(USER_TYPE, user.getUserType()),
-        () -> assertEquals(STATUS_TYPE, user.getStatusType()),
-        () -> assertNull(user.getDeletedAt()));
+      assertThat(user).isNotNull();
+      assertThat(user.getEmail()).isEqualTo(EMAIL);
+      assertThat(user.getNickname()).isEqualTo(NICKNAME);
+      assertThat(user.getProfileImage()).isEqualTo(PROFILE_IMAGE);
+      assertThat(user.getUserType()).isEqualTo(USER_TYPE);
+      assertThat(user.getStatusType()).isEqualTo(STATUS_TYPE);
+      assertThat(user.getOauthId()).isEqualTo(OAUTH_ID);
+      assertThat(user.getOauthType()).isEqualTo(OAUTH_TYPE);
+      assertThat(user.getDeletedAt()).isNull();
   }
 
   @Test
@@ -58,6 +62,6 @@ class UserEntityTest {
     user.delete();
 
     // Then
-    assertNotNull(user.getDeletedAt());
+    assertThat(user.getDeletedAt()).isNotNull();
   }
 }

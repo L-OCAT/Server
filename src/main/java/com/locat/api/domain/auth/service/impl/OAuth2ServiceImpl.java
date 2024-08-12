@@ -6,11 +6,10 @@ import com.locat.api.domain.auth.template.OAuth2Template;
 import com.locat.api.domain.auth.template.OAuth2TemplateFactory;
 import com.locat.api.domain.user.entity.OAuth2ProviderType;
 import com.locat.api.domain.user.entity.User;
-import com.locat.api.domain.user.entity.UserOAuth;
 import com.locat.api.domain.user.service.UserRegistrationService;
+import com.locat.api.domain.user.service.UserService;
 import com.locat.api.global.auth.jwt.JwtProvider;
 import com.locat.api.global.auth.jwt.LocatTokenDto;
-import com.locat.api.infrastructure.repository.user.UserOAuthRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,8 +18,8 @@ import org.springframework.stereotype.Service;
 public class OAuth2ServiceImpl implements OAuth2Service {
 
   private final JwtProvider jwtProvider;
+  private final UserService userService;
   private final UserRegistrationService userRegistrationService;
-  private final UserOAuthRepository userOAuthRepository;
   private final OAuth2TemplateFactory oAuth2TemplateFactory;
 
   @Override
@@ -33,9 +32,8 @@ public class OAuth2ServiceImpl implements OAuth2Service {
   private LocatTokenDto createLocatToken(OAuth2ProviderToken providerToken) {
     final String oAuthId = providerToken.getId();
     User user =
-        this.userOAuthRepository
+        this.userService
             .findByOauthId(providerToken.getId())
-            .map(UserOAuth::getUser)
             .orElseGet(() -> this.userRegistrationService.registerByOAuth(oAuthId));
     return this.jwtProvider.create(user.getEmail());
   }
