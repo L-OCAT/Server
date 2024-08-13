@@ -41,8 +41,8 @@ public interface OAuth2Template {
   /**
    * 관리자 권한으로 사용자의 OAuth ID를 기반으로 약관 동의 정보를 가져옵니다.
    *
-   * @param userOAuthId 조회할 사용자의 OAuth ID
+   * @param userOAuthIds 조회할 사용자의 OAuth ID(배열)
    * @return 약관 동의 정보
    */
-  OAuth2ProviderTermsAgreementDto fetchTermsAgreementByAdmin(final String userOAuthId);
+  OAuth2ProviderTermsAgreementDto fetchTermsAgreementByAdmin(final String... userOAuthIds);
 }

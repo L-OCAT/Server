@@ -27,5 +27,7 @@ public interface KakaoUserClient {
 
   @GetMapping("/v2/user/service_terms")
   KakaoUserTermsAgreementDto fetchTermsAgreementByAdmin(
-      @RequestHeader(OAuth2Properties.KAKAO_ADMIN_KEY) String adminKey);
+      @RequestHeader(OAuth2Properties.KAKAO_ADMIN_KEY) String adminKey,
+      @RequestParam("target_id_type") String targetIdType,
+      @RequestParam("target_id") Long[] targetIds);
 }

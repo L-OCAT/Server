@@ -12,6 +12,8 @@ import com.locat.api.infrastructure.external.KakaoUserClient;
 import com.locat.api.infrastructure.redis.OAuth2ProviderTokenRepository;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
+
 @Component
 public class KakaoOAuth2Template extends AbstractOAuth2Template {
 
@@ -61,8 +63,10 @@ public class KakaoOAuth2Template extends AbstractOAuth2Template {
   }
 
   @Override
-  public OAuth2ProviderTermsAgreementDto fetchTermsAgreementByAdmin(String userOAuthId) {
+  public OAuth2ProviderTermsAgreementDto fetchTermsAgreementByAdmin(String... userOAuthIds) {
     return this.kakaoUserClient.fetchTermsAgreementByAdmin(
-        super.oAuth2Properties.getKakaoAdminKey());
+        super.oAuth2Properties.getKakaoAdminKey(),
+        OAuth2Properties.KAKAO_TARGET_ID_TYPE,
+        Arrays.stream(userOAuthIds).map(Long::parseLong).toArray(Long[]::new));
   }
 }

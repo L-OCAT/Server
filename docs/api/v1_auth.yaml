@@ -31,6 +31,12 @@ paths:
       responses:
         200:
           $ref: "#/components/responses/LocatTokenDto"
+        401:
+          description: "Unauthorized(유효하지 않은 포맷, 서명 등)"
+          content:
+            application/json:
+              schema:
+                $ref: "schemas.yaml#/components/schemas/ErrorResponse"
         500:
           description: "Internal Server Error"
           content:

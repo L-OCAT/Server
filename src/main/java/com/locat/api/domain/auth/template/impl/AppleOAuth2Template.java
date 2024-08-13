@@ -39,7 +39,7 @@ public class AppleOAuth2Template extends AbstractOAuth2Template {
   }
 
   @Override
-  public OAuth2ProviderTermsAgreementDto fetchTermsAgreementByAdmin(String userOAuthId) {
+  public OAuth2ProviderTermsAgreementDto fetchTermsAgreementByAdmin(String... userOAuthIds) {
     throw new UnsupportedOperationException(NOT_IMPLEMENTED_YET);
   }
 }

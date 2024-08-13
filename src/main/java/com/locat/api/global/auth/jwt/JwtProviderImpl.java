@@ -73,8 +73,8 @@ public class JwtProviderImpl implements JwtProvider {
   }
 
   @Override
-  public LocatTokenDto renew(String accessToken, String refreshToken) {
-    Claims claims = this.parse(accessToken);
+  public LocatTokenDto renew(String oldAccessToken, String refreshToken) {
+    Claims claims = this.parse(oldAccessToken);
     String username = claims.getSubject();
 
     this.validateRefreshToken(username, refreshToken);

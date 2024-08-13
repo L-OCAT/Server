@@ -14,7 +14,7 @@ public interface JwtProvider {
    */
   LocatTokenDto create(String userEmail);
 
-  LocatTokenDto renew(String accessToken, String refreshToken);
+  LocatTokenDto renew(String oldAccessToken, String refreshToken);
 
   /**
    * {@link HttpServletRequest}의 Authorization Header에서 토큰을 추출합니다.

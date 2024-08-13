@@ -33,7 +33,7 @@ public class OAuth2ServiceImpl implements OAuth2Service {
     final String oAuthId = providerToken.getId();
     User user =
         this.userService
-            .findByOauthId(providerToken.getId())
+            .findByOauthId(oAuthId)
             .orElseGet(() -> this.userRegistrationService.registerByOAuth(oAuthId));
     return this.jwtProvider.create(user.getEmail());
   }
