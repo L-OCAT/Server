@@ -30,7 +30,7 @@ public class UserTermsServiceImpl implements UserTermsService {
     List<UserTermsAgreement> userTermsAgreements =
         this.getAgreementByOAuthType(token).getAgreementDetails().stream()
             .map(AgreementDetails::termsType)
-            .map(termsRepository::findByType)
+            .map(this.termsRepository::findByType)
             .filter(Optional::isPresent)
             .map(agreement -> UserTermsAgreement.of(user, agreement.get()))
             .toList();

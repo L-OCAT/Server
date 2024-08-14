@@ -26,8 +26,8 @@ public class RedisConfig {
   /** Lecttuce 클라이언트 Connection Factory 설정 */
   @Bean
   protected RedisConnectionFactory redisConnectionFactory() {
-    final String host = redisProperties.getHost();
-    final Integer port = redisProperties.getPort();
+    final String host = this.redisProperties.getHost();
+    final Integer port = this.redisProperties.getPort();
     RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration(host, port);
     return new LettuceConnectionFactory(configuration);
   }

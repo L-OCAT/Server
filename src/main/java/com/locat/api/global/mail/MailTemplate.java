@@ -24,7 +24,7 @@ public final class MailTemplate {
                         h1(verificationCode)
                             .withStyle(
                                 "font-size: 30px; font-weight: bold; margin-bottom: 20px; margin-top: 20px;"),
-                        p("- 인증 코드는 3분간 유효하며, 유효 시간이 지난 경우 다시 요청해주세요."),
+                        p("- 인증 코드는 5분간 유효하며, 유효 시간이 지난 경우 다시 요청해주세요."),
                         p("- 타인이 이메일을 잘못 입력한 경우, 본 메일이 발송될 수 있습니다."))
                     .withStyle(COMMON_TEMPLATE_STYLE)))
         .render();

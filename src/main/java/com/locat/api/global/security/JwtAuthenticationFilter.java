@@ -26,7 +26,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
   protected void doFilterInternal(
       HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
       throws ServletException, IOException {
-    Optional<String> userToken = Optional.of(request).map(jwtProvider::resolve);
+    Optional<String> userToken = Optional.of(request).map(this.jwtProvider::resolve);
 
     if (userToken.isPresent()) {
       this.processAuthentication(userToken.get(), response);
@@ -38,7 +38,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
   private void processAuthentication(String token, HttpServletResponse response)
       throws IOException {
     try {
-      Claims userInfo = jwtProvider.parse(token);
+      Claims userInfo = this.jwtProvider.parse(token);
       this.setAuthentication(userInfo.getSubject());
     } catch (JwtException ex) {
       response.sendError(HttpServletResponse.SC_UNAUTHORIZED, ex.getMessage());

@@ -48,7 +48,7 @@ public class JwtProviderImpl implements JwtProvider {
   /** secretKey를 Base64로 인코딩합니다. */
   @PostConstruct
   private void init() {
-    byte[] bytes = Base64.getDecoder().decode(secretKey);
+    byte[] bytes = Base64.getDecoder().decode(this.secretKey);
     Key key = Keys.hmacShaKeyFor(bytes);
     this.parser = Jwts.parserBuilder().setSigningKey(key).build();
   }
@@ -56,8 +56,8 @@ public class JwtProviderImpl implements JwtProvider {
   @Override
   public LocatTokenDto create(String userEmail) {
     LocatUserDetails userDetails =
-        (LocatUserDetails) userDetailsService.loadUserByUsername(userEmail);
-    Authentication authentication = userDetailsService.createAuthentication(userEmail);
+        (LocatUserDetails) this.userDetailsService.loadUserByUsername(userEmail);
+    Authentication authentication = this.userDetailsService.createAuthentication(userEmail);
 
     String accessToken = this.createAccessToken(authentication);
     String refreshToken = this.createRefreshToken(authentication.getName());
@@ -78,7 +78,7 @@ public class JwtProviderImpl implements JwtProvider {
     String username = claims.getSubject();
 
     this.validateRefreshToken(username, refreshToken);
-    Authentication authentication = userDetailsService.createAuthentication(username);
+    Authentication authentication = this.userDetailsService.createAuthentication(username);
 
     String newAccessToken = this.createAccessToken(authentication);
     return LocatTokenDto.jwtBuilder()
@@ -114,7 +114,7 @@ public class JwtProviderImpl implements JwtProvider {
   @Override
   public Claims parse(String token) {
     try {
-      return parser.parseClaimsJws(token).getBody();
+      return this.parser.parseClaimsJws(token).getBody();
     } catch (ExpiredJwtException ex) {
       return ex.getClaims();
     } catch (JwtException ex) {
@@ -126,18 +126,18 @@ public class JwtProviderImpl implements JwtProvider {
     return Jwts.builder()
         .setSubject(authentication.getName())
         .claim(AUTHORIZATION_KEY, authentication.getAuthorities())
-        .setIssuedAt(Date.from(Instant.now(clock)))
+        .setIssuedAt(Date.from(Instant.now(this.clock)))
         .setExpiration(getExpirationDate(ACCESS_TOKEN_EXPIRATION))
-        .signWith(Keys.hmacShaKeyFor(secretKey.getBytes()), signatureAlgorithm)
+        .signWith(Keys.hmacShaKeyFor(this.secretKey.getBytes()), signatureAlgorithm)
         .compact();
   }
 
   private String createRefreshToken(String username) {
     return Jwts.builder()
         .setSubject(username)
-        .setIssuedAt(Date.from(Instant.now(clock)))
+        .setIssuedAt(Date.from(Instant.now(this.clock)))
         .setExpiration(getExpirationDate(REFRESH_TOKEN_EXPIRATION))
-        .signWith(Keys.hmacShaKeyFor(secretKey.getBytes()), signatureAlgorithm)
+        .signWith(Keys.hmacShaKeyFor(this.secretKey.getBytes()), signatureAlgorithm)
         .compact();
   }
 

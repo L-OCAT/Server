@@ -67,11 +67,11 @@ public class SecurityConfig {
                     .requestMatchers("/api/**")
                     .authenticated()
                     .requestMatchers("/actuator/**")
-                    .access(localHostOnly)
+                    .access(this.localHostOnly)
                     .anyRequest()
                     .denyAll())
         .addFilterBefore(
-            new JwtAuthenticationFilter(jwtProvider, userDetailsService),
+            new JwtAuthenticationFilter(this.jwtProvider, this.userDetailsService),
             UsernamePasswordAuthenticationFilter.class)
         .exceptionHandling(
             exception ->
@@ -96,7 +96,7 @@ public class SecurityConfig {
         .formLogin(AbstractHttpConfigurer::disable)
         .sessionManagement(
             session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .authorizeHttpRequests(authorize -> authorize.anyRequest().access(localHostOnly))
+        .authorizeHttpRequests(authorize -> authorize.anyRequest().access(this.localHostOnly))
         .build();
   }
 
