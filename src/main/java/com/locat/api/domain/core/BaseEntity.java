@@ -3,12 +3,11 @@ package com.locat.api.domain.core;
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
+import java.time.ZonedDateTime;
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import java.time.ZonedDateTime;
 
 /**
  * Entity의 생성일시와 수정일시를 자동으로 관리하기 위한 추상 클래스입니다. <br>

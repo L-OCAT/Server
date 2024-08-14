@@ -1,9 +1,9 @@
 package com.locat.api.domain.core;
 
+import static com.locat.api.global.exception.ApiExceptionType.*;
+
 import com.locat.api.global.exception.ApiExceptionType;
 import com.locat.api.global.exception.LocatApiException;
-
-import static com.locat.api.global.exception.ApiExceptionType.*;
 
 /**
  * Standard Error Response

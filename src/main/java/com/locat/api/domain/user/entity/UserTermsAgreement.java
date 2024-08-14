@@ -31,4 +31,8 @@ public class UserTermsAgreement extends SecuredBaseEntity {
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(name = "terms_id", nullable = false)
   private Terms terms;
+
+  public static UserTermsAgreement of(User user, Terms agreement) {
+    return UserTermsAgreement.builder().user(user).terms(agreement).build();
+  }
 }

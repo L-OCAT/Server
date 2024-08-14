@@ -35,4 +35,12 @@ public class UserSetting extends SecuredBaseEntity {
   @NotNull @Lob
   @Column(name = "value", nullable = false)
   private String value;
+
+  public static UserSetting ofDefault(User user, AppSetting appSetting) {
+    return UserSetting.builder()
+        .user(user)
+        .appSetting(appSetting)
+        .value(appSetting.getDefaultValue())
+        .build();
+  }
 }
