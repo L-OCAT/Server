@@ -23,7 +23,7 @@ public class AwsConfig {
   }
 
   @Bean
-  public SesClient snsClient(AwsBasicCredentials basicCredentials) {
+  public SesClient sesClient(AwsBasicCredentials basicCredentials) {
     return SesClient.builder()
         .region(AwsProperties.BASE_REGION)
         .credentialsProvider(StaticCredentialsProvider.create(basicCredentials))
