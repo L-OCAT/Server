@@ -1,19 +1,18 @@
 package com.locat.api.unit.file;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+
 import com.locat.api.global.exception.LocatApiException;
 import com.locat.api.global.file.FileOperationFailedException;
 import com.locat.api.global.file.FileValidator;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
-
-import java.util.stream.Stream;
-
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 class FileValidatorTest {
 

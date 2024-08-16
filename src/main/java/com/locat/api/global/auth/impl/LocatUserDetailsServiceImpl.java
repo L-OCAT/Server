@@ -1,22 +1,29 @@
-package com.locat.api.global.auth;
+package com.locat.api.global.auth.impl;
 
+import com.locat.api.domain.user.service.UserService;
+import com.locat.api.global.auth.LocatUserDetailsService;
+import com.locat.api.global.exception.ApiExceptionType;
+import com.locat.api.global.exception.NoSuchEntityException;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class LocatUserDetailsServiceImpl implements LocatUserDetailsService {
 
+  private final UserService userService;
+
   @Override
-  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    return null;
+  public UserDetails loadUserByUsername(String username) {
+    return this.userService
+        .findByEmail(username)
+        .map(LocatUserDetailsImpl::from)
+        .orElseThrow(() -> new NoSuchEntityException(ApiExceptionType.NOT_FOUND_USER));
   }
 
   @Override
