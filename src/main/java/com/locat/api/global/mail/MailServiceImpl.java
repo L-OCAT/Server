@@ -1,16 +1,17 @@
 package com.locat.api.global.mail;
 
-import static jakarta.mail.Message.RecipientType.TO;
-
 import com.locat.api.global.exception.ApiExceptionType;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
-import java.nio.charset.StandardCharsets;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+
+import java.nio.charset.StandardCharsets;
+
+import static jakarta.mail.Message.RecipientType.TO;
 
 @Service
 @RequiredArgsConstructor

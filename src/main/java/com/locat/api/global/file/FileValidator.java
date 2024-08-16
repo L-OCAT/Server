@@ -1,10 +1,10 @@
 package com.locat.api.global.file;
 
-import static com.locat.api.global.file.FileServiceImpl.MAX_FILE_SIZE;
-import static com.locat.api.global.file.FileServiceImpl.SUPPORTED_FILE_EXTENSION;
-
 import com.locat.api.global.exception.ApiExceptionType;
 import org.springframework.web.multipart.MultipartFile;
+
+import static com.locat.api.global.file.FileServiceImpl.MAX_FILE_SIZE;
+import static com.locat.api.global.file.FileServiceImpl.SUPPORTED_FILE_EXTENSION;
 
 public final class FileValidator {
 

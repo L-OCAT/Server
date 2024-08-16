@@ -1,4 +1,4 @@
-package com.locat.api.infrastructure.redis.config;
+package com.locat.api.global.config.redis;
 
 import jakarta.annotation.Nullable;
 import lombok.Getter;

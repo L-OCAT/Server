@@ -1,7 +1,7 @@
 name: Sync OpenAPI YAML to API Docs
 
 on:
-  push:
+  pull_request:
     branches:
       - develop
     paths:

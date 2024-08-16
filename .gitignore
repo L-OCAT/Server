@@ -57,8 +57,6 @@ out/
 ### Querydsl ###
 src/generated/
 
-### OpenAPI ###
-docs/**/schemas.yaml
 
 ### Properties ###
 **/main/resources/certificates

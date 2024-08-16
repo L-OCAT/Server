@@ -1,12 +1,8 @@
 package com.locat.api.global.exception;
 
-import static org.springframework.http.HttpStatus.METHOD_NOT_ALLOWED;
-
 import com.locat.api.domain.core.ErrorResponse;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
-import java.util.Optional;
-import java.util.stream.Collectors;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -15,6 +11,11 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static org.springframework.http.HttpStatus.METHOD_NOT_ALLOWED;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
