@@ -1,6 +1,7 @@
 package com.locat.api.domain.auth.service.impl;
 
 import com.locat.api.domain.auth.entity.VerificationCode;
+import com.locat.api.domain.auth.exception.EmailAlreadySentException;
 import com.locat.api.domain.auth.service.AuthService;
 import com.locat.api.global.auth.AuthenticationException;
 import com.locat.api.global.auth.jwt.JwtProvider;
@@ -26,15 +27,14 @@ public class AuthServiceImpl implements AuthService {
   private final VerificationCodeRepository verificationCodeRepository;
 
   @Override
-  public LocatTokenDto renew(String accessToken, String refreshToken) {
+  public LocatTokenDto renew(final String accessToken, final String refreshToken) {
     return this.jwtProvider.renew(accessToken, refreshToken);
   }
 
   @Override
-  public void sendVerificationEmail(String email) {
+  public void sendVerificationEmail(final String email) {
+    this.checkIfEmailIsAlreadySent(email);
     final String verificationCode = RandomCodeGenerator.generate(VERIFICATION_CODE_LENGTH);
-    this.verificationCodeRepository.save(
-        VerificationCode.of(email, verificationCode, VERIFICATION_CODE_EXPIRATION.toSeconds()));
     this.mailService.send(
         email,
         MailTemplate.MAIL_VERIFY_TITLE,
@@ -42,13 +42,20 @@ public class AuthServiceImpl implements AuthService {
   }
 
   @Override
-  public void verify(String email, String code) {
-    if (this.isVerificationCodeInValid(email, code)) {
+  public void verify(final String email, final String code) {
+    if (this.isVerificationCodeInvalid(email, code)) {
       throw new AuthenticationException(ApiExceptionType.INVALID_EMAIL_VERIFICATION_CODE);
+    }
+    this.verificationCodeRepository.deleteById(email);
+  }
+
+  private void checkIfEmailIsAlreadySent(String email) {
+    if (this.verificationCodeRepository.existsById(email)) {
+      throw new EmailAlreadySentException(VERIFICATION_CODE_EXPIRATION.toSeconds());
     }
   }
 
-  private boolean isVerificationCodeInValid(String email, String code) {
+  private boolean isVerificationCodeInvalid(String email, String code) {
     final String cachedCode =
         this.verificationCodeRepository
             .findById(email)

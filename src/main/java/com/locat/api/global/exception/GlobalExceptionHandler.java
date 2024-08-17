@@ -2,6 +2,7 @@ package com.locat.api.global.exception;
 
 import static org.springframework.http.HttpStatus.METHOD_NOT_ALLOWED;
 
+import com.locat.api.domain.auth.exception.EmailAlreadySentException;
 import com.locat.api.domain.core.ErrorResponse;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
@@ -27,6 +28,14 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(LocatApiException.class)
   protected ResponseEntity<ErrorResponse> handleLocatApiException(LocatApiException ex) {
     return ResponseEntity.status(ex.getHttpStatus()).body(ErrorResponse.fromException(ex));
+  }
+
+  @ExceptionHandler(EmailAlreadySentException.class)
+  protected ResponseEntity<ErrorResponse> handleEmailAlreadySentException(
+      EmailAlreadySentException ex) {
+    return ResponseEntity.status(ex.getHttpStatus())
+        .header(HttpHeaders.RETRY_AFTER, String.valueOf(ex.getRetryAfter()))
+        .body(ErrorResponse.fromException(ex));
   }
 
   /** API Endpoint에 대해 지원하지 않는 HTTP Method를 사용했을 때 */
