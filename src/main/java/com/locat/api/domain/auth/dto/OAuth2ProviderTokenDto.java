@@ -7,6 +7,8 @@ public interface OAuth2ProviderTokenDto {
 
   String getRefreshToken();
 
+  String getIdToken();
+
   Integer getAccessTokenExpiresIn();
 
   Integer getRefreshTokenExpiresIn();

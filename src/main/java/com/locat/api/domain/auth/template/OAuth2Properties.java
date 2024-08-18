@@ -15,8 +15,7 @@ public class OAuth2Properties {
   public static final String KAKAO_GRANT_TYPE = "authorization_code";
   public static final String KAKAO_TARGET_ID_TYPE = "user_id";
 
-  public static final String APPLE_ADMIN_KEY = "APPLE_ADMIN_KEY_HERE";
-  public static final String APPLE_GRANT_TYPE = "APPLE_GRANT_TYPE_HERE";
+  public static final String APPLE_GRANT_TYPE = "authorization_code";
 
   private String kakaoAdminKey;
 
@@ -26,11 +25,13 @@ public class OAuth2Properties {
 
   private String kakaoRedirectUri;
 
-  private String appleAdminKey;
+  private String appleTeamId;
 
   private String appleClientId;
 
-  private String appleClientSecret;
-
   private String appleRedirectUri;
+
+  private String appleKeyId;
+
+  private String appleKeyPath;
 }

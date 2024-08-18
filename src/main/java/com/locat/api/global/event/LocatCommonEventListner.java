@@ -11,7 +11,8 @@ public class LocatCommonEventListner {
 
   @EventListener(ApplicationReadyEvent.class)
   public void init(ApplicationReadyEvent ignored) {
-    log.info("""
+    log.info(
+        """
       \s
          _____ __________ _    ____________     __________  ____  ____    __________     __________      __
         / ___// ____/ __ \\ |  / / ____/ __ \\   / ____/ __ \\/ __ \\/ __ \\  /_  __/ __ \\   / ____/ __ \\    / /
