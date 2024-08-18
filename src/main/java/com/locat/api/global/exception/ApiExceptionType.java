@@ -25,6 +25,11 @@ public enum ApiExceptionType {
 
   NOT_ALLOWED_METHOD(405, "Method Not Allowed", 405000),
 
+  CONFLICT(409, "Conflict", 409000),
+
+  TOO_MANY_REQUESTS(429, "Too Many Requests", 429000),
+  VERIFICATION_EMAIL_ALREADY_SENT(429, "Email Verification Code Already Sent", 429001),
+
   INTERNAL_SERVER_ERROR(500, "Internal Server Error", 500000),
   FAIL_TO_CONSTRUCT_EMAIL(500, "Failed to Construct Mail", 500001),
   FAIL_TO_SEND_EMAIL(500, "Failed to Send Mail", 500002),
