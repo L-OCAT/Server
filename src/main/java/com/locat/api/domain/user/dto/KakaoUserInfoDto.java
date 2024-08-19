@@ -1,6 +1,7 @@
 package com.locat.api.domain.user.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.locat.api.domain.user.entity.OAuth2ProviderType;
 
 public record KakaoUserInfoDto(String id, KakaoAccount kakaoAccount) implements OAuth2UserInfoDto {
@@ -20,9 +21,7 @@ public record KakaoUserInfoDto(String id, KakaoAccount kakaoAccount) implements 
     return OAuth2ProviderType.KAKAO;
   }
 
+  @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
   public record KakaoAccount(
-      @JsonProperty("has_email") Boolean hasEmail,
-      @JsonProperty("is_email_valid") Boolean isEmailValid,
-      @JsonProperty("is_email_verified") Boolean isEmailVerified,
-      String email) {}
+      Boolean hasEmail, Boolean isEmailValid, Boolean isEmailVerified, String email) {}
 }

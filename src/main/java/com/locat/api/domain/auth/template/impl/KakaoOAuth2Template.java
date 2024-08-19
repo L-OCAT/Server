@@ -10,9 +10,8 @@ import com.locat.api.domain.user.entity.OAuth2ProviderType;
 import com.locat.api.infrastructure.external.KakaoOAuth2Client;
 import com.locat.api.infrastructure.external.KakaoUserClient;
 import com.locat.api.infrastructure.redis.OAuth2ProviderTokenRepository;
-import org.springframework.stereotype.Component;
-
 import java.util.Arrays;
+import org.springframework.stereotype.Component;
 
 @Component
 public class KakaoOAuth2Template extends AbstractOAuth2Template {

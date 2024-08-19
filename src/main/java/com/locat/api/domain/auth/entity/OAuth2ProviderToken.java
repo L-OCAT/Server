@@ -16,6 +16,7 @@ public class OAuth2ProviderToken {
   private OAuth2ProviderType providerType;
   private String accessToken;
   private String refreshToken;
+  private String idToken;
   private Integer accessTokenExpiresIn;
   private Integer refreshTokenExpiresIn;
   @TimeToLive private Long ttl;
@@ -27,6 +28,7 @@ public class OAuth2ProviderToken {
         .providerType(providerType)
         .accessToken(providerTokenDto.getAccessToken())
         .refreshToken(providerTokenDto.getRefreshToken())
+        .idToken(providerTokenDto.getIdToken())
         .accessTokenExpiresIn(providerTokenDto.getAccessTokenExpiresIn())
         .refreshTokenExpiresIn(providerTokenDto.getRefreshTokenExpiresIn())
         .ttl(providerTokenDto.getRefreshTokenExpiresIn().longValue())
