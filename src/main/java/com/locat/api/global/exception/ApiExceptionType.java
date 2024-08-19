@@ -22,6 +22,7 @@ public enum ApiExceptionType {
   NOT_FOUND(404, "Not Found", 404000),
   NOT_FOUND_USER(404, "User Not Found", 404001),
   NOT_FOUND_FILE(404, "File Not Found", 404002),
+  NOT_FOUND_AUTH(404, "Authorization Method Not Found", 404003),
 
   NOT_ALLOWED_METHOD(405, "Method Not Allowed", 405000),
 
@@ -35,6 +36,8 @@ public enum ApiExceptionType {
   FAIL_TO_SEND_EMAIL(500, "Failed to Send Mail", 500002),
   S3_ERROR(500, "Something went Wrong with S3", 500003),
   FAIL_TO_READ_FILES(500, "Failed to Read Files", 500004),
+  CANNOT_PROCESS_JWT_NO_MATCHING_ALGORITHM(
+      500, "Cannot Process JWT: No Matching Algorithm", 500005),
   ;
 
   /**
