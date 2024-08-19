@@ -4,9 +4,9 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * DynamoDB에 저장하는 Entity에 대한 기본적인 CRUD 작업을 제공하는 인터페이스
- * @param <T> 관리할 Entity
- * @param <ID> Entity의 식별자 타입
+ * DynamoDB에 저장하는 Item에 대한 기본적인 CRUD 작업을 제공하는 인터페이스
+ * @param <T> 관리할 Item
+ * @param <ID> Item의 식별자 타입
  */
 public interface DynamoDbCrudRepository<T, ID> {
 
