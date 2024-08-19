@@ -1,8 +1,8 @@
 package com.locat.api.domain.user.controller;
 
-import com.locat.api.domain.user.dto.response.UserInfoResponse;
 import com.locat.api.domain.user.dto.request.UserInfoUpdateRequest;
 import com.locat.api.domain.user.dto.request.UserWithDrawalRequest;
+import com.locat.api.domain.user.dto.response.UserInfoResponse;
 import com.locat.api.domain.user.service.UserInfoUpdateDto;
 import com.locat.api.domain.user.service.UserService;
 import com.locat.api.global.auth.LocatUserDetails;
@@ -20,9 +20,7 @@ public class UserController {
 
   private final UserService userService;
 
-  /**
-   * 내 정보 조회
-   */
+  /** 내 정보 조회 */
   @GetMapping
   @PreAuthorize("isAuthenticated() && #userDetails.user.isActivated()")
   public ResponseEntity<UserInfoResponse> me(
@@ -33,9 +31,7 @@ public class UserController {
     return ResponseEntity.ok(userInfoResponse);
   }
 
-  /**
-   * 내 정보(이메일 또는 닉네임) 수정
-   */
+  /** 내 정보(이메일 또는 닉네임) 수정 */
   @PatchMapping
   @PreAuthorize("isAuthenticated() && #userDetails.user.isActivated()")
   public ResponseEntity<UserInfoResponse> updateMe(
@@ -48,9 +44,7 @@ public class UserController {
     return ResponseEntity.ok(userInfoResponse);
   }
 
-  /**
-   * 회원 탈퇴
-   */
+  /** 회원 탈퇴 */
   @PutMapping("/delete")
   @PreAuthorize("isAuthenticated() && #userDetails.user.isActivated()")
   public ResponseEntity<Void> deleteMe(

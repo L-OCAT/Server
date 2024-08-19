@@ -16,9 +16,15 @@ public abstract class AbstractOAuth2Template implements OAuth2Template {
   protected final OAuth2Properties oAuth2Properties;
   protected final OAuth2ProviderTokenRepository providerTokenRepository;
 
-  protected OAuth2ProviderToken fetchToken(String accessToken) {
+  protected OAuth2ProviderToken fetchTokenByAccessToken(String accessToken) {
     return this.providerTokenRepository
         .findByAccessToken(accessToken)
+        .orElseThrow(() -> new NoSuchEntityException(ApiExceptionType.NOT_FOUND_AUTH));
+  }
+
+  protected OAuth2ProviderToken fetchToken(String userOAuthId) {
+    return this.providerTokenRepository
+        .findById(userOAuthId)
         .orElseThrow(() -> new NoSuchEntityException(ApiExceptionType.NOT_FOUND_AUTH));
   }
 }

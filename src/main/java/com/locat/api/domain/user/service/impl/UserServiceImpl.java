@@ -1,7 +1,6 @@
 package com.locat.api.domain.user.service.impl;
 
 import com.locat.api.domain.auth.template.OAuth2TemplateFactory;
-import com.locat.api.domain.auth.template.OAuth2TemplateFactoryImpl;
 import com.locat.api.domain.user.entity.User;
 import com.locat.api.domain.user.service.UserInfoUpdateDto;
 import com.locat.api.domain.user.service.UserService;

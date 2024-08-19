@@ -48,6 +48,7 @@ public interface OAuth2Template {
 
   /**
    * 회원 탈퇴(OAuth2 연결 끊기, 토큰 삭제) 작업을 수행합니다.
+   *
    * @param userOAuthId 사용자의 OAuth ID
    */
   void withdrawal(final String userOAuthId);

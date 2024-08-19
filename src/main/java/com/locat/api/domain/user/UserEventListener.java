@@ -16,14 +16,14 @@ public class UserEventListener {
 
   private final UserService userService;
 
-  /**
-   * 사용자 인증 완료 시 사용자 활성화 처리 이벤트 핸들러
-   */
+  /** 사용자 인증 완료 시 사용자 활성화 처리 이벤트 핸들러 */
   @Async("asyncExcecutor")
   @EventListener(UserAuthenticatedEvent.class)
   public void handleUserAuthenticatedEvent(UserAuthenticatedEvent event) {
-    final User user = this.userService.findByEmail(event.getUserEmail())
-        .orElseThrow(() -> new NoSuchEntityException(ApiExceptionType.NOT_FOUND_USER));
+    final User user =
+        this.userService
+            .findByEmail(event.getUserEmail())
+            .orElseThrow(() -> new NoSuchEntityException(ApiExceptionType.NOT_FOUND_USER));
     user.activate();
   }
 }

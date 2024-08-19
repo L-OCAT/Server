@@ -16,8 +16,10 @@ import com.locat.api.infrastructure.external.AppleOAuth2Client;
 import com.locat.api.infrastructure.redis.OAuth2ProviderTokenRepository;
 import java.util.Arrays;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
+@Transactional
 public class AppleOAuth2Template extends AbstractOAuth2Template {
 
   public static final String APPLE_AUDIENCE = "https://appleid.apple.com";
@@ -53,7 +55,7 @@ public class AppleOAuth2Template extends AbstractOAuth2Template {
 
   @Override
   public OAuth2UserInfoDto fetchUserInfo(String accessToken) {
-    OAuth2ProviderToken providerToken = super.fetchToken(accessToken);
+    OAuth2ProviderToken providerToken = super.fetchTokenByAccessToken(accessToken);
     OAuth2ProviderJsonWebKey jsonWebKey = this.getMatchingJsonWebKey(providerToken.getIdToken());
     return OpenIDConnectTokenUtils.parseIdToken(
         providerToken.getIdToken(), jsonWebKey.n(), jsonWebKey.e());
@@ -61,7 +63,10 @@ public class AppleOAuth2Template extends AbstractOAuth2Template {
 
   @Override
   public OAuth2UserInfoDto fetchUserInfoByAdmin(String userOAuthId) {
-    throw new UnsupportedOperationException(UNSUPPORTED);
+    OAuth2ProviderToken providerToken = super.fetchToken(userOAuthId);
+    OAuth2ProviderJsonWebKey jsonWebKey = this.getMatchingJsonWebKey(providerToken.getIdToken());
+    return OpenIDConnectTokenUtils.parseIdToken(
+      providerToken.getIdToken(), jsonWebKey.n(), jsonWebKey.e());
   }
 
   @Override
@@ -72,6 +77,15 @@ public class AppleOAuth2Template extends AbstractOAuth2Template {
   @Override
   public OAuth2ProviderTermsAgreementDto fetchTermsAgreementByAdmin(String... userOAuthIds) {
     throw new UnsupportedOperationException(UNSUPPORTED);
+  }
+
+  @Override
+  public void withdrawal(String userOAuthId) {
+    final String clientSecret = AppleClientSecretProvider.create(super.oAuth2Properties);
+    OAuth2ProviderToken providerToken = super.fetchToken(userOAuthId);
+    this.revokeAccessToken(clientSecret, providerToken.getAccessToken());
+    this.revokeRefreshToken(clientSecret, providerToken.getRefreshToken());
+    this.providerTokenRepository.delete(providerToken);
   }
 
   /** Apple의 공개키 중, idToken 암호화 방식과 일치하는 공개키를 찾아 반환합니다. */
@@ -87,5 +101,21 @@ public class AppleOAuth2Template extends AbstractOAuth2Template {
             () ->
                 new AuthenticationException(
                     ApiExceptionType.CANNOT_PROCESS_JWT_NO_MATCHING_ALGORITHM));
+  }
+
+  private void revokeAccessToken(String clientSecret, String accessToken) {
+    this.appleOAuth2Client.revokeToken(
+        super.oAuth2Properties.getAppleClientId(),
+        clientSecret,
+        accessToken,
+        OAuth2Properties.APPLE_ACCESS_TOKEN_HINT);
+  }
+
+  private void revokeRefreshToken(String clientSecret, String refreshToken) {
+    this.appleOAuth2Client.revokeToken(
+        super.oAuth2Properties.getAppleClientId(),
+        clientSecret,
+        refreshToken,
+        OAuth2Properties.APPLE_REFRESH_TOKEN_HINT);
   }
 }

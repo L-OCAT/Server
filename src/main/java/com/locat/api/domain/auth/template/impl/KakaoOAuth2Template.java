@@ -12,8 +12,10 @@ import com.locat.api.infrastructure.external.KakaoUserClient;
 import com.locat.api.infrastructure.redis.OAuth2ProviderTokenRepository;
 import java.util.Arrays;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
+@Transactional
 public class KakaoOAuth2Template extends AbstractOAuth2Template {
 
   private final KakaoUserClient kakaoUserClient;

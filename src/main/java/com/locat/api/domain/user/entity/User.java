@@ -100,12 +100,11 @@ public class User extends SecuredBaseEntity {
 
   public static User fromOAuth(OAuth2UserInfoDto userInfo) {
     return User.builder()
-      .email(userInfo.getEmail())
-      .oauthId(userInfo.getId())
-      .oauthType(userInfo.getProvider())
-      .userType(UserType.USER)
-      .statusType(StatusType.PENDING)
-      .build();
+        .email(userInfo.getEmail())
+        .oauthId(userInfo.getId())
+        .oauthType(userInfo.getProvider())
+        .userType(UserType.USER)
+        .statusType(StatusType.PENDING)
+        .build();
   }
-
 }

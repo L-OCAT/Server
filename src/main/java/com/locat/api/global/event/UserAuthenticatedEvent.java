@@ -4,8 +4,7 @@ import lombok.Getter;
 import org.springframework.context.ApplicationEvent;
 
 /**
- * 사용자 인증 완료 이벤트
- * <br>
+ * 사용자 인증 완료 이벤트 <br>
  * 이메일 인증 완료 등 사용자 가입 및 인증 절차 완료 시 Publish
  */
 @Getter

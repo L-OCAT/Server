@@ -4,6 +4,7 @@ import com.locat.api.domain.auth.dto.AppleOAuth2TokenDto;
 import com.locat.api.domain.auth.dto.OAuth2ProviderJsonWebKey;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @FeignClient(name = "appleOAuth2Client", url = "https://appleid.apple.com/auth/oauth2/v2")
@@ -31,4 +32,11 @@ public interface AppleOAuth2Client {
       @RequestParam("grant_type") String grantType,
       @RequestParam("redirect_uri") String redirectUri,
       @RequestParam("refresh_token") String refreshToken);
+
+  @PostMapping("/revoke")
+  void revokeToken(
+      @RequestParam("client_id") String clientId,
+      @RequestParam("client_secret") String clientSecret,
+      @RequestParam("token") String token,
+      @RequestParam("token_type_hint") String tokenTypeHint);
 }
