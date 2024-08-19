@@ -30,6 +30,7 @@ val queryDSLVersion by extra("5.1.0")
 val jjwtVersion by extra("0.11.5")
 val j2htmlVersion by extra("1.6.0")
 val flywayDBVersion by extra("10.15.0")
+val awsSNSVersion by extra("2.21.42")
 
 repositories {
     mavenCentral()
@@ -65,6 +66,8 @@ dependencies {
     // Mail
     implementation("com.j2html:j2html:$j2htmlVersion")
     implementation("org.springframework.boot:spring-boot-starter-mail")
+    // AWS SNS
+    implementation("software.amazon.awssdk:sns:$awsSNSVersion")
     // DataBase Schema Migration
     implementation("org.flywaydb:flyway-mysql:$flywayDBVersion")
     implementation("org.flywaydb:flyway-core:$flywayDBVersion")
