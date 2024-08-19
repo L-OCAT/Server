@@ -1,4 +1,3 @@
 package com.locat.api.domain.lost;
 
-public class LostItemController {
-}
+public class LostItemController {}

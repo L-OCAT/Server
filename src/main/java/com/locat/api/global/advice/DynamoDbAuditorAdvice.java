@@ -6,6 +6,12 @@ import com.locat.api.global.annotations.LastModifiedBy;
 import com.locat.api.global.annotations.LastModifiedDate;
 import com.locat.api.global.exception.InternalProcessingException;
 import com.locat.api.global.security.LocatAuditorAware;
+import java.lang.reflect.Field;
+import java.time.Clock;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.util.Date;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
@@ -13,13 +19,6 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.stereotype.Component;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
-
-import java.lang.reflect.Field;
-import java.time.Clock;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
-import java.util.Date;
 
 @Aspect
 @Slf4j
@@ -68,9 +67,12 @@ public class DynamoDbAuditorAdvice {
   }
 
   private Long getCurrentAuditor() {
-    return locatAuditorAware.getCurrentAuditor()
-      .map(Long::parseLong)
-      .orElse(null);
+    return locatAuditorAware
+        .getCurrentAuditor()
+        .orElseThrow(
+            () ->
+                new InternalProcessingException(
+                    "Cannot get current auditor from SecurityContext."));
   }
 
   private void setFieldValue(Object arg, Field field, Object value) {

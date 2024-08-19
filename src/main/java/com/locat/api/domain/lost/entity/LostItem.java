@@ -4,13 +4,12 @@ import com.locat.api.global.annotations.CreatedBy;
 import com.locat.api.global.annotations.CreatedDate;
 import com.locat.api.global.annotations.LastModifiedBy;
 import com.locat.api.global.annotations.LastModifiedDate;
+import java.time.ZonedDateTime;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.geo.Point;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
-
-import java.time.ZonedDateTime;
 
 @DynamoDbBean
 @Getter
@@ -29,25 +28,22 @@ public class LostItem {
 
   private String description;
 
+  private Boolean isWillingToPayReward;
+
   private Point location;
 
   private String lostAt;
 
-  @CreatedDate
-  private ZonedDateTime createdAt;
+  @CreatedDate private ZonedDateTime createdAt;
 
-  @CreatedBy
-  private Long createdBy;
+  @CreatedBy private Long createdBy;
 
-  @LastModifiedDate
-  private ZonedDateTime updatedAt;
+  @LastModifiedDate private ZonedDateTime updatedAt;
 
-  @LastModifiedBy
-  private Long updatedBy;
+  @LastModifiedBy private Long updatedBy;
 
   @DynamoDbPartitionKey
   public Long getId() {
     return id;
   }
-
 }

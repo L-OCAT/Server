@@ -23,8 +23,8 @@ public class FoundItemController {
   }
 
   @PostMapping
-  public ResponseEntity<?> createFoundItem(@RequestParam MultipartFile foundItemImage, @RequestBody FoundItemRegisterRequest request) {
+  public ResponseEntity<?> createFoundItem(
+      @RequestBody FoundItemRegisterRequest request, @RequestParam MultipartFile foundItemImage) {
     return ResponseEntity.ok().build();
   }
-
 }

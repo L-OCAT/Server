@@ -5,9 +5,7 @@ import org.springframework.data.geo.Point;
 
 public final class GeoUtils {
 
-  /**
-   * 지구의 반지름 (단위: km)
-   */
+  /** 지구의 반지름 (단위: km) */
   private static final double EARTH_RADIUS = 6371.0;
 
   private GeoUtils() {
@@ -22,7 +20,8 @@ public final class GeoUtils {
    * @param radius 중심점을 기준으로 하는 반경 거리
    * @return 대상 좌표가 반경 내에 있으면 {@code true}, 그렇지 않으면 {@code false}를 반환
    */
-  public static boolean isInRadius(final Point centralPoint, final Point targetPoint, final Distance radius) {
+  public static boolean isInRadius(
+      final Point centralPoint, final Point targetPoint, final Distance radius) {
     return calculateDistanceBetween(centralPoint, targetPoint) <= radius.getValue();
   }
 
@@ -42,7 +41,9 @@ public final class GeoUtils {
     final double deltaLat = lat2 - lat1;
     final double deltaLon = lon2 - lon1;
 
-    final double a = Math.pow(Math.sin(deltaLat / 2), 2) + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(deltaLon / 2), 2);
+    final double a =
+        Math.pow(Math.sin(deltaLat / 2), 2)
+            + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(deltaLon / 2), 2);
     final double c = 2 * Math.asin(Math.sqrt(a));
 
     return EARTH_RADIUS * c;

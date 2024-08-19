@@ -1,5 +1,8 @@
 package com.locat.api.unit.utils;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+
 import com.locat.api.domain.lost.GeoUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -8,9 +11,6 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.data.geo.Distance;
 import org.springframework.data.geo.Metrics;
 import org.springframework.data.geo.Point;
-
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.within;
 
 class GeoUtilsTest {
 
@@ -47,8 +47,8 @@ class GeoUtilsTest {
 
   @ParameterizedTest
   @CsvSource({
-    "37.5665, 126.9780, 37.5665, 126.9780, 0.0",      // 같은 좌표
-    "37.5665, 126.9780, 37.5651, 126.9896, 1.034",   // 근거리
+    "37.5665, 126.9780, 37.5665, 126.9780, 0.0", // 같은 좌표
+    "37.5665, 126.9780, 37.5651, 126.9896, 1.034", // 근거리
     "37.5665, 126.9780, 37.7749, -122.4194, 9028.92" // 장거리
   })
   @DisplayName("두 좌표 간의 거리를 정확히 계산해야 한다.")
