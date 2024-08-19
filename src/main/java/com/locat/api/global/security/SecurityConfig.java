@@ -1,10 +1,17 @@
 package com.locat.api.global.security;
 
+import static org.springframework.http.HttpMethod.*;
+
+import com.locat.api.global.auth.LocatUserDetailsService;
+import com.locat.api.global.auth.jwt.JwtProvider;
+import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.authorization.AuthorizationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -14,22 +21,23 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.List;
-
-import static org.springframework.http.HttpMethod.*;
-
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = true)
+@RequiredArgsConstructor
 public class SecurityConfig {
 
   private static final List<String> DEFAULT_PERMIT_METHODS =
-      List.of(GET.name(), HEAD.name(), POST.name(), PATCH.name(), DELETE.name());
+      List.of(GET.name(), HEAD.name(), POST.name(), PUT.name(), PATCH.name(), DELETE.name());
+
+  private final JwtProvider jwtProvider;
+  private final LocatUserDetailsService userDetailsService;
 
   /** 비밀번호 등 해시화를 위한 PasswordEncoder */
   @Bean
@@ -48,14 +56,23 @@ public class SecurityConfig {
         .cors(cors -> cors.configurationSource(corsConfigurationSource()))
         .sessionManagement(
             session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .oauth2Client(Customizer.withDefaults())
         .authorizeHttpRequests(
             authorize ->
                 authorize
-                    .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                    .requestMatchers("/login/**", "/oauth2/**").permitAll()
-                    .requestMatchers("/api/**").authenticated()
-                    .requestMatchers("/actuator/**").access(localHostOnly)
-                    .anyRequest().denyAll())
+                    .requestMatchers(CorsUtils::isPreFlightRequest)
+                    .permitAll()
+                    .requestMatchers("/login/**", "/oauth2/**")
+                    .permitAll()
+                    .requestMatchers("/api/**")
+                    .authenticated()
+                    .requestMatchers("/actuator/**")
+                    .access(this.localHostOnly)
+                    .anyRequest()
+                    .denyAll())
+        .addFilterBefore(
+            new JwtAuthenticationFilter(this.jwtProvider, this.userDetailsService),
+            UsernamePasswordAuthenticationFilter.class)
         .exceptionHandling(
             exception ->
                 exception
@@ -73,13 +90,13 @@ public class SecurityConfig {
    */
   @Bean
   @Profile("local")
-  protected SecurityFilterChain configureDev(HttpSecurity http) throws Exception {
+  protected SecurityFilterChain configureLocal(HttpSecurity http) throws Exception {
     return http.httpBasic(AbstractHttpConfigurer::disable)
         .csrf(AbstractHttpConfigurer::disable)
         .formLogin(AbstractHttpConfigurer::disable)
         .sessionManagement(
             session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .authorizeHttpRequests(authorize -> authorize.anyRequest().access(localHostOnly))
+        .authorizeHttpRequests(authorize -> authorize.anyRequest().access(this.localHostOnly))
         .build();
   }
 
@@ -87,7 +104,7 @@ public class SecurityConfig {
   @Bean
   protected CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration corsConfiguration = new CorsConfiguration();
-    corsConfiguration.addAllowedOriginPattern("*");   // update 필요
+    corsConfiguration.addAllowedOriginPattern("*"); // update 필요
     corsConfiguration.addAllowedHeader("*");
     corsConfiguration.setAllowedMethods(DEFAULT_PERMIT_METHODS);
     corsConfiguration.setAllowCredentials(true);

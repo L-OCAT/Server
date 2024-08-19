@@ -1,10 +1,10 @@
 package com.locat.api.unit.utils;
 
-import com.locat.api.global.utils.LocatSpelParser;
-import org.junit.jupiter.api.Test;
-
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+
+import com.locat.api.global.utils.LocatSpelParser;
+import org.junit.jupiter.api.Test;
 
 class SpelParserTest {
 

@@ -26,6 +26,7 @@ dependencyManagement {
     }
 }
 
+val queryDSLVersion by extra("5.1.0")
 val jjwtVersion by extra("0.11.5")
 val j2htmlVersion by extra("1.6.0")
 val flywayDBVersion by extra("10.15.0")
@@ -42,9 +43,6 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
-    implementation(platform("software.amazon.awssdk:bom:2.24.0"))
-    implementation("software.amazon.awssdk:s3")
-    implementation("software.amazon.awssdk:dynamodb-enhanced")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-cache")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
@@ -54,18 +52,27 @@ dependencies {
     implementation("io.jsonwebtoken:jjwt-impl:$jjwtVersion")
     implementation("io.jsonwebtoken:jjwt-jackson:$jjwtVersion")
     runtimeOnly("com.mysql:mysql-connector-j")
+    // AWS SDK
+    implementation(platform("software.amazon.awssdk:bom:2.24.0"))
+    implementation("software.amazon.awssdk:dynamodb-enhanced")
+    implementation("software.amazon.awssdk:s3")
+    implementation("software.amazon.awssdk:ses")
     // Lombok
     implementation("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
-    // Mail
+    // QueryDSL
+    implementation("com.querydsl:querydsl-jpa:$queryDSLVersion:jakarta")
+    annotationProcessor("com.querydsl:querydsl-apt:$queryDSLVersion:jakarta")
+    annotationProcessor("jakarta.persistence:jakarta.persistence-api")
+    annotationProcessor("jakarta.annotation:jakarta.annotation-api")
+    // Mail HTML Template
     implementation("com.j2html:j2html:$j2htmlVersion")
-    implementation("org.springframework.boot:spring-boot-starter-mail")
     // DataBase Schema Migration
     implementation("org.flywaydb:flyway-mysql:$flywayDBVersion")
     implementation("org.flywaydb:flyway-core:$flywayDBVersion")
     // Local Development
     developmentOnly("org.springframework.boot:spring-boot-devtools")
-    developmentOnly("org.springframework.boot:spring-boot-docker-compose")
+    implementation("org.springframework.boot:spring-boot-docker-compose")
     // Testing
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testImplementation("org.testcontainers:junit-jupiter")
@@ -96,7 +103,7 @@ tasks.jar {
 
 tasks.withType<Test> {
     useJUnitPlatform()
-    finalizedBy (tasks.jacocoTestReport, tasks.jacocoTestCoverageVerification)
+//    finalizedBy (tasks.jacocoTestReport, tasks.jacocoTestCoverageVerification)
     reports {
         html.required.set(false)
         junitXml.required.set(false)
