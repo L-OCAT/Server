@@ -6,6 +6,7 @@ import com.locat.api.domain.user.dto.KakaoUserTermsAgreementDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -30,4 +31,7 @@ public interface KakaoUserClient {
       @RequestHeader(OAuth2Properties.KAKAO_ADMIN_KEY) String adminKey,
       @RequestParam("target_id_type") String targetIdType,
       @RequestParam("target_id") Long[] targetIds);
+
+  @PostMapping("/v1/user/unlink")
+  void withdrawal(@RequestHeader(HttpHeaders.AUTHORIZATION) String accessToken);
 }

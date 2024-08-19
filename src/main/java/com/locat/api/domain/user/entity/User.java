@@ -9,6 +9,7 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.*;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SQLSelect;
 
 @Entity
@@ -27,6 +28,7 @@ import org.hibernate.annotations.SQLSelect;
           name = "unique_nickname",
           columnNames = {"nickname"})
     })
+@DynamicUpdate
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLSelect(sql = "SELECT * FROM user WHERE deleted_at IS NULL")
@@ -73,17 +75,37 @@ public class User extends SecuredBaseEntity {
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<UserTermsAgreement> termsAgreements = new ArrayList<>();
 
-  public static User fromOAuth(OAuth2UserInfoDto userInfo) {
-    return User.builder()
-        .email(userInfo.getEmail())
-        .oauthId(userInfo.getId())
-        .oauthType(userInfo.getProvider())
-        .userType(UserType.USER)
-        .statusType(StatusType.PENDING)
-        .build();
+  public void activate() {
+    this.statusType = StatusType.ACTIVE;
+  }
+
+  public boolean isActivated() {
+    return this.statusType == StatusType.ACTIVE;
+  }
+
+  public User update(String email, String nickname) {
+    if (email != null) {
+      this.email = email;
+    }
+    if (nickname != null) {
+      this.nickname = nickname;
+    }
+    return this;
   }
 
   public void delete() {
+    this.statusType = StatusType.INACTIVE;
     this.deletedAt = ZonedDateTime.now();
   }
+
+  public static User fromOAuth(OAuth2UserInfoDto userInfo) {
+    return User.builder()
+      .email(userInfo.getEmail())
+      .oauthId(userInfo.getId())
+      .oauthType(userInfo.getProvider())
+      .userType(UserType.USER)
+      .statusType(StatusType.PENDING)
+      .build();
+  }
+
 }

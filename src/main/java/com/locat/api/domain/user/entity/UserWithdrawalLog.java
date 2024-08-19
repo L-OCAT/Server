@@ -23,4 +23,8 @@ public class UserWithdrawalLog extends SecuredBaseEntity {
   @NotNull @Lob
   @Column(name = "reason", nullable = false)
   private String reason;
+
+  public static UserWithdrawalLog of(final Long userId, final String reason) {
+    return UserWithdrawalLog.builder().userId(userId).reason(reason).build();
+  }
 }

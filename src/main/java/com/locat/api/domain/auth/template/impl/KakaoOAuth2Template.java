@@ -69,4 +69,10 @@ public class KakaoOAuth2Template extends AbstractOAuth2Template {
         OAuth2Properties.KAKAO_TARGET_ID_TYPE,
         Arrays.stream(userOAuthIds).map(Long::parseLong).toArray(Long[]::new));
   }
+
+  @Override
+  public void withdrawal(String userOAuthId) {
+    this.kakaoUserClient.withdrawal(userOAuthId);
+    this.providerTokenRepository.deleteById(userOAuthId);
+  }
 }

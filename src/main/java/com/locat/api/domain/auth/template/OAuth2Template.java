@@ -45,4 +45,10 @@ public interface OAuth2Template {
    * @return 약관 동의 정보
    */
   OAuth2ProviderTermsAgreementDto fetchTermsAgreementByAdmin(final String... userOAuthIds);
+
+  /**
+   * 회원 탈퇴(OAuth2 연결 끊기, 토큰 삭제) 작업을 수행합니다.
+   * @param userOAuthId 사용자의 OAuth ID
+   */
+  void withdrawal(final String userOAuthId);
 }
