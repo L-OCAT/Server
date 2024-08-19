@@ -2,7 +2,6 @@ package com.locat.api.global.auth.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.UnsupportedJwtException;
 import jakarta.servlet.http.HttpServletRequest;
 
 public interface JwtProvider {
@@ -13,7 +12,9 @@ public interface JwtProvider {
    * @param userEmail 사용자 이메일
    * @return 토큰 발급 응답 DTO
    */
-  JwtDto create(String userEmail);
+  LocatTokenDto create(String userEmail);
+
+  LocatTokenDto renew(String oldAccessToken, String refreshToken);
 
   /**
    * {@link HttpServletRequest}의 Authorization Header에서 토큰을 추출합니다.
@@ -31,13 +32,4 @@ public interface JwtProvider {
    * @throws ExpiredJwtException 만료된 토큰을 사용할 경우
    */
   Claims parse(String token);
-
-  /**
-   * 토큰의 유효성을 검증하고, 상황에 따라 예외를 던집니다.
-   *
-   * @throws SecurityException 유효하지 않은 토큰을 사용할 경우
-   * @throws UnsupportedJwtException 지원되지 않는 토큰을 사용할 경우
-   * @throws ExpiredJwtException 만료된 토큰을 사용할 경우
-   */
-  void validate(String token);
 }

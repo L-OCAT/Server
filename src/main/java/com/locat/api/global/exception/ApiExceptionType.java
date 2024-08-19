@@ -11,8 +11,11 @@ public enum ApiExceptionType {
   FILE_EXTENSION_NOT_PROVIDED(400, "File Extension Not Provided", 400001),
   FILE_SIZE_LIMIT_EXCEEDED(400, "File Size Limit Exceeded", 400002),
   FILE_EXTENSION_NOT_SUPPORTED(400, "File Extension Not Supported", 400003),
+  INVALID_EMAIL_VERIFICATION_CODE(400, "Provided Verification Code is Not Matched", 400004),
 
   UNAUTHORIZED(401, "Unauthorized", 401000),
+  INVALID_TOKEN(401, "Invalid JWT", 401001),
+  INVALID_REFRESH_TOKEN(401, "Invalid Refresh Token (Expired or Not Matched)", 401002),
 
   FORBIDDEN(403, "Forbidden", 403000),
 
@@ -21,6 +24,11 @@ public enum ApiExceptionType {
   NOT_FOUND_FILE(404, "File Not Found", 404002),
 
   NOT_ALLOWED_METHOD(405, "Method Not Allowed", 405000),
+
+  CONFLICT(409, "Conflict", 409000),
+
+  TOO_MANY_REQUESTS(429, "Too Many Requests", 429000),
+  VERIFICATION_EMAIL_ALREADY_SENT(429, "Email Verification Code Already Sent", 429001),
 
   INTERNAL_SERVER_ERROR(500, "Internal Server Error", 500000),
   FAIL_TO_CONSTRUCT_EMAIL(500, "Failed to Construct Mail", 500001),

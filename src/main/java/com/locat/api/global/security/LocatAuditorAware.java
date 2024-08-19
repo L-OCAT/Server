@@ -1,15 +1,15 @@
 package com.locat.api.global.security;
 
+import com.locat.api.global.auth.LocatUserDetails;
+import java.util.Optional;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-
 /** Auditing을 위한 현재 사용자 정보를 제공하는 클래스입니다.<br> */
 @Component
-public class LocatAuditorAware implements AuditorAware<String> {
+public class LocatAuditorAware implements AuditorAware<Long> {
 
   /**
    * Spring Security의 {@link SecurityContextHolder}를 사용하여 현재 사용자 정보를 가져옵니다. <br>
@@ -19,9 +19,11 @@ public class LocatAuditorAware implements AuditorAware<String> {
    * @return 현재 사용자 정보
    */
   @Override
-  public Optional<String> getCurrentAuditor() {
+  public Optional<Long> getCurrentAuditor() {
     return Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
         .filter(Authentication::isAuthenticated)
-        .map(Authentication::getName);
+        .map(Authentication::getPrincipal)
+        .map(LocatUserDetails.class::cast)
+        .map(LocatUserDetails::getId);
   }
 }
