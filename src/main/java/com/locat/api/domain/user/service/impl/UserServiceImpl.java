@@ -2,6 +2,8 @@ package com.locat.api.domain.user.service.impl;
 
 import com.locat.api.domain.user.entity.User;
 import com.locat.api.domain.user.service.UserService;
+import com.locat.api.global.exception.ApiExceptionType;
+import com.locat.api.global.exception.NoSuchEntityException;
 import com.locat.api.infrastructure.repository.user.UserRepository;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,14 @@ public class UserServiceImpl implements UserService {
   @Override
   public User save(User user) {
     return this.userRepository.save(user);
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public User findById(final Long id) {
+    return this.userRepository
+        .findById(id)
+        .orElseThrow(() -> new NoSuchEntityException(ApiExceptionType.NOT_FOUND_USER));
   }
 
   @Override

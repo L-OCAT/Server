@@ -2,6 +2,8 @@ package com.locat.api.infrastructure.aws.dynamodb;
 
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 /**
  * DynamoDB에 저장하는 Item에 대한 기본적인 CRUD 작업을 제공하는 인터페이스
@@ -12,40 +14,49 @@ import java.util.Optional;
 public interface DynamoDbCrudRepository<T, ID> {
 
   /**
-   * Entity를 저장합니다.
+   * Item를 저장합니다.
    *
-   * @param entity 저장할 Entity
-   * @return 저장된 Entity
+   * @param Item 저장할 Item
+   * @return 저장된 Item
    */
-  T save(T entity);
+  T save(T item);
 
   /**
-   * Entity를 식별자로 조회합니다.
+   * Item를 식별자로 조회합니다.
    *
-   * @param id 조회할 Entity의 식별자 (never {@code null})
-   * @return 조회된 Entity, 없을 경우 {@link Optional#empty()}
+   * @param id 조회할 Item의 식별자 (never {@code null})
+   * @return 조회된 Item, 없을 경우 {@link Optional#empty()}
    */
   Optional<T> findById(ID id);
 
   /**
-   * 모든 Entity를 조회합니다.
+   * 모든 Item를 조회합니다.
    *
-   * @return 모든 Entity 목록
+   * @return 모든 Item 목록
    */
   List<T> findAll();
 
-  /**
-   * Entity를 수정합니다.
-   *
-   * @param entity 수정할 Entity
-   * @return 수정된 Entity
-   */
-  T update(T entity);
+  Page<T> findAll(Pageable pageable);
 
   /**
-   * Entity를 식별자로 삭제합니다.
+   * Item를 수정합니다.
    *
-   * @param id 삭제할 Entity의 식별자 (never {@code null})
+   * @param Item 수정할 Item
+   * @return 수정된 Item
+   */
+  T update(T item);
+
+  /**
+   * Item를 식별자로 삭제합니다.
+   *
+   * @param id 삭제할 Item의 식별자 (never {@code null})
    */
   void delete(ID id);
+
+  /**
+   * Item의 총 개수를 조회합니다.
+   *
+   * @return Item의 총 개수
+   */
+  Long countAll();
 }

@@ -1,4 +1,4 @@
-package com.locat.api.domain.lost;
+package com.locat.api.domain.geo.base.utils;
 
 import org.springframework.data.geo.Distance;
 import org.springframework.data.geo.Point;

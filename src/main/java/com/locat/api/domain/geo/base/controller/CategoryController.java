@@ -1,6 +1,9 @@
-package com.locat.api.domain.lost;
+package com.locat.api.domain.geo.base.controller;
 
 import com.locat.api.domain.core.BaseResponse;
+import com.locat.api.domain.geo.base.dto.CategoryInfoResponse;
+import com.locat.api.domain.geo.base.service.CategoryService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,7 +20,9 @@ public class CategoryController {
 
   @GetMapping
   @PreAuthorize("isAuthenticated()")
-  public ResponseEntity<BaseResponse<?>> findAll() {
-    return ResponseEntity.ok().build();
+  public ResponseEntity<BaseResponse<List<CategoryInfoResponse>>> findAll() {
+    List<CategoryInfoResponse> categoryInfoResponses =
+        CategoryInfoResponse.fromList(this.categoryService.findAll());
+    return ResponseEntity.ok(BaseResponse.of(categoryInfoResponses));
   }
 }

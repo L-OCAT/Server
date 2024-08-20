@@ -1,5 +1,6 @@
-package com.locat.api.domain.lost.entity;
+package com.locat.api.domain.geo.found;
 
+import com.locat.api.domain.user.entity.User;
 import com.locat.api.global.annotations.CreatedBy;
 import com.locat.api.global.annotations.CreatedDate;
 import com.locat.api.global.annotations.LastModifiedBy;
@@ -14,7 +15,7 @@ import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbParti
 @DynamoDbBean
 @Getter
 @Builder
-public class LostItem {
+public class FoundItem {
 
   private Long id;
 
@@ -28,11 +29,13 @@ public class LostItem {
 
   private String description;
 
-  private Boolean isWillingToPayReward;
+  private String custodyLocation;
 
   private Point location;
 
-  private String lostAt;
+  private ZonedDateTime foundAt;
+
+  private String imageUrl;
 
   @CreatedDate private ZonedDateTime createdAt;
 
@@ -44,6 +47,19 @@ public class LostItem {
 
   @DynamoDbPartitionKey
   public Long getId() {
-    return id;
+    return this.id;
+  }
+
+  public static FoundItem of(User user, FoundItemRegisterRequest request, String imageUrl) {
+    return FoundItem.builder()
+        .userId(user.getId())
+        .categoryId(request.categoryId())
+        .colorId(request.colorId())
+        .itemName(request.itemName())
+        .description(request.description())
+        .custodyLocation(request.custodyLocation())
+        .imageUrl(imageUrl)
+        .foundAt(ZonedDateTime.now())
+        .build();
   }
 }

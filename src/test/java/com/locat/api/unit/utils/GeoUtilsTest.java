@@ -3,7 +3,7 @@ package com.locat.api.unit.utils;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.within;
 
-import com.locat.api.domain.lost.GeoUtils;
+import com.locat.api.domain.geo.base.utils.GeoUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

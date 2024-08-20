@@ -1,11 +1,7 @@
-package com.locat.api.domain.lost;
+package com.locat.api.domain.geo.found;
 
 public record FoundItemRegisterDto(
-    Long categoryId,
-    Long colorId,
-    String itemName,
-    String description,
-    String custodyLocation) {
+    Long categoryId, Long colorId, String itemName, String description, String custodyLocation) {
 
   public static FoundItemRegisterDto from(FoundItemRegisterRequest request) {
     return new FoundItemRegisterDto(

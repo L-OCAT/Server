@@ -1,4 +1,4 @@
-package com.locat.api.domain.lost.entity;
+package com.locat.api.domain.geo.base.entity;
 
 import com.locat.api.domain.core.SecuredBaseEntity;
 import jakarta.persistence.*;
@@ -9,24 +9,19 @@ import lombok.*;
 @Entity
 @Getter
 @Builder
-@Table(name = "contact_center")
+@Table(name = "category")
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ContactCenter extends SecuredBaseEntity {
+public class Category extends SecuredBaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id", columnDefinition = "int UNSIGNED not null")
   private Long id;
 
-  @Size(max = 100)
-  @NotNull @Column(name = "name", nullable = false, length = 100)
+  @Size(max = 80)
+  @NotNull @Column(name = "name", nullable = false, length = 80)
   private String name;
 
-  @Size(max = 100)
-  @NotNull @Column(name = "contact", nullable = false, length = 100)
-  private String contact;
-
-  @Size(max = 255)
-  @NotNull @Column(name = "address", nullable = false)
-  private String address;
+  @Column(name = "parent_id", columnDefinition = "int UNSIGNED")
+  private Long parentId;
 }

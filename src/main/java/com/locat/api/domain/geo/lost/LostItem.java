@@ -1,4 +1,4 @@
-package com.locat.api.domain.lost.entity;
+package com.locat.api.domain.geo.lost;
 
 import com.locat.api.global.annotations.CreatedBy;
 import com.locat.api.global.annotations.CreatedDate;
@@ -7,13 +7,14 @@ import com.locat.api.global.annotations.LastModifiedDate;
 import java.time.ZonedDateTime;
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.data.geo.Point;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
 
 @DynamoDbBean
 @Getter
 @Builder
-public class FoundItem {
+public class LostItem {
 
   private Long id;
 
@@ -27,9 +28,11 @@ public class FoundItem {
 
   private String description;
 
-  private String custodyLocation;
+  private Boolean isWillingToPayReward;
 
-  private String foundAt;
+  private Point location;
+
+  private String lostAt;
 
   @CreatedDate private ZonedDateTime createdAt;
 
@@ -41,6 +44,6 @@ public class FoundItem {
 
   @DynamoDbPartitionKey
   public Long getId() {
-    return this.id;
+    return id;
   }
 }

@@ -23,6 +23,7 @@ public enum ApiExceptionType {
   NOT_FOUND_USER(404, "User Not Found", 404001),
   NOT_FOUND_FILE(404, "File Not Found", 404002),
   NOT_FOUND_AUTH(404, "Authorization Method Not Found", 404003),
+  NOT_FOUND_ITEM_FOUND(404, "Found Item Not Found", 404004),
 
   NOT_ALLOWED_METHOD(405, "Method Not Allowed", 405000),
 

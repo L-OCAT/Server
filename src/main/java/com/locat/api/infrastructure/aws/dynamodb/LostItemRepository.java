@@ -1,6 +1,6 @@
 package com.locat.api.infrastructure.aws.dynamodb;
 
-import com.locat.api.domain.lost.entity.LostItem;
+import com.locat.api.domain.geo.lost.LostItem;
 import java.util.List;
 import org.springframework.data.geo.Distance;
 import org.springframework.data.geo.Point;

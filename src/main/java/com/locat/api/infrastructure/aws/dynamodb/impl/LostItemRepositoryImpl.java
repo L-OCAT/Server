@@ -1,13 +1,14 @@
 package com.locat.api.infrastructure.aws.dynamodb.impl;
 
-import com.locat.api.domain.lost.GeoUtils;
-import com.locat.api.domain.lost.entity.LostItem;
+import com.locat.api.domain.geo.base.utils.GeoUtils;
+import com.locat.api.domain.geo.lost.LostItem;
 import com.locat.api.infrastructure.aws.dynamodb.LostItemRepository;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.geo.Distance;
 import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
 import software.amazon.awssdk.enhanced.dynamodb.Key;
@@ -16,13 +17,16 @@ import software.amazon.awssdk.enhanced.dynamodb.model.PutItemEnhancedRequest;
 import software.amazon.awssdk.enhanced.dynamodb.model.UpdateItemEnhancedRequest;
 
 @Repository
+@Transactional
 public class LostItemRepositoryImpl implements LostItemRepository {
+
+  public static final String LOST_ITEM_TABLE = "LOST_ITEM";
 
   private final DynamoDbTable<LostItem> lostDynamoDbTable;
 
   public LostItemRepositoryImpl(DynamoDbEnhancedClient dbEnhancedClient) {
     this.lostDynamoDbTable =
-        dbEnhancedClient.table("LOST_ITEM", TableSchema.fromBean(LostItem.class));
+        dbEnhancedClient.table(LOST_ITEM_TABLE, TableSchema.fromBean(LostItem.class));
   }
 
   @Override
@@ -40,7 +44,7 @@ public class LostItemRepositoryImpl implements LostItemRepository {
 
   @Override
   public List<LostItem> findAll() {
-    return this.lostDynamoDbTable.scan(r -> r.limit(50)).items().stream().toList();
+    return this.lostDynamoDbTable.scan().items().stream().toList();
   }
 
   @Override
@@ -54,6 +58,11 @@ public class LostItemRepositoryImpl implements LostItemRepository {
   public void delete(Long partionKey) {
     Key key = Key.builder().partitionValue(partionKey).sortValue(1).build();
     this.lostDynamoDbTable.deleteItem(key);
+  }
+
+  @Override
+  public Long countAll() {
+    return this.lostDynamoDbTable.scan().items().stream().count();
   }
 
   @Override
