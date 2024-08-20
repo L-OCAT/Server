@@ -73,6 +73,7 @@ public class SecurityConfig {
         .addFilterBefore(
             new JwtAuthenticationFilter(this.jwtProvider, this.userDetailsService),
             UsernamePasswordAuthenticationFilter.class)
+        .addFilterAfter(new ActiveUserFilter(), JwtAuthenticationFilter.class)
         .exceptionHandling(
             exception ->
                 exception

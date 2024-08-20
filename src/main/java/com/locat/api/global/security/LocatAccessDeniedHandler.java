@@ -23,7 +23,7 @@ public class LocatAccessDeniedHandler implements AccessDeniedHandler {
     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
     response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 
-    out.print(ErrorResponse.forbidden());
+    out.print(ErrorResponse.forbidden(accessDeniedException.getLocalizedMessage()));
     out.flush();
     out.close();
   }

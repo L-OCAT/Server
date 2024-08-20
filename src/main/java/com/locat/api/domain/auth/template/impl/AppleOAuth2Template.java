@@ -66,7 +66,7 @@ public class AppleOAuth2Template extends AbstractOAuth2Template {
     OAuth2ProviderToken providerToken = super.fetchToken(userOAuthId);
     OAuth2ProviderJsonWebKey jsonWebKey = this.getMatchingJsonWebKey(providerToken.getIdToken());
     return OpenIDConnectTokenUtils.parseIdToken(
-      providerToken.getIdToken(), jsonWebKey.n(), jsonWebKey.e());
+        providerToken.getIdToken(), jsonWebKey.n(), jsonWebKey.e());
   }
 
   @Override

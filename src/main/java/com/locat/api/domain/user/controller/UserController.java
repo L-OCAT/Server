@@ -1,5 +1,6 @@
 package com.locat.api.domain.user.controller;
 
+import com.locat.api.domain.core.BaseResponse;
 import com.locat.api.domain.user.dto.request.UserInfoUpdateRequest;
 import com.locat.api.domain.user.dto.request.UserWithDrawalRequest;
 import com.locat.api.domain.user.dto.response.UserInfoResponse;
@@ -22,31 +23,31 @@ public class UserController {
 
   /** 내 정보 조회 */
   @GetMapping
-  @PreAuthorize("isAuthenticated() && #userDetails.user.isActivated()")
-  public ResponseEntity<UserInfoResponse> me(
+  @PreAuthorize("isAuthenticated()")
+  public ResponseEntity<BaseResponse<UserInfoResponse>> me(
       @AuthenticationPrincipal LocatUserDetails userDetails) {
     final long userId = userDetails.getId();
     UserInfoResponse userInfoResponse =
         UserInfoResponse.fromEntity(this.userService.findById(userId));
-    return ResponseEntity.ok(userInfoResponse);
+    return ResponseEntity.ok(BaseResponse.of(userInfoResponse));
   }
 
   /** 내 정보(이메일 또는 닉네임) 수정 */
   @PatchMapping
-  @PreAuthorize("isAuthenticated() && #userDetails.user.isActivated()")
-  public ResponseEntity<UserInfoResponse> updateMe(
+  @PreAuthorize("isAuthenticated()")
+  public ResponseEntity<BaseResponse<UserInfoResponse>> updateMe(
       @AuthenticationPrincipal LocatUserDetails userDetails,
       @RequestBody @Valid final UserInfoUpdateRequest request) {
     final long userId = userDetails.getId();
     UserInfoResponse userInfoResponse =
         UserInfoResponse.fromEntity(
             this.userService.update(userId, UserInfoUpdateDto.from(request)));
-    return ResponseEntity.ok(userInfoResponse);
+    return ResponseEntity.ok(BaseResponse.of(userInfoResponse));
   }
 
   /** 회원 탈퇴 */
   @PutMapping("/delete")
-  @PreAuthorize("isAuthenticated() && #userDetails.user.isActivated()")
+  @PreAuthorize("isAuthenticated()")
   public ResponseEntity<Void> deleteMe(
       @AuthenticationPrincipal LocatUserDetails userDetails,
       @RequestBody @Valid final UserWithDrawalRequest request) {
