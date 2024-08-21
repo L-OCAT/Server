@@ -1,15 +1,17 @@
-package com.locat.api.domain.geo.found;
+package com.locat.api.domain.geo.found.service.impl;
 
+import com.locat.api.domain.geo.found.dto.FoundItemRegisterRequest;
+import com.locat.api.domain.geo.found.dto.FoundItemSearchDto;
+import com.locat.api.domain.geo.found.entity.FoundItem;
+import com.locat.api.domain.geo.found.service.FoundItemService;
 import com.locat.api.domain.user.entity.User;
 import com.locat.api.domain.user.service.UserService;
 import com.locat.api.global.exception.ApiExceptionType;
 import com.locat.api.global.exception.NoSuchEntityException;
 import com.locat.api.global.file.FileService;
-import com.locat.api.infrastructure.aws.dynamodb.FoundItemRepository;
+import com.locat.api.infrastructure.repository.geo.found.FoundItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,10 +36,8 @@ public class FoundItemServiceImpl implements FoundItemService {
   }
 
   @Override
-  public Page<FoundItem> findAllByCondition(FoundItemSearchDto searchDto, Pageable pageable) {
-    final long totalCount = this.foundItemRepository.countAll();
-    this.foundItemRepository.findByLocationNear(searchDto.location(), searchDto.distance());
-    return new PageImpl<>(this.foundItemRepository.findAll(), pageable, totalCount);
+  public Page<FoundItem> findAllByCondition(FoundItemSearchDto searchDto) {
+    return null;
   }
 
   @Override
@@ -46,6 +46,7 @@ public class FoundItemServiceImpl implements FoundItemService {
     User user = this.userService.findById(userId);
 
     final String imageUrl = this.fileService.upload(FOUND_ITEM_IMAGE_DIRECTORY, foundItemImage);
-    return this.foundItemRepository.save(FoundItem.of(user, request, imageUrl)).getId();
+    //    return this.foundItemRepository.save(FoundItem.of(user, request, imageUrl)).getId();
+    return null;
   }
 }

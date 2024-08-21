@@ -1,14 +1,16 @@
-package com.locat.api.domain.geo.found;
+package com.locat.api.domain.geo.found.service;
 
+import com.locat.api.domain.geo.found.dto.FoundItemRegisterRequest;
+import com.locat.api.domain.geo.found.dto.FoundItemSearchDto;
+import com.locat.api.domain.geo.found.entity.FoundItem;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface FoundItemService {
 
   FoundItem findById(final Long id);
 
-  Page<FoundItem> findAllByCondition(FoundItemSearchDto searchDto, Pageable pageable);
+  Page<FoundItem> findAllByCondition(FoundItemSearchDto searchDto);
 
   /**
    * 습득물 정보를 등록합니다.

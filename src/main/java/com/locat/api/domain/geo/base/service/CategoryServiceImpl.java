@@ -1,7 +1,7 @@
 package com.locat.api.domain.geo.base.service;
 
 import com.locat.api.domain.geo.base.dto.CategoryInfoDto;
-import com.locat.api.infrastructure.repository.lost.CustomCategoryRepository;
+import com.locat.api.infrastructure.repository.geo.base.CustomCategoryRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

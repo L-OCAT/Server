@@ -27,6 +27,7 @@ dependencyManagement {
 }
 
 val queryDSLVersion by extra("5.1.0")
+val hibernateSpatialVersion by extra("6.6.0.Final")
 val jjwtVersion by extra("0.11.5")
 val j2htmlVersion by extra("1.6.0")
 val flywayDBVersion by extra("10.15.0")
@@ -42,6 +43,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.hibernate.orm:hibernate-spatial:$hibernateSpatialVersion")
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-cache")
@@ -54,7 +56,6 @@ dependencies {
     runtimeOnly("com.mysql:mysql-connector-j")
     // AWS SDK
     implementation(platform("software.amazon.awssdk:bom:2.24.0"))
-    implementation("software.amazon.awssdk:dynamodb-enhanced")
     implementation("software.amazon.awssdk:s3")
     implementation("software.amazon.awssdk:ses")
     // Lombok

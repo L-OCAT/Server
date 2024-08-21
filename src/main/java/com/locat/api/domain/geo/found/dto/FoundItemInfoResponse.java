@@ -1,5 +1,6 @@
-package com.locat.api.domain.geo.found;
+package com.locat.api.domain.geo.found.dto;
 
+import com.locat.api.domain.geo.found.entity.FoundItem;
 import lombok.Builder;
 
 @Builder
@@ -14,5 +15,7 @@ public record FoundItemInfoResponse(
     String foundAt,
     String createdAt,
     String updatedAt) {
-  public static FoundItemInfoResponse fromEntity(FoundItem foundItem) {}
+  public static FoundItemInfoResponse fromEntity(FoundItem foundItem) {
+    return null;
+  }
 }
