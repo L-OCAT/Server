@@ -18,6 +18,7 @@ public class CategoryController {
 
   private final CategoryService categoryService;
 
+  /** 전체 카테고리 조회 */
   @GetMapping
   @PreAuthorize("isAuthenticated()")
   public ResponseEntity<BaseResponse<List<CategoryInfoResponse>>> findAll() {

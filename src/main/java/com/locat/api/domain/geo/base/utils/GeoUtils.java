@@ -58,4 +58,14 @@ public final class GeoUtils {
   public static double toKilometer(final double meter) {
     return meter / 1000;
   }
+
+  /**
+   * 킬로미터 단위의 거리를 미터 단위로 변환합니다.
+   *
+   * @param kilometer 킬로미터 단위의 거리
+   * @return 미터 단위의 거리
+   */
+  public static double toMeter(final double kilometer) {
+    return kilometer * 1000;
+  }
 }

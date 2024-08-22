@@ -1,4 +1,4 @@
-package com.locat.api.global.annotations;
+package com.locat.api.global.annotation;
 
 import com.locat.api.global.utils.LocatSpelParser;
 import java.lang.annotation.*;

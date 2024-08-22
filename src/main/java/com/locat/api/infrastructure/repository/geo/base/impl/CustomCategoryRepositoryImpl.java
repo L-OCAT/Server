@@ -1,7 +1,8 @@
-package com.locat.api.infrastructure.repository.geo.base;
+package com.locat.api.infrastructure.repository.geo.base.impl;
 
 import com.locat.api.domain.geo.base.dto.CategoryInfoDto;
 import com.locat.api.domain.geo.base.entity.QCategory;
+import com.locat.api.infrastructure.repository.geo.base.CustomCategoryRepository;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
