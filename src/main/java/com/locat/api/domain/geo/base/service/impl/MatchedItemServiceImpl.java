@@ -12,11 +12,11 @@ public class MatchedItemServiceImpl implements MatchedItemService {
 
   @Override
   public Integer countMatchedLostItems(Long foundItemId) {
-    return 0;
+    throw new UnsupportedOperationException("Matching is not implemented yet");
   }
 
   @Override
   public Integer countMatchedFoundItems(Long lostItemId) {
-    return 0;
+    throw new UnsupportedOperationException("Matching is not implemented yet");
   }
 }

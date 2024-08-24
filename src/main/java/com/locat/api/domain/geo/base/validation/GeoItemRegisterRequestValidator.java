@@ -36,11 +36,11 @@ public abstract class GeoItemRegisterRequestValidator<A extends Annotation, T>
       "카테고리를 직접 입력하는 경우, 반드시 카테고리 이름을 입력해야 합니다.";
 
   /**
-   * 분실물 & 습득물 등록 요청 객체의 공통 필드에 대한 유효성 검증
+   * 분실물 & 습득물 등록 요청 객체의 공통 필드에 대한 유효성을 검사합니다.
    *
    * @param request 분실물 또는 습득물 등록 요청 객체
    * @param context ConstraintValidatorContext
-   * @return 요청이 모든 유효석 검사를 통과하면 {@code true}, 그렇지 않으면 {@code false}
+   * @return 요청이 모든 유효성 검사를 통과하면 {@code true}, 그렇지 않으면 {@code false}
    */
   @Override
   public boolean isValid(T request, ConstraintValidatorContext context) {
@@ -63,11 +63,15 @@ public abstract class GeoItemRegisterRequestValidator<A extends Annotation, T>
     return true;
   }
 
+  /** 사용자가 직접 카테고리를 입력한 경우, 카테고리 이름이 입력되었는지 검증 */
   protected abstract boolean validateCategoryNameIfCustom(T request);
 
+  /** 닉네임 유효성 검사 */
   protected abstract boolean validateNickname(T request);
 
+  /** 색상 코드 유효성 검사 */
   protected abstract boolean validateColorHexCode(T request);
 
+  /** 좌표 유효성 검사 */
   protected abstract boolean validateCoordinates(T request);
 }
