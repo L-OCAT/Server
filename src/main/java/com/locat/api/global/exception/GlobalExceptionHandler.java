@@ -67,10 +67,7 @@ public class GlobalExceptionHandler {
         bindingResult.getFieldErrors().stream()
             .map(
                 fieldError ->
-                    """
-						%s - %s.
-						"""
-                        .formatted(fieldError.getField(), fieldError.getDefaultMessage()))
+                    "%s - %s.".formatted(fieldError.getField(), fieldError.getDefaultMessage()))
             .collect(Collectors.joining());
 
     return ResponseEntity.badRequest().body(ErrorResponse.badRequest(message));

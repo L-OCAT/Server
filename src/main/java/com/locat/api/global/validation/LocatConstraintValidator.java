@@ -13,11 +13,15 @@ public abstract class LocatConstraintValidator<A extends Annotation, T>
    * @param context ConstraintValidatorContext
    * @param message 사용자 정의 메세지
    */
-  protected void setCustomViolationMessage(ConstraintValidatorContext context, String message) {
+  protected void setCustomViolationMessage(
+      ConstraintValidatorContext context, final String message, final String fieldName) {
     if (context == null) {
       return;
     }
     context.disableDefaultConstraintViolation();
-    context.buildConstraintViolationWithTemplate(message).addConstraintViolation();
+    context
+        .buildConstraintViolationWithTemplate(message)
+        .addPropertyNode(fieldName)
+        .addConstraintViolation();
   }
 }

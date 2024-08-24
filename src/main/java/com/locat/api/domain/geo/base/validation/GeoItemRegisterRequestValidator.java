@@ -8,12 +8,6 @@ import java.util.regex.Pattern;
 public abstract class GeoItemRegisterRequestValidator<A extends Annotation, T>
     extends LocatConstraintValidator<A, T> {
 
-  /**
-   * 닉네임 정규 표현식
-   * <li>한글만 / 최소 2자, 최대 8자
-   */
-  protected static final Pattern NICKNAME_PATTERN = Pattern.compile("^[가-힣]{2,8}$");
-
   /** HEX 색상 코드 정규표현식 */
   protected static final Pattern HEX_COLOR_PATTERN = Pattern.compile("^#[0-9A-Fa-f]{6}$");
 
@@ -21,19 +15,16 @@ public abstract class GeoItemRegisterRequestValidator<A extends Annotation, T>
   protected static final Pattern LATITUDE_LONGITUDE_PATTERN =
       Pattern.compile("^-?([1-8]?\\d(\\.\\d{1,6})?|90(\\.0{1,6})?)$");
 
-  /** 닉네임 제약 조건 위반 시 커스텀 메시지 */
-  protected static final String NICKNAME_CONSTRAINT_VIOLATION_MESSAGE = "닉네임은 한글 2~8자로 입력해야 합니다.";
-
   /** 색상 코드 조건 위반 시 커스텀 메시지 */
   protected static final String HEX_COLOR_CONSTRAINT_VIOLATION_MESSAGE =
-      "HEX 색상 코드 형식에 맞게 입력해야 합니다.";
+      "HEX 색상 코드 형식에 맞게 입력해야 합니다";
 
   /** 좌표 조건 위반 시 커스텀 메시지 */
-  protected static final String COORDINATES_CONSTRAINT_VIOLATION_MESSAGE = "위도, 경도 값을 올바르게 입력해주세요.";
+  protected static final String COORDINATES_CONSTRAINT_VIOLATION_MESSAGE = "위도, 경도 값을 올바르게 입력해주세요";
 
   /** 카테고리 이름 조건 위반 시 커스텀 메시지 */
   protected static final String CATEGORY_NAME_CONSTRAINT_VIOLATION_MESSAGE =
-      "카테고리를 직접 입력하는 경우, 반드시 카테고리 이름을 입력해야 합니다.";
+      "카테고리를 직접 입력하는 경우, 반드시 카테고리 이름을 입력해야 합니다";
 
   /**
    * 분실물 & 습득물 등록 요청 객체의 공통 필드에 대한 유효성을 검사합니다.
@@ -44,20 +35,19 @@ public abstract class GeoItemRegisterRequestValidator<A extends Annotation, T>
    */
   @Override
   public boolean isValid(T request, ConstraintValidatorContext context) {
-    if (!this.validateNickname(request)) {
-      super.setCustomViolationMessage(context, NICKNAME_CONSTRAINT_VIOLATION_MESSAGE);
-      return false;
-    }
     if (!this.validateColorHexCode(request)) {
-      super.setCustomViolationMessage(context, HEX_COLOR_CONSTRAINT_VIOLATION_MESSAGE);
+      super.setCustomViolationMessage(
+          context, HEX_COLOR_CONSTRAINT_VIOLATION_MESSAGE, "colorHexCode");
       return false;
     }
     if (!this.validateCoordinates(request)) {
-      super.setCustomViolationMessage(context, COORDINATES_CONSTRAINT_VIOLATION_MESSAGE);
+      super.setCustomViolationMessage(
+          context, COORDINATES_CONSTRAINT_VIOLATION_MESSAGE, "latitude or longitude");
       return false;
     }
-    if (this.validateCategoryNameIfCustom(request)) {
-      super.setCustomViolationMessage(context, CATEGORY_NAME_CONSTRAINT_VIOLATION_MESSAGE);
+    if (!this.validateCategoryNameIfCustom(request)) {
+      super.setCustomViolationMessage(
+          context, CATEGORY_NAME_CONSTRAINT_VIOLATION_MESSAGE, "categoryName");
       return false;
     }
     return true;
@@ -65,9 +55,6 @@ public abstract class GeoItemRegisterRequestValidator<A extends Annotation, T>
 
   /** 사용자가 직접 카테고리를 입력한 경우, 카테고리 이름이 입력되었는지 검증 */
   protected abstract boolean validateCategoryNameIfCustom(T request);
-
-  /** 닉네임 유효성 검사 */
-  protected abstract boolean validateNickname(T request);
 
   /** 색상 코드 유효성 검사 */
   protected abstract boolean validateColorHexCode(T request);

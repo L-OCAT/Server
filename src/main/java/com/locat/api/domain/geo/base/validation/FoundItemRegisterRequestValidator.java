@@ -2,21 +2,10 @@ package com.locat.api.domain.geo.base.validation;
 
 import com.locat.api.domain.geo.base.annotation.FoundItemValidation;
 import com.locat.api.domain.geo.found.dto.request.FoundItemRegisterRequest;
-import jakarta.validation.ConstraintValidatorContext;
 import java.util.Objects;
 
 public class FoundItemRegisterRequestValidator
     extends GeoItemRegisterRequestValidator<FoundItemValidation, FoundItemRegisterRequest> {
-
-  @Override
-  public boolean isValid(FoundItemRegisterRequest request, ConstraintValidatorContext context) {
-    return super.isValid(request, context);
-  }
-
-  @Override
-  protected boolean validateNickname(FoundItemRegisterRequest request) {
-    return NICKNAME_PATTERN.matcher(request.categoryName()).matches();
-  }
 
   @Override
   protected boolean validateColorHexCode(FoundItemRegisterRequest request) {
