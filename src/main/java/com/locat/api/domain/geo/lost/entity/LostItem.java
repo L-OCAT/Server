@@ -12,7 +12,12 @@ import lombok.experimental.SuperBuilder;
 @Entity
 @Getter
 @SuperBuilder
-@Table(name = "lost_item")
+@Table(
+    name = "lost_item",
+    indexes = {
+      @Index(name = "idx_lost_item_match", columnList = "category_id, color, location"),
+      @Index(name = "idx_lost_item_location", columnList = "location")
+    })
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class LostItem extends GeoItem {
@@ -36,8 +41,8 @@ public class LostItem extends GeoItem {
         .user(user)
         .category(category)
         .categoryName(category.isCustom() ? registerDto.categoryName() : category.getName())
-        .colorType(registerDto.colorType())
-        .itemName(registerDto.itemName())
+        .color(registerDto.color())
+        .name(registerDto.itemName())
         .description(registerDto.description())
         .isWillingToPayGratuity(registerDto.isWillingToPayGratuity())
         .gratuity(registerDto.gratuity())

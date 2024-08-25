@@ -25,7 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class LostItemServiceImpl implements LostItemService {
 
-  private static final String LOST_ITEM_IMAGE_DIRECTORY = "item/losts";
+  private static final String LOST_ITEM_IMAGE_DIRECTORY = "items/losts";
 
   private final LostItemRepository lostItemRepository;
   private final GeoItemQRepository<LostItem> lostItemQRepository;

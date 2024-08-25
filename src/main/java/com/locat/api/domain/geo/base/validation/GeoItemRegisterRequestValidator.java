@@ -42,7 +42,7 @@ public abstract class GeoItemRegisterRequestValidator<A extends Annotation, T>
     }
     if (!this.validateCoordinates(request)) {
       super.setCustomViolationMessage(
-          context, COORDINATES_CONSTRAINT_VIOLATION_MESSAGE, "latitude or longitude");
+          context, COORDINATES_CONSTRAINT_VIOLATION_MESSAGE, "lat or lng");
       return false;
     }
     if (!this.validateCategoryNameIfCustom(request)) {

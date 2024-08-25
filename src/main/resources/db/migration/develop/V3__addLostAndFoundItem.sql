@@ -1,0 +1,56 @@
+CREATE TABLE lost_item
+(
+    id                         BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '분실물 ID',
+    user_id                    BIGINT UNSIGNED NOT NULL COMMENT '사용자 ID',
+    category_id                BIGINT UNSIGNED NOT NULL COMMENT '카테고리 ID',
+    category_name              VARCHAR(50) COMMENT '카테고리명',
+    color                      VARCHAR(7)      NOT NULL COMMENT '색상',
+    `name`                     VARCHAR(255)    NOT NULL COMMENT '물품명',
+    `description`              VARCHAR(500) COMMENT '설명',
+    is_willing_to_pay_gratuity BOOLEAN      DEFAULT FALSE COMMENT '보상금 지급 여부',
+    gratuity                   INT UNSIGNED DEFAULT 0 COMMENT '보상 비율',
+    location                   POINT SRID 4326 NOT NULL COMMENT '분실 위치',
+    lost_at                    DATETIME COMMENT '분실 일시',
+    image_url                  VARCHAR(255) COMMENT '이미지 URL',
+    created_at                 DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '생성일',
+    created_by                 INT UNSIGNED    NOT NULL COMMENT '생성자',
+    updated_at                 DATETIME     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일',
+    updated_by                 INT UNSIGNED DEFAULT NULL COMMENT '수정자',
+    deleted_at                 DATETIME     DEFAULT null COMMENT '탈퇴일',
+    PRIMARY KEY (id),
+    INDEX idx_lost_item_match (category_id, color),
+    SPATIAL INDEX idx_lost_item_location (location),
+    CHECK ( gratuity >= 0 AND gratuity <= 5 )
+) COMMENT '분실물 정보',
+    CHARSET = 'UTF8MB4',
+    COLLATE = 'UTF8MB4_GENERAL_CI',
+    ROW_FORMAT = Dynamic,
+    ENGINE = InnoDB;
+
+CREATE TABLE found_item
+(
+    id               BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '습득물 ID',
+    user_id          BIGINT UNSIGNED NOT NULL COMMENT '사용자 ID',
+    category_id      BIGINT UNSIGNED NOT NULL COMMENT '카테고리 ID',
+    category_name    VARCHAR(50) COMMENT '카테고리명',
+    color            VARCHAR(7)      NOT NULL COMMENT '색상',
+    `name`           VARCHAR(50)     NOT NULL COMMENT '물품명',
+    `description`    VARCHAR(500) COMMENT '설명',
+    custody_location VARCHAR(100) COMMENT '보관 장소',
+    location         POINT SRID 4326 NOT NULL COMMENT '습득 위치',
+    found_at         DATETIME COMMENT '습득 일시',
+    image_url        VARCHAR(255) COMMENT '이미지 URL',
+    created_at       DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '생성일',
+    created_by       INT UNSIGNED    NOT NULL COMMENT '생성자',
+    updated_at       DATETIME     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일',
+    updated_by       INT UNSIGNED DEFAULT NULL COMMENT '수정자',
+    deleted_at       DATETIME     DEFAULT null COMMENT '탈퇴일',
+    PRIMARY KEY (id),
+    INDEX idx_found_item_match (category_id, color),
+    SPATIAL INDEX idx_found_item_location (location)
+) COMMENT '습득물 정보',
+    CHARSET = 'UTF8MB4',
+    COLLATE = 'UTF8MB4_GENERAL_CI',
+    ROW_FORMAT = Dynamic,
+    ENGINE = InnoDB;
+

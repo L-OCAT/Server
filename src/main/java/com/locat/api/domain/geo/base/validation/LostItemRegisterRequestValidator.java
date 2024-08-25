@@ -45,8 +45,8 @@ public class LostItemRegisterRequestValidator
 
   @Override
   protected boolean validateCoordinates(LostItemRegisterRequest request) {
-    return LATITUDE_LONGITUDE_PATTERN.matcher(request.latitude().toString()).matches()
-        && LATITUDE_LONGITUDE_PATTERN.matcher(request.longitude().toString()).matches();
+    return LATITUDE_LONGITUDE_PATTERN.matcher(request.lat().toString()).matches()
+        && LATITUDE_LONGITUDE_PATTERN.matcher(request.lng().toString()).matches();
   }
 
   @Override

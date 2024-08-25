@@ -31,8 +31,8 @@ public class FoundItemQRepositoryImpl extends AbstractGeoItemQRepository<FoundIt
   }
 
   @Override
-  protected BooleanExpression userIdEquals(Long userId) {
-    if (userId == null) {
+  protected BooleanExpression userIdEquals(Boolean onlyMine, Long userId) {
+    if (Boolean.FALSE.equals(onlyMine) || userId == null) {
       return null;
     }
     return qFountItem.user.id.eq(userId);

@@ -35,7 +35,7 @@ public abstract class AbstractGeoItemQRepository<T extends GeoItem>
                 .select(this.qEntity, distance)
                 .from(this.qEntity)
                 .where(
-                    this.userIdEquals(userId),
+                    this.userIdEquals(searchCriteria.getOnlyMine(), userId),
                     this.locationInRadius(
                         searchCriteria.getLocation(), searchCriteria.getDistance()))
                 .limit(pageable.getPageSize())
@@ -56,7 +56,7 @@ public abstract class AbstractGeoItemQRepository<T extends GeoItem>
                     q.select(this.qEntity.count())
                         .from(this.qEntity)
                         .where(
-                            this.userIdEquals(userId),
+                            this.userIdEquals(searchCriteria.getOnlyMine(), userId),
                             this.locationInRadius(
                                 searchCriteria.getLocation(), searchCriteria.getDistance()))
                         .fetchOne())
@@ -76,10 +76,11 @@ public abstract class AbstractGeoItemQRepository<T extends GeoItem>
   /**
    * 주어진 사용자 ID와 일치하는지 여부 조건을 반환합니다.
    *
+   * @param onlyMine 내가 등록한 항목만 조회할지 여부
    * @param userId 사용자 ID
    * @return 사용자 ID와 일치하는 조건을 나타내는 BooleanExpression
    */
-  protected abstract BooleanExpression userIdEquals(Long userId);
+  protected abstract BooleanExpression userIdEquals(Boolean onlyMine, Long userId);
 
   /**
    * 주어진 위치와 거리 내에 포함되는 좌표를 나타내지 여부 조건을 반환합니다.

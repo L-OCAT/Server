@@ -1,6 +1,5 @@
 package com.locat.api.domain.geo.found.dto;
 
-import com.locat.api.domain.geo.base.entity.ColorType;
 import com.locat.api.domain.geo.found.dto.request.FoundItemRegisterRequest;
 import lombok.Builder;
 import org.springframework.data.geo.Point;
@@ -10,7 +9,7 @@ import org.springframework.data.geo.Point;
  *
  * @param categoryId 카테고리 ID(직접 입력한 카테고리일 경우 1)
  * @param categoryName 카테고리 이름
- * @param colorType 색상 타입
+ * @param color 색상 HEX 코드
  * @param itemName 습득물 이름
  * @param description 습득물 설명
  * @param custodyLocation 보관 장소
@@ -20,7 +19,7 @@ import org.springframework.data.geo.Point;
 public record FoundItemRegisterDto(
     Long categoryId,
     String categoryName,
-    ColorType colorType,
+    String color,
     String itemName,
     String description,
     String custodyLocation,
@@ -30,11 +29,11 @@ public record FoundItemRegisterDto(
     return FoundItemRegisterDto.builder()
         .categoryId(request.categoryId())
         .categoryName(request.categoryName())
-        .colorType(ColorType.fromHexCode(request.colorHexCode()))
+        .color(request.colorHexCode())
         .itemName(request.itemName())
         .description(request.description())
         .custodyLocation(request.custodyLocation())
-        .location(new Point(request.longitude(), request.latitude()))
+        .location(new Point(request.lng(), request.lat()))
         .build();
   }
 }

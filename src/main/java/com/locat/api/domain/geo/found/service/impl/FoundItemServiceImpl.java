@@ -25,7 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class FoundItemServiceImpl implements FoundItemService {
 
-  private static final String FOUND_ITEM_IMAGE_DIRECTORY = "item/founds";
+  private static final String FOUND_ITEM_IMAGE_DIRECTORY = "items/founds";
 
   private final FoundItemRepository foundItemRepository;
   private final GeoItemQRepository<FoundItem> foundItemQRepository;

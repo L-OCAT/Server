@@ -13,8 +13,8 @@ import jakarta.validation.constraints.Positive;
  * @param itemName 습득물 이름
  * @param description 습득물 설명
  * @param custodyLocation 보관 장소
- * @param latitude 습득 장소 위도
- * @param longitude 습득 장소 경도
+ * @param lat 습득 장소 위도
+ * @param lng 습득 장소 경도
  */
 @FoundItemValidation
 public record FoundItemRegisterRequest(
@@ -24,5 +24,5 @@ public record FoundItemRegisterRequest(
     @NotBlank String itemName,
     @NotBlank String description,
     @NotBlank String custodyLocation,
-    Double latitude,
-    Double longitude) {}
+    Double lat,
+    Double lng) {}

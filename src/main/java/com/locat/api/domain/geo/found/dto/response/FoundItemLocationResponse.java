@@ -15,8 +15,8 @@ import org.springframework.data.geo.GeoResult;
  * @param description 습득물 설명
  * @param custodyLocation 보관 장소
  * @param imageUrl 이미지 URL
- * @param lng 경도(longitude)
- * @param lat 위도(latitude)
+ * @param lng 경도(lng)
+ * @param lat 위도(lat)
  * @param distance 기준 좌표로부터 거리 (단위: 미터)
  * @param foundAt 습득 일시
  */
@@ -39,8 +39,8 @@ public record FoundItemLocationResponse(
     return FoundItemLocationResponse.builder()
         .id(item.getId())
         .category(item.getCategoryName())
-        .color(item.getColorType().getHexCode())
-        .name(item.getItemName())
+        .color(item.getColor())
+        .name(item.getName())
         .description(item.getDescription())
         .custodyLocation(item.getCustodyLocation())
         .imageUrl(item.getImageUrl())

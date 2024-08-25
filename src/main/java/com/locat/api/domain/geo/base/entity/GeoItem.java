@@ -28,27 +28,30 @@ public abstract class GeoItem extends SecuredBaseEntity {
       name = "user_id",
       nullable = false,
       updatable = false,
-      columnDefinition = "int UNSIGNED")
+      columnDefinition = "int UNSIGNED",
+      foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
   protected User user;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "category_id")
+  @JoinColumn(name = "category_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
   protected Category category;
 
   @Column(name = "category_name", length = 50)
   protected String categoryName;
 
-  protected ColorType colorType;
+  @Column(name = "color", nullable = false, length = 7)
+  protected String color;
 
-  @Column(name = "item_name", length = 50)
-  protected String itemName;
+  @Column(name = "item_name", nullable = false, length = 50)
+  protected String name;
 
   @Column(name = "description", length = 500)
   protected String description;
 
-  @Column(name = "location", columnDefinition = "POINT SRID 4326")
+  @Column(name = "location", nullable = false, columnDefinition = "POINT SRID 4326")
   protected Point location;
 
+  @Column(name = "image_url")
   protected String imageUrl;
 
   public String getCategoryName() {

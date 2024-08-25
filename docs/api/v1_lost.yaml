@@ -1,0 +1,303 @@
+openapi: 3.0.0
+info:
+  title: Lost Item API
+  description: 분실물 관련 API를 정의하는 문서입니다.
+  version: 0.0.1
+servers:
+  - url: https://api.locat.kr
+    description: Production
+paths:
+  /v1/items/losts:
+    get:
+      summary: 분실물 목록 조회 API
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: onlyMine
+          in: query
+          description: "내가 등록한 분실물만 조회 여부"
+          required: true
+          schema:
+            type: boolean
+            example: true
+        - name: lat
+          in: query
+          description: "기준 위도"
+          required: true
+          schema:
+            type: number
+            example: 37.504
+        - name: lng
+          in: query
+          description: "기준 경도"
+          required: true
+          schema:
+            type: number
+            example: 127.051
+        - name: r
+          in: query
+          description: "검색 반경(단위: m)"
+          required: true
+          schema:
+            type: number
+            example: 1000
+        - name: s
+          in: query
+          description: "정렬 기준(Non-Case Sensitive)"
+          required: true
+          schema:
+            enum:
+              - "CREATED_AT_ASC"
+              - "CREATED_AT_DESC"
+              - "LOST_AT_ASC"
+              - "LOST_AT_DESC"
+            example: "CREATED_AT_DESC"
+      responses:
+        200:
+          $ref: "#/components/responses/LostItemLocationResponse"
+    post:
+      summary: 분실물 등록 API
+      requestBody:
+        $ref: "#/components/requestBodies/LostItemRegisterRequest"
+      responses:
+        201:
+          description: "분실물 등록 성공"
+          headers:
+            Location:
+              description: "등록된 분실물의 URI"
+              schema:
+                type: string
+        400:
+          description: "Bad Request: 요청 형식 오류"
+          content:
+            application/json:
+              schema:
+                $ref: "schemas.yaml#/components/schemas/ErrorResponse"
+        404:
+          description: "Not Found: 등록 요청 사용자 또는 카테고리 정보 없음"
+          content:
+            application/json:
+              schema:
+                $ref: "schemas.yaml#/components/schemas/ErrorResponse"
+        500:
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: "schemas.yaml#/components/schemas/ErrorResponse"
+      security:
+        - bearerAuth: [ ]
+  /v1/items/losts/{id}:
+    description: "분실물 상세 조회 API"
+    get:
+      summary: "분실물 상세 조회 API"
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          description: "분실물 ID"
+          required: true
+          schema:
+            type: integer
+            example: 5
+      responses:
+        200:
+          $ref: "#/components/responses/LostItemDetailResponse"
+components:
+  requestBodies:
+    LostItemRegisterRequest:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/LostItemRegisterRequest"
+  responses:
+    LostItemLocationResponse:
+      description: "분실물 위치 정보 응답(목록 조회 시 등에 사용)"
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "schemas.yaml#/components/schemas/BaseResponse"
+              - type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/LostItemLocationResponse"
+    LostItemDetailResponse:
+      description: "분실물 상세 조회 응답 Body"
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "schemas.yaml#/components/schemas/BaseResponse"
+              - type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/LostItemDetailResponse"
+  schemas:
+    LostItemLocationResponse:
+      type: object
+      description: "분실물 위치 정보 응답(목록 조회 시 등에 사용)"
+      properties:
+        id:
+          type: integer
+          example: 1
+          description: "분실물 ID"
+        category:
+          type: string
+          example: "카드지갑"
+          description: "분실물 카테고리 이름"
+        color:
+          type: string
+          example: "#FF0000"
+          description: "분실물 색상 HEX 코드"
+        name:
+          type: string
+          example: "레이디 디올 장지갑"
+          description: "분실물 이름"
+        description:
+          type: string
+          example: "기후동행카드, 신분증 들어있고, 돌고래 키링이 달려 있어요. 선물 받은 거라 꼭 찾고 싶어요 ㅠㅠ"
+          description: "분실물 설명"
+        imageUrl:
+          type: string
+          example: "15123252.jpg"
+          description: "분실물 이미지 URL"
+        lat:
+          type: number
+          example: 37.504
+          description: "분실 장소 위도"
+        lng:
+          type: number
+          example: 127.051
+          description: "분실 장소 경도"
+        distance:
+          type: number
+          example: 253
+          description: "기준 위치로부터의 거리(단위: m)"
+        foundAt:
+          type: string
+          example: "2024-07-23T12:00:00"
+          description: "분실 일시(ISO 8601)"
+    LostItemDetailResponse:
+      type: object
+      description: "분실물 상세 조회 응답 Body"
+      properties:
+        id:
+          type: integer
+          example: 1
+          description: "분실물 ID"
+        category:
+          type: string
+          example: "카드지갑"
+          description: "분실물 카테고리 이름"
+        color:
+          type: string
+          example: "#FF0000"
+          description: "분실물 색상 HEX 코드"
+        name:
+          type: string
+          example: "레이디 디올 장지갑"
+          description: "분실물 이름"
+        description:
+          type: string
+          example: "기후동행카드, 신분증 들어있고, 돌고래 키링이 달려 있어요. 선물 받은 거라 꼭 찾고 싶어요 ㅠㅠ"
+          description: "분실물 설명"
+        isWillingToPayGratuity:
+          type: boolean
+          example: true
+          description: "보상금 지급 의사"
+        gratuity:
+          type: integer
+          example: 2
+          maximum: 5
+          minimum: 1
+          description: "보상금 비율(단위 %)"
+        imageUrl:
+          type: string
+          example: "15123252.jpg"
+          description: "분실물 이미지 URL"
+        lat:
+          type: number
+          example: 37.504
+          description: "분실 장소 위도"
+        lng:
+          type: number
+          example: 127.051
+          description: "분실 장소 경도"
+        lostAt:
+          type: string
+          example: "2024-08-01T15:00:00"
+          description: "분실 일시(ISO 8601)"
+        createdAt:
+          type: string
+          example: "2024-08-01T15:30:00"
+          description: "등록 일시(ISO 8601)"
+        updatedAt:
+          type: string
+          example: "2024-08-02T08:23:00"
+          description: "수정 일시(ISO 8601)"
+    LostItemRegisterRequest:
+      type: object
+      description: "분실물 등록 요청 Body"
+      properties:
+        categoryId:
+          type: integer
+          example: 8
+          description: "분실물 카테고리 ID(사용자 '직접 입력' 시 null)"
+        categoryName:
+          type: string
+          example: "카드지갑"
+          description: "분실물 카테고리 이름(사용자 '직접 입력' 시 필수)"
+        colorHexCode:
+          type: string
+          example: "#FF0000"
+          description: "분실물 색상 HEX 코드"
+        itemName:
+          type: string
+          example: "레이디 디올 장지갑"
+          description: "분실물 이름(최대 50자)"
+        description:
+          type: string
+          example: "기후동행카드, 신분증 들어있고, 돌고래 키링이 달려 있어요. 선물 받은 거라 꼭 찾고 싶어요 ㅠㅠ"
+          description: "분실물 설명(최대 500자)"
+        isWillingToPayGratuity:
+          type: boolean
+          example: true
+          description: "보상금 지급 의사"
+        gratuity:
+          type: integer
+          example: 2
+          maximum: 5
+          minimum: 1
+          description: "보상금 비율(단위 %)"
+        lat:
+          type: number
+          example: 37.504
+          description: "분실 장소 위도(소수점은 6자리까지)"
+        lng:
+          type: number
+          example: 127.051
+          description: "분실 장소 경도(소수점은 6자리까지)"
+        lostItemImage:
+          type: string
+          format: binary
+          description: "분실물 이미지"
+      required:
+        - categoryId
+        - itemName
+        - description
+        - isWillingToPayGratuity
+        - lat
+        - lng
+        - lostItemImage
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+

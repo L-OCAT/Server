@@ -15,8 +15,8 @@ import jakarta.validation.constraints.Positive;
  * @param description 분실물 설명
  * @param isWillingToPayGratuity 보상금 지급 의사
  * @param gratuity 보상금(단위: %)
- * @param latitude 분실 장소 위도
- * @param longitude 분실 장소 경도
+ * @param lat 분실 장소 위도
+ * @param lng 분실 장소 경도
  */
 @LostItemValidation
 public record LostItemRegisterRequest(
@@ -26,6 +26,6 @@ public record LostItemRegisterRequest(
     @NotEmpty String itemName,
     @NotEmpty String description,
     @NotNull Boolean isWillingToPayGratuity,
-    @Positive Integer gratuity,
-    Double latitude,
-    Double longitude) {}
+    Integer gratuity,
+    Double lat,
+    Double lng) {}
