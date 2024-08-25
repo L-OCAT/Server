@@ -2,6 +2,7 @@ package com.locat.api.domain.user.entity;
 
 import com.locat.api.domain.core.SecuredBaseEntity;
 import com.locat.api.domain.user.dto.OAuth2UserInfoDto;
+import com.locat.api.global.security.StringColumnEncryptionConverter;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -38,6 +39,7 @@ public class User extends SecuredBaseEntity {
   private Long id;
 
   @Column(name = "oauth_id", nullable = false, length = 100)
+  @Convert(converter = StringColumnEncryptionConverter.class)
   private String oauthId;
 
   @Enumerated(EnumType.STRING)
@@ -46,6 +48,7 @@ public class User extends SecuredBaseEntity {
 
   @Size(max = 100)
   @NotNull @Column(name = "email", nullable = false, updatable = false, length = 100)
+  @Convert(converter = StringColumnEncryptionConverter.class)
   private String email;
 
   @Size(max = 100)
