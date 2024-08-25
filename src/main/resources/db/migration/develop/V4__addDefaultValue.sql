@@ -69,7 +69,3 @@ VALUES ('반지', 8, 1, 1),
        ('귀걸이', 8, 1, 1),
        ('목걸이', 8, 1, 1),
        ('시계', 8, 1, 1);
-
--- 개발용 사용자 추가
-INSERT INTO user (oauth_id, oauth_type, email, nickname, profile_image, created_by, created_at, updated_by, updated_at)
-VALUES ('1231244132', 'KAKAO', 'team.l0oocat@gmail.com', 'Team LOCAT', '51231245123.jpg', 1, NOW(), 1, NOW());
