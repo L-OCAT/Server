@@ -1,5 +1,6 @@
 package com.locat.api.global.notification;
 
+import com.locat.api.infrastructure.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Value("${service.aws.sns.platform-application-arn.android}")
     private String androidArn;
+    private final UserRepository userRepository;
 
     public String createPlatformEndpoint(String token, String platform) {
         String platformApplicationArn = getPlatformApplicationArn(platform);
@@ -78,13 +80,22 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public void sendUserNotification(Long userId, String message, String subject) {
+    public String sendUserNotification(Long userId, String message, String subject) {
+        String endpointArn = this.userRepository.findEndpointArnById(userId);
+        if (endpointArn == null) {
+            throw new RuntimeException("Endpoint Arn not found, userId=" + userId);
+        }
+
         PublishRequest request = PublishRequest.builder()
-                .targetArn()
+                .targetArn(endpointArn)
                 .message(message)
                 .subject(subject)
-                .messageAttributes()
                 .build();
-        this.snsClient.publish(request);
+        try {
+            PublishResponse response = this.snsClient.publish(request);
+            return response.messageId();
+        } catch (SnsException e) {
+            throw new RuntimeException("Failed to send user notification", e);
+        }
     }
 }
