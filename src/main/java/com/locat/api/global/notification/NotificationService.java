@@ -4,10 +4,12 @@ public interface NotificationService {
 
     /**
      * 단체 앱 푸시 알림을 전송합니다.
+     *
      * @param message 메시지 내용
      * @param subject 메시지 제목
+     * @return
      */
-    void sendGeneralNotification(String message, String subject);
+    String sendGeneralNotification(String message, String subject);
 
     /**
      * 개인용 앱 푸시 알림을 전송합니다.
