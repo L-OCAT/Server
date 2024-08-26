@@ -1,86 +1,13 @@
 openapi: 3.0.0
 info:
   title: User API
-  description: API for managing users.
+  description: 사용자 정보 관리 API를 정의하는 문서입니다.
   version: 0.0.1
 servers:
-  - url: https://api.locat.com
+  - url: https://api.locat.kr
     description: Production
-
-components:
-  securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
-  schemas:
-    User:
-      type: object
-      properties:
-        id:
-          type: integer
-        oauthId:
-          type: string
-        email:
-          type: string
-          format: email
-        nickname:
-          type: string
-        profileImage:
-          type: string
-        userType:
-          type: string
-          enum:
-            - USER
-            - ADMIN
-        statusType:
-          type: string
-          enum:
-            - ACTIVE
-            - INACTIVE
-            - BANNED
-      required:
-        - ouathId
-        - nickname
-        - email
-    UserSetting:
-      type: object
-      properties:
-        id:
-          type: integer
-        user:
-          $ref: '#/components/schemas/User'
-        appSetting:
-          type: object
-          properties:
-            id:
-              type: integer
-        value:
-          type: string
-    UserTermsAgreement:
-      type: object
-      properties:
-        id:
-          type: integer
-        user:
-          $ref: '#/components/schemas/User'
-        terms:
-          type: object
-          properties:
-            id:
-              type: integer
-    UserWithdrawalLog:
-      type: object
-      properties:
-        id:
-          type: integer
-        userId:
-          type: integer
-        reason:
-          type: string
-
 paths:
-  /api/v1/users:
+  /v1/users:
     get:
       summary: Retrieve a list of users
       parameters:
@@ -173,7 +100,7 @@ paths:
             application/json:
               schema:
                 $ref: "schemas.yaml#/components/schemas/ErrorResponse"
-  /api/v1/users/{id}:
+  /v1/users/{id}:
     get:
       summary: Retrieve a user by ID
       parameters:
@@ -299,7 +226,7 @@ paths:
                 $ref: "schemas.yaml#/components/schemas/ErrorResponse"
       security:
         - bearerAuth: [ ]
-  /api/v1/users/{id}/settings:
+  /v1/users/{id}/settings:
     get:
       summary: Retrieve settings for a specific user
       parameters:
@@ -343,7 +270,7 @@ paths:
                 $ref: "schemas.yaml#/components/schemas/ErrorResponse"
       security:
         - bearerAuth: [ ]
-  /api/v1/users/{id}/terms:
+  /v1/users/{id}/terms:
     get:
       summary: Retrieve terms agreements for a specific user
       parameters:
@@ -387,7 +314,7 @@ paths:
                 $ref: "schemas.yaml#/components/schemas/ErrorResponse"
       security:
         - bearerAuth: [ ]
-  /api/v1/user-withdrawal-logs:
+  /v1/user-withdrawal-logs:
     get:
       summary: Retrieve a list of user withdrawal logs
       responses:
@@ -447,7 +374,7 @@ paths:
               schema:
                 $ref: "schemas.yaml#/components/schemas/ErrorResponse"
 
-  /api/v1/user-withdrawal-logs/{id}:
+  /v1/user-withdrawal-logs/{id}:
     get:
       summary: Retrieve a user withdrawal log by ID
       parameters:
@@ -518,3 +445,75 @@ paths:
             application/json:
               schema:
                 $ref: "schemas.yaml#/components/schemas/ErrorResponse"
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        oauthId:
+          type: string
+        email:
+          type: string
+          format: email
+        nickname:
+          type: string
+        profileImage:
+          type: string
+        userType:
+          type: string
+          enum:
+            - USER
+            - ADMIN
+        statusType:
+          type: string
+          enum:
+            - ACTIVE
+            - INACTIVE
+            - BANNED
+      required:
+        - ouathId
+        - nickname
+        - email
+    UserSetting:
+      type: object
+      properties:
+        id:
+          type: integer
+        user:
+          $ref: '#/components/schemas/User'
+        appSetting:
+          type: object
+          properties:
+            id:
+              type: integer
+        value:
+          type: string
+    UserTermsAgreement:
+      type: object
+      properties:
+        id:
+          type: integer
+        user:
+          $ref: '#/components/schemas/User'
+        terms:
+          type: object
+          properties:
+            id:
+              type: integer
+    UserWithdrawalLog:
+      type: object
+      properties:
+        id:
+          type: integer
+        userId:
+          type: integer
+        reason:
+          type: string

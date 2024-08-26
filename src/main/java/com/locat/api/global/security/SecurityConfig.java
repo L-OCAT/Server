@@ -36,6 +36,8 @@ public class SecurityConfig {
   private static final List<String> DEFAULT_PERMIT_METHODS =
       List.of(GET.name(), HEAD.name(), POST.name(), PUT.name(), PATCH.name(), DELETE.name());
 
+  public static final List<String> PUBLIC_API_PATHS = List.of("/v1/auth");
+
   private final JwtProvider jwtProvider;
   private final LocatUserDetailsService userDetailsService;
 
@@ -62,17 +64,16 @@ public class SecurityConfig {
                 authorize
                     .requestMatchers(CorsUtils::isPreFlightRequest)
                     .permitAll()
-                    .requestMatchers("/login/**", "/oauth2/**")
+                    .requestMatchers("/v*/**")
                     .permitAll()
-                    .requestMatchers("/api/**")
-                    .authenticated()
                     .requestMatchers("/actuator/**")
                     .access(this.localHostOnly)
                     .anyRequest()
                     .denyAll())
-        .addFilterBefore(
+        .addFilterBefore(new PublicApiKeyFilter(), UsernamePasswordAuthenticationFilter.class)
+        .addFilterAfter(
             new JwtAuthenticationFilter(this.jwtProvider, this.userDetailsService),
-            UsernamePasswordAuthenticationFilter.class)
+            PublicApiKeyFilter.class)
         .addFilterAfter(new ActiveUserFilter(), JwtAuthenticationFilter.class)
         .exceptionHandling(
             exception ->

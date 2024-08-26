@@ -1,5 +1,7 @@
 package com.locat.api.global.security;
 
+import static com.locat.api.global.security.SecurityConfig.PUBLIC_API_PATHS;
+
 import com.locat.api.domain.user.entity.User;
 import com.locat.api.global.auth.LocatUserDetails;
 import jakarta.servlet.FilterChain;
@@ -20,10 +22,16 @@ public class ActiveUserFilter extends OncePerRequestFilter {
   protected void doFilterInternal(
       HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
       throws ServletException, IOException {
+    if (this.isPublicApi(request)) {
+      filterChain.doFilter(request, response);
+      return;
+    }
+
     final User user = this.getCurrentAuthenticatedUser();
     if (!user.isActivated()) {
       throw new AccessDeniedException("Access Denied: User is not activated.");
     }
+
     filterChain.doFilter(request, response);
   }
 
@@ -36,5 +44,9 @@ public class ActiveUserFilter extends OncePerRequestFilter {
         .map(LocatUserDetails::getUser)
         .orElseThrow(
             () -> new AccessDeniedException("Access Denied: Unable to retrieve user details."));
+  }
+
+  private boolean isPublicApi(HttpServletRequest request) {
+    return PUBLIC_API_PATHS.stream().anyMatch(request.getServletPath()::startsWith);
   }
 }

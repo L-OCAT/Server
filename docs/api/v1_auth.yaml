@@ -7,7 +7,7 @@ servers:
   - url: https://api.locat.com
     description: Production
 paths:
-  /api/v1/auth:
+  /v1/auth:
     description: OAuth2 사용자 인증 API
     post:
       summary: 소셜 로그인 기반 사용자 인증을 처리합니다.
@@ -22,7 +22,7 @@ paths:
             application/json:
               schema:
                 $ref: "schemas.yaml#/components/schemas/ErrorResponse"
-  /api/v1/auth/renew:
+  /v1/auth/renew:
     description: 토큰 갱신 API
     post:
       summary: Refresh 토큰을 이용하여 Access 토큰을 갱신합니다.
@@ -43,7 +43,7 @@ paths:
             application/json:
               schema:
                 $ref: "schemas.yaml#/components/schemas/ErrorResponse"
-  /api/v1/auth/email-verification:
+  /v1/auth/email-verification:
     description: 이메일 인증 메일 발송 요청 API
     post:
       summary: 이메일 인증 코드를 발송합니다.
@@ -64,7 +64,7 @@ paths:
             application/json:
               schema:
                 $ref: "schemas.yaml#/components/schemas/ErrorResponse"
-  /api/v1/auth/email-verification/verify:
+  /v1/auth/email-verification/verify:
     description: 이메일 인증 코드 검증 API
     post:
       summary: 이메일 인증 코드를 검증합니다.
