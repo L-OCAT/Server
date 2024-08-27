@@ -22,7 +22,7 @@ public final class RequestUtils {
    * @param clazz 반환할 값의 타입 클래스 (never {@code null})
    * @param defaultValue 파라미터가 없을 경우 사용할 기본값 or {@code null}
    * @return 요청 파라미터 값 또는 기본값
-   * @throws IllegalArgumentException 필수 파라미터가 없고 기본값이 null인 경우
+   * @throws InvalidParameterException 필수 파라미터가 없고 기본값이 null인 경우
    * @apiNote 기본값 없이 사용자로부터 반드시 입력을 받아야 하는 경우 defaultValue를 null로 설정
    */
   public static <T> T getParameterOrDefault(

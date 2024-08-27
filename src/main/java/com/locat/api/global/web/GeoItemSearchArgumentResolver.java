@@ -35,7 +35,6 @@ public class GeoItemSearchArgumentResolver implements HandlerMethodArgumentResol
       NativeWebRequest webRequest,
       WebDataBinderFactory binderFactory) {
     HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
-    try {
       final String requestUri = request.getRequestURI();
 
       final Double latitude =
@@ -53,10 +52,8 @@ public class GeoItemSearchArgumentResolver implements HandlerMethodArgumentResol
       return switch (requestUri) {
         case LOST_ITEM_URI -> LostItemSearchDto.fromRequest(onlyMine, location, radius, sort);
         case FOUND_ITEM_URI -> FoundItemSearchDto.fromRequest(onlyMine, location, radius, sort);
-        default -> throw new IllegalArgumentException("Unexpected URI: " + requestUri);
+        default -> throw new InvalidParameterException("Unexpected URI: " + requestUri);
       };
-    } catch (IllegalArgumentException | ClassCastException e) {
-      throw new InvalidParameterException(e.getMessage());
-    }
+
   }
 }
