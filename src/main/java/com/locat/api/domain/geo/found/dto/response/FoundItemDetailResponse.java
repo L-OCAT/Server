@@ -33,8 +33,8 @@ public record FoundItemDetailResponse(
   public static FoundItemDetailResponse fromEntity(FoundItem foundItem) {
     return FoundItemDetailResponse.builder()
         .id(foundItem.getId())
-        .category(foundItem.getCategoryName())
-        .color(foundItem.getColor())
+        .category(foundItem.getCategory().getName())
+        .color(foundItem.getColorCode().getName())
         .name(foundItem.getName())
         .description(foundItem.getDescription())
         .custodyLocation(foundItem.getCustodyLocation())

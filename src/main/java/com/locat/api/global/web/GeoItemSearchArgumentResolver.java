@@ -1,9 +1,11 @@
 package com.locat.api.global.web;
 
 import com.locat.api.domain.geo.base.dto.GeoItemSearchCriteria;
+import com.locat.api.domain.geo.base.dto.GeoItemSortType;
 import com.locat.api.domain.geo.found.dto.FoundItemSearchDto;
 import com.locat.api.domain.geo.lost.dto.LostItemSearchDto;
-import com.locat.api.global.exception.ParameterValidationException;
+import com.locat.api.global.exception.InvalidParameterException;
+import com.locat.api.global.utils.RequestUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
@@ -32,15 +34,20 @@ public class GeoItemSearchArgumentResolver implements HandlerMethodArgumentResol
       ModelAndViewContainer mavContainer,
       NativeWebRequest webRequest,
       WebDataBinderFactory binderFactory) {
-    HttpServletRequest request = getHttpServletRequest(webRequest);
+    HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
     try {
       final String requestUri = request.getRequestURI();
 
-      final Double latitude = parseRequiredParameter(request, "lat", Double.class);
-      final Double longitude = parseRequiredParameter(request, "lng", Double.class);
-      final Integer radius = parseRequiredParameter(request, "r", Integer.class);
-      final Boolean onlyMine = parseRequiredParameter(request, "onlyMine", Boolean.class);
-      final String sort = parseRequiredParameter(request, "s", String.class);
+      final Double latitude =
+          RequestUtils.getParameterOrDefault(request, "lat", Double.class, null);
+      final Double longitude =
+          RequestUtils.getParameterOrDefault(request, "lng", Double.class, null);
+      final Double radius = RequestUtils.getParameterOrDefault(request, "r", Double.class, 500.0);
+      final Boolean onlyMine =
+          RequestUtils.getParameterOrDefault(request, "onlyMine", Boolean.class, true);
+      final String sort =
+          RequestUtils.getParameterOrDefault(
+              request, "s", String.class, GeoItemSortType.CREATED_AT_DESC.name());
       final Point location = new Point(longitude, latitude);
 
       return switch (requestUri) {
@@ -49,20 +56,7 @@ public class GeoItemSearchArgumentResolver implements HandlerMethodArgumentResol
         default -> throw new IllegalArgumentException("Unexpected URI: " + requestUri);
       };
     } catch (IllegalArgumentException | ClassCastException e) {
-      throw new ParameterValidationException(e.getMessage());
+      throw new InvalidParameterException(e.getMessage());
     }
-  }
-
-  private HttpServletRequest getHttpServletRequest(NativeWebRequest webRequest) {
-    return (HttpServletRequest) webRequest.getNativeRequest();
-  }
-
-  private static <T> T parseRequiredParameter(
-      HttpServletRequest request, String parameterName, Class<T> clazz) {
-    String parameter = request.getParameter(parameterName);
-    if (parameter == null) {
-      throw new IllegalArgumentException("Required parameter \"" + parameterName + "\" is missing");
-    }
-    return clazz.cast(parameter);
   }
 }

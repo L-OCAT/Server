@@ -2,6 +2,7 @@ package com.locat.api.domain.geo.found.dto;
 
 import com.locat.api.domain.geo.base.dto.GeoItemSearchCriteria;
 import com.locat.api.domain.geo.base.dto.GeoItemSortType;
+import com.locat.api.domain.geo.base.utils.GeoUtils;
 import lombok.Builder;
 import org.springframework.data.geo.Distance;
 import org.springframework.data.geo.Metrics;
@@ -41,11 +42,11 @@ public record FoundItemSearchDto(
   }
 
   public static FoundItemSearchDto fromRequest(
-      Boolean onlyMine, Point location, Integer radius, String sort) {
+      Boolean onlyMine, Point location, Double radius, String sort) {
     return FoundItemSearchDto.builder()
         .onlyMine(onlyMine)
         .location(location)
-        .distance(new Distance(radius, Metrics.KILOMETERS))
+        .distance(new Distance(GeoUtils.toKilometer(radius), Metrics.KILOMETERS))
         .sort(GeoItemSortType.toEnum(sort))
         .build();
   }

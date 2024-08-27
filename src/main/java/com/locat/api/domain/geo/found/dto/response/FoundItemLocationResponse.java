@@ -10,7 +10,7 @@ import org.springframework.data.geo.GeoResult;
  *
  * @param id 습득물 ID
  * @param category 카테고리명
- * @param color 색상 HEX 코드
+ * @param color 색상명
  * @param name 습득물 이름
  * @param description 습득물 설명
  * @param custodyLocation 보관 장소
@@ -38,8 +38,8 @@ public record FoundItemLocationResponse(
     FoundItem item = foundItemGeoResult.getContent();
     return FoundItemLocationResponse.builder()
         .id(item.getId())
-        .category(item.getCategoryName())
-        .color(item.getColor())
+        .category(item.getCategory().getName())
+        .color(item.getColorCode().getName())
         .name(item.getName())
         .description(item.getDescription())
         .custodyLocation(item.getCustodyLocation())

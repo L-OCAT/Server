@@ -54,12 +54,10 @@ public class LostItemController {
   public ResponseEntity<BaseResponse<Void>> register(
       @AuthenticationPrincipal LocatUserDetails userDetails,
       @RequestBody @Valid LostItemRegisterRequest request,
-      @RequestParam MultipartFile lostItemImage) {
+      @RequestParam("image") MultipartFile image) {
     final long userId = userDetails.getId();
     final String lostItemId =
-        this.lostItemService
-            .register(userId, LostItemRegisterDto.from(request), lostItemImage)
-            .toString();
+        this.lostItemService.register(userId, LostItemRegisterDto.from(request), image).toString();
     return ResponseEntity.created(URI.create("/v1/losts/".concat(lostItemId))).build();
   }
 }

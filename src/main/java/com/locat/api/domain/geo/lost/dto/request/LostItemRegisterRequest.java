@@ -8,9 +8,8 @@ import jakarta.validation.constraints.Positive;
 /**
  * 분실물 등록 요청 DTO
  *
- * @param categoryId 카테고리 ID (직접 입력한 카테고리일 경우 null)
- * @param categoryName 카테고리 이름 (직접 입력한 카테고리일 경우 필수)
- * @param colorHexCode 색상 HEX 코드
+ * @param categoryId 카테고리 ID (never {@code null})
+ * @param colorId 색상 ID (never {@code null})
  * @param itemName 분실물 이름
  * @param description 분실물 설명
  * @param isWillingToPayGratuity 보상금 지급 의사
@@ -21,8 +20,7 @@ import jakarta.validation.constraints.Positive;
 @LostItemValidation
 public record LostItemRegisterRequest(
     @Positive Long categoryId,
-    String categoryName,
-    @NotEmpty String colorHexCode,
+    @Positive Long colorId,
     @NotEmpty String itemName,
     @NotEmpty String description,
     @NotNull Boolean isWillingToPayGratuity,

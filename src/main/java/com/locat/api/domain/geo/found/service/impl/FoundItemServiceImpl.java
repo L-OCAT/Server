@@ -1,7 +1,9 @@
 package com.locat.api.domain.geo.found.service.impl;
 
 import com.locat.api.domain.geo.base.entity.Category;
+import com.locat.api.domain.geo.base.entity.ColorCode;
 import com.locat.api.domain.geo.base.service.CategoryService;
+import com.locat.api.domain.geo.base.service.ColorCodeService;
 import com.locat.api.domain.geo.found.dto.FoundItemRegisterDto;
 import com.locat.api.domain.geo.found.dto.FoundItemSearchDto;
 import com.locat.api.domain.geo.found.entity.FoundItem;
@@ -31,6 +33,7 @@ public class FoundItemServiceImpl implements FoundItemService {
   private final GeoItemQRepository<FoundItem> foundItemQRepository;
   private final UserService userService;
   private final CategoryService categoryService;
+  private final ColorCodeService colorCodeService;
   private final FileService fileService;
 
   @Override
@@ -52,12 +55,24 @@ public class FoundItemServiceImpl implements FoundItemService {
   public Long register(
       Long userId, FoundItemRegisterDto registerDto, MultipartFile foundItemImage) {
     User user = this.userService.findById(userId);
-    final Category category =
-        this.categoryService.findById(registerDto.categoryId()).orElse(Category.ofCustom());
+    final Category category = this.fetchCategoryById(registerDto.categoryId());
+    final ColorCode colorCode = this.fetchColorCodeById(registerDto.colorId());
 
     final String imageUrl = this.fileService.upload(FOUND_ITEM_IMAGE_DIRECTORY, foundItemImage);
     return this.foundItemRepository
-        .save(FoundItem.of(user, category, registerDto, imageUrl))
+        .save(FoundItem.of(user, category, colorCode, registerDto, imageUrl))
         .getId();
+  }
+
+  private Category fetchCategoryById(final Long categoryId) {
+    return this.categoryService
+        .findById(categoryId)
+        .orElseThrow(() -> new NoSuchEntityException(ApiExceptionType.NOT_FOUND_CATEGORY));
+  }
+
+  private ColorCode fetchColorCodeById(final Long colorId) {
+    return this.colorCodeService
+        .findById(colorId)
+        .orElseThrow(() -> new NoSuchEntityException(ApiExceptionType.NOT_FOUND_COLOR_CODE));
   }
 }

@@ -1,6 +1,7 @@
 package com.locat.api.domain.geo.lost.entity;
 
 import com.locat.api.domain.geo.base.entity.Category;
+import com.locat.api.domain.geo.base.entity.ColorCode;
 import com.locat.api.domain.geo.base.entity.GeoItem;
 import com.locat.api.domain.geo.lost.dto.LostItemRegisterDto;
 import com.locat.api.domain.user.entity.User;
@@ -35,19 +36,27 @@ public class LostItem extends GeoItem {
 
   private ZonedDateTime lostAt;
 
+  @Enumerated(EnumType.STRING)
+  @Column(name = "status_type", nullable = false)
+  private LostItemStatusType statusType;
+
   public static LostItem of(
-      User user, Category category, LostItemRegisterDto registerDto, String imageUrl) {
+      User user,
+      Category category,
+      ColorCode colorCode,
+      LostItemRegisterDto registerDto,
+      String imageUrl) {
     return LostItem.builder()
         .user(user)
         .category(category)
-        .categoryName(category.isCustom() ? registerDto.categoryName() : category.getName())
-        .color(registerDto.color())
+        .colorCode(colorCode)
         .name(registerDto.itemName())
         .description(registerDto.description())
         .isWillingToPayGratuity(registerDto.isWillingToPayGratuity())
         .gratuity(registerDto.gratuity())
         .location(registerDto.location())
         .lostAt(ZonedDateTime.now())
+        .statusType(LostItemStatusType.REGISTERED)
         .imageUrl(imageUrl)
         .build();
   }

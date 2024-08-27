@@ -1,6 +1,7 @@
 package com.locat.api.domain.geo.found.entity;
 
 import com.locat.api.domain.geo.base.entity.Category;
+import com.locat.api.domain.geo.base.entity.ColorCode;
 import com.locat.api.domain.geo.base.entity.GeoItem;
 import com.locat.api.domain.geo.found.dto.FoundItemRegisterDto;
 import com.locat.api.domain.user.entity.User;
@@ -29,18 +30,26 @@ public class FoundItem extends GeoItem {
 
   private ZonedDateTime foundAt;
 
+  @Enumerated(EnumType.STRING)
+  @Column(name = "status_type", nullable = false)
+  private FoundItemStatusType statusType;
+
   public static FoundItem of(
-      User user, Category category, FoundItemRegisterDto registerDto, String imageUrl) {
+      User user,
+      Category category,
+      ColorCode colorCode,
+      FoundItemRegisterDto registerDto,
+      String imageUrl) {
     return FoundItem.builder()
         .user(user)
         .category(category)
-        .categoryName(category.isCustom() ? registerDto.categoryName() : category.getName())
-        .color(registerDto.color())
+        .colorCode(colorCode)
         .name(registerDto.itemName())
         .description(registerDto.description())
         .custodyLocation(registerDto.custodyLocation())
         .location(registerDto.location())
         .foundAt(ZonedDateTime.now())
+        .statusType(FoundItemStatusType.REGISTERED)
         .imageUrl(imageUrl)
         .build();
   }

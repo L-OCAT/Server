@@ -8,7 +8,7 @@ import lombok.Builder;
  *
  * @param id 분실물 ID
  * @param category 카테고리명
- * @param color 색상 HEX 코드
+ * @param color 색상명
  * @param name 분실물 이름
  * @param description 분실물 설명
  * @param isWillingToPayGratuity 보상금 지급 여부
@@ -31,8 +31,8 @@ public record LostItemDetailResponse(
   public static LostItemDetailResponse fromEntity(LostItem lostItem) {
     return LostItemDetailResponse.builder()
         .id(lostItem.getId())
-        .category(lostItem.getCategoryName())
-        .color(lostItem.getColor())
+        .category(lostItem.getCategory().getName())
+        .color(lostItem.getColorCode().getName())
         .name(lostItem.getName())
         .description(lostItem.getDescription())
         .isWillingToPayGratuity(lostItem.getIsWillingToPayGratuity())

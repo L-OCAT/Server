@@ -15,8 +15,8 @@ paths:
       parameters:
         - name: onlyMine
           in: query
-          description: "내가 등록한 분실물만 조회 여부"
-          required: true
+          description: "내가 등록한 분실물만 조회 여부 / 기본값: true"
+          required: false
           schema:
             type: boolean
             example: true
@@ -36,15 +36,15 @@ paths:
             example: 127.051
         - name: r
           in: query
-          description: "검색 반경(단위: m)"
-          required: true
+          description: "검색 반경(단위: m) / 기본값: 500"
+          required: false
           schema:
             type: number
-            example: 1000
+            example: 500
         - name: s
           in: query
-          description: "정렬 기준(Non-Case Sensitive)"
-          required: true
+          description: "정렬 기준(Non-Case Sensitive) / 기본 정렬: 등록일 내림차순"
+          required: false
           schema:
             enum:
               - "CREATED_AT_ASC"
@@ -153,8 +153,8 @@ components:
           description: "분실물 카테고리 이름"
         color:
           type: string
-          example: "#FF0000"
-          description: "분실물 색상 HEX 코드"
+          example: "레드"
+          description: "분실물 색상 이름"
         name:
           type: string
           example: "레이디 디올 장지갑"
@@ -165,7 +165,7 @@ components:
           description: "분실물 설명"
         imageUrl:
           type: string
-          example: "15123252.jpg"
+          example: "https://static.locat.kr/items/losts/512312.jpg"
           description: "분실물 이미지 URL"
         lat:
           type: number
@@ -197,8 +197,8 @@ components:
           description: "분실물 카테고리 이름"
         color:
           type: string
-          example: "#FF0000"
-          description: "분실물 색상 HEX 코드"
+          example: "레드"
+          description: "분실물 색상 이름"
         name:
           type: string
           example: "레이디 디올 장지갑"
@@ -219,7 +219,7 @@ components:
           description: "보상금 비율(단위 %)"
         imageUrl:
           type: string
-          example: "15123252.jpg"
+          example: "https://static.locat.kr/items/losts/512312.jpg"
           description: "분실물 이미지 URL"
         lat:
           type: number
@@ -248,15 +248,11 @@ components:
         categoryId:
           type: integer
           example: 8
-          description: "분실물 카테고리 ID(사용자 '직접 입력' 시 null)"
-        categoryName:
-          type: string
-          example: "카드지갑"
-          description: "분실물 카테고리 이름(사용자 '직접 입력' 시 필수)"
-        colorHexCode:
-          type: string
-          example: "#FF0000"
-          description: "분실물 색상 HEX 코드"
+          description: "분실물 카테고리 ID"
+        colorId:
+          type: integer
+          example: 2
+          description: "분실물 색상 ID"
         itemName:
           type: string
           example: "레이디 디올 장지갑"
@@ -283,18 +279,19 @@ components:
           type: number
           example: 127.051
           description: "분실 장소 경도(소수점은 6자리까지)"
-        lostItemImage:
+        image:
           type: string
           format: binary
           description: "분실물 이미지"
       required:
         - categoryId
+        - colorId
         - itemName
         - description
         - isWillingToPayGratuity
         - lat
         - lng
-        - lostItemImage
+        - image
   securitySchemes:
     bearerAuth:
       type: http

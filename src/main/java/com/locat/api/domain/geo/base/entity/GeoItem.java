@@ -36,11 +36,9 @@ public abstract class GeoItem extends SecuredBaseEntity {
   @JoinColumn(name = "category_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
   protected Category category;
 
-  @Column(name = "category_name", length = 50)
-  protected String categoryName;
-
-  @Column(name = "color", nullable = false, length = 7)
-  protected String color;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "color_code_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+  protected ColorCode colorCode;
 
   @Column(name = "item_name", nullable = false, length = 50)
   protected String name;
@@ -53,8 +51,4 @@ public abstract class GeoItem extends SecuredBaseEntity {
 
   @Column(name = "image_url")
   protected String imageUrl;
-
-  public String getCategoryName() {
-    return this.category.isCustom() ? this.categoryName : this.category.getName();
-  }
 }

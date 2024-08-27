@@ -8,8 +8,7 @@ import org.springframework.data.geo.Point;
  * 분실물 등록 DTO
  *
  * @param categoryId 카테고리 ID
- * @param categoryName 카테고리명
- * @param color 색상 HEX 코드
+ * @param colorId 색상 ID
  * @param itemName 분실물 이름
  * @param description 분실물 설명
  * @param isWillingToPayGratuity 보상금 지급 여부
@@ -19,8 +18,7 @@ import org.springframework.data.geo.Point;
 @Builder
 public record LostItemRegisterDto(
     Long categoryId,
-    String categoryName,
-    String color,
+    Long colorId,
     String itemName,
     String description,
     Boolean isWillingToPayGratuity,
@@ -30,8 +28,7 @@ public record LostItemRegisterDto(
   public static LostItemRegisterDto from(LostItemRegisterRequest request) {
     return LostItemRegisterDto.builder()
         .categoryId(request.categoryId())
-        .categoryName(request.categoryName())
-        .color(request.colorHexCode())
+        .colorId(request.colorId())
         .itemName(request.itemName())
         .description(request.description())
         .isWillingToPayGratuity(request.isWillingToPayGratuity())

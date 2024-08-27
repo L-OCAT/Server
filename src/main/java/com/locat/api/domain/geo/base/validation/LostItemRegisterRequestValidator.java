@@ -39,19 +39,9 @@ public class LostItemRegisterRequestValidator
   }
 
   @Override
-  protected boolean validateColorHexCode(LostItemRegisterRequest request) {
-    return HEX_COLOR_PATTERN.matcher(request.colorHexCode()).matches();
-  }
-
-  @Override
   protected boolean validateCoordinates(LostItemRegisterRequest request) {
     return LATITUDE_LONGITUDE_PATTERN.matcher(request.lat().toString()).matches()
         && LATITUDE_LONGITUDE_PATTERN.matcher(request.lng().toString()).matches();
-  }
-
-  @Override
-  protected boolean validateCategoryNameIfCustom(LostItemRegisterRequest request) {
-    return Objects.isNull(request.categoryId()) && Objects.nonNull(request.categoryName());
   }
 
   private boolean validateGratuity(LostItemRegisterRequest request) {

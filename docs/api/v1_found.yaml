@@ -15,8 +15,8 @@ paths:
       parameters:
         - name: onlyMine
           in: query
-          description: "내가 등록한 습득물만 조회 여부"
-          required: true
+          description: "내가 등록한 습득물만 조회 여부 / 기본값: true"
+          required: false
           schema:
             type: boolean
             example: true
@@ -36,15 +36,15 @@ paths:
             example: 127.051
         - name: r
           in: query
-          description: "검색 반경(단위: m)"
-          required: true
+          description: "검색 반경(단위: m) / 기본값: 500"
+          required: false
           schema:
             type: number
             example: 1000
         - name: s
           in: query
-          description: "정렬 기준(Non-Case Sensitive)"
-          required: true
+          description: "정렬 기준(Non-Case Sensitive) / 기본 정렬: 등록일 내림차순"
+          required: false
           schema:
             enum:
               - "CREATED_AT_ASC"
@@ -153,8 +153,8 @@ components:
           description: "습득물 카테고리 이름"
         color:
           type: string
-          example: "#000000"
-          description: "습득물 색상 HEX 코드"
+          example: "스카이블루"
+          description: "습득물 색상 이름"
         name:
           type: string
           example: "iPhone 15 Pro"
@@ -169,7 +169,7 @@ components:
           description: "보관 장소"
         imageUrl:
           type: string
-          example: "15123252.jpg"
+          example: "https://static.locat.kr/items/founds/11235422.jpg"
           description: "습득물 이미지 URL"
         lat:
           type: number
@@ -181,7 +181,7 @@ components:
           description: "습득 장소 경도"
         distance:
           type: number
-          example: 0.5
+          example: 500
           description: "기준 위치로부터의 거리(단위: m)"
         foundAt:
           type: string
@@ -201,8 +201,8 @@ components:
           description: "습득물 카테고리 이름"
         color:
           type: string
-          example: "#000000"
-          description: "습득물 색상 HEX 코드"
+          example: "블랙"
+          description: "습득물 색상 이름"
         name:
           type: string
           example: "iPhone 15 Pro"
@@ -217,7 +217,7 @@ components:
           description: "보관 장소"
         imageUrl:
           type: string
-          example: "15123252.jpg"
+          example: "https://static.locat.kr/items/founds/11235422.jpg"
           description: "습득물 이미지 URL"
         lat:
           type: number
@@ -246,15 +246,11 @@ components:
         categoryId:
           type: integer
           example: 3
-          description: "습득물 카테고리 ID(사용자 '직접 입력' 시 null)"
-        categoryName:
-          type: string
-          example: "전자기기"
-          description: "습득물 카테고리 이름(사용자 '직접 입력' 시 필수)"
-        colorHexCode:
-          type: string
-          example: "#000000"
-          description: "습득물 색상 HEX 코드"
+          description: "습득물 카테고리 ID"
+        colorId:
+          type: integer
+          example: 4
+          description: "습득물 색상 ID"
         itemName:
           type: string
           example: "iPhone 15 Pro"
@@ -275,18 +271,19 @@ components:
           type: number
           example: 127.051
           description: "습득 장소 경도(소수점은 6자리까지)"
-        foundItemImage:
+        image:
           type: string
           format: binary
           description: "습득물 이미지"
       required:
         - categoryId
+        - colorId
         - itemName
         - description
         - custodyLocation
         - lat
         - lng
-        - foundItemImage
+        - image
   securitySchemes:
     bearerAuth:
       type: http

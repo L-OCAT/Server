@@ -1,6 +1,6 @@
 package com.locat.api.domain.geo.base.dto;
 
-import com.locat.api.global.exception.ParameterValidationException;
+import com.locat.api.global.exception.InvalidParameterException;
 import java.util.Arrays;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,7 +18,6 @@ public enum GeoItemType {
         .filter(v -> v.getValue().equals(value))
         .findFirst()
         .orElseThrow(
-            () ->
-                new ParameterValidationException("No matching GeoItemType found. value: " + value));
+            () -> new InvalidParameterException("No matching GeoItemType found. value: " + value));
   }
 }

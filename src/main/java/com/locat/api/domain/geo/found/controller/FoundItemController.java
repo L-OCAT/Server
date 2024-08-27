@@ -51,14 +51,14 @@ public class FoundItemController {
 
   /** 습득물 등록 */
   @PostMapping
-  public ResponseEntity<BaseResponse<Integer>> register(
+  public ResponseEntity<BaseResponse<Void>> register(
       @AuthenticationPrincipal LocatUserDetails userDetails,
       @RequestBody @Valid FoundItemRegisterRequest request,
-      @RequestParam MultipartFile foundItemImage) {
+      @RequestParam("image") MultipartFile image) {
     final long userId = userDetails.getId();
     final String foundItemId =
         this.foundItemService
-            .register(userId, FoundItemRegisterDto.from(request), foundItemImage)
+            .register(userId, FoundItemRegisterDto.from(request), image)
             .toString();
     return ResponseEntity.created(URI.create("/v1/founds/".concat(foundItemId))).build();
   }

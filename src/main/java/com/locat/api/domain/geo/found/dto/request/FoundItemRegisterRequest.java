@@ -7,9 +7,8 @@ import jakarta.validation.constraints.Positive;
 /**
  * 습득물 등록 요청 DTO
  *
- * @param categoryId 카테고리 ID (직접 입력한 카테고리일 경우 null)
- * @param categoryName 카테고리 이름 (직접 입력한 카테고리일 경우 필수)
- * @param colorHexCode 색상 HEX 코드
+ * @param categoryId 카테고리 ID (never {@code null})
+ * @param colorId 색상 ID (never {@code null})
  * @param itemName 습득물 이름
  * @param description 습득물 설명
  * @param custodyLocation 보관 장소
@@ -19,8 +18,7 @@ import jakarta.validation.constraints.Positive;
 @FoundItemValidation
 public record FoundItemRegisterRequest(
     @Positive Long categoryId,
-    String categoryName,
-    @NotBlank String colorHexCode,
+    @Positive Long colorId,
     @NotBlank String itemName,
     @NotBlank String description,
     @NotBlank String custodyLocation,

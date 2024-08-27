@@ -1,7 +1,9 @@
 package com.locat.api.domain.geo.lost.service.impl;
 
 import com.locat.api.domain.geo.base.entity.Category;
+import com.locat.api.domain.geo.base.entity.ColorCode;
 import com.locat.api.domain.geo.base.service.CategoryService;
+import com.locat.api.domain.geo.base.service.ColorCodeService;
 import com.locat.api.domain.geo.lost.dto.LostItemRegisterDto;
 import com.locat.api.domain.geo.lost.dto.LostItemSearchDto;
 import com.locat.api.domain.geo.lost.entity.LostItem;
@@ -31,9 +33,11 @@ public class LostItemServiceImpl implements LostItemService {
   private final GeoItemQRepository<LostItem> lostItemQRepository;
   private final UserService userService;
   private final CategoryService categoryService;
+  private final ColorCodeService colorCodeService;
   private final FileService fileService;
 
   @Override
+  @Transactional(readOnly = true)
   public LostItem findById(Long id) {
     return this.lostItemRepository
         .findById(id)
@@ -41,6 +45,7 @@ public class LostItemServiceImpl implements LostItemService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public GeoPage<LostItem> findAllByCondition(
       Long userId, LostItemSearchDto searchDto, Pageable pageable) {
     return this.lostItemQRepository.findByCondition(userId, searchDto, pageable);
@@ -49,9 +54,24 @@ public class LostItemServiceImpl implements LostItemService {
   @Override
   public Long register(Long userId, LostItemRegisterDto registerDto, MultipartFile foundItemImage) {
     final User user = this.userService.findById(userId);
-    final Category category =
-        this.categoryService.findById(registerDto.categoryId()).orElse(Category.ofCustom());
+    final Category category = this.fetchCategoryById(registerDto.categoryId());
+    final ColorCode colorCode = this.fetchColorCodeById(registerDto.colorId());
+
     final String imageUrl = this.fileService.upload(LOST_ITEM_IMAGE_DIRECTORY, foundItemImage);
-    return this.lostItemRepository.save(LostItem.of(user, category, registerDto, imageUrl)).getId();
+    return this.lostItemRepository
+        .save(LostItem.of(user, category, colorCode, registerDto, imageUrl))
+        .getId();
+  }
+
+  private Category fetchCategoryById(final Long categoryId) {
+    return this.categoryService
+        .findById(categoryId)
+        .orElseThrow(() -> new NoSuchEntityException(ApiExceptionType.NOT_FOUND_CATEGORY));
+  }
+
+  private ColorCode fetchColorCodeById(final Long colorId) {
+    return this.colorCodeService
+        .findById(colorId)
+        .orElseThrow(() -> new NoSuchEntityException(ApiExceptionType.NOT_FOUND_COLOR_CODE));
   }
 }

@@ -10,7 +10,7 @@ import org.springframework.data.geo.GeoResult;
  *
  * @param id 분실물 ID
  * @param category 카테고리명
- * @param color 색상 HEX 코드
+ * @param color 색상명
  * @param name 분실물 이름
  * @param description 분실물 설명
  * @param lng 경도(lng)
@@ -36,8 +36,8 @@ public record LostItemLocationResponse(
     LostItem item = lostItem.getContent();
     return LostItemLocationResponse.builder()
         .id(item.getId())
-        .category(item.getCategoryName())
-        .color(item.getColor())
+        .category(item.getCategory().getName())
+        .color(item.getColorCode().getName())
         .name(item.getName())
         .description(item.getDescription())
         .lng(item.getLocation().getX())
