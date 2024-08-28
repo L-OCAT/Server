@@ -5,9 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.sns.SnsClient;
-import software.amazon.awssdk.services.sns.model.CreatePlatformEndpointRequest;
-import software.amazon.awssdk.services.sns.model.CreatePlatformEndpointResponse;
-import software.amazon.awssdk.services.sns.model.SnsException;
+import software.amazon.awssdk.services.sns.model.*;
 
 import static com.locat.api.domain.user.entity.PlatformType.*;
 
@@ -23,6 +21,9 @@ public class PlatformEndpointServiceImpl implements PlatformEndpointService{
     @Value("${service.aws.sns.platform-application-arn.android}")
     private String androidArn;
 
+    @Value("${service.aws.sns.topic-arn}")
+    private String topicArn;
+
     @Override
     public String createPlatformEndpoint(String token, String platform) {
         String platformApplicationArn = getPlatformApplicationArn(platform);
@@ -36,6 +37,23 @@ public class PlatformEndpointServiceImpl implements PlatformEndpointService{
             return response.endpointArn();
         } catch (SnsException e) {
             throw new RuntimeException("Failed to create platform endpoint", e); // Exception 추가 필요
+        }
+    }
+
+    @Override
+    public String subscribeEndpointToTopic(String endpointArn) {
+        SubscribeRequest request = SubscribeRequest.builder()
+                .protocol("application")
+                .endpoint(endpointArn)
+                .returnSubscriptionArn(true)
+                .topicArn(this.topicArn)
+                .build();
+
+        try {
+            SubscribeResponse response = this.snsClient.subscribe(request);
+            return response.subscriptionArn();
+        } catch (SnsException e) {
+            throw new RuntimeException("Failed to subscribe endpoint to topic", e); // Exception 추가 필요
         }
     }
 
