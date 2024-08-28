@@ -26,7 +26,7 @@ public class UserEndpoint extends SecuredBaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "platform", nullable = false)
-    private Platform platform;
+    private PlatformType platformType;
 
     @Column(name = "endpoint_arn", nullable = false)
     private String endpointArn;
