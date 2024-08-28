@@ -60,7 +60,7 @@ public class PlatformEndpointServiceImpl implements PlatformEndpointService{
     private String getPlatformApplicationArn(String platform) {
         if(platform.equalsIgnoreCase(IOS.getValue())) {
             return this.iosArn;
-        } else if (platform.equalsIgnoreCase("android")) {
+        } else if (platform.equalsIgnoreCase(ANDROID.getValue())) {
             return this.androidArn;
         } else {
             throw new IllegalStateException("Unknow platform"); // Exception 추가 필요

@@ -8,8 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -17,16 +15,10 @@ import java.util.stream.Collectors;
 public class UserEndpointServiceImpl implements UserEndpointService {
 
     private final UserEndpointRepository userEndpointRepository;
+
     @Override
-    public List<String> findUserEndpointArnsByUserId(Long userId) {
-        List<UserEndpoint> userEndpoints = this.userEndpointRepository.findByUserId(userId);
+    public List<UserEndpoint> findUserEndpointsByUserId(Long userId) {
 
-        if (userEndpoints.isEmpty()) {
-            throw new RuntimeException("No user endpoint ARN found for userId=" + userId);
-        }
-
-        return userEndpoints.stream()
-                .map(UserEndpoint::getEndpointArn)
-                .toList();
+        return this.userEndpointRepository.findByUserId(userId);
     }
 }

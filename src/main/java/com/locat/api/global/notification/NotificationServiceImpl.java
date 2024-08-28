@@ -1,5 +1,6 @@
 package com.locat.api.global.notification;
 
+import com.locat.api.domain.user.entity.UserEndpoint;
 import com.locat.api.domain.user.service.UserEndpointService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,15 +38,21 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public String sendUserNotification(Long userId, String message, String subject) {
-        List<String> endpointArns = this.userEndpointService.findUserEndpointArnsByUserId(userId);
+        List<UserEndpoint> endpoints = this.userEndpointService.findUserEndpointsByUserId(userId);
+
+        if (endpoints.isEmpty()) {
+            throw new RuntimeException("No user endpoint ARN found for userId=" + userId);
+        }
+
 
         StringBuilder responseMessages = new StringBuilder();
-        for (String endpointArn : endpointArns) {
+        for (UserEndpoint endpoint : endpoints) {
             PublishRequest request = PublishRequest.builder()
-                    .targetArn(endpointArn)
+                    .targetArn(endpoint.getEndpointArn())
                     .message(message)
                     .subject(subject)
                     .build();
+
             try {
                 PublishResponse response = this.snsClient.publish(request);
                 responseMessages.append(response.messageId());
