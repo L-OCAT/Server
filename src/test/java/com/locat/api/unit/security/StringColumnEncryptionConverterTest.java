@@ -3,7 +3,6 @@ package com.locat.api.unit.security;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import com.locat.api.global.security.StringColumnEncryptionConverter;
-import java.lang.reflect.Field;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,6 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith(MockitoExtension.class)
 class StringColumnEncryptionConverterTest {
@@ -18,8 +18,8 @@ class StringColumnEncryptionConverterTest {
   @InjectMocks private StringColumnEncryptionConverter converter;
 
   @BeforeEach
-  void setUp() throws NoSuchFieldException, IllegalAccessException {
-    this.injectEncryptionKey();
+  void setUp() {
+    ReflectionTestUtils.setField(this.converter, "encryptionKey", "testEncryptionKey123", String.class);
     MockitoAnnotations.openMocks(this);
     this.converter.init();
   }
@@ -65,10 +65,4 @@ class StringColumnEncryptionConverterTest {
     assertThat(decrypted).isNull();
   }
 
-  private void injectEncryptionKey() throws NoSuchFieldException, IllegalAccessException {
-    Field encryptionKeyField =
-        StringColumnEncryptionConverter.class.getDeclaredField("encryptionKey");
-    encryptionKeyField.setAccessible(true);
-    encryptionKeyField.set(this.converter, "testEncryptionKey123");
-  }
 }
