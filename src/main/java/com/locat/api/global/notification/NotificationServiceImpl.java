@@ -1,11 +1,13 @@
 package com.locat.api.global.notification;
 
-import com.locat.api.infrastructure.repository.user.UserRepository;
+import com.locat.api.domain.user.service.UserEndpointService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.sns.SnsClient;
 import software.amazon.awssdk.services.sns.model.*;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -16,7 +18,7 @@ public class NotificationServiceImpl implements NotificationService {
     @Value("${service.aws.sns.topic-arn}")
     private String topicArn;
 
-    private final UserRepository userRepository;
+    private final UserEndpointService userEndpointService;
 
     @Override
     public String sendGeneralNotification(String message, String subject) {
@@ -35,21 +37,22 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public String sendUserNotification(Long userId, String message, String subject) {
-        String endpointArn = this.userRepository.findEndpointArnById(userId);
-        if (endpointArn == null) {
-            throw new RuntimeException("Endpoint Arn not found, userId=" + userId);
-        }
+        List<String> endpointArns = this.userEndpointService.findUserEndpointArnsByUserId(userId);
 
-        PublishRequest request = PublishRequest.builder()
-                .targetArn(endpointArn)
-                .message(message)
-                .subject(subject)
-                .build();
-        try {
-            PublishResponse response = this.snsClient.publish(request);
-            return response.messageId();
-        } catch (SnsException e) {
-            throw new RuntimeException("Failed to send user notification", e);
+        StringBuilder responseMessages = new StringBuilder();
+        for (String endpointArn : endpointArns) {
+            PublishRequest request = PublishRequest.builder()
+                    .targetArn(endpointArn)
+                    .message(message)
+                    .subject(subject)
+                    .build();
+            try {
+                PublishResponse response = this.snsClient.publish(request);
+                responseMessages.append(response.messageId());
+            } catch (SnsException e) {
+                throw new RuntimeException("Failed to send user notification", e);
+            }
         }
+        return responseMessages.toString().trim();
     }
 }
