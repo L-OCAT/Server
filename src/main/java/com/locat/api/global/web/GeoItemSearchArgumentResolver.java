@@ -35,25 +35,22 @@ public class GeoItemSearchArgumentResolver implements HandlerMethodArgumentResol
       NativeWebRequest webRequest,
       WebDataBinderFactory binderFactory) {
     HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
-      final String requestUri = request.getRequestURI();
+    final String requestUri = request.getRequestURI();
 
-      final Double latitude =
-          RequestUtils.getParameterOrDefault(request, "lat", Double.class, null);
-      final Double longitude =
-          RequestUtils.getParameterOrDefault(request, "lng", Double.class, null);
-      final Double radius = RequestUtils.getParameterOrDefault(request, "r", Double.class, 500.0);
-      final Boolean onlyMine =
-          RequestUtils.getParameterOrDefault(request, "onlyMine", Boolean.class, true);
-      final String sort =
-          RequestUtils.getParameterOrDefault(
-              request, "s", String.class, GeoItemSortType.CREATED_AT_DESC.name());
-      final Point location = new Point(longitude, latitude);
+    final Double latitude = RequestUtils.getParameterOrDefault(request, "lat", Double.class, null);
+    final Double longitude = RequestUtils.getParameterOrDefault(request, "lng", Double.class, null);
+    final Double radius = RequestUtils.getParameterOrDefault(request, "r", Double.class, 500.0);
+    final Boolean onlyMine =
+        RequestUtils.getParameterOrDefault(request, "onlyMine", Boolean.class, true);
+    final String sort =
+        RequestUtils.getParameterOrDefault(
+            request, "s", String.class, GeoItemSortType.CREATED_AT_DESC.name());
+    final Point location = new Point(longitude, latitude);
 
-      return switch (requestUri) {
-        case LOST_ITEM_URI -> LostItemSearchDto.fromRequest(onlyMine, location, radius, sort);
-        case FOUND_ITEM_URI -> FoundItemSearchDto.fromRequest(onlyMine, location, radius, sort);
-        default -> throw new InvalidParameterException("Unexpected URI: " + requestUri);
-      };
-
+    return switch (requestUri) {
+      case LOST_ITEM_URI -> LostItemSearchDto.fromRequest(onlyMine, location, radius, sort);
+      case FOUND_ITEM_URI -> FoundItemSearchDto.fromRequest(onlyMine, location, radius, sort);
+      default -> throw new InvalidParameterException("Unexpected URI: " + requestUri);
+    };
   }
 }

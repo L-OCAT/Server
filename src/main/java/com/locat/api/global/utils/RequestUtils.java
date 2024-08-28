@@ -29,7 +29,7 @@ public final class RequestUtils {
       HttpServletRequest request, String parameterName, Class<T> clazz, T defaultValue) {
     return Optional.of(request)
         .map(req -> req.getParameter(parameterName))
-        .map(value -> cast(value, clazz))
+        .map(value -> TypeCaster.cast(value, clazz))
         .orElseGet(
             () -> {
               if (defaultValue != null) {
@@ -38,23 +38,5 @@ public final class RequestUtils {
               throw new InvalidParameterException(
                   String.format("Required parameter \"%s\" is missing", parameterName));
             });
-  }
-
-  /**
-   * 주어진 문자열 값을 주어진 타입으로 변환합니다.
-   *
-   * @param value 문자열 값
-   * @param clazz 변환할 타입 클래스
-   * @return 변환된 값
-   * @param <T> 변환할 타입
-   * @throws InvalidParameterException 주어진 타입으로 변환할 수 없는 값인 경우
-   */
-  private static <T> T cast(String value, Class<T> clazz) {
-    try {
-      return clazz.cast(value);
-    } catch (ClassCastException e) {
-      throw new InvalidParameterException(
-          String.format("%s cannot be cast to %s", value, clazz.getSimpleName()));
-    }
   }
 }
