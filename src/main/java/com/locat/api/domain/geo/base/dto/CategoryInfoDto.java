@@ -9,4 +9,4 @@ package com.locat.api.domain.geo.base.dto;
  * @param parentCategoryName 상위 카테고리 이름 (최상위 카테고리인 경우 {@code null})
  */
 public record CategoryInfoDto(
-    Long categoryId, String categoryName, String parentCategoryId, String parentCategoryName) {}
+    Long categoryId, String categoryName, Long parentCategoryId, String parentCategoryName) {}

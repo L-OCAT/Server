@@ -14,8 +14,6 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Category extends SecuredBaseEntity {
 
-  public static final String CUSTOM_CATEGORY_NAME = "직접 입력";
-
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id", columnDefinition = "int UNSIGNED not null")
@@ -27,12 +25,4 @@ public class Category extends SecuredBaseEntity {
 
   @Column(name = "parent_id", columnDefinition = "int UNSIGNED")
   private Long parentId;
-
-  public static Category ofCustom() {
-    return Category.builder().id(1L).name(CUSTOM_CATEGORY_NAME).parentId(null).build();
-  }
-
-  public boolean isCustom() {
-    return this.name.equals(CUSTOM_CATEGORY_NAME);
-  }
 }
