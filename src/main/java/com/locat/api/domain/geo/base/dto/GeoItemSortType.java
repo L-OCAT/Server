@@ -15,7 +15,7 @@ public enum GeoItemSortType {
     return Arrays.stream(GeoItemSortType.values())
         .filter(sortType -> sortType.name().equalsIgnoreCase(sort))
         .findFirst()
-        .orElse(CREATED_AT_ASC);
+        .orElse(CREATED_AT_DESC);
   }
 
   public boolean isCreatedAtDesc() {
