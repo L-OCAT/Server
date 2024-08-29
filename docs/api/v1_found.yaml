@@ -151,10 +151,12 @@ components:
           type: string
           example: "전자기기"
           description: "습득물 카테고리 이름"
-        color:
-          type: string
-          example: "스카이블루"
-          description: "습득물 색상 이름"
+        colors:
+          type: array
+          items:
+            type: string
+          example: [ "레드", "블랙" ]
+          description: "습득물 색상 이름 목록"
         name:
           type: string
           example: "iPhone 15 Pro"
@@ -199,10 +201,12 @@ components:
           type: string
           example: "전자기기"
           description: "습득물 카테고리 이름"
-        color:
-          type: string
-          example: "블랙"
-          description: "습득물 색상 이름"
+        colors:
+          type: array
+          items:
+            type: string
+          example: [ "레드", "블랙" ]
+          description: "습득물 색상 이름 목록"
         name:
           type: string
           example: "iPhone 15 Pro"
@@ -247,10 +251,12 @@ components:
           type: integer
           example: 3
           description: "습득물 카테고리 ID"
-        colorId:
-          type: integer
-          example: 4
-          description: "습득물 색상 ID"
+        colorIds:
+          type: array
+          items:
+            type: integer
+          example: [ 1, 2 ]
+          description: "습득물 색상 ID 목록(최소 1개, 최대 2개)"
         itemName:
           type: string
           example: "iPhone 15 Pro"
@@ -277,7 +283,7 @@ components:
           description: "습득물 이미지"
       required:
         - categoryId
-        - colorId
+        - colorIds
         - itemName
         - description
         - custodyLocation

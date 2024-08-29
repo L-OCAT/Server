@@ -7,6 +7,7 @@ import com.locat.api.domain.geo.lost.dto.LostItemRegisterDto;
 import com.locat.api.domain.user.entity.User;
 import jakarta.persistence.*;
 import java.time.ZonedDateTime;
+import java.util.Set;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -15,10 +16,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @Table(
     name = "lost_item",
-    indexes = {
-      @Index(name = "idx_lost_item_match", columnList = "category_id, color, location"),
-      @Index(name = "idx_lost_item_location", columnList = "location")
-    })
+    indexes = {@Index(name = "idx_lost_item_location", columnList = "location")})
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class LostItem extends GeoItem {
@@ -43,13 +41,13 @@ public class LostItem extends GeoItem {
   public static LostItem of(
       User user,
       Category category,
-      ColorCode colorCode,
+      Set<ColorCode> colorCodes,
       LostItemRegisterDto registerDto,
       String imageUrl) {
     return LostItem.builder()
         .user(user)
         .category(category)
-        .colorCode(colorCode)
+        .colorCodes(colorCodes)
         .name(registerDto.itemName())
         .description(registerDto.description())
         .isWillingToPayGratuity(registerDto.isWillingToPayGratuity())

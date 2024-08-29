@@ -15,6 +15,8 @@ import com.locat.api.global.exception.NoSuchEntityException;
 import com.locat.api.global.file.FileService;
 import com.locat.api.infrastructure.repository.geo.GeoItemQRepository;
 import com.locat.api.infrastructure.repository.geo.found.FoundItemRepository;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.geo.GeoPage;
@@ -56,11 +58,12 @@ public class FoundItemServiceImpl implements FoundItemService {
       Long userId, FoundItemRegisterDto registerDto, MultipartFile foundItemImage) {
     User user = this.userService.findById(userId);
     final Category category = this.fetchCategoryById(registerDto.categoryId());
-    final ColorCode colorCode = this.fetchColorCodeById(registerDto.colorId());
+    final Set<ColorCode> colorCodes =
+        registerDto.colorIds().stream().map(this::fetchColorCodeById).collect(Collectors.toSet());
 
     final String imageUrl = this.fileService.upload(FOUND_ITEM_IMAGE_DIRECTORY, foundItemImage);
     return this.foundItemRepository
-        .save(FoundItem.of(user, category, colorCode, registerDto, imageUrl))
+        .save(FoundItem.of(user, category, colorCodes, registerDto, imageUrl))
         .getId();
   }
 

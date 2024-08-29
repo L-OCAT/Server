@@ -7,6 +7,7 @@ import com.locat.api.domain.geo.found.dto.FoundItemRegisterDto;
 import com.locat.api.domain.user.entity.User;
 import jakarta.persistence.*;
 import java.time.ZonedDateTime;
+import java.util.Set;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -15,7 +16,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @Table(
     name = "found_item",
-    indexes = {@Index(name = "idx_found_item_match", columnList = "category_id, color, location")})
+    indexes = {@Index(name = "idx_found_item_location", columnList = "location")})
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class FoundItem extends GeoItem {
@@ -37,13 +38,13 @@ public class FoundItem extends GeoItem {
   public static FoundItem of(
       User user,
       Category category,
-      ColorCode colorCode,
+      Set<ColorCode> colorCodes,
       FoundItemRegisterDto registerDto,
       String imageUrl) {
     return FoundItem.builder()
         .user(user)
         .category(category)
-        .colorCode(colorCode)
+        .colorCodes(colorCodes)
         .name(registerDto.itemName())
         .description(registerDto.description())
         .custodyLocation(registerDto.custodyLocation())

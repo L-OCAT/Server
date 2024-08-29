@@ -151,10 +151,12 @@ components:
           type: string
           example: "카드지갑"
           description: "분실물 카테고리 이름"
-        color:
-          type: string
-          example: "레드"
-          description: "분실물 색상 이름"
+        colors:
+          type: array
+          items:
+            type: string
+          example: [ "레드", "블랙" ]
+          description: "분실물 색상 이름 목록"
         name:
           type: string
           example: "레이디 디올 장지갑"
@@ -195,10 +197,12 @@ components:
           type: string
           example: "카드지갑"
           description: "분실물 카테고리 이름"
-        color:
-          type: string
-          example: "레드"
-          description: "분실물 색상 이름"
+        colors:
+          type: array
+          items:
+            type: string
+          example: [ "레드", "블랙" ]
+          description: "분실물 색상 이름 목록"
         name:
           type: string
           example: "레이디 디올 장지갑"
@@ -249,10 +253,12 @@ components:
           type: integer
           example: 8
           description: "분실물 카테고리 ID"
-        colorId:
-          type: integer
-          example: 2
-          description: "분실물 색상 ID"
+        colorIds:
+          type: array
+          items:
+            type: integer
+          example: [ 1, 2 ]
+          description: "분실물 색상 ID 목록(최소 1개, 최대 2개)"
         itemName:
           type: string
           example: "레이디 디올 장지갑"
@@ -285,7 +291,7 @@ components:
           description: "분실물 이미지"
       required:
         - categoryId
-        - colorId
+        - colorIds
         - itemName
         - description
         - isWillingToPayGratuity

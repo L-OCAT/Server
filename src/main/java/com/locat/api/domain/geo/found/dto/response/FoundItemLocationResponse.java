@@ -2,6 +2,7 @@ package com.locat.api.domain.geo.found.dto.response;
 
 import com.locat.api.domain.geo.base.utils.GeoUtils;
 import com.locat.api.domain.geo.found.entity.FoundItem;
+import java.util.Set;
 import lombok.Builder;
 import org.springframework.data.geo.GeoResult;
 
@@ -10,7 +11,7 @@ import org.springframework.data.geo.GeoResult;
  *
  * @param id 습득물 ID
  * @param category 카테고리명
- * @param color 색상명
+ * @param colors 색상명 (최대 2개)
  * @param name 습득물 이름
  * @param description 습득물 설명
  * @param custodyLocation 보관 장소
@@ -24,7 +25,7 @@ import org.springframework.data.geo.GeoResult;
 public record FoundItemLocationResponse(
     Long id,
     String category,
-    String color,
+    Set<String> colors,
     String name,
     String description,
     String custodyLocation,
@@ -39,7 +40,7 @@ public record FoundItemLocationResponse(
     return FoundItemLocationResponse.builder()
         .id(item.getId())
         .category(item.getCategory().getName())
-        .color(item.getColorCode().getName())
+        .colors(item.getColorNames())
         .name(item.getName())
         .description(item.getDescription())
         .custodyLocation(item.getCustodyLocation())

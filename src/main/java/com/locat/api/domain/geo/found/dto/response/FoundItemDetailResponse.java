@@ -1,6 +1,7 @@
 package com.locat.api.domain.geo.found.dto.response;
 
 import com.locat.api.domain.geo.found.entity.FoundItem;
+import java.util.Set;
 import lombok.Builder;
 
 /**
@@ -8,7 +9,7 @@ import lombok.Builder;
  *
  * @param id 습득물 ID
  * @param category 카테고리명
- * @param color 색상 HEX 코드
+ * @param colors 색상명 (최대 2개)
  * @param name 습득물 이름
  * @param description 습득물 설명
  * @param custodyLocation 보관 장소
@@ -21,7 +22,7 @@ import lombok.Builder;
 public record FoundItemDetailResponse(
     Long id,
     String category,
-    String color,
+    Set<String> colors,
     String name,
     String description,
     String custodyLocation,
@@ -34,7 +35,7 @@ public record FoundItemDetailResponse(
     return FoundItemDetailResponse.builder()
         .id(foundItem.getId())
         .category(foundItem.getCategory().getName())
-        .color(foundItem.getColorCode().getName())
+        .colors(foundItem.getColorNames())
         .name(foundItem.getName())
         .description(foundItem.getDescription())
         .custodyLocation(foundItem.getCustodyLocation())

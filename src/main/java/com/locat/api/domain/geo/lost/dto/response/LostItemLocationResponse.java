@@ -2,6 +2,7 @@ package com.locat.api.domain.geo.lost.dto.response;
 
 import com.locat.api.domain.geo.base.utils.GeoUtils;
 import com.locat.api.domain.geo.lost.entity.LostItem;
+import java.util.Set;
 import lombok.Builder;
 import org.springframework.data.geo.GeoResult;
 
@@ -10,7 +11,7 @@ import org.springframework.data.geo.GeoResult;
  *
  * @param id 분실물 ID
  * @param category 카테고리명
- * @param color 색상명
+ * @param colors 색상명 (최대 2개)
  * @param name 분실물 이름
  * @param description 분실물 설명
  * @param lng 경도(lng)
@@ -23,7 +24,7 @@ import org.springframework.data.geo.GeoResult;
 public record LostItemLocationResponse(
     Long id,
     String category,
-    String color,
+    Set<String> colors,
     String name,
     String description,
     Double lng,
@@ -37,7 +38,7 @@ public record LostItemLocationResponse(
     return LostItemLocationResponse.builder()
         .id(item.getId())
         .category(item.getCategory().getName())
-        .color(item.getColorCode().getName())
+        .colors(item.getColorNames())
         .name(item.getName())
         .description(item.getDescription())
         .lng(item.getLocation().getX())

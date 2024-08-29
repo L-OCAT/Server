@@ -1,6 +1,7 @@
 package com.locat.api.domain.geo.lost.dto;
 
 import com.locat.api.domain.geo.lost.dto.request.LostItemRegisterRequest;
+import java.util.Set;
 import lombok.Builder;
 import org.springframework.data.geo.Point;
 
@@ -8,7 +9,7 @@ import org.springframework.data.geo.Point;
  * 분실물 등록 DTO
  *
  * @param categoryId 카테고리 ID
- * @param colorId 색상 ID
+ * @param colorIds 색상 ID 목록
  * @param itemName 분실물 이름
  * @param description 분실물 설명
  * @param isWillingToPayGratuity 보상금 지급 여부
@@ -18,7 +19,7 @@ import org.springframework.data.geo.Point;
 @Builder
 public record LostItemRegisterDto(
     Long categoryId,
-    Long colorId,
+    Set<Long> colorIds,
     String itemName,
     String description,
     Boolean isWillingToPayGratuity,
@@ -28,7 +29,7 @@ public record LostItemRegisterDto(
   public static LostItemRegisterDto from(LostItemRegisterRequest request) {
     return LostItemRegisterDto.builder()
         .categoryId(request.categoryId())
-        .colorId(request.colorId())
+        .colorIds(request.colorIds())
         .itemName(request.itemName())
         .description(request.description())
         .isWillingToPayGratuity(request.isWillingToPayGratuity())
