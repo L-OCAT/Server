@@ -56,8 +56,8 @@ public class LostItemQRepositoryImpl extends AbstractGeoItemQRepository<LostItem
     if (sort.isLostAtAsc()) {
       return qLostItem.lostAt.asc();
     }
-    if (sort.isCreatedAtDesc()) {
-      return qLostItem.createdAt.desc();
+    if (sort.isCreatedAtAsc()) {
+      return qLostItem.createdAt.asc();
     }
     return orderSpecifier;
   }

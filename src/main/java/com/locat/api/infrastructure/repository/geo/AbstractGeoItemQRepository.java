@@ -25,6 +25,13 @@ public abstract class AbstractGeoItemQRepository<T extends GeoItem>
   /** QueryDSL Entity */
   protected final EntityPathBase<T> qEntity;
 
+  /**
+   * {@inheritDoc}
+   * @param userId 사용자 ID
+   * @param searchCriteria 검색 조건
+   * @param pageable 페이징 정보
+   * @return {@link GeoPage}로 래핑된 검색 결과
+   */
   @Transactional(readOnly = true)
   public GeoPage<T> findByCondition(
       final Long userId, GeoItemSearchCriteria searchCriteria, final Pageable pageable) {

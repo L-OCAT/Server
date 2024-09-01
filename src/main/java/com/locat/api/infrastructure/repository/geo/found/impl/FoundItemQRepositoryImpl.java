@@ -49,15 +49,15 @@ public class FoundItemQRepositoryImpl extends AbstractGeoItemQRepository<FoundIt
 
   @Override
   protected OrderSpecifier<?> determineOrderSpecification(GeoItemSortType sort) {
-    OrderSpecifier<?> orderSpecifier = qFountItem.foundAt.desc();
+    OrderSpecifier<?> orderSpecifier = qFountItem.createdAt.desc();
     if (sort.isFoundAtAsc()) {
       return qFountItem.foundAt.asc();
     }
     if (sort.isFoundAtDesc()) {
       return qFountItem.foundAt.desc();
     }
-    if (sort.isCreatedAtDesc()) {
-      return qFountItem.createdAt.desc();
+    if (sort.isCreatedAtAsc()) {
+      return qFountItem.createdAt.asc();
     }
     return orderSpecifier;
   }
