@@ -33,7 +33,7 @@ public class StringColumnEncryptionConverter implements AttributeConverter<Strin
 
   private SecretKeySpec secretKeySpec;
 
-  @Value("${service.enncryption.key}")
+  @Value("${service.encryption.key}")
   private String encryptionKey;
 
   @PostConstruct
