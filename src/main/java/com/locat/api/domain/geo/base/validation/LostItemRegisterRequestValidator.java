@@ -20,7 +20,7 @@ public class LostItemRegisterRequestValidator
       "Gratuity rate must be a value between 0 and 5%";
 
   /** 보상금 지급 의사가 있다고 표시했지만, 보상금 비율을 입력하지 않은 경우 커스텀 메시지 */
-  private static final String GRATUITY_VALUE_CONSRANT_VIOLATION_MESSAGE =
+  private static final String GRATUITY_VALUE_CONSTRAINT_VIOLATION_MESSAGE =
       "If the intent to pay gratuity is indicated, the gratuity value must be provided.";
 
   @Override
@@ -28,7 +28,7 @@ public class LostItemRegisterRequestValidator
     if (request.isWillingToPayGratuity()) {
       if (Objects.isNull(request.gratuity())) {
         super.setCustomViolationMessage(
-            context, GRATUITY_VALUE_CONSRANT_VIOLATION_MESSAGE, "gratuity");
+            context, GRATUITY_VALUE_CONSTRAINT_VIOLATION_MESSAGE, "gratuity");
         return false;
       }
       if (!this.validateGratuity(request)) {

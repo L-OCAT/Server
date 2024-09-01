@@ -2,7 +2,7 @@ package com.locat.api.infrastructure.repository.geo.base.impl;
 
 import com.locat.api.domain.geo.base.dto.CategoryInfoDto;
 import com.locat.api.domain.geo.base.entity.QCategory;
-import com.locat.api.infrastructure.repository.geo.base.CustomCategoryRepository;
+import com.locat.api.infrastructure.repository.geo.base.CategoryQRepository;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @Transactional
 @RequiredArgsConstructor
-public class CustomCategoryRepositoryImpl implements CustomCategoryRepository {
+public class CategoryQRepositoryImpl implements CategoryQRepository {
 
   private static final QCategory qCategory = QCategory.category;
 
@@ -23,7 +23,7 @@ public class CustomCategoryRepositoryImpl implements CustomCategoryRepository {
   @Transactional(readOnly = true)
   public List<CategoryInfoDto> findAll() {
     QCategory parentCategory = new QCategory("parentCategory");
-    return jpaQueryFactory
+    return this.jpaQueryFactory
         .select(
             Projections.constructor(
                 CategoryInfoDto.class,

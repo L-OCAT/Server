@@ -54,13 +54,13 @@ public class LostItemServiceImpl implements LostItemService {
   }
 
   @Override
-  public Long register(Long userId, LostItemRegisterDto registerDto, MultipartFile foundItemImage) {
+  public Long register(Long userId, LostItemRegisterDto registerDto, MultipartFile lostItemImage) {
     final User user = this.userService.findById(userId);
     final Category category = this.fetchCategoryById(registerDto.categoryId());
     final Set<ColorCode> colorCodes =
         registerDto.colorIds().stream().map(this::fetchColorCodeById).collect(Collectors.toSet());
 
-    final String imageUrl = this.fileService.upload(LOST_ITEM_IMAGE_DIRECTORY, foundItemImage);
+    final String imageUrl = this.fileService.upload(LOST_ITEM_IMAGE_DIRECTORY, lostItemImage);
     return this.lostItemRepository
         .save(LostItem.of(user, category, colorCodes, registerDto, imageUrl))
         .getId();

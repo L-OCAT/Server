@@ -4,7 +4,7 @@ import com.locat.api.domain.geo.base.dto.CategoryInfoDto;
 import com.locat.api.domain.geo.base.entity.Category;
 import com.locat.api.domain.geo.base.service.CategoryService;
 import com.locat.api.infrastructure.repository.geo.base.CategoryRepository;
-import com.locat.api.infrastructure.repository.geo.base.CustomCategoryRepository;
+import com.locat.api.infrastructure.repository.geo.base.CategoryQRepository;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class CategoryServiceImpl implements CategoryService {
 
   private final CategoryRepository categoryRepository;
-  private final CustomCategoryRepository customCategoryRepository;
+  private final CategoryQRepository customCategoryRepository;
 
   @Override
   @Transactional(readOnly = true)

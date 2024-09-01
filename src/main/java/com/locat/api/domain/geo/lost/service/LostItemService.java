@@ -37,10 +37,10 @@ public interface LostItemService {
    *
    * @param userId 등록 요청한 사용자 ID
    * @param registerDto 분실물 등록 DTO
-   * @param foundItemImage 분실물 이미지 파일
+   * @param lostItemImage 분실물 이미지 파일
    * @return 등록된 분실물 ID
    * @throws FileOperationFailedException 이미지 파일 처리에 실패한 경우
    */
   Long register(
-      final Long userId, final LostItemRegisterDto registerDto, final MultipartFile foundItemImage);
+      final Long userId, final LostItemRegisterDto registerDto, final MultipartFile lostItemImage);
 }
