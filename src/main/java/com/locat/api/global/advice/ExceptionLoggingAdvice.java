@@ -17,11 +17,13 @@ public class ExceptionLoggingAdvice {
   }
 
   private void doLogExceptionInternal(JoinPoint joinPoint, Throwable ex) {
+    StackTraceElement invokedMethod = ex.getStackTrace()[0];
     log.error(
-        "Resolve exception {} during execution of {} with message: {} from {}",
+        "Resolved exception[{}] | Location: {} | Method: {}:{} | Message: {}",
         ex.getClass().getSimpleName(),
         joinPoint.getSignature().toShortString(),
-        ex.getMessage(),
-        joinPoint.getSignature().getDeclaringTypeName());
+        invokedMethod.getMethodName(),
+        invokedMethod.getLineNumber(),
+        ex.getMessage());
   }
 }

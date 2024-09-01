@@ -1,0 +1,298 @@
+openapi: 3.0.0
+info:
+  title: Found Item API
+  description: 습득물 관련 API를 정의하는 문서입니다.
+  version: 0.0.1
+servers:
+  - url: https://api.locat.kr
+    description: Production
+paths:
+  /v1/items/founds:
+    get:
+      summary: 습득물 목록 조회 API
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: onlyMine
+          in: query
+          description: "내가 등록한 습득물만 조회 여부 / 기본값: true"
+          required: false
+          schema:
+            type: boolean
+            example: true
+        - name: lat
+          in: query
+          description: "기준 위도"
+          required: true
+          schema:
+            type: number
+            example: 37.504
+        - name: lng
+          in: query
+          description: "기준 경도"
+          required: true
+          schema:
+            type: number
+            example: 127.051
+        - name: r
+          in: query
+          description: "검색 반경(단위: m) / 기본값: 500"
+          required: false
+          schema:
+            type: number
+            example: 1000
+        - name: s
+          in: query
+          description: "정렬 기준(Non-Case Sensitive) / 기본 정렬: 등록일 내림차순"
+          required: false
+          schema:
+            enum:
+              - "CREATED_AT_ASC"
+              - "CREATED_AT_DESC"
+              - "FOUND_AT_ASC"
+              - "FOUND_AT_DESC"
+            example: "CREATED_AT_DESC"
+      responses:
+        200:
+          $ref: "#/components/responses/FoundItemLocationResponse"
+    post:
+      summary: 습득물 등록 API
+      requestBody:
+        $ref: "#/components/requestBodies/FoundItemRegisterRequest"
+      responses:
+        201:
+          description: "습득물 등록 성공"
+          headers:
+            Location:
+              description: "등록된 습득물의 URI"
+              schema:
+                type: string
+        400:
+          description: "Bad Request: 요청 형식 오류"
+          content:
+            application/json:
+              schema:
+                $ref: "schemas.yaml#/components/schemas/ErrorResponse"
+        404:
+          description: "Not Found: 등록 요청 사용자 또는 카테고리 정보 없음"
+          content:
+            application/json:
+              schema:
+                $ref: "schemas.yaml#/components/schemas/ErrorResponse"
+        500:
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: "schemas.yaml#/components/schemas/ErrorResponse"
+      security:
+        - bearerAuth: [ ]
+  /v1/items/founds/{id}:
+    description: "습득물 상세 조회 API"
+    get:
+      summary: "습득물 상세 조회 API"
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          description: "습득물 ID"
+          required: true
+          schema:
+            type: integer
+            example: 5
+      responses:
+        200:
+          $ref: "#/components/responses/FoundItemDetailResponse"
+components:
+  requestBodies:
+    FoundItemRegisterRequest:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/FoundItemRegisterRequest"
+  responses:
+    FoundItemLocationResponse:
+      description: "습득물 위치 정보 응답(목록 조회 시 등에 사용)"
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "schemas.yaml#/components/schemas/BaseResponse"
+              - type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/FoundItemLocationResponse"
+    FoundItemDetailResponse:
+      description: "습득물 상세 조회 응답 Body"
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "schemas.yaml#/components/schemas/BaseResponse"
+              - type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/FoundItemDetailResponse"
+  schemas:
+    FoundItemLocationResponse:
+      type: object
+      description: "습득물 위치 정보 응답(목록 조회 시 등에 사용)"
+      properties:
+        id:
+          type: integer
+          example: 1
+          description: "습득물 ID"
+        category:
+          type: string
+          example: "전자기기"
+          description: "습득물 카테고리 이름"
+        colors:
+          type: array
+          items:
+            type: string
+          example: [ "레드", "블랙" ]
+          description: "습득물 색상 이름 목록"
+        name:
+          type: string
+          example: "iPhone 15 Pro"
+          description: "습득물 이름"
+        description:
+          type: string
+          example: "블랙 티타늄 색상이고, 'Hello' 각인이 되어 있어요."
+          description: "습득물 설명"
+        custodyLocation:
+          type: string
+          example: "2호선 선릉역 10번 출구 근처"
+          description: "보관 장소"
+        imageUrl:
+          type: string
+          example: "https://static.locat.kr/items/founds/11235422.jpg"
+          description: "습득물 이미지 URL"
+        lat:
+          type: number
+          example: 37.504
+          description: "습득 장소 위도"
+        lng:
+          type: number
+          example: 127.051
+          description: "습득 장소 경도"
+        distance:
+          type: number
+          example: 500
+          description: "기준 위치로부터의 거리(단위: m)"
+        foundAt:
+          type: string
+          example: "2024-07-23T12:00:00"
+          description: "습득 일시(ISO 8601)"
+    FoundItemDetailResponse:
+      type: object
+      description: "습득물 상세 조회 응답 Body"
+      properties:
+        id:
+          type: integer
+          example: 1
+          description: "습득물 ID"
+        category:
+          type: string
+          example: "전자기기"
+          description: "습득물 카테고리 이름"
+        colors:
+          type: array
+          items:
+            type: string
+          example: [ "레드", "블랙" ]
+          description: "습득물 색상 이름 목록"
+        name:
+          type: string
+          example: "iPhone 15 Pro"
+          description: "습득물 이름"
+        description:
+          type: string
+          example: "블랙 티타늄 색상이고, 'Hello' 각인이 되어 있어요."
+          description: "습득물 설명"
+        custodyLocation:
+          type: string
+          example: "2호선 선릉역 10번 출구 근처"
+          description: "보관 장소"
+        imageUrl:
+          type: string
+          example: "https://static.locat.kr/items/founds/11235422.jpg"
+          description: "습득물 이미지 URL"
+        lat:
+          type: number
+          example: 37.504
+          description: "습득 장소 위도"
+        lng:
+          type: number
+          example: 127.051
+          description: "습득 장소 경도"
+        foundAt:
+          type: string
+          example: "2024-08-01T15:00:00"
+          description: "습득 일시(ISO 8601)"
+        createdAt:
+          type: string
+          example: "2024-08-01T15:30:00"
+          description: "등록 일시(ISO 8601)"
+        updatedAt:
+          type: string
+          example: "2024-08-02T08:23:00"
+          description: "수정 일시(ISO 8601)"
+    FoundItemRegisterRequest:
+      type: object
+      description: "습득물 등록 요청 Body"
+      properties:
+        categoryId:
+          type: integer
+          example: 3
+          description: "습득물 카테고리 ID"
+        colorIds:
+          type: array
+          items:
+            type: integer
+          example: [ 1, 2 ]
+          description: "습득물 색상 ID 목록(최소 1개, 최대 2개)"
+        itemName:
+          type: string
+          example: "iPhone 15 Pro"
+          description: "습득물 이름(최대 50자)"
+        description:
+          type: string
+          example: "블랙 티타늄 색상이고, 'Hello' 각인이 되어 있어요."
+          description: "습득물 설명(최대 500자)"
+        custodyLocation:
+          type: string
+          example: "2호선 선릉역 10번 출구 근처"
+          description: "보관 장소"
+        lat:
+          type: number
+          example: 37.504
+          description: "습득 장소 위도(소수점은 6자리까지)"
+        lng:
+          type: number
+          example: 127.051
+          description: "습득 장소 경도(소수점은 6자리까지)"
+        image:
+          type: string
+          format: binary
+          description: "습득물 이미지"
+      required:
+        - categoryId
+        - colorIds
+        - itemName
+        - description
+        - custodyLocation
+        - lat
+        - lng
+        - image
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+

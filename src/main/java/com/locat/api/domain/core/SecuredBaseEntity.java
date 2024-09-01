@@ -3,7 +3,11 @@ package com.locat.api.domain.core;
 import com.locat.api.global.security.LocatAuditorAware;
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.LastModifiedBy;
 
@@ -13,14 +17,17 @@ import org.springframework.data.annotation.LastModifiedBy;
  * 모든 Entity 클래스는 이 클래스 또는 {@link BaseEntity}를 상속받도록 구성해야 합니다.
  */
 @Getter
+@SuperBuilder
 @MappedSuperclass
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class SecuredBaseEntity extends BaseEntity {
 
   @CreatedBy
   @Column(nullable = false, updatable = false)
-  private String createdBy;
+  private Long createdBy;
 
   @LastModifiedBy
   @Column(nullable = false)
-  private String updatedBy;
+  private Long updatedBy;
 }
