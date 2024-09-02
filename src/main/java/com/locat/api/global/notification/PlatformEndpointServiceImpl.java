@@ -1,6 +1,5 @@
 package com.locat.api.global.notification;
 
-import com.locat.api.domain.user.entity.PlatformType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -24,6 +23,8 @@ public class PlatformEndpointServiceImpl implements PlatformEndpointService{
     @Value("${service.aws.sns.topic-arn}")
     private String topicArn;
 
+    private static final String PROTOCOL_APPLICATION = "application";
+
     @Override
     public String createPlatformEndpoint(String token, String platform) {
         String platformApplicationArn = getPlatformApplicationArn(platform);
@@ -43,7 +44,7 @@ public class PlatformEndpointServiceImpl implements PlatformEndpointService{
     @Override
     public String subscribeEndpointToTopic(String endpointArn) {
         SubscribeRequest request = SubscribeRequest.builder()
-                .protocol("application")
+                .protocol(PROTOCOL_APPLICATION)
                 .endpoint(endpointArn)
                 .returnSubscriptionArn(true)
                 .topicArn(this.topicArn)
