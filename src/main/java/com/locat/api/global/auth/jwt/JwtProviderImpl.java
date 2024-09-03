@@ -41,6 +41,9 @@ public class JwtProviderImpl implements JwtProvider {
   @Value("${security.jwt.secret}")
   private String secretKey;
 
+  @Value("${service.url.api}")
+  private String serviceUrl;
+
   private JwtParser parser;
 
   private static final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS512;
@@ -126,6 +129,7 @@ public class JwtProviderImpl implements JwtProvider {
     return Jwts.builder()
         .setSubject(authentication.getName())
         .claim(AUTHORIZATION_KEY, authentication.getAuthorities())
+        .setIssuer(this.serviceUrl)
         .setIssuedAt(Date.from(Instant.now(this.clock)))
         .setExpiration(getExpirationDate(ACCESS_TOKEN_EXPIRATION))
         .signWith(Keys.hmacShaKeyFor(this.secretKey.getBytes()), signatureAlgorithm)
@@ -135,6 +139,7 @@ public class JwtProviderImpl implements JwtProvider {
   private String createRefreshToken(String username) {
     return Jwts.builder()
         .setSubject(username)
+        .setIssuer(this.serviceUrl)
         .setIssuedAt(Date.from(Instant.now(this.clock)))
         .setExpiration(getExpirationDate(REFRESH_TOKEN_EXPIRATION))
         .signWith(Keys.hmacShaKeyFor(this.secretKey.getBytes()), signatureAlgorithm)

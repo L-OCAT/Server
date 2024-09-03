@@ -43,8 +43,6 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
-    implementation(platform("software.amazon.awssdk:bom:2.24.0"))
-    implementation("software.amazon.awssdk:s3")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-cache")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
@@ -54,6 +52,12 @@ dependencies {
     implementation("io.jsonwebtoken:jjwt-impl:$jjwtVersion")
     implementation("io.jsonwebtoken:jjwt-jackson:$jjwtVersion")
     runtimeOnly("com.mysql:mysql-connector-j")
+    // AWS SDK
+    implementation(platform("software.amazon.awssdk:bom:2.24.0"))
+    implementation("software.amazon.awssdk:s3")
+    implementation("software.amazon.awssdk:ses")
+    // AWS SNS
+    implementation("software.amazon.awssdk:sns")
     // Lombok
     implementation("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
@@ -62,11 +66,8 @@ dependencies {
     annotationProcessor("com.querydsl:querydsl-apt:$queryDSLVersion:jakarta")
     annotationProcessor("jakarta.persistence:jakarta.persistence-api")
     annotationProcessor("jakarta.annotation:jakarta.annotation-api")
-    // Mail
+    // Mail HTML Template
     implementation("com.j2html:j2html:$j2htmlVersion")
-    implementation("org.springframework.boot:spring-boot-starter-mail")
-    // AWS SNS
-    implementation("software.amazon.awssdk:sns")
     // DataBase Schema Migration
     implementation("org.flywaydb:flyway-mysql:$flywayDBVersion")
     implementation("org.flywaydb:flyway-core:$flywayDBVersion")

@@ -1,6 +1,7 @@
 package com.locat.api.domain.auth.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import jakarta.annotation.Nullable;
 
 /**
@@ -9,38 +10,44 @@ import jakarta.annotation.Nullable;
  * @param tokenType 토큰 타입, {@code Bearer}로 고정
  * @param accessToken 액세스 토큰
  * @param idToken ID 토큰
- * @param accessTokenExpiresIn 액세스 토큰 만료 시간(초)
+ * @param expiresIn 액세스 토큰 만료 시간(초)
  * @param refreshToken 리프레시 토큰
  * @param refreshTokenExpiresIn 리프레시 토큰 만료 시간(초)
  * @param scope 인증된 사용자의 조회 권한 범위
  */
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record KakaoOAuth2TokenDto(
-    @JsonProperty("token_type") String tokenType,
-    @JsonProperty("access_token") String accessToken,
-    @JsonProperty("id_token") @Nullable String idToken,
-    @JsonProperty("expires_in") Integer accessTokenExpiresIn,
-    @JsonProperty("refresh_token") String refreshToken,
-    @JsonProperty("refresh_token_expires_in") Integer refreshTokenExpiresIn,
-    @JsonProperty("scope") @Nullable String scope)
+    String tokenType,
+    String accessToken,
+    @Nullable String idToken,
+    Integer expiresIn,
+    String refreshToken,
+    Integer refreshTokenExpiresIn,
+    @Nullable String scope)
     implements OAuth2ProviderTokenDto {
 
   @Override
   public String getAccessToken() {
-    return this.accessToken();
+    return this.accessToken;
   }
 
   @Override
   public String getRefreshToken() {
-    return this.refreshToken();
+    return this.refreshToken;
+  }
+
+  @Override
+  public String getIdToken() {
+    return this.idToken;
   }
 
   @Override
   public Integer getAccessTokenExpiresIn() {
-    return this.accessTokenExpiresIn();
+    return this.expiresIn;
   }
 
   @Override
   public Integer getRefreshTokenExpiresIn() {
-    return this.refreshTokenExpiresIn();
+    return this.refreshTokenExpiresIn;
   }
 }
