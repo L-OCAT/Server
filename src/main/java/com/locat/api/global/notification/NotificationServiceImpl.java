@@ -2,6 +2,7 @@ package com.locat.api.global.notification;
 
 import com.locat.api.domain.user.entity.UserEndpoint;
 import com.locat.api.domain.user.service.UserEndpointService;
+import com.locat.api.global.exception.ApiExceptionType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -32,7 +33,7 @@ public class NotificationServiceImpl implements NotificationService {
             PublishResponse response = this.snsClient.publish(request);
             return response.messageId();
         } catch (SnsException e) {
-            throw new RuntimeException("Failed to send general notification", e); // Exception 추가 필요
+            throw new NotificationException(ApiExceptionType.FAIL_TO_SEND_PUSH_NOTIFICATION);
         }
     }
 
@@ -41,7 +42,7 @@ public class NotificationServiceImpl implements NotificationService {
         List<UserEndpoint> endpoints = this.userEndpointService.findUserEndpointsByUserId(userId);
 
         if (endpoints.isEmpty()) {
-            throw new RuntimeException("No user endpoint ARN found for userId=" + userId);
+            throw new NotificationException(ApiExceptionType.NOT_FOUND_ENDPOINT);
         }
 
 
@@ -57,7 +58,7 @@ public class NotificationServiceImpl implements NotificationService {
                 PublishResponse response = this.snsClient.publish(request);
                 responseMessages.append(response.messageId());
             } catch (SnsException e) {
-                throw new RuntimeException("Failed to send user notification", e);
+                throw new NotificationException(ApiExceptionType.FAIL_TO_SEND_PUSH_NOTIFICATION);
             }
         }
         return responseMessages.toString().trim();

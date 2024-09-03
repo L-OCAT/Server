@@ -1,5 +1,6 @@
 package com.locat.api.global.notification;
 
+import com.locat.api.global.exception.ApiExceptionType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -37,7 +38,7 @@ public class PlatformEndpointServiceImpl implements PlatformEndpointService{
             CreatePlatformEndpointResponse response = this.snsClient.createPlatformEndpoint(request);
             return response.endpointArn();
         } catch (SnsException e) {
-            throw new RuntimeException("Failed to create platform endpoint", e); // Exception 추가 필요
+            throw new NotificationException(ApiExceptionType.FAIL_TO_CREATE_ENDPOINT);
         }
     }
 
@@ -54,7 +55,7 @@ public class PlatformEndpointServiceImpl implements PlatformEndpointService{
             SubscribeResponse response = this.snsClient.subscribe(request);
             return response.subscriptionArn();
         } catch (SnsException e) {
-            throw new RuntimeException("Failed to subscribe endpoint to topic", e); // Exception 추가 필요
+            throw new NotificationException(ApiExceptionType.FAIL_TO_SUBSCRIBE_TOPIC);
         }
     }
 
@@ -64,7 +65,7 @@ public class PlatformEndpointServiceImpl implements PlatformEndpointService{
         } else if (platform.equalsIgnoreCase(ANDROID.getValue())) {
             return this.androidArn;
         } else {
-            throw new IllegalStateException("Unknow platform"); // Exception 추가 필요
+            throw new NotificationException(ApiExceptionType.INVALID_PLATFORM);
         }
     }
 }

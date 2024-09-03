@@ -12,6 +12,7 @@ public enum ApiExceptionType {
   FILE_SIZE_LIMIT_EXCEEDED(400, "File Size Limit Exceeded", 400002),
   FILE_EXTENSION_NOT_SUPPORTED(400, "File Extension Not Supported", 400003),
   INVALID_EMAIL_VERIFICATION_CODE(400, "Provided Verification Code is Not Matched", 400004),
+  INVALID_PLATFORM(400, "Platform Type is Invalid", 400005),
 
   UNAUTHORIZED(401, "Unauthorized", 401000),
   INVALID_TOKEN(401, "Invalid JWT", 401001),
@@ -22,6 +23,7 @@ public enum ApiExceptionType {
   NOT_FOUND(404, "Not Found", 404000),
   NOT_FOUND_USER(404, "User Not Found", 404001),
   NOT_FOUND_FILE(404, "File Not Found", 404002),
+  NOT_FOUND_ENDPOINT(404, "Endpoint ARN Not Found", 404003),
 
   NOT_ALLOWED_METHOD(405, "Method Not Allowed", 405000),
 
@@ -30,6 +32,9 @@ public enum ApiExceptionType {
   FAIL_TO_SEND_EMAIL(500, "Failed to Send Mail", 500002),
   S3_ERROR(500, "Something went Wrong with S3", 500003),
   FAIL_TO_READ_FILES(500, "Failed to Read Files", 500004),
+  FAIL_TO_SEND_PUSH_NOTIFICATION(500, "Failed to Send Push Notification", 500005),
+  FAIL_TO_CREATE_ENDPOINT(500, "Failed to Create Platform Endpoint", 500006),
+  FAIL_TO_SUBSCRIBE_TOPIC(500, "Failed to Subscribe Endpoint to Topic", 500007)
   ;
 
   /**
