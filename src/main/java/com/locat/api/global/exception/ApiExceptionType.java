@@ -29,6 +29,7 @@ public enum ApiExceptionType {
   NOT_FOUND_ITEM_LOST(404, "Not Found: Lost Item", 404005),
   NOT_FOUND_CATEGORY(404, "Not Found: Category", 404006),
   NOT_FOUND_COLOR_CODE(404, "Not Found: Color Code", 404007),
+  NOT_FOUND_TERMS(404, "Not Found: Terms", 404008),
 
   NOT_ALLOWED_METHOD(405, "Method Not Allowed", 405000),
 

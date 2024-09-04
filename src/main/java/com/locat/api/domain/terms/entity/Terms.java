@@ -1,9 +1,12 @@
 package com.locat.api.domain.terms.entity;
 
 import com.locat.api.domain.core.SecuredBaseEntity;
+import com.locat.api.domain.terms.dto.TermsRegisterDto;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import java.math.BigDecimal;
 import lombok.*;
 
 @Entity
@@ -36,7 +39,16 @@ public class Terms extends SecuredBaseEntity {
   @Column(name = "content", nullable = false)
   private String content;
 
-  @Size(max = 30)
-  @NotNull @Column(name = "version", nullable = false, length = 30)
-  private String version;
+  @NotNull @Digits(integer = 2, fraction = 1)
+  @Column(name = "version", nullable = false, precision = 3, scale = 1)
+  private BigDecimal version;
+
+  public static Terms from(TermsRegisterDto registerDto, BigDecimal version) {
+    return Terms.builder()
+        .type(registerDto.type())
+        .title(registerDto.title())
+        .content(registerDto.content())
+        .version(version)
+        .build();
+  }
 }

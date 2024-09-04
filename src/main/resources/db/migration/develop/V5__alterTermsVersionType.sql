@@ -1,0 +1,2 @@
+ALTER TABLE terms MODIFY version DECIMAL(3, 1) NOT NULL COMMENT '약관 버전';
+
