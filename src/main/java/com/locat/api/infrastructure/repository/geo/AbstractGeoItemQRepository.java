@@ -27,6 +27,7 @@ public abstract class AbstractGeoItemQRepository<T extends GeoItem>
 
   /**
    * {@inheritDoc}
+   *
    * @param userId 사용자 ID
    * @param searchCriteria 검색 조건
    * @param pageable 페이징 정보
