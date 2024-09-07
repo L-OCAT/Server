@@ -1,6 +1,8 @@
-package com.locat.api.global.notification;
+package com.locat.api.domain.endpoint.service.impl;
 
+import com.locat.api.domain.endpoint.service.PlatformEndpointService;
 import com.locat.api.global.exception.ApiExceptionType;
+import com.locat.api.global.notification.NotificationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -11,7 +13,7 @@ import static com.locat.api.domain.user.entity.PlatformType.*;
 
 @Service
 @RequiredArgsConstructor
-public class PlatformEndpointServiceImpl implements PlatformEndpointService{
+public class PlatformEndpointServiceImpl implements PlatformEndpointService {
 
     private final SnsClient snsClient;
 

@@ -1,4 +1,4 @@
-package com.locat.api.global.notification;
+package com.locat.api.domain.endpoint.service;
 
 public interface PlatformEndpointService {
 
