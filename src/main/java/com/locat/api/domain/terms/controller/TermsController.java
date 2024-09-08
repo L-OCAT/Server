@@ -45,7 +45,7 @@ public class TermsController {
       @PathVariable final String type) {
     Terms terms =
         this.termsService
-            .findLatestByType(TermsType.valueOf(type))
+            .findLatestByType(TermsType.fromValue(type))
             .orElseThrow(() -> new NoSuchEntityException(ApiExceptionType.NOT_FOUND_TERMS));
     TermsResponse response = TermsResponse.fromEntity(terms);
     return ResponseEntity.ok(BaseResponse.of(response));
