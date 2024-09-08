@@ -39,6 +39,8 @@ paths:
       responses:
         200:
           $ref: "#/components/responses/TermsResponse"
+        400:
+          description: "Bad Request: type 입력이 잘못된 경우"
 components:
   responses:
     TermsListResponse:

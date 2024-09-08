@@ -30,6 +30,8 @@ paths:
       responses:
         200:
           $ref: "#/components/responses/FaqResponse"
+        400:
+          description: "Bad Request: type 입력이 잘못된 경우"
 components:
   responses:
     FaqResponse:
