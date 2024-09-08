@@ -18,6 +18,10 @@ import lombok.experimental.SuperBuilder;
 public class FAQ extends SecuredBaseEntity {
 
   @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id", columnDefinition = "int UNSIGNED not null")
+  private Long id;
+
   @Enumerated(EnumType.STRING)
   @Column(name = "type", nullable = false)
   private FaqType type;

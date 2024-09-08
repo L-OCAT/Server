@@ -1,6 +1,7 @@
 package com.locat.api.domain.faq.service.impl;
 
 import com.locat.api.domain.faq.entity.FAQ;
+import com.locat.api.domain.faq.entity.FaqType;
 import com.locat.api.domain.faq.service.FaqService;
 import com.locat.api.infrastructure.repository.faq.FAQRepository;
 import java.util.List;
@@ -16,7 +17,8 @@ public class FaqServiceImpl implements FaqService {
   private final FAQRepository faqRepository;
 
   @Override
-  public List<FAQ> findAll() {
-    return this.faqRepository.findAll();
+  @Transactional(readOnly = true)
+  public List<FAQ> findAllByType(FaqType type) {
+    return this.faqRepository.findAllByType(type);
   }
 }
