@@ -1,6 +1,13 @@
 package com.locat.api.domain.endpoint.service.impl;
 
+import com.locat.api.domain.endpoint.dto.EndpointRegistrationRequest;
 import com.locat.api.domain.endpoint.service.PlatformEndpointService;
+import com.locat.api.domain.user.entity.PlatformType;
+import com.locat.api.domain.user.entity.User;
+import com.locat.api.domain.user.entity.UserEndpoint;
+import com.locat.api.domain.user.service.UserEndpointService;
+import com.locat.api.domain.user.service.UserService;
+import com.locat.api.global.auth.LocatUserDetails;
 import com.locat.api.global.exception.ApiExceptionType;
 import com.locat.api.global.notification.NotificationException;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +15,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.sns.SnsClient;
 import software.amazon.awssdk.services.sns.model.*;
+
+import java.util.List;
 
 import static com.locat.api.domain.user.entity.PlatformType.*;
 
@@ -25,12 +34,30 @@ public class PlatformEndpointServiceImpl implements PlatformEndpointService {
 
     @Value("${service.aws.sns.topic-arn}")
     private String topicArn;
+    private static final String DEFAULT_SNS_PROTOCOL = "application";
 
-    private static final String PROTOCOL_APPLICATION = "application";
+    private final UserEndpointService userEndpointService;
+    private final UserService userService;
 
     @Override
-    public String createPlatformEndpoint(String token, String platform) {
-        String platformApplicationArn = getPlatformApplicationArn(platform);
+    public void register(EndpointRegistrationRequest request, LocatUserDetails userDetails) {
+        List<UserEndpoint> endpoints = this.userEndpointService.findUserEndpointsByUserId(userDetails.getId());
+        boolean endpointExists = this.isEndpointExists(request, endpoints);
+
+        if (!endpointExists) {
+            String endpointArn = this.create(
+                    request.deviceToken(), request.platform());
+            String subscribeArn = this.subscribeToTopic(endpointArn);
+
+            User user = this.userService.findById(userDetails.getId());
+            this.userEndpointService.saveUserEndpoint(
+                    user, request.deviceToken(), request.platform(), endpointArn);
+        }
+    }
+
+    @Override
+    public String create(String token, String platform) {
+        String platformApplicationArn = resolvePlatformArn(platform);
         CreatePlatformEndpointRequest request = CreatePlatformEndpointRequest.builder()
                 .token(token)
                 .platformApplicationArn(platformApplicationArn)
@@ -45,9 +72,9 @@ public class PlatformEndpointServiceImpl implements PlatformEndpointService {
     }
 
     @Override
-    public String subscribeEndpointToTopic(String endpointArn) {
+    public String subscribeToTopic(String endpointArn) {
         SubscribeRequest request = SubscribeRequest.builder()
-                .protocol(PROTOCOL_APPLICATION)
+                .protocol(DEFAULT_SNS_PROTOCOL)
                 .endpoint(endpointArn)
                 .returnSubscriptionArn(true)
                 .topicArn(this.topicArn)
@@ -61,13 +88,17 @@ public class PlatformEndpointServiceImpl implements PlatformEndpointService {
         }
     }
 
-    private String getPlatformApplicationArn(String platform) {
-        if(platform.equalsIgnoreCase(IOS.getValue())) {
-            return this.iosArn;
-        } else if (platform.equalsIgnoreCase(ANDROID.getValue())) {
-            return this.androidArn;
-        } else {
-            throw new NotificationException(ApiExceptionType.INVALID_PLATFORM);
-        }
+    private String resolvePlatformArn(String platform) {
+        final PlatformType platformType = fromValue(platform);
+        return switch (platformType) {
+            case IOS -> this.iosArn;
+            case ANDROID -> this.androidArn;
+        };
+    }
+
+    private boolean isEndpointExists(EndpointRegistrationRequest request, List<UserEndpoint> endpoints) {
+        return endpoints.stream()
+                .anyMatch(e -> e.getDeviceToken().equals(request.deviceToken())
+                        && e.getPlatformType().getValue().equals(request.platform()));
     }
 }
