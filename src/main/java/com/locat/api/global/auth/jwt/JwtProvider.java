@@ -9,10 +9,10 @@ public interface JwtProvider {
   /**
    * 토큰 생성
    *
-   * @param userEmail 사용자 이메일
+   * @param userId 사용자 ID
    * @return 토큰 발급 응답 DTO
    */
-  LocatTokenDto create(String userEmail);
+  LocatTokenDto create(Long userId);
 
   LocatTokenDto renew(String oldAccessToken, String refreshToken);
 

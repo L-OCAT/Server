@@ -2,8 +2,6 @@ package com.locat.api.global.auth.impl;
 
 import com.locat.api.domain.user.service.UserService;
 import com.locat.api.global.auth.LocatUserDetailsService;
-import com.locat.api.global.exception.ApiExceptionType;
-import com.locat.api.global.exception.NoSuchEntityException;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,16 +17,13 @@ public class LocatUserDetailsServiceImpl implements LocatUserDetailsService {
   private final UserService userService;
 
   @Override
-  public UserDetails loadUserByUsername(String username) {
-    return this.userService
-        .findByEmail(username)
-        .map(LocatUserDetailsImpl::from)
-        .orElseThrow(() -> new NoSuchEntityException(ApiExceptionType.NOT_FOUND_USER));
+  public UserDetails loadUserByUsername(String userId) {
+    return LocatUserDetailsImpl.from(this.userService.findById(Long.parseLong(userId)));
   }
 
   @Override
-  public Authentication createAuthentication(String username) {
-    UserDetails userDetails = this.loadUserByUsername(username);
+  public Authentication createAuthentication(String userId) {
+    UserDetails userDetails = this.loadUserByUsername(userId);
     return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
   }
 

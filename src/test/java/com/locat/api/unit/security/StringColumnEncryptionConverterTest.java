@@ -19,7 +19,8 @@ class StringColumnEncryptionConverterTest {
 
   @BeforeEach
   void setUp() {
-    ReflectionTestUtils.setField(this.converter, "encryptionKey", "testEncryptionKey123", String.class);
+    ReflectionTestUtils.setField(
+        this.converter, "encryptionKey", "testEncryptionKey123", String.class);
     MockitoAnnotations.openMocks(this);
     this.converter.init();
   }
@@ -64,5 +65,4 @@ class StringColumnEncryptionConverterTest {
     assertThat(encrypted).isNull();
     assertThat(decrypted).isNull();
   }
-
 }
