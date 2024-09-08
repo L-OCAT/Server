@@ -15,13 +15,13 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 public class RequestLoggingAdvice {
 
   @Before("execution(* com..*.controller.*.*(..))")
-  public void applicationPackagePointcut() {
-    doLogCurrentRequest();
+  public void debugLogBeforeRequest() {
+    this.doLogCurrentRequest();
   }
 
   private void doLogCurrentRequest() {
     if (log.isDebugEnabled()) {
-      HttpServletRequest currentRequest = getCurrentHttpRequest();
+      HttpServletRequest currentRequest = this.getCurrentHttpRequest();
       log.debug(
           """
 					[RequestLog]
