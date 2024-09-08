@@ -47,11 +47,11 @@ public class PlatformEndpointServiceImpl implements PlatformEndpointService {
         if (!endpointExists) {
             String endpointArn = this.create(
                     request.deviceToken(), request.platform());
-            String subscribeArn = this.subscribeToTopic(endpointArn);
+            String subscriptionArn = this.subscribeToTopic(endpointArn);
 
             User user = this.userService.findById(userDetails.getId());
             this.userEndpointService.saveUserEndpoint(
-                    user, request.deviceToken(), request.platform(), endpointArn);
+                    user, request.deviceToken(), request.platform(), endpointArn, subscriptionArn);
         }
     }
 

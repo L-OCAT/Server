@@ -8,5 +8,5 @@ import java.util.List;
 public interface UserEndpointService {
     List<UserEndpoint> findUserEndpointsByUserId(Long userId);
 
-    void saveUserEndpoint(User user, String deviceToken, String platform, String EndpointArn);
+    void saveUserEndpoint(User user, String deviceToken, String platform, String EndpointArn, String subscriptionArn);
 }

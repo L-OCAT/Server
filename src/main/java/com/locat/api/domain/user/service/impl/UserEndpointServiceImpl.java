@@ -24,7 +24,8 @@ public class UserEndpointServiceImpl implements UserEndpointService {
     }
 
     @Override
-    public void saveUserEndpoint(User user, String deviceToken, String platform, String endpointArn) {
+    public void saveUserEndpoint(User user, String deviceToken, String platform,
+                                 String endpointArn, String subscriptionArn) {
         PlatformType platformType = PlatformType.valueOf(platform);
 
         UserEndpoint userEndpoint = UserEndpoint.builder()
@@ -32,6 +33,7 @@ public class UserEndpointServiceImpl implements UserEndpointService {
                 .deviceToken(deviceToken)
                 .platformType(platformType)
                 .endpointArn(endpointArn)
+                .subscriptionArn(subscriptionArn)
                 .build();
 
         this.userEndpointRepository.save(userEndpoint);

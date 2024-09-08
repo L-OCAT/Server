@@ -31,4 +31,6 @@ public class UserEndpoint extends SecuredBaseEntity {
     @Column(name = "endpoint_arn", nullable = false)
     private String endpointArn;
 
+    @Column(name = "subscription_arn", nullable = false)
+    private String subscriptionArn;
 }
