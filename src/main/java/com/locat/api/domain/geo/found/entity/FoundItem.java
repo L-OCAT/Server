@@ -6,7 +6,7 @@ import com.locat.api.domain.geo.base.entity.GeoItem;
 import com.locat.api.domain.geo.found.dto.FoundItemRegisterDto;
 import com.locat.api.domain.user.entity.User;
 import jakarta.persistence.*;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 import java.util.Set;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -29,7 +29,7 @@ public class FoundItem extends GeoItem {
   @Column(name = "custody_location", length = 50)
   private String custodyLocation;
 
-  private ZonedDateTime foundAt;
+  private LocalDateTime foundAt;
 
   @Enumerated(EnumType.STRING)
   @Column(name = "status_type", nullable = false)
@@ -49,7 +49,7 @@ public class FoundItem extends GeoItem {
         .description(registerDto.description())
         .custodyLocation(registerDto.custodyLocation())
         .location(registerDto.location())
-        .foundAt(ZonedDateTime.now())
+        .foundAt(LocalDateTime.now())
         .statusType(FoundItemStatusType.REGISTERED)
         .imageUrl(imageUrl)
         .build();

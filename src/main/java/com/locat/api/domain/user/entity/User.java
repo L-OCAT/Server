@@ -6,7 +6,7 @@ import com.locat.api.global.security.StringColumnEncryptionConverter;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.*;
@@ -68,7 +68,7 @@ public class User extends SecuredBaseEntity {
   private StatusType statusType;
 
   @Column(name = "deleted_at")
-  private ZonedDateTime deletedAt;
+  private LocalDateTime deletedAt;
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<UserSetting> userSettings = new ArrayList<>();
@@ -87,6 +87,6 @@ public class User extends SecuredBaseEntity {
   }
 
   public void delete() {
-    this.deletedAt = ZonedDateTime.now();
+    this.deletedAt = LocalDateTime.now();
   }
 }

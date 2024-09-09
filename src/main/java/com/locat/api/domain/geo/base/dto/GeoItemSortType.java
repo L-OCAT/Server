@@ -17,7 +17,7 @@ public enum GeoItemSortType {
         .findFirst()
         .orElse(CREATED_AT_DESC);
   }
-  
+
   public boolean isCreatedAtAsc() {
     return this == CREATED_AT_ASC;
   }

@@ -3,7 +3,7 @@ package com.locat.api.domain.core;
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,9 +27,9 @@ public abstract class BaseEntity {
 
   @CreatedDate
   @Column(nullable = false, updatable = false)
-  private ZonedDateTime createdAt;
+  private LocalDateTime createdAt;
 
   @LastModifiedDate
   @Column(nullable = false)
-  private ZonedDateTime updatedAt;
+  private LocalDateTime updatedAt;
 }

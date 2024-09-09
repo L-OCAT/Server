@@ -6,7 +6,7 @@ import com.locat.api.domain.geo.base.entity.GeoItem;
 import com.locat.api.domain.geo.lost.dto.LostItemRegisterDto;
 import com.locat.api.domain.user.entity.User;
 import jakarta.persistence.*;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 import java.util.Set;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -32,7 +32,7 @@ public class LostItem extends GeoItem {
   @Column(name = "gratuity")
   private Integer gratuity;
 
-  private ZonedDateTime lostAt;
+  private LocalDateTime lostAt;
 
   @Enumerated(EnumType.STRING)
   @Column(name = "status_type", nullable = false)
@@ -53,7 +53,7 @@ public class LostItem extends GeoItem {
         .isWillingToPayGratuity(registerDto.isWillingToPayGratuity())
         .gratuity(registerDto.gratuity())
         .location(registerDto.location())
-        .lostAt(ZonedDateTime.now())
+        .lostAt(LocalDateTime.now())
         .statusType(LostItemStatusType.REGISTERED)
         .imageUrl(imageUrl)
         .build();
