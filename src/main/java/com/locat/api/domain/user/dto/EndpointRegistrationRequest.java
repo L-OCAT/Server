@@ -1,4 +1,4 @@
-package com.locat.api.domain.endpoint.dto;
+package com.locat.api.domain.user.dto;
 
 import jakarta.validation.constraints.NotBlank;
 
