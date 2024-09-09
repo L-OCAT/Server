@@ -9,7 +9,5 @@ public interface UserService {
 
   User findById(final Long id);
 
-  Optional<User> findByEmail(final String email);
-
   Optional<User> findByOauthId(final String oauthId);
 }
