@@ -76,6 +76,9 @@ public class User extends SecuredBaseEntity {
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<UserTermsAgreement> termsAgreements = new ArrayList<>();
 
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<UserEndpoint> userEndpoints = new ArrayList<>();
+
   public static User fromOAuth(OAuth2UserInfoDto userInfo) {
     return User.builder()
         .email(userInfo.getEmail())
