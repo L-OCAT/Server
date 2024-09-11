@@ -35,9 +35,9 @@ public class PublicApiKeyFilter extends OncePerRequestFilter {
   }
 
   private void validateApiKey(String requestedApiKey) {
-    if (!this.apiKey.equals(requestedApiKey)) {
-      throw new NoApiKeyException("Access Denied: Invalid API Key.");
-    }
+    //    if (!this.apiKey.equals(requestedApiKey)) {
+    //      throw new NoApiKeyException("Access Denied: Invalid API Key.");
+    //    }
   }
 
   private boolean isPublicApi(HttpServletRequest request) {
