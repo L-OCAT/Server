@@ -47,6 +47,6 @@ public class ActiveUserFilter extends OncePerRequestFilter {
   }
 
   private boolean isPublicApi(HttpServletRequest request) {
-    return PUBLIC_API_PATHS.stream().anyMatch(request.getServletPath()::startsWith);
+    return PUBLIC_API_PATHS.stream().anyMatch(request.getRequestURI()::startsWith);
   }
 }
