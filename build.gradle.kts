@@ -73,7 +73,6 @@ dependencies {
     implementation("org.flywaydb:flyway-core:$flywayDBVersion")
     // Local Development
     developmentOnly("org.springframework.boot:spring-boot-devtools")
-    implementation("org.springframework.boot:spring-boot-docker-compose")
     // Testing
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testImplementation("org.testcontainers:junit-jupiter")
