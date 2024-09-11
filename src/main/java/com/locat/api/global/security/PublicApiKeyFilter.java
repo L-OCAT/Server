@@ -16,6 +16,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class PublicApiKeyFilter extends OncePerRequestFilter {
 
   @Value("${service.api-key}")
+  private String apiKey;
+
   @Override
   protected void doFilterInternal(
       HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -32,8 +34,10 @@ public class PublicApiKeyFilter extends OncePerRequestFilter {
     filterChain.doFilter(request, response);
   }
 
-  private void validateApiKey(String s) {
-    // do something
+  private void validateApiKey(String requestedApiKey) {
+    if (!this.apiKey.equals(requestedApiKey)) {
+      throw new NoApiKeyException("Access Denied: Invalid API Key.");
+    }
   }
 
   private boolean isPublicApi(HttpServletRequest request) {
