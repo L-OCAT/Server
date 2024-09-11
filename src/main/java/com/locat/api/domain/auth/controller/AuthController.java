@@ -24,11 +24,10 @@ public class AuthController {
   private final OAuth2Service oAuth2Service;
 
   @PostMapping
-  public ResponseEntity<BaseResponse<LocatTokenDto>> authenticate(
+  public ResponseEntity<BaseResponse<String>> authenticate(
       @RequestBody final OAuth2AuthorizeRequest request) {
-    LocatTokenDto locatTokenDto =
-        this.oAuth2Service.authenticate(request.providerType(), request.code());
-    return ResponseEntity.ok((BaseResponse.of(locatTokenDto)));
+    String oauthId = this.oAuth2Service.authenticate(request.providerType(), request.code());
+    return ResponseEntity.ok((BaseResponse.of(oauthId)));
   }
 
   @PostMapping("/renew")

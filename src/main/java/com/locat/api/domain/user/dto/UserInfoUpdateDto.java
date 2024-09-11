@@ -1,4 +1,4 @@
-package com.locat.api.domain.user.service;
+package com.locat.api.domain.user.dto;
 
 import com.locat.api.domain.user.dto.request.UserInfoUpdateRequest;
 import jakarta.validation.constraints.Email;

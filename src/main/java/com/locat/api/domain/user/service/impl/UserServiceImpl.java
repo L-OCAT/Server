@@ -1,14 +1,13 @@
 package com.locat.api.domain.user.service.impl;
 
 import com.locat.api.domain.auth.template.OAuth2TemplateFactory;
+import com.locat.api.domain.user.dto.UserInfoUpdateDto;
 import com.locat.api.domain.user.entity.User;
-import com.locat.api.domain.user.service.UserInfoUpdateDto;
 import com.locat.api.domain.user.service.UserService;
 import com.locat.api.domain.user.service.UserWithdrawalLogService;
 import com.locat.api.global.exception.ApiExceptionType;
 import com.locat.api.global.exception.NoSuchEntityException;
 import com.locat.api.infrastructure.repository.user.UserRepository;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,7 +29,8 @@ public class UserServiceImpl implements UserService {
   @Override
   public User update(Long id, UserInfoUpdateDto infoUpdateDto) {
     final User user = this.findById(id);
-    return user.update(infoUpdateDto.email(), infoUpdateDto.nickname());
+    final String email = infoUpdateDto.email();
+    return user.update(email, infoUpdateDto.nickname());
   }
 
   @Override
@@ -39,18 +39,6 @@ public class UserServiceImpl implements UserService {
     return this.userRepository
         .findById(id)
         .orElseThrow(() -> new NoSuchEntityException(ApiExceptionType.NOT_FOUND_USER));
-  }
-
-  @Override
-  @Transactional(readOnly = true)
-  public Optional<User> findByEmail(final String email) {
-    return this.userRepository.findByEmail(email);
-  }
-
-  @Override
-  @Transactional(readOnly = true)
-  public Optional<User> findByOauthId(final String oauthId) {
-    return this.userRepository.findByOauthId(oauthId);
   }
 
   @Override

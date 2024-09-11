@@ -48,7 +48,6 @@ public class JwtProviderImpl implements JwtProvider {
 
   private static final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS512;
 
-  /** secretKey를 Base64로 인코딩합니다. */
   @PostConstruct
   private void init() {
     byte[] bytes = Base64.getDecoder().decode(this.secretKey);

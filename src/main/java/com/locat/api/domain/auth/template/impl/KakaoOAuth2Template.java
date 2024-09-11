@@ -4,13 +4,11 @@ import com.locat.api.domain.auth.dto.OAuth2ProviderTokenDto;
 import com.locat.api.domain.auth.entity.OAuth2ProviderToken;
 import com.locat.api.domain.auth.template.AbstractOAuth2Template;
 import com.locat.api.domain.auth.template.OAuth2Properties;
-import com.locat.api.domain.user.dto.OAuth2ProviderTermsAgreementDto;
 import com.locat.api.domain.user.dto.OAuth2UserInfoDto;
 import com.locat.api.domain.user.entity.OAuth2ProviderType;
 import com.locat.api.infrastructure.external.KakaoOAuth2Client;
 import com.locat.api.infrastructure.external.KakaoUserClient;
 import com.locat.api.infrastructure.redis.OAuth2ProviderTokenRepository;
-import java.util.Arrays;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,19 +54,6 @@ public class KakaoOAuth2Template extends AbstractOAuth2Template {
         super.oAuth2Properties.getKakaoAdminKey(),
         OAuth2Properties.KAKAO_TARGET_ID_TYPE,
         Long.parseLong(userOAuthId));
-  }
-
-  @Override
-  public OAuth2ProviderTermsAgreementDto fetchTermsAgreement(String accessToken) {
-    return this.kakaoUserClient.fetchTermsAgreement(accessToken);
-  }
-
-  @Override
-  public OAuth2ProviderTermsAgreementDto fetchTermsAgreementByAdmin(String... userOAuthIds) {
-    return this.kakaoUserClient.fetchTermsAgreementByAdmin(
-        super.oAuth2Properties.getKakaoAdminKey(),
-        OAuth2Properties.KAKAO_TARGET_ID_TYPE,
-        Arrays.stream(userOAuthIds).map(Long::parseLong).toArray(Long[]::new));
   }
 
   @Override

@@ -1,5 +1,6 @@
 package com.locat.api.global.security;
 
+import static com.locat.api.global.security.SecurityConfig.API_KEY_HEADER;
 import static com.locat.api.global.security.SecurityConfig.PUBLIC_API_PATHS;
 
 import com.locat.api.global.exception.NoApiKeyException;
@@ -9,12 +10,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Optional;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 public class PublicApiKeyFilter extends OncePerRequestFilter {
 
-  public static final String API_KEY_HEADER = "Locat-API-Key";
-
+  @Value("${service.api-key}")
   @Override
   protected void doFilterInternal(
       HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)

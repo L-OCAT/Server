@@ -7,7 +7,6 @@ import com.locat.api.domain.auth.template.AbstractOAuth2Template;
 import com.locat.api.domain.auth.template.OAuth2Properties;
 import com.locat.api.domain.auth.utils.AppleClientSecretProvider;
 import com.locat.api.domain.auth.utils.OpenIDConnectTokenUtils;
-import com.locat.api.domain.user.dto.OAuth2ProviderTermsAgreementDto;
 import com.locat.api.domain.user.dto.OAuth2UserInfoDto;
 import com.locat.api.domain.user.entity.OAuth2ProviderType;
 import com.locat.api.global.auth.AuthenticationException;
@@ -23,8 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class AppleOAuth2Template extends AbstractOAuth2Template {
 
   public static final String APPLE_AUDIENCE = "https://appleid.apple.com";
-
-  private static final String UNSUPPORTED = "Apple OAuth2Template does not support this operation";
 
   private final AppleOAuth2Client appleOAuth2Client;
 
@@ -67,16 +64,6 @@ public class AppleOAuth2Template extends AbstractOAuth2Template {
     OAuth2ProviderJsonWebKey jsonWebKey = this.getMatchingJsonWebKey(providerToken.getIdToken());
     return OpenIDConnectTokenUtils.parseIdToken(
         providerToken.getIdToken(), jsonWebKey.n(), jsonWebKey.e());
-  }
-
-  @Override
-  public OAuth2ProviderTermsAgreementDto fetchTermsAgreement(String accessToken) {
-    throw new UnsupportedOperationException(UNSUPPORTED);
-  }
-
-  @Override
-  public OAuth2ProviderTermsAgreementDto fetchTermsAgreementByAdmin(String... userOAuthIds) {
-    throw new UnsupportedOperationException(UNSUPPORTED);
   }
 
   @Override

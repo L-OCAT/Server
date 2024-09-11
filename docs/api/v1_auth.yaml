@@ -15,7 +15,7 @@ paths:
         $ref: "#/components/requestBodies/OAuth2AuthorizeRequest"
       responses:
         200:
-          $ref: "#/components/responses/LocatTokenDto"
+          $ref: "#/components/responses/OAuth2AuthenticatedResponse"
         500:
           description: "Internal Server Error"
           content:
@@ -103,6 +103,19 @@ components:
           schema:
             $ref: "#/components/schemas/EmailVerificationRequest"
   responses:
+    OAuth2AuthenticatedResponse:
+      description: "OAuth2 인증 성공"
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "schemas.yaml#/components/schemas/BaseResponse"
+              - type: object
+                properties:
+                  data:
+                    type: string
+                    description: "소셜 로그인 제공자가 관리하는 사용자의 고유 ID"
+                    example: "5192371272"
     LocatTokenDto:
       description: "사용자 인증 성공"
       content:

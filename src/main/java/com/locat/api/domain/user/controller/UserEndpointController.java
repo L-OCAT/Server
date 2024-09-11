@@ -18,14 +18,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("v1/endpoints")
 public class UserEndpointController {
 
-    private final UserEndpointService userEndpointService;
+  private final UserEndpointService userEndpointService;
 
-    @PostMapping
-    public ResponseEntity<BaseResponse<Void>> register(
-            @AuthenticationPrincipal LocatUserDetails userDetails,
-            @RequestBody @Valid final EndpointRegistrationRequest request) {
-        this.userEndpointService.register(request, userDetails);
+  @PostMapping
+  public ResponseEntity<BaseResponse<Void>> register(
+      @AuthenticationPrincipal LocatUserDetails userDetails,
+      @RequestBody @Valid final EndpointRegistrationRequest request) {
+    this.userEndpointService.register(request, userDetails);
 
-        return ResponseEntity.ok(BaseResponse.ofEmpty());
-    }
+    return ResponseEntity.ok(BaseResponse.ofEmpty());
+  }
 }
