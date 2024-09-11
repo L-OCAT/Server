@@ -39,7 +39,6 @@ public class User extends SecuredBaseEntity {
   private Long id;
 
   @Column(name = "oauth_id", nullable = false, length = 100)
-  @Convert(converter = StringColumnEncryptionConverter.class)
   private String oauthId;
 
   @Enumerated(EnumType.STRING)

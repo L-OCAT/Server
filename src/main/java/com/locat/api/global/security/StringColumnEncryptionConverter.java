@@ -21,8 +21,8 @@ public class StringColumnEncryptionConverter implements AttributeConverter<Strin
   /** 암호화 알고리즘: AES/GCM/NoPadding */
   private static final String ENCRYPTION_TRANSFORM = "AES/GCM/NoPadding";
 
-  /** AES 키의 길이: 16 바이트 */
-  private static final int AES_KEY_LENGTH = 16;
+  /** AES 키의 길이: 32 바이트 */
+  private static final int AES_KEY_LENGTH = 32;
 
   /** 초기화 벡터의 길이: 12 바이트로 고정 */
   private static final int INITIAL_VECTOR_LENGTH = 12;
