@@ -8,6 +8,7 @@ import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.ses.SesClient;
+import software.amazon.awssdk.services.sns.SnsClient;
 
 @Configuration
 @RequiredArgsConstructor
@@ -26,6 +27,14 @@ public class AwsConfig {
   @Bean
   public SesClient sesClient(AwsBasicCredentials basicCredentials) {
     return SesClient.builder()
+        .region(Region.of(this.awsProperties.getRegion()))
+        .credentialsProvider(StaticCredentialsProvider.create(basicCredentials))
+        .build();
+  }
+
+  @Bean
+  public SnsClient snsClient(AwsBasicCredentials basicCredentials) {
+    return SnsClient.builder()
         .region(Region.of(this.awsProperties.getRegion()))
         .credentialsProvider(StaticCredentialsProvider.create(basicCredentials))
         .build();

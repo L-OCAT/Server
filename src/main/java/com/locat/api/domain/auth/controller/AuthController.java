@@ -17,18 +17,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/auth")
+@RequestMapping("/v1/auth")
 public class AuthController {
 
   private final AuthService authService;
   private final OAuth2Service oAuth2Service;
 
   @PostMapping
-  public ResponseEntity<BaseResponse<LocatTokenDto>> authenticate(
+  public ResponseEntity<BaseResponse<String>> authenticate(
       @RequestBody final OAuth2AuthorizeRequest request) {
-    LocatTokenDto locatTokenDto =
-        this.oAuth2Service.authenticate(request.providerType(), request.code());
-    return ResponseEntity.ok((BaseResponse.of(locatTokenDto)));
+    String oauthId = this.oAuth2Service.authenticate(request.providerType(), request.code());
+    return ResponseEntity.ok((BaseResponse.of(oauthId)));
   }
 
   @PostMapping("/renew")

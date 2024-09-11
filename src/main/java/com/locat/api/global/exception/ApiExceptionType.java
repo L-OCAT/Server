@@ -12,7 +12,8 @@ public enum ApiExceptionType {
   FILE_EXTENSION_NOT_PROVIDED(400, "Bad Request: File Extension Not Provided", 400002),
   FILE_SIZE_LIMIT_EXCEEDED(400, "Bad Request: File Size Limit Exceeded", 400003),
   FILE_EXTENSION_NOT_SUPPORTED(400, "Bad Request: File Extension Not Supported", 400004),
-  INVALID_EMAIL_VERIFICATION_CODE(400, "Bad Request: Provided Verification Code is Not Matched", 400005),
+  INVALID_EMAIL_VERIFICATION_CODE(
+      400, "Bad Request: Provided Verification Code is Not Matched", 400005),
   INVALID_PLATFORM(400, "Bad Request: Platform Type is Invalid", 400006),
 
   UNAUTHORIZED(401, "Unauthorized", 401000),
@@ -48,8 +49,7 @@ public enum ApiExceptionType {
       500, "Cannot Process JWT: No Matching Algorithm", 500005),
   FAIL_TO_SEND_PUSH_NOTIFICATION(500, "Failed to Send Push Notification", 500006),
   FAIL_TO_CREATE_ENDPOINT(500, "Failed to Create Platform Endpoint", 500007),
-  FAIL_TO_SUBSCRIBE_TOPIC(500, "Failed to Subscribe Endpoint to Topic", 500008)
-  ;
+  FAIL_TO_SUBSCRIBE_TOPIC(500, "Failed to Subscribe Endpoint to Topic", 500008);
 
   /**
    * 각 예외 상황에 대한 적절한 HTTP Status Code

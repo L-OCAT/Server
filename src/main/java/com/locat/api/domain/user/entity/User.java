@@ -3,7 +3,9 @@ package com.locat.api.domain.user.entity;
 import com.locat.api.domain.core.SecuredBaseEntity;
 import com.locat.api.domain.user.dto.OAuth2UserInfoDto;
 import com.locat.api.global.security.StringColumnEncryptionConverter;
+import com.locat.api.global.utils.HashingUtils;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
@@ -46,9 +48,13 @@ public class User extends SecuredBaseEntity {
   private OAuth2ProviderType oauthType;
 
   @Size(max = 100)
-  @NotNull @Column(name = "email", nullable = false, updatable = false, length = 100)
+  @NotNull @Column(name = "email", nullable = false, length = 100)
   @Convert(converter = StringColumnEncryptionConverter.class)
   private String email;
+
+  @Size(max = 255)
+  @NotNull @Column(name = "email_hash", nullable = false)
+  private String emailHash;
 
   @Size(max = 100)
   @NotNull @Column(name = "nickname", nullable = false, length = 100)
@@ -81,14 +87,30 @@ public class User extends SecuredBaseEntity {
   public static User fromOAuth(OAuth2UserInfoDto userInfo) {
     return User.builder()
         .email(userInfo.getEmail())
+        .emailHash(HashingUtils.hash(userInfo.getEmail()))
         .oauthId(userInfo.getId())
         .oauthType(userInfo.getProvider())
         .userType(UserType.USER)
-        .statusType(StatusType.PENDING)
+        .statusType(StatusType.ACTIVE)
         .build();
+  }
+
+  public boolean isActivated() {
+    return this.statusType == StatusType.ACTIVE;
   }
 
   public void delete() {
     this.deletedAt = LocalDateTime.now();
+  }
+
+  public User update(@Email String email, String nickname) {
+    if (email != null && emailHash != null) {
+      this.email = email;
+      this.emailHash = HashingUtils.hash(email);
+    }
+    if (nickname != null) {
+      this.nickname = nickname;
+    }
+    return this;
   }
 }

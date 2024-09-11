@@ -24,6 +24,10 @@ public record ErrorResponse(String message, ErrorData data) {
         FORBIDDEN.getMessage(), ErrorData.of("접근 권한이 없습니다.", FORBIDDEN.getCode()));
   }
 
+  public static ErrorResponse forbidden(String message) {
+    return new ErrorResponse(FORBIDDEN.getMessage(), ErrorData.of(message, FORBIDDEN.getCode()));
+  }
+
   public static ErrorResponse unauthorized() {
     return new ErrorResponse(
         UNAUTHORIZED.getMessage(), ErrorData.of("인증 수단이 없거나, 유효하지 않습니다.", UNAUTHORIZED.getCode()));
