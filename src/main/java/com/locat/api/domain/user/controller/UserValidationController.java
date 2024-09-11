@@ -27,15 +27,14 @@ public class UserValidationController {
   }
 
   @GetMapping("/nickname")
-  public ResponseEntity<BaseResponse<Boolean>> validateNickname(@RequestParam @NotEmpty String nickname) {
+  public ResponseEntity<BaseResponse<Boolean>> validateNickname(
+      @RequestParam @NotEmpty String nickname) {
     final boolean result = this.userValidationService.isNicknameExists(nickname);
     HttpStatus httpStatus = this.getHttpStatus(result);
     return ResponseEntity.status(httpStatus).build();
   }
 
   private HttpStatus getHttpStatus(boolean result) {
-    return result
-      ? HttpStatus.CONFLICT
-      : HttpStatus.OK;
+    return result ? HttpStatus.CONFLICT : HttpStatus.OK;
   }
 }
