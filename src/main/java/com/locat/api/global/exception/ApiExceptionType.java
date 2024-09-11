@@ -8,21 +8,29 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 public enum ApiExceptionType {
   BAD_REQUEST(400, "Bad Request", 400000),
-  FILE_EXTENSION_NOT_PROVIDED(400, "File Extension Not Provided", 400001),
-  FILE_SIZE_LIMIT_EXCEEDED(400, "File Size Limit Exceeded", 400002),
-  FILE_EXTENSION_NOT_SUPPORTED(400, "File Extension Not Supported", 400003),
-  INVALID_EMAIL_VERIFICATION_CODE(400, "Provided Verification Code is Not Matched", 400004),
+  INVALID_PARAMETER(400, "Bad Request: Required Parameters are Invalid or Missing.", 400001),
+  FILE_EXTENSION_NOT_PROVIDED(400, "Bad Request: File Extension Not Provided", 400002),
+  FILE_SIZE_LIMIT_EXCEEDED(400, "Bad Request: File Size Limit Exceeded", 400003),
+  FILE_EXTENSION_NOT_SUPPORTED(400, "Bad Request: File Extension Not Supported", 400004),
+  INVALID_EMAIL_VERIFICATION_CODE(400, "Bad Request: Provided Verification Code is Not Matched", 400005),
+  INVALID_PLATFORM(400, "Bad Request: Platform Type is Invalid", 400006),
 
   UNAUTHORIZED(401, "Unauthorized", 401000),
-  INVALID_TOKEN(401, "Invalid JWT", 401001),
-  INVALID_REFRESH_TOKEN(401, "Invalid Refresh Token (Expired or Not Matched)", 401002),
+  INVALID_TOKEN(401, "Unauthorized: Invalid JWT", 401001),
+  INVALID_REFRESH_TOKEN(
+      401, "Unauthorized: Invalid Refresh Token (Expired or Not Matched)", 401002),
 
   FORBIDDEN(403, "Forbidden", 403000),
 
   NOT_FOUND(404, "Not Found", 404000),
-  NOT_FOUND_USER(404, "User Not Found", 404001),
-  NOT_FOUND_FILE(404, "File Not Found", 404002),
-  NOT_FOUND_AUTH(404, "Authorization Method Not Found", 404003),
+  NOT_FOUND_USER(404, "Not Found: User", 404001),
+  NOT_FOUND_FILE(404, "Not Found: File", 404002),
+  NOT_FOUND_AUTH(404, "Not Found: Authorization Method", 404003),
+  NOT_FOUND_ITEM_FOUND(404, "Not Found: Found Item", 404004),
+  NOT_FOUND_ITEM_LOST(404, "Not Found: Lost Item", 404005),
+  NOT_FOUND_CATEGORY(404, "Not Found: Category", 404006),
+  NOT_FOUND_COLOR_CODE(404, "Not Found: Color Code", 404007),
+  NOT_FOUND_ENDPOINT(404, "Not Found: Endpoint ARN Not Found", 404008),
 
   NOT_ALLOWED_METHOD(405, "Method Not Allowed", 405000),
 
@@ -38,6 +46,9 @@ public enum ApiExceptionType {
   FAIL_TO_READ_FILES(500, "Failed to Read Files", 500004),
   CANNOT_PROCESS_JWT_NO_MATCHING_ALGORITHM(
       500, "Cannot Process JWT: No Matching Algorithm", 500005),
+  FAIL_TO_SEND_PUSH_NOTIFICATION(500, "Failed to Send Push Notification", 500006),
+  FAIL_TO_CREATE_ENDPOINT(500, "Failed to Create Platform Endpoint", 500007),
+  FAIL_TO_SUBSCRIBE_TOPIC(500, "Failed to Subscribe Endpoint to Topic", 500008)
   ;
 
   /**

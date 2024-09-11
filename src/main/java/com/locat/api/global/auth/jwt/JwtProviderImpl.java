@@ -57,10 +57,11 @@ public class JwtProviderImpl implements JwtProvider {
   }
 
   @Override
-  public LocatTokenDto create(String userEmail) {
+  public LocatTokenDto create(final Long userId) {
+    final String userIdStr = userId.toString();
     LocatUserDetails userDetails =
-        (LocatUserDetails) this.userDetailsService.loadUserByUsername(userEmail);
-    Authentication authentication = this.userDetailsService.createAuthentication(userEmail);
+        (LocatUserDetails) this.userDetailsService.loadUserByUsername(userIdStr);
+    Authentication authentication = this.userDetailsService.createAuthentication(userIdStr);
 
     String accessToken = this.createAccessToken(authentication);
     String refreshToken = this.createRefreshToken(authentication.getName());

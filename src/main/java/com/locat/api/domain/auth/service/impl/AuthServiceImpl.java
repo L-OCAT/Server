@@ -10,7 +10,7 @@ import com.locat.api.global.event.UserAuthenticatedEvent;
 import com.locat.api.global.exception.ApiExceptionType;
 import com.locat.api.global.mail.MailService;
 import com.locat.api.global.mail.MailTemplate;
-import com.locat.api.global.utils.RandomCodeGenerator;
+import com.locat.api.global.utils.RandomGenerator;
 import com.locat.api.infrastructure.redis.VerificationCodeRepository;
 import java.time.Duration;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +37,7 @@ public class AuthServiceImpl implements AuthService {
   @Override
   public void sendVerificationEmail(final String email) {
     this.checkIfEmailIsAlreadySent(email);
-    final String verificationCode = RandomCodeGenerator.generate(VERIFICATION_CODE_LENGTH);
+    final String verificationCode = RandomGenerator.generateRandomCode(VERIFICATION_CODE_LENGTH);
     this.mailService.send(
         email,
         MailTemplate.MAIL_VERIFY_TITLE,

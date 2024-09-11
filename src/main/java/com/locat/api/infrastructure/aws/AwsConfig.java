@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.ses.SesClient;
 
@@ -17,7 +18,7 @@ public class AwsConfig {
   @Bean
   public S3Client s3Client(AwsBasicCredentials basicCredentials) {
     return S3Client.builder()
-        .region(AwsProperties.BASE_REGION)
+        .region(Region.of(this.awsProperties.getRegion()))
         .credentialsProvider(StaticCredentialsProvider.create(basicCredentials))
         .build();
   }
@@ -25,7 +26,7 @@ public class AwsConfig {
   @Bean
   public SesClient sesClient(AwsBasicCredentials basicCredentials) {
     return SesClient.builder()
-        .region(AwsProperties.BASE_REGION)
+        .region(Region.of(this.awsProperties.getRegion()))
         .credentialsProvider(StaticCredentialsProvider.create(basicCredentials))
         .build();
   }

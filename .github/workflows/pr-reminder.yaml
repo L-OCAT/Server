@@ -12,8 +12,10 @@ jobs:
 
     steps:
       - name: Run PR reminder
-        uses: SeongHo5/pr-reminder@v2.0
+        uses: SeongHo5/pr-reminder@v2.1
         with:
           platform: discord
           webhook-url: ${{ secrets.WEBHOOK_URL }}
           remind-time: 24
+          skip-on-weekend: true
+          timezone: 'Asia/Seoul'

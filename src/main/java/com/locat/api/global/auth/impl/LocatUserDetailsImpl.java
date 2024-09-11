@@ -41,7 +41,7 @@ public record LocatUserDetailsImpl(User user)
 
   @Override
   public String getUsername() {
-    return this.user.getEmail();
+    return this.user.getId().toString();
   }
 
   @Override
