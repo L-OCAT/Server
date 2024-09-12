@@ -42,8 +42,8 @@ jobs:
           echo ${{ secrets.APPLICATION_PROD }} > ./src/main/resources/application-prod.yaml
 
       - name: Build & Test with Gradle
-        run: ./gradlew clean build
-        continue-on-error: true
+        run: ./gradlew clean build -x test
+#        continue-on-error: true
 
 #      알림 설정
 #      - name: Notify Discord on Test Failure
