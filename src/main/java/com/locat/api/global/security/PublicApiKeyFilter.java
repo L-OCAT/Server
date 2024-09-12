@@ -10,15 +10,16 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Optional;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.core.env.Environment;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-@Component
 public class PublicApiKeyFilter extends OncePerRequestFilter {
 
-  @Value("${service.api-key}")
-  private String apiKey;
+  private final String apiKey;
+
+  public PublicApiKeyFilter(Environment environment) {
+    this.apiKey = environment.getProperty("service.api-key");
+  }
 
   @Override
   public void doFilterInternal(

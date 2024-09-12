@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.env.Environment;
 import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.authorization.AuthorizationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -44,6 +45,7 @@ public class SecurityConfig {
   private static final List<String> DEFAULT_PERMIT_METHODS =
       List.of(GET.name(), HEAD.name(), POST.name(), PUT.name(), PATCH.name(), DELETE.name());
 
+  private final Environment environment;
   private final JwtProvider jwtProvider;
   private final LocatUserDetailsService userDetailsService;
 
@@ -75,7 +77,8 @@ public class SecurityConfig {
                     .access(this.localHostOnly)
                     .anyRequest()
                     .denyAll())
-        .addFilterBefore(new PublicApiKeyFilter(), UsernamePasswordAuthenticationFilter.class)
+        .addFilterBefore(
+            new PublicApiKeyFilter(this.environment), UsernamePasswordAuthenticationFilter.class)
         .addFilterAfter(
             new JwtAuthenticationFilter(this.jwtProvider, this.userDetailsService),
             PublicApiKeyFilter.class)
