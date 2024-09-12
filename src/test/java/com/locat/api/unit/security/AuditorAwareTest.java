@@ -1,5 +1,6 @@
 package com.locat.api.unit.security;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -30,7 +31,7 @@ class AuditorAwareTest {
 
   @BeforeEach
   void setUp() {
-    SecurityContextHolder.setContext(securityContext);
+    SecurityContextHolder.setContext(this.securityContext);
   }
 
   @Test
@@ -38,52 +39,51 @@ class AuditorAwareTest {
   void whenAuthenticatedShouldReturnUserId() {
     // Given
     Long userId = 123L;
-    when(securityContext.getAuthentication()).thenReturn(authentication);
-    when(authentication.isAuthenticated()).thenReturn(true);
-    when(authentication.getPrincipal()).thenReturn(locatUserDetails);
-    when(locatUserDetails.getId()).thenReturn(userId);
+    when(this.securityContext.getAuthentication()).thenReturn(this.authentication);
+    when(this.authentication.isAuthenticated()).thenReturn(true);
+    when(this.authentication.getPrincipal()).thenReturn(this.locatUserDetails);
+    when(this.locatUserDetails.getId()).thenReturn(userId);
 
     // When
-    Optional<Long> currentAuditor = locatAuditorAware.getCurrentAuditor();
+    Optional<Long> currentAuditor = this.locatAuditorAware.getCurrentAuditor();
 
     // Then
-    assertTrue(currentAuditor.isPresent());
-    assertEquals(userId, currentAuditor.get());
+    assertThat(currentAuditor).isPresent().hasValue(userId);
     assertAll(
-        () -> verify(securityContext, times(1)).getAuthentication(),
-        () -> verify(authentication, times(1)).isAuthenticated(),
-        () -> verify(authentication, times(1)).getPrincipal(),
-        () -> verify(locatUserDetails, times(1)).getId());
+        () -> verify(this.securityContext, times(1)).getAuthentication(),
+        () -> verify(this.authentication, times(1)).isAuthenticated(),
+        () -> verify(this.authentication, times(1)).getPrincipal(),
+        () -> verify(this.locatUserDetails, times(1)).getId());
   }
 
   @Test
   @DisplayName("인증되지 않은 사용자[익명 사용자]라면, Optional.empty()를 반환해야 한다.")
   void whenNotAuthenticatedShouldReturnEmpty() {
     // Given
-    when(securityContext.getAuthentication()).thenReturn(authentication);
-    when(authentication.isAuthenticated()).thenReturn(false);
+    when(this.securityContext.getAuthentication()).thenReturn(this.authentication);
+    when(this.authentication.isAuthenticated()).thenReturn(false);
 
     // When
-    Optional<Long> currentAuditor = locatAuditorAware.getCurrentAuditor();
+    Optional<Long> currentAuditor = this.locatAuditorAware.getCurrentAuditor();
 
     // Then
-    assertTrue(currentAuditor.isEmpty());
+    assertThat(currentAuditor).isEmpty();
     assertAll(
-        () -> verify(securityContext, times(1)).getAuthentication(),
-        () -> verify(authentication, times(1)).isAuthenticated());
+        () -> verify(this.securityContext, times(1)).getAuthentication(),
+        () -> verify(this.authentication, times(1)).isAuthenticated());
   }
 
   @Test
   @DisplayName("인증 정보가 없는 경우, Optional.empty()를 반환해야 한다.")
   void whenNoAuthenticationShouldReturnEmpty() {
     // Given
-    when(securityContext.getAuthentication()).thenReturn(null);
+    when(this.securityContext.getAuthentication()).thenReturn(null);
 
     // When
-    Optional<Long> currentAuditor = locatAuditorAware.getCurrentAuditor();
+    Optional<Long> currentAuditor = this.locatAuditorAware.getCurrentAuditor();
 
     // Then
-    assertTrue(currentAuditor.isEmpty());
-    assertAll(() -> verify(securityContext, times(1)).getAuthentication());
+    assertThat(currentAuditor).isEmpty();
+    assertAll(() -> verify(this.securityContext, times(1)).getAuthentication());
   }
 }

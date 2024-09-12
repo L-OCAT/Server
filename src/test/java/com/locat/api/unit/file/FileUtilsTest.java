@@ -7,6 +7,7 @@ import com.locat.api.global.file.FileOperationFailedException;
 import com.locat.api.global.file.FileUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.mock.web.MockMultipartFile;
 
 class FileUtilsTest {
 
@@ -34,17 +35,16 @@ class FileUtilsTest {
   @DisplayName("주어진 파일명에 확장자가 없다면, 예외를 던져야 한다.")
   void testGenerateFileNameFailureNoExtension() {
     // Given
-    String directoryPath = "test-directory";
-    String originalFilename1 = "file1";
-    String originalFilename2 = "file2.";
-    String originalFilename3 = "file3.";
+    MockMultipartFile file1 = new MockMultipartFile("file", "file1", "text/plain", new byte[1024]);
+    MockMultipartFile file2 = new MockMultipartFile("file", "file2.", "image/jpeg", new byte[1024]);
+    MockMultipartFile file3 = new MockMultipartFile("file", "file3", "image/png", new byte[1024]);
 
     // When & Then
-    assertThatThrownBy(() -> FileUtils.generateTimeBasedName(directoryPath, originalFilename1))
-        .isInstanceOf(FileOperationFailedException.class);
-    assertThatThrownBy(() -> FileUtils.generateTimeBasedName(directoryPath, originalFilename2))
-        .isInstanceOf(FileOperationFailedException.class);
-    assertThatThrownBy(() -> FileUtils.generateTimeBasedName(directoryPath, originalFilename3))
-        .isInstanceOf(FileOperationFailedException.class);
+    assertThatThrownBy(() -> FileUtils.extractExtension(file1))
+        .isExactlyInstanceOf(FileOperationFailedException.class);
+    assertThatThrownBy(() -> FileUtils.extractExtension(file2))
+        .isExactlyInstanceOf(FileOperationFailedException.class);
+    assertThatThrownBy(() -> FileUtils.extractExtension(file3))
+        .isExactlyInstanceOf(FileOperationFailedException.class);
   }
 }
