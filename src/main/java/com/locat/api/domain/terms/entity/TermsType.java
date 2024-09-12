@@ -1,7 +1,6 @@
 package com.locat.api.domain.terms.entity;
 
 import com.locat.api.global.exception.InvalidParameterException;
-
 import java.util.Arrays;
 
 public enum TermsType {
@@ -21,8 +20,8 @@ public enum TermsType {
 
   public static TermsType fromValue(final String type) {
     return Arrays.stream(TermsType.values())
-      .filter(terms -> terms.name().equalsIgnoreCase(type))
-      .findFirst()
-      .orElseThrow(() -> new InvalidParameterException("No Such Terms Type exists"));
+        .filter(terms -> terms.name().equalsIgnoreCase(type))
+        .findFirst()
+        .orElseThrow(() -> new InvalidParameterException("No Such Terms Type exists"));
   }
 }

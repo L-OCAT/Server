@@ -17,8 +17,8 @@ public enum FaqType {
 
   public static FaqType fromValueOrDefault(final String type) {
     return Arrays.stream(FaqType.values())
-      .filter(faq -> faq.name().equalsIgnoreCase(type))
-      .findFirst()
-      .orElse(GENERAL);
+        .filter(faq -> faq.name().equalsIgnoreCase(type))
+        .findFirst()
+        .orElse(GENERAL);
   }
 }

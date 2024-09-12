@@ -53,7 +53,8 @@ public class AdminNotifierAdvice {
       RequireAdminNotification requireAdminNotify,
       Object methodResult) {
     String condition = requireAdminNotify.condition();
-    return StringUtils.isBlank(condition) || this.evaluateCondition(condition, joinPoint, methodResult);
+    return StringUtils.isBlank(condition)
+        || this.evaluateCondition(condition, joinPoint, methodResult);
   }
 
   private boolean evaluateCondition(

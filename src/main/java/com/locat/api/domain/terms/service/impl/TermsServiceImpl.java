@@ -43,6 +43,6 @@ public class TermsServiceImpl implements TermsService {
   @Override
   @Transactional(readOnly = true)
   public List<Terms> findAllLatest() {
-    return this.termsRepository.findAll();
+    return this.termsQRepository.findAllLatest();
   }
 }
