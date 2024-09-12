@@ -1,0 +1,321 @@
+openapi: 3.0.0
+info:
+  title: User API
+  description: 사용자 정보 관리 API를 정의하는 문서입니다.
+  version: 0.0.1
+servers:
+  - url: https://api.locat.kr
+    description: Production
+paths:
+  /v1/users:
+    post:
+      summary: 사용자 회원가입 요청 API
+      requestBody:
+        $ref: '#/components/requestBodies/UserRegisterRequest'
+      responses:
+        201:
+          description: "사용자 등록 성공"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/LocatTokenDto'
+        400:
+          description: "Bad request: 필수 요청 파라미터 누락"
+          content:
+            application/json:
+              schema:
+                $ref: "schemas.yaml#/components/schemas/ErrorResponse"
+        409:
+          description: "Conflict: 이미 등록된 사용자"
+          content:
+            application/json:
+              schema:
+                $ref: "schemas.yaml#/components/schemas/ErrorResponse"
+        500:
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: "schemas.yaml#/components/schemas/ErrorResponse"
+  /v1/users/me:
+    get:
+      summary: 내 정보 조회 API
+      security:
+        - bearerAuth: [ ]
+      responses:
+        200:
+          description: "사용자 정보 조회 성공"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/UserInfoResponse'
+        401:
+          description: "Unauthorized: 토큰이 유효하지 않음"
+          content:
+            application/json:
+              schema:
+                $ref: "schemas.yaml#/components/schemas/ErrorResponse"
+        500:
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: "schemas.yaml#/components/schemas/ErrorResponse"
+    patch:
+      summary: 내 정보 수정 API
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        $ref: '#/components/requestBodies/UserInfoUpdateRequest'
+      responses:
+        200:
+          description: "사용자 정보 수정 성공(수정된 사용자 정보 응답)"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/UserInfoResponse'
+        400:
+          description: "Bad request: 필수 요청 파라미터 누락"
+          content:
+            application/json:
+              schema:
+                $ref: "schemas.yaml#/components/schemas/ErrorResponse"
+        401:
+          description: "Unauthorized: 토큰이 유효하지 않음"
+          content:
+            application/json:
+              schema:
+                $ref: "schemas.yaml#/components/schemas/ErrorResponse"
+        500:
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: "schemas.yaml#/components/schemas/ErrorResponse"
+    put:
+      summary: 사용자 탈퇴 요청 API
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        $ref: '#/components/requestBodies/UserWithDrawalRequest'
+      responses:
+        204:
+          description: "사용자 탈퇴 성공"
+        400:
+          description: "Bad request: 탈퇴 사유 필드가 공백이거나 없는 경우"
+          content:
+            application/json:
+              schema:
+                $ref: "schemas.yaml#/components/schemas/ErrorResponse"
+        401:
+          description: "Unauthorized: 토큰이 유효하지 않음"
+          content:
+            application/json:
+              schema:
+                $ref: "schemas.yaml#/components/schemas/ErrorResponse"
+        500:
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: "schemas.yaml#/components/schemas/ErrorResponse"
+  /v1/users/validate/email:
+    get:
+      summary: 이메일 중복 확인 API
+      parameters:
+        - name: email
+          in: query
+          required: true
+          schema:
+            type: string
+          description: "중복 확인할 이메일"
+      responses:
+        200:
+          description: "사용 가능한 이메일"
+        409:
+          description: "Conflict: 이미 등록된 이메일"
+        500:
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: "schemas.yaml#/components/schemas/ErrorResponse"
+  /v1/users/validate/nickname:
+    get:
+      summary: 닉네임 중복 확인 API
+      parameters:
+        - name: nickname
+          in: query
+          required: true
+          schema:
+            type: string
+          description: "중복 확인할 닉네임"
+      responses:
+        200:
+          description: "사용 가능한 닉네임"
+        409:
+          description: "Conflict: 이미 등록된 닉네임"
+        500:
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: "schemas.yaml#/components/schemas/ErrorResponse"
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  requestBodies:
+    UserRegisterRequest:
+      description: "사용자 등록 요청"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/UserRegisterRequest"
+    UserInfoUpdateRequest:
+      description: "사용자 정보 수정 요청"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/UserInfoUpdateRequest"
+    UserWithDrawalRequest:
+      description: "사용자 탈퇴 요청"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/UserWithDrawalRequest"
+  responses:
+    UserInfoResponse:
+      description: "사용자 정보 응답"
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "schemas.yaml#/components/schemas/BaseResponse"
+              - type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/UserInfoResponse"
+    LocatTokenDto:
+      description: "JWT 발급 응답"
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "schemas.yaml#/components/schemas/BaseResponse"
+              - type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/LocatTokenDto"
+  schemas:
+    UserInfoResponse:
+      description: "사용자 정보 응답"
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+          description: "사용자 ID"
+        email:
+          type: string
+          example: "loocat@locat.kr"
+          description: "사용자 이메일"
+        nickname:
+          type: string
+          example: "김로켓"
+          description: "사용자 닉네임"
+        profileImageUrl:
+          type: string
+          example: "https://bucket.locat.kr/profile/1"
+          description: "프로필 이미지 URL"
+        createdAt:
+          type: string
+          format: date-time
+          example: "2021-01-01T00:00:00"
+          description: "사용자 등록 일시"
+        updatedAt:
+          type: string
+          format: date-time
+          example: "2021-01-01T00:00:00"
+          description: "사용자 정보 수정 일시"
+    UserInfoUpdateRequest:
+      description: "사용자 정보 수정 요청"
+      type: object
+      properties:
+        email:
+          type: string
+          example: "loocat@locat.com"
+          description: "변경할 사용자 이메일"
+        nickname:
+          type: string
+          example: "김로켓"
+          description: "변경할 사용자 닉네임"
+    UserWithDrawalRequest:
+      description: "사용자 탈퇴 요청"
+      type: object
+      properties:
+        reason:
+          type: string
+          example: "알림이 너무 많이 와요."
+          description: "탈퇴 사유"
+    UserRegisterRequest:
+      description: "사용자 등록 요청"
+      type: object
+      properties:
+        oAuthId:
+          type: string
+          example: "1234567890"
+          description: "소셜 로그인 요청 성공 후에 반환된 OAuth2 ID"
+        isTermsOfServiceAgreed:
+          type: boolean
+          example: true
+          description: "서비스 이용 약관 동의 여부(반드시 true)"
+        isPrivacyPolicyAgreed:
+          type: boolean
+          example: true
+          description: "개인정보 처리 방침 동의 여부(반드시 true)"
+        isLocationServiceAgreed:
+          type: boolean
+          example: true
+          description: "위치 정보 이용 동의 여부(반드시 true)"
+        isMarketingAgreed:
+          type: boolean
+          example: true
+          description: "마케팅 정보 수신 동의 여부"
+      required:
+        - oAuthId
+        - isTermsOfServiceAgreed
+        - isPrivacyPolicyAgreed
+        - isLocationServiceAgreed
+        - isMarketingAgreed
+    LocatTokenDto:
+      description: "JWT 발급 응답"
+      type: object
+      properties:
+        grantType:
+          type: string
+          nullable: false
+          example: "Bearer"
+          description: "토큰 타입(Bearer로 고정)"
+        accessToken:
+          type: string
+          nullable: false
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.***"
+          description: "Access 토큰(유효 기간: 2시간)"
+        refreshToken:
+          type: string
+          nullable: true
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.***"
+          description: "Refresh 토큰(유효 기간: 14일 / 토큰 갱신 시에는 nullable)"
+        accessTokenExpiresIn:
+          type: integer
+          nullable: false
+          example: 7200
+          description: "Access 토큰 만료 시간(초)"
+        refreshTokenExpiresIn:
+          type: integer
+          nullable: true
+          example: 604800
+          description: "Refresh 토큰 만료 시간(초, 토큰 갱신 시에는 nullable)"

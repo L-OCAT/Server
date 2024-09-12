@@ -48,7 +48,6 @@ public class JwtProviderImpl implements JwtProvider {
 
   private static final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS512;
 
-  /** secretKey를 Base64로 인코딩합니다. */
   @PostConstruct
   private void init() {
     byte[] bytes = Base64.getDecoder().decode(this.secretKey);
@@ -57,10 +56,11 @@ public class JwtProviderImpl implements JwtProvider {
   }
 
   @Override
-  public LocatTokenDto create(String userEmail) {
+  public LocatTokenDto create(final Long userId) {
+    final String userIdStr = userId.toString();
     LocatUserDetails userDetails =
-        (LocatUserDetails) this.userDetailsService.loadUserByUsername(userEmail);
-    Authentication authentication = this.userDetailsService.createAuthentication(userEmail);
+        (LocatUserDetails) this.userDetailsService.loadUserByUsername(userIdStr);
+    Authentication authentication = this.userDetailsService.createAuthentication(userIdStr);
 
     String accessToken = this.createAccessToken(authentication);
     String refreshToken = this.createRefreshToken(authentication.getName());

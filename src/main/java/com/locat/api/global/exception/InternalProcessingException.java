@@ -11,6 +11,6 @@ public class InternalProcessingException extends LocatApiException {
 
   public InternalProcessingException(final String message) {
     super(ApiExceptionType.INTERNAL_SERVER_ERROR);
-    log.warn(message);
+    log.error(message);
   }
 }

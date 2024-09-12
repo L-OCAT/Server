@@ -6,22 +6,14 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 
-public record LocatUserDetailsImpl(User user)
-    implements LocatUserDetails, OAuth2User, Serializable {
+public record LocatUserDetailsImpl(User user) implements LocatUserDetails, Serializable {
 
   @Serial private static final long serialVersionUID = 132581231927321L;
 
   public static LocatUserDetails from(User user) {
     return new LocatUserDetailsImpl(user);
-  }
-
-  @Override
-  public Map<String, Object> getAttributes() {
-    return Map.of();
   }
 
   @Override
@@ -41,12 +33,7 @@ public record LocatUserDetailsImpl(User user)
 
   @Override
   public String getUsername() {
-    return this.user.getEmail();
-  }
-
-  @Override
-  public String getName() {
-    return this.getUsername();
+    return this.user.getId().toString();
   }
 
   @Override

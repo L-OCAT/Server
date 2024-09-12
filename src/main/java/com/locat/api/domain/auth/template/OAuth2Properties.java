@@ -12,10 +12,10 @@ import org.springframework.context.annotation.Configuration;
 public class OAuth2Properties {
 
   public static final String KAKAO_ADMIN_KEY = "KakaoAK";
-  public static final String KAKAO_GRANT_TYPE = "authorization_code";
-  public static final String KAKAO_TARGET_ID_TYPE = "user_id";
 
-  public static final String APPLE_GRANT_TYPE = "authorization_code";
+  public static final String KAKAO_GRANT_TYPE = "authorization_code";
+
+  public static final String KAKAO_TARGET_ID_TYPE = "user_id";
 
   private String kakaoAdminKey;
 
@@ -24,6 +24,12 @@ public class OAuth2Properties {
   private String kakaoClientSecret;
 
   private String kakaoRedirectUri;
+
+  public static final String APPLE_GRANT_TYPE = "authorization_code";
+
+  public static final String APPLE_ACCESS_TOKEN_HINT = "access_token";
+
+  public static final String APPLE_REFRESH_TOKEN_HINT = "refresh_token";
 
   private String appleTeamId;
 

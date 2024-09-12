@@ -4,6 +4,7 @@ import com.locat.api.domain.auth.entity.OAuth2ProviderToken;
 import com.locat.api.domain.auth.template.OAuth2Template;
 import com.locat.api.domain.auth.template.OAuth2TemplateFactory;
 import com.locat.api.domain.user.dto.OAuth2UserInfoDto;
+import com.locat.api.domain.user.dto.UserRegisterDto;
 import com.locat.api.domain.user.entity.User;
 import com.locat.api.domain.user.service.UserRegistrationService;
 import com.locat.api.domain.user.service.UserService;
@@ -23,13 +24,12 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
   private final UserService userService;
   private final UserTermsService userTermsService;
   private final UserSettingService userSettingService;
-
   private final OAuth2TemplateFactory oAuth2TemplateFactory;
   private final OAuth2ProviderTokenRepository providerTokenRepository;
 
   @Override
-  public User registerByOAuth(String oAuthId) {
-    OAuth2ProviderToken token = this.findTokenById(oAuthId);
+  public User register(UserRegisterDto userRegisterDto) {
+    OAuth2ProviderToken token = this.findTokenById(userRegisterDto.oAuthId());
     OAuth2UserInfoDto userInfo = this.fetchUserInfo(token);
     final User user = User.fromOAuth(userInfo);
 
@@ -38,7 +38,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     CompletableFuture<Void> userSettingFuture =
         userFuture.thenRunAsync(() -> this.userSettingService.registerDefaultSettings(user));
     CompletableFuture<Void> userTermsAgreementFuture =
-        userFuture.thenRunAsync(() -> this.userTermsService.registerByOAuth(user, token));
+        userFuture.thenRunAsync(() -> this.userTermsService.register(user, userRegisterDto));
 
     CompletableFuture.allOf(userFuture, userSettingFuture, userTermsAgreementFuture).join();
     return user;
