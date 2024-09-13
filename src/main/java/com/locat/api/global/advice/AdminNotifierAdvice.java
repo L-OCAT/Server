@@ -39,10 +39,10 @@ public class AdminNotifierAdvice {
       ProceedingJoinPoint joinPoint, RequireAdminNotification requireAdminNotify) throws Throwable {
     Object methodResult = joinPoint.proceed();
 
-    if (shouldNotify(joinPoint, requireAdminNotify, methodResult)) {
+    if (this.shouldNotify(joinPoint, requireAdminNotify, methodResult)) {
       String message = MESSAGE_PREFIX.concat(requireAdminNotify.message());
       WebhookRequest request = new WebhookRequest(message);
-      discordClient.send(serverId, webhookToken, request);
+      this.discordClient.send(this.serverId, this.webhookToken, request);
     }
 
     return methodResult;
@@ -53,7 +53,8 @@ public class AdminNotifierAdvice {
       RequireAdminNotification requireAdminNotify,
       Object methodResult) {
     String condition = requireAdminNotify.condition();
-    return StringUtils.isBlank(condition) || evaluateCondition(condition, joinPoint, methodResult);
+    return StringUtils.isBlank(condition)
+        || this.evaluateCondition(condition, joinPoint, methodResult);
   }
 
   private boolean evaluateCondition(

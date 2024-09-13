@@ -1,0 +1,82 @@
+openapi: 3.0.0
+info:
+  title: FAQ API
+  description: FAQ 관련 API를 정의하는 문서입니다.
+  version: 0.0.1
+servers:
+  - url: https://api.locat.kr
+    description: Production
+paths:
+  /v1/faqs/{type}:
+    get:
+      description: "분류별 FAQ 조회 API"
+      parameters:
+        - name: type
+          in: path
+          description: "FAQ 분류 타입(Non-Case Sensitive)"
+          required: true
+          example: "GENERAL"
+          schema:
+            type: string
+            default: "GENERAL"
+            enum:
+              - "GENERAL"
+              - "USER"
+              - "LOST_FOUND"
+              - "SERVICE"
+              - "MISCELLANEOUS"
+      security:
+        - bearerAuth: [ ]
+      responses:
+        200:
+          $ref: "#/components/responses/FaqResponse"
+        400:
+          description: "Bad Request: type 입력이 잘못된 경우"
+components:
+  responses:
+    FaqResponse:
+      description: "분류별 FAQ 조회 응답"
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "schemas.yaml#/components/schemas/BaseResponse"
+              - type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/FaqResponse"
+  schemas:
+    FaqResponse:
+      type: object
+      properties:
+        type:
+          enum:
+            - "GENERAL"
+            - "USER"
+            - "LOST_FOUND"
+            - "SERVICE"
+            - "MISCELLANEOUS"
+          default: "GENERAL"
+          description: "FAQ 분류 타입(Non-Case Sensitive)"
+        title:
+          type: string
+          description: "제목"
+        content:
+          type: string
+          description: "본문"
+        createdAt:
+          type: string
+          format: date-time
+          description: "등록일시"
+        updatedAt:
+          type: string
+          format: date-time
+          description: "수정일시"
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+

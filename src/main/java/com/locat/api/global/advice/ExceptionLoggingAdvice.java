@@ -13,7 +13,7 @@ public class ExceptionLoggingAdvice {
 
   @AfterThrowing(pointcut = "execution(* com.locat.api..*.*(..))", throwing = "ex")
   public void logAfterThrowing(JoinPoint joinPoint, Throwable ex) {
-    doLogExceptionInternal(joinPoint, ex);
+    this.doLogExceptionInternal(joinPoint, ex);
   }
 
   private void doLogExceptionInternal(JoinPoint joinPoint, Throwable ex) {

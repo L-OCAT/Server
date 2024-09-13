@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class CategoryServiceImpl implements CategoryService {
 
   private final CategoryRepository categoryRepository;
-  private final CategoryQRepository customCategoryRepository;
+  private final CategoryQRepository categoryQRepository;
 
   @Override
   @Transactional(readOnly = true)
@@ -28,6 +28,6 @@ public class CategoryServiceImpl implements CategoryService {
   @Override
   @Transactional(readOnly = true)
   public List<CategoryInfoDto> findAll() {
-    return this.customCategoryRepository.findAll();
+    return this.categoryQRepository.findAll();
   }
 }
