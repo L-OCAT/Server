@@ -1,6 +1,6 @@
 package com.locat.api.unit.security;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.mock;
 
 import com.locat.api.global.security.LocatAccessDeniedHandler;
@@ -12,7 +12,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.access.AccessDeniedException;
@@ -34,8 +33,9 @@ class SecurityExceptionHandlerTest {
     authEntryPoint.commence(request, response, authException);
 
     // Then
-    assertEquals(HttpServletResponse.SC_UNAUTHORIZED, response.getStatus());
-    assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+    assertThat(response).isNotNull();
+    assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_UNAUTHORIZED);
+    assertThat(response.getContentType()).isEqualTo("application/json;charset=UTF-8");
   }
 
   @Test
@@ -51,7 +51,8 @@ class SecurityExceptionHandlerTest {
     accessDeniedHandler.handle(request, response, accessDeniedException);
 
     // Then
-    assertEquals(HttpServletResponse.SC_FORBIDDEN, response.getStatus());
-    assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+    assertThat(response).isNotNull();
+    assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_FORBIDDEN);
+    assertThat(response.getContentType()).isEqualTo("application/json;charset=UTF-8");
   }
 }

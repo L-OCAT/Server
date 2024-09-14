@@ -32,7 +32,7 @@ class StringColumnEncryptionConverterTest {
     String plainText = "Hello, World!";
 
     // When
-    String encrypted = converter.convertToDatabaseColumn(plainText);
+    String encrypted = this.converter.convertToDatabaseColumn(plainText);
 
     // Then
     assertThat(encrypted).isNotNull();
@@ -44,10 +44,10 @@ class StringColumnEncryptionConverterTest {
   void decryptDatabaseColumnToPlain() {
     // Given
     String expected = "Hello, World!";
-    String encryptedExpect = converter.convertToDatabaseColumn(expected);
+    String encryptedExpect = this.converter.convertToDatabaseColumn(expected);
 
     // When
-    String actual = converter.convertToEntityAttribute(encryptedExpect);
+    String actual = this.converter.convertToEntityAttribute(encryptedExpect);
 
     // Then
     assertThat(actual).isNotNull();
@@ -58,8 +58,8 @@ class StringColumnEncryptionConverterTest {
   @DisplayName("null이 주어지는 경우 null을 반환해야 한다.")
   void returnNullWhenNullIsGiven() {
     // Given & When
-    String encrypted = converter.convertToDatabaseColumn(null);
-    String decrypted = converter.convertToEntityAttribute(null);
+    String encrypted = this.converter.convertToDatabaseColumn(null);
+    String decrypted = this.converter.convertToEntityAttribute(null);
 
     // Then
     assertThat(encrypted).isNull();

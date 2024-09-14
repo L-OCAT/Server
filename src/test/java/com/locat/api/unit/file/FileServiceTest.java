@@ -8,15 +8,13 @@ import static org.mockito.Mockito.*;
 import com.locat.api.global.file.FileOperationFailedException;
 import com.locat.api.global.file.FileServiceImpl;
 import java.util.stream.Stream;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.DynamicTest;
-import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.testcontainers.containers.localstack.LocalStackContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -39,6 +37,13 @@ class FileServiceTest {
   @Mock private S3Client s3Client;
 
   @InjectMocks private FileServiceImpl fileService;
+
+  @BeforeEach
+  void init() {
+    ReflectionTestUtils.setField(
+        this.fileService, "bucketUrl", "http://localhost:4566", String.class);
+    ReflectionTestUtils.setField(this.fileService, "bucketName", "test-bucket", String.class);
+  }
 
   @TestFactory
   @DisplayName("FileService 테스트")

@@ -6,7 +6,6 @@ import com.locat.api.domain.auth.service.AuthService;
 import com.locat.api.global.auth.AuthenticationException;
 import com.locat.api.global.auth.jwt.JwtProvider;
 import com.locat.api.global.auth.jwt.LocatTokenDto;
-import com.locat.api.global.event.UserAuthenticatedEvent;
 import com.locat.api.global.exception.ApiExceptionType;
 import com.locat.api.global.mail.MailService;
 import com.locat.api.global.mail.MailTemplate;
@@ -14,7 +13,6 @@ import com.locat.api.global.utils.RandomGenerator;
 import com.locat.api.infrastructure.redis.VerificationCodeRepository;
 import java.time.Duration;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -27,7 +25,6 @@ public class AuthServiceImpl implements AuthService {
   private final MailService mailService;
   private final JwtProvider jwtProvider;
   private final VerificationCodeRepository verificationCodeRepository;
-  private final ApplicationEventPublisher eventPublisher;
 
   @Override
   public LocatTokenDto renew(final String accessToken, final String refreshToken) {
@@ -38,6 +35,8 @@ public class AuthServiceImpl implements AuthService {
   public void sendVerificationEmail(final String email) {
     this.checkIfEmailIsAlreadySent(email);
     final String verificationCode = RandomGenerator.generateRandomCode(VERIFICATION_CODE_LENGTH);
+    this.verificationCodeRepository.save(
+        VerificationCode.of(email, verificationCode, VERIFICATION_CODE_EXPIRATION.toSeconds()));
     this.mailService.send(
         email,
         MailTemplate.MAIL_VERIFY_TITLE,
@@ -54,7 +53,6 @@ public class AuthServiceImpl implements AuthService {
 
   private void finalizeUserAuthentication(final String email) {
     this.verificationCodeRepository.deleteById(email);
-    this.eventPublisher.publishEvent(UserAuthenticatedEvent.of(this, email));
   }
 
   private void checkIfEmailIsAlreadySent(String email) {

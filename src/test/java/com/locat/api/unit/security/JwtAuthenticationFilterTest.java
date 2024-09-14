@@ -57,21 +57,21 @@ class JwtAuthenticationFilterTest {
     String username = "user";
     Claims claims = mock(Claims.class);
 
-    when(jwtProvider.resolve(any(HttpServletRequest.class))).thenReturn(token);
-    when(jwtProvider.parse(token)).thenReturn(claims);
+    when(this.jwtProvider.resolve(any(HttpServletRequest.class))).thenReturn(token);
+    when(this.jwtProvider.parse(token)).thenReturn(claims);
     when(claims.getSubject()).thenReturn(username);
-    when(userDetailsService.createAuthentication(username)).thenReturn(authentication);
+    when(this.userDetailsService.createAuthentication(username)).thenReturn(this.authentication);
 
     // When
-    jwtAuthenticationFilter.doFilter(request, response, filterChain);
+    this.jwtAuthenticationFilter.doFilter(this.request, this.response, this.filterChain);
 
     // Then
     SecurityContext context = SecurityContextHolder.getContext();
-    assertThat(context.getAuthentication()).isEqualTo(authentication);
-    verify(jwtProvider).resolve(any(HttpServletRequest.class));
-    verify(jwtProvider).parse(token);
-    verify(userDetailsService).createAuthentication(username);
-    verify(filterChain).doFilter(request, response);
+    assertThat(context.getAuthentication()).isEqualTo(this.authentication);
+    verify(this.jwtProvider).resolve(any(HttpServletRequest.class));
+    verify(this.jwtProvider).parse(token);
+    verify(this.userDetailsService).createAuthentication(username);
+    verify(this.filterChain).doFilter(this.request, this.response);
   }
 
   @Test
@@ -81,17 +81,17 @@ class JwtAuthenticationFilterTest {
     // Given
     String token = "invalidToken";
 
-    when(jwtProvider.resolve(any(HttpServletRequest.class))).thenReturn(token);
-    when(jwtProvider.parse(token)).thenThrow(new JwtException("Invalid token"));
+    when(this.jwtProvider.resolve(any(HttpServletRequest.class))).thenReturn(token);
+    when(this.jwtProvider.parse(token)).thenThrow(new JwtException("Invalid token"));
 
     // When
     jwtAuthenticationFilter.doFilter(request, response, filterChain);
 
     // Then
-    assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_UNAUTHORIZED);
-    verify(jwtProvider).resolve(any(HttpServletRequest.class));
-    verify(jwtProvider).parse(token);
-    verify(filterChain).doFilter(request, response);
+    assertThat(this.response.getStatus()).isEqualTo(HttpServletResponse.SC_UNAUTHORIZED);
+    verify(this.jwtProvider).resolve(any(HttpServletRequest.class));
+    verify(this.jwtProvider).parse(token);
+    verify(this.filterChain).doFilter(this.request, this.response);
   }
 
   @Test
@@ -99,15 +99,15 @@ class JwtAuthenticationFilterTest {
   void givenNoToken_whenDoFilterInternal_thenDoNotSetAuthentication()
       throws ServletException, IOException {
     // Given
-    when(jwtProvider.resolve(any(HttpServletRequest.class))).thenReturn(null);
+    when(this.jwtProvider.resolve(any(HttpServletRequest.class))).thenReturn(null);
 
     // When
-    jwtAuthenticationFilter.doFilter(request, response, filterChain);
+    this.jwtAuthenticationFilter.doFilter(this.request, this.response, this.filterChain);
 
     // Then
     SecurityContext context = SecurityContextHolder.getContext();
     assertThat(context.getAuthentication()).isNull();
-    verify(jwtProvider).resolve(any(HttpServletRequest.class));
-    verify(filterChain).doFilter(request, response);
+    verify(this.jwtProvider).resolve(any(HttpServletRequest.class));
+    verify(this.filterChain).doFilter(this.request, this.response);
   }
 }
