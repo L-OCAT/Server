@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
-@Transactional
 public class KakaoOAuth2Template extends AbstractOAuth2Template {
 
   private final KakaoUserClient kakaoUserClient;
@@ -38,14 +37,15 @@ public class KakaoOAuth2Template extends AbstractOAuth2Template {
             super.oAuth2Properties.getKakaoClientSecret(),
             super.oAuth2Properties.getKakaoRedirectUri(),
             code);
-    final String oAuthId = this.kakaoUserClient.getUserInfo(tokenDto.getAccessToken()).id();
+    final String oAuthId =
+        this.kakaoUserClient.getUserInfo(prependBearer(tokenDto.getAccessToken())).id();
     return super.providerTokenRepository.save(
         OAuth2ProviderToken.from(OAuth2ProviderType.KAKAO, oAuthId, tokenDto));
   }
 
   @Override
   public OAuth2UserInfoDto fetchUserInfo(String accessToken) {
-    return this.kakaoUserClient.getUserInfo(accessToken);
+    return this.kakaoUserClient.getUserInfo(prependBearer(accessToken));
   }
 
   @Override
@@ -57,6 +57,7 @@ public class KakaoOAuth2Template extends AbstractOAuth2Template {
   }
 
   @Override
+  @Transactional
   public void withdrawal(String userOAuthId) {
     this.kakaoUserClient.withdrawal(userOAuthId);
     this.providerTokenRepository.deleteById(userOAuthId);

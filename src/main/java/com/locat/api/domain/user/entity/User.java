@@ -32,7 +32,7 @@ import org.hibernate.annotations.SQLSelect;
     })
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SQLSelect(sql = "SELECT * FROM user WHERE deleted_at IS NULL")
+@SQLSelect(sql = "SELECT * FROM user WHERE deleted_at IS NOT NULL")
 public class User extends SecuredBaseEntity {
 
   @Id
@@ -84,8 +84,9 @@ public class User extends SecuredBaseEntity {
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<UserEndpoint> userEndpoints = new ArrayList<>();
 
-  public static User fromOAuth(OAuth2UserInfoDto userInfo) {
+  public static User fromOAuth(String nickname, OAuth2UserInfoDto userInfo) {
     return User.builder()
+        .nickname(nickname)
         .email(userInfo.getEmail())
         .emailHash(HashingUtils.hash(userInfo.getEmail()))
         .oauthId(userInfo.getId())

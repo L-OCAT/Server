@@ -8,6 +8,7 @@ import com.locat.api.domain.user.service.UserWithdrawalLogService;
 import com.locat.api.global.exception.ApiExceptionType;
 import com.locat.api.global.exception.NoSuchEntityException;
 import com.locat.api.infrastructure.repository.user.UserRepository;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +40,11 @@ public class UserServiceImpl implements UserService {
     return this.userRepository
         .findById(id)
         .orElseThrow(() -> new NoSuchEntityException(ApiExceptionType.NOT_FOUND_USER));
+  }
+
+  @Override
+  public Optional<User> findByOAuthId(String oAuthId) {
+    return this.userRepository.findByOauthId(oAuthId);
   }
 
   @Override

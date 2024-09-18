@@ -107,6 +107,9 @@ public class SecurityConfig {
         .sessionManagement(
             session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(authorize -> authorize.anyRequest().access(this.localHostOnly))
+        .addFilterBefore(
+            new JwtAuthenticationFilter(this.jwtProvider, this.userDetailsService),
+            UsernamePasswordAuthenticationFilter.class)
         .build();
   }
 

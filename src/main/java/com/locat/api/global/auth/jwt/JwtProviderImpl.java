@@ -44,6 +44,8 @@ public class JwtProviderImpl implements JwtProvider {
   @Value("${service.url.api}")
   private String serviceUrl;
 
+  private Key key;
+
   private JwtParser parser;
 
   private static final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS512;
@@ -51,8 +53,8 @@ public class JwtProviderImpl implements JwtProvider {
   @PostConstruct
   private void init() {
     byte[] bytes = Base64.getDecoder().decode(this.secretKey);
-    Key key = Keys.hmacShaKeyFor(bytes);
-    this.parser = Jwts.parserBuilder().setSigningKey(key).build();
+    this.key = Keys.hmacShaKeyFor(bytes);
+    this.parser = Jwts.parserBuilder().setSigningKey(this.key).build();
   }
 
   @Override
@@ -121,6 +123,7 @@ public class JwtProviderImpl implements JwtProvider {
     } catch (ExpiredJwtException ex) {
       return ex.getClaims();
     } catch (JwtException ex) {
+      log.debug("Could not parse JWT Cliams. / Reason: {}", ex.getMessage());
       throw new TokenException();
     }
   }
@@ -132,7 +135,7 @@ public class JwtProviderImpl implements JwtProvider {
         .setIssuer(this.serviceUrl)
         .setIssuedAt(Date.from(Instant.now(this.clock)))
         .setExpiration(getExpirationDate(ACCESS_TOKEN_EXPIRATION))
-        .signWith(Keys.hmacShaKeyFor(this.secretKey.getBytes()), signatureAlgorithm)
+        .signWith(this.key, signatureAlgorithm)
         .compact();
   }
 
@@ -148,9 +151,8 @@ public class JwtProviderImpl implements JwtProvider {
 
   private void saveRefreshToken(LocatUserDetails userDetails, String refreshToken) {
     final long id = userDetails.getId();
-    final String email = userDetails.getUsername();
     this.refreshTokenRepository.save(
-        LocatRefreshToken.from(id, email, refreshToken, REFRESH_TOKEN_EXPIRATION));
+        LocatRefreshToken.from(id, refreshToken, REFRESH_TOKEN_EXPIRATION));
   }
 
   private static Date getExpirationDate(Duration duration) {

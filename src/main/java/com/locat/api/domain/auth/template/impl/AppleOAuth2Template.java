@@ -18,7 +18,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
-@Transactional
 public class AppleOAuth2Template extends AbstractOAuth2Template {
 
   public static final String APPLE_AUDIENCE = "https://appleid.apple.com";
@@ -67,6 +66,7 @@ public class AppleOAuth2Template extends AbstractOAuth2Template {
   }
 
   @Override
+  @Transactional
   public void withdrawal(String userOAuthId) {
     final String clientSecret = AppleClientSecretProvider.create(super.oAuth2Properties);
     OAuth2ProviderToken providerToken = super.fetchToken(userOAuthId);
