@@ -1,15 +1,47 @@
 package com.locat.api.domain.geo.base.utils;
 
+import org.locationtech.jts.geom.*;
 import org.springframework.data.geo.Distance;
-import org.springframework.data.geo.Point;
 
 public final class GeoUtils {
 
   /** 지구의 반지름 (단위: km) */
   private static final double EARTH_RADIUS = 6371.0;
 
+  /** WGS 84 좌표계 SRID */
+  private static final int SRID_WGS_84 = 4326;
+
+  private static final GeometryFactory GEOMETRY_FACTORY;
+
   private GeoUtils() {
     // Utility class
+  }
+
+  static {
+    PrecisionModel precisionModel = new PrecisionModel(PrecisionModel.FLOATING);
+    GEOMETRY_FACTORY = new GeometryFactory(precisionModel, SRID_WGS_84);
+  }
+
+  /**
+   * 주어진 위도, 경도 좌표를 {@link Point} 객체로 변환합니다.
+   *
+   * @param lat 위도
+   * @param lng 경도
+   * @return {@link Point} 객체
+   * @apiNote {@link #toPoint(Coordinate)} 메서드에게 위임합니다.
+   */
+  public static Point toPoint(final double lat, final double lng) {
+    return toPoint(new Coordinate(lng, lat));
+  }
+
+  /**
+   * 주어진 좌표를 {@link Point} 객체로 변환합니다.
+   *
+   * @param coordinate 좌표
+   * @return {@link Point} 객체
+   */
+  public static Point toPoint(Coordinate coordinate) {
+    return GEOMETRY_FACTORY.createPoint(coordinate);
   }
 
   /**

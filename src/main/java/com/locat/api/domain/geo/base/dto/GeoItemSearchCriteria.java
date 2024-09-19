@@ -1,7 +1,7 @@
 package com.locat.api.domain.geo.base.dto;
 
+import org.locationtech.jts.geom.Point;
 import org.springframework.data.geo.Distance;
-import org.springframework.data.geo.Point;
 
 /** 분실물 & 습득물 공통 검색 조건 인터페이스 */
 public interface GeoItemSearchCriteria {

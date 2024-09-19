@@ -19,7 +19,7 @@ import java.util.Set;
 @FoundItemValidation
 public record FoundItemRegisterRequest(
     @Positive Long categoryId,
-    @Positive Set<Long> colorIds,
+    Set<Long> colorIds,
     @NotBlank String itemName,
     @NotBlank String description,
     @NotBlank String custodyLocation,

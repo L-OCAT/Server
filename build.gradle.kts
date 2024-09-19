@@ -30,6 +30,7 @@ val queryDSLVersion by extra("5.1.0")
 val jjwtVersion by extra("0.11.5")
 val j2htmlVersion by extra("1.6.0")
 val flywayDBVersion by extra("10.15.0")
+val hibernateSpatialVersion by extra("6.6.1.Final")
 
 repositories {
     mavenCentral()
@@ -47,6 +48,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
     implementation("org.springframework.boot:spring-boot-configuration-processor")
+    implementation("org.hibernate.orm:hibernate-spatial:$hibernateSpatialVersion")
     implementation("io.jsonwebtoken:jjwt-api:$jjwtVersion")
     implementation("io.jsonwebtoken:jjwt-impl:$jjwtVersion")
     implementation("io.jsonwebtoken:jjwt-jackson:$jjwtVersion")

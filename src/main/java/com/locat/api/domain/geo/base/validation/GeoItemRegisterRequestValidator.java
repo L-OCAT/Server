@@ -8,19 +8,23 @@ import java.util.regex.Pattern;
 public abstract class GeoItemRegisterRequestValidator<A extends Annotation, T>
     extends LocatConstraintValidator<A, T> {
 
-  /** 위도, 경도 정규표현식 */
-  protected static final Pattern LATITUDE_LONGITUDE_PATTERN =
+  /** 위도 정규표현식 */
+  protected static final Pattern LATITUDE_PATTERN =
       Pattern.compile("^-?([1-8]?\\d(\\.\\d{1,6})?|90(\\.0{1,6})?)$");
+
+  /** 경도 정규표현식 */
+  protected static final Pattern LONGITUDE_PATTERN =
+      Pattern.compile("^-?((1[0-7]|[1-9])?\\d(\\.\\d{1,6})?|180(\\.0{1,6})?)$");
 
   /** 선택 가능한 색상 최대 수 */
   protected static final int MAX_COLOR_CODES_SIZE = 2;
 
   /** 좌표 조건 위반 시 커스텀 메시지 */
   protected static final String COORDINATES_CONSTRAINT_VIOLATION_MESSAGE =
-      "Coordinates(lat or lng) must be valid.";
+      "Coordinates(lat or lng) must be valid";
 
   /** 색상 코드 ID가 없는 경우 커스텀 메시지 */
-  protected static final String COLOR_CODE_ID_NOT_FOUND_MESSAGE = "ColorCode ID must be provided.";
+  protected static final String COLOR_CODE_ID_NOT_FOUND_MESSAGE = "ColorCode ID must be provided";
 
   /** 색상 코드 ID 조건 위반 시 커스텀 메시지 */
   protected static final String COLOR_CODE_ID_CONSTRAINT_VIOLATION_MESSAGE =

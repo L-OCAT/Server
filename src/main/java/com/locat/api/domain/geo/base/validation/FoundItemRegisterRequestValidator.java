@@ -8,8 +8,8 @@ public class FoundItemRegisterRequestValidator
 
   @Override
   protected boolean validateCoordinates(FoundItemRegisterRequest request) {
-    return LATITUDE_LONGITUDE_PATTERN.matcher(request.lat().toString()).matches()
-        && LATITUDE_LONGITUDE_PATTERN.matcher(request.lng().toString()).matches();
+    return LATITUDE_PATTERN.matcher(request.lat().toString()).matches()
+        && LONGITUDE_PATTERN.matcher(request.lng().toString()).matches();
   }
 
   @Override

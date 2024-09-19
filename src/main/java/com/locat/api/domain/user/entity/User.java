@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.*;
-import org.hibernate.annotations.SQLSelect;
 
 @Entity
 @Getter
@@ -32,7 +31,6 @@ import org.hibernate.annotations.SQLSelect;
     })
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SQLSelect(sql = "SELECT * FROM user WHERE deleted_at IS NOT NULL")
 public class User extends SecuredBaseEntity {
 
   @Id

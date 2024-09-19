@@ -12,7 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import org.springframework.data.geo.Point;
+import org.locationtech.jts.geom.Point;
 
 /**
  * 분실물 & 습득물 공통 Entity<br>
@@ -45,7 +45,7 @@ public abstract class GeoItem extends SecuredBaseEntity {
       inverseJoinColumns = @JoinColumn(name = "color_id"))
   protected Set<ColorCode> colorCodes;
 
-  @Column(name = "item_name", nullable = false, length = 50)
+  @Column(name = "name", nullable = false, length = 50)
   protected String name;
 
   @Column(name = "description", length = 500)

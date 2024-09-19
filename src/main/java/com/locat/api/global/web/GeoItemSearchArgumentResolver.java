@@ -2,14 +2,15 @@ package com.locat.api.global.web;
 
 import com.locat.api.domain.geo.base.dto.GeoItemSearchCriteria;
 import com.locat.api.domain.geo.base.dto.GeoItemSortType;
+import com.locat.api.domain.geo.base.utils.GeoUtils;
 import com.locat.api.domain.geo.found.dto.FoundItemSearchDto;
 import com.locat.api.domain.geo.lost.dto.LostItemSearchDto;
 import com.locat.api.global.exception.InvalidParameterException;
 import com.locat.api.global.utils.RequestUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.locationtech.jts.geom.Point;
 import org.springframework.core.MethodParameter;
-import org.springframework.data.geo.Point;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -45,7 +46,7 @@ public class GeoItemSearchArgumentResolver implements HandlerMethodArgumentResol
     final String sort =
         RequestUtils.getParameterOrDefault(
             request, "s", String.class, GeoItemSortType.CREATED_AT_DESC.name());
-    final Point location = new Point(longitude, latitude);
+    final Point location = GeoUtils.toPoint(latitude, longitude);
 
     return switch (requestUri) {
       case LOST_ITEM_URI -> LostItemSearchDto.fromRequest(onlyMine, location, radius, sort);

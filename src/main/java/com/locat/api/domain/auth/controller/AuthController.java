@@ -30,6 +30,12 @@ public class AuthController {
     return ResponseEntity.ok((BaseResponse.of(oauthId)));
   }
 
+  @PostMapping("/token")
+  public ResponseEntity<BaseResponse<LocatTokenDto>> authenticate(final String oAuthId) {
+    LocatTokenDto locatTokenDto = this.authService.authenticate(oAuthId);
+    return ResponseEntity.ok((BaseResponse.of(locatTokenDto)));
+  }
+
   @PostMapping("/renew")
   public ResponseEntity<BaseResponse<LocatTokenDto>> renewToken(
       @RequestBody final TokenRenewRequest request) {

@@ -4,9 +4,9 @@ import com.locat.api.domain.geo.base.dto.GeoItemSearchCriteria;
 import com.locat.api.domain.geo.base.dto.GeoItemSortType;
 import com.locat.api.domain.geo.base.utils.GeoUtils;
 import lombok.Builder;
+import org.locationtech.jts.geom.Point;
 import org.springframework.data.geo.Distance;
 import org.springframework.data.geo.Metrics;
-import org.springframework.data.geo.Point;
 
 /**
  * 분실물 검색 조건 DTO

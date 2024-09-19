@@ -21,21 +21,22 @@ public record ErrorResponse(String message, ErrorData data) {
 
   public static ErrorResponse forbidden() {
     return new ErrorResponse(
-        FORBIDDEN.getMessage(), ErrorData.of("접근 권한이 없습니다.", FORBIDDEN.getCode()));
-  }
-
-  public static ErrorResponse forbidden(String message) {
-    return new ErrorResponse(FORBIDDEN.getMessage(), ErrorData.of(message, FORBIDDEN.getCode()));
+        FORBIDDEN.getMessage(), ErrorData.of("No permission.", FORBIDDEN.getCode()));
   }
 
   public static ErrorResponse unauthorized() {
     return new ErrorResponse(
-        UNAUTHORIZED.getMessage(), ErrorData.of("인증 수단이 없거나, 유효하지 않습니다.", UNAUTHORIZED.getCode()));
+        UNAUTHORIZED.getMessage(),
+        ErrorData.of("Authentication method is NOT provided or Invalid.", UNAUTHORIZED.getCode()));
   }
 
   public static ErrorResponse badRequest(String message) {
     return new ErrorResponse(
         BAD_REQUEST.getMessage(), ErrorData.of(message, BAD_REQUEST.getCode()));
+  }
+
+  public static ErrorResponse notFound(String message) {
+    return new ErrorResponse(NOT_FOUND.getMessage(), ErrorData.of(message, NOT_FOUND.getCode()));
   }
 
   public static ErrorResponse methodNotAllowed(String message) {
@@ -46,6 +47,7 @@ public record ErrorResponse(String message, ErrorData data) {
   public static ErrorResponse internalServerError() {
     return new ErrorResponse(
         INTERNAL_SERVER_ERROR.getMessage(),
-        ErrorData.of("서버 내부 오류가 발생했습니다.", INTERNAL_SERVER_ERROR.getCode()));
+        ErrorData.of(
+            "Something went wrong. Please try again later.", INTERNAL_SERVER_ERROR.getCode()));
   }
 }
