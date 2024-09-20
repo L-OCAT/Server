@@ -1,6 +1,6 @@
 package com.locat.api.domain.user.entity;
 
-import com.locat.api.domain.core.SecuredBaseEntity;
+import com.locat.api.domain.core.BaseEntity;
 import com.locat.api.domain.user.dto.OAuth2UserInfoDto;
 import com.locat.api.global.security.StringColumnEncryptionConverter;
 import com.locat.api.global.utils.HashingUtils;
@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.*;
+import org.springframework.data.annotation.LastModifiedBy;
 
 @Entity
 @Getter
@@ -31,7 +32,7 @@ import lombok.*;
     })
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User extends SecuredBaseEntity {
+public class User extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -69,6 +70,10 @@ public class User extends SecuredBaseEntity {
   @Enumerated(EnumType.STRING)
   @Column(name = "status_type")
   private StatusType statusType;
+
+  @LastModifiedBy
+  @Column(name = "updated_by")
+  private Long updatedBy;
 
   @Column(name = "deleted_at")
   private LocalDateTime deletedAt;

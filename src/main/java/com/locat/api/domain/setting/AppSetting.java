@@ -1,6 +1,6 @@
 package com.locat.api.domain.setting;
 
-import com.locat.api.domain.core.SecuredBaseEntity;
+import com.locat.api.domain.core.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -18,7 +18,7 @@ import lombok.*;
     })
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class AppSetting extends SecuredBaseEntity {
+public class AppSetting extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id", columnDefinition = "int UNSIGNED not null")

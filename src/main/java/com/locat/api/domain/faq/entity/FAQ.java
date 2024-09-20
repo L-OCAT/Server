@@ -1,6 +1,6 @@
 package com.locat.api.domain.faq.entity;
 
-import com.locat.api.domain.core.SecuredBaseEntity;
+import com.locat.api.domain.core.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
@@ -15,7 +15,7 @@ import lombok.experimental.SuperBuilder;
 @Table(name = "faq")
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class FAQ extends SecuredBaseEntity {
+public class FAQ extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
