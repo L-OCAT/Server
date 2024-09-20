@@ -49,14 +49,6 @@ public class KakaoOAuth2Template extends AbstractOAuth2Template {
   }
 
   @Override
-  public OAuth2UserInfoDto fetchUserInfoByAdmin(String userOAuthId) {
-    return this.kakaoUserClient.getUserInfoByAdmin(
-        super.oAuth2Properties.getKakaoAdminKey(),
-        OAuth2Properties.KAKAO_TARGET_ID_TYPE,
-        Long.parseLong(userOAuthId));
-  }
-
-  @Override
   @Transactional
   public void withdrawal(String userOAuthId) {
     this.kakaoUserClient.withdrawal(userOAuthId);

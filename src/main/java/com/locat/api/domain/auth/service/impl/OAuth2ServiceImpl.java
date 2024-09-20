@@ -18,4 +18,9 @@ public class OAuth2ServiceImpl implements OAuth2Service {
     OAuth2Template oAuth2Template = this.oAuth2TemplateFactory.getByType(provider);
     return oAuth2Template.issueToken(code).getId();
   }
+
+  @Override
+  public Boolean isAuthenticated(String oAuthId) {
+    return this.oAuth2TemplateFactory.getById(oAuthId).isAuthenticated(oAuthId);
+  }
 }

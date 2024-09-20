@@ -1,4 +1,4 @@
-package com.locat.api.global.security;
+package com.locat.api.global.security.filter;
 
 import com.locat.api.global.auth.LocatUserDetailsService;
 import com.locat.api.global.auth.jwt.JwtProvider;

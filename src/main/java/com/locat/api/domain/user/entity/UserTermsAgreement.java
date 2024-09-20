@@ -1,6 +1,6 @@
 package com.locat.api.domain.user.entity;
 
-import com.locat.api.domain.core.SecuredBaseEntity;
+import com.locat.api.domain.common.entity.SecuredBaseEntity;
 import com.locat.api.domain.terms.entity.Terms;
 import jakarta.persistence.*;
 import lombok.*;

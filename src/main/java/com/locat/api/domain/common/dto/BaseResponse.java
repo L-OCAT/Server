@@ -1,4 +1,4 @@
-package com.locat.api.domain.core;
+package com.locat.api.domain.common.dto;
 
 /**
  * 기본 응답 객체

@@ -13,7 +13,9 @@ import org.springframework.data.redis.core.TimeToLive;
 public class LocatRefreshToken {
 
   @Id private Long id;
+
   private String refreshToken;
+
   @TimeToLive private Long refreshTokenExpiresIn;
 
   public static LocatRefreshToken from(

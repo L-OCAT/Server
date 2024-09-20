@@ -3,7 +3,7 @@ package com.locat.api.global.exception;
 import static org.springframework.http.HttpStatus.METHOD_NOT_ALLOWED;
 
 import com.locat.api.domain.auth.exception.EmailAlreadySentException;
-import com.locat.api.domain.core.ErrorResponse;
+import com.locat.api.domain.common.dto.ErrorResponse;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import java.util.Optional;
@@ -51,7 +51,7 @@ public class GlobalExceptionHandler {
             .orElse("None");
     String message =
         """
-				Unsupported Http Methods!
+				Unsupported HTTP Methods!
 				[Requested: %s, Supported: %s]
 				"""
             .formatted(ex.getMethod(), supportedMethods);

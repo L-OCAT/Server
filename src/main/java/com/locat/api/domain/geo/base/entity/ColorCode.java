@@ -1,6 +1,6 @@
 package com.locat.api.domain.geo.base.entity;
 
-import com.locat.api.domain.core.BaseEntity;
+import com.locat.api.domain.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 

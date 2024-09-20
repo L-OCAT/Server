@@ -1,4 +1,4 @@
-package com.locat.api.global.security;
+package com.locat.api.global.converter;
 
 import com.locat.api.global.exception.InternalProcessingException;
 import com.locat.api.global.utils.RandomGenerator;

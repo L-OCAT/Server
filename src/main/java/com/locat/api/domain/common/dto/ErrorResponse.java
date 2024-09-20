@@ -1,4 +1,4 @@
-package com.locat.api.domain.core;
+package com.locat.api.domain.common.dto;
 
 import static com.locat.api.global.exception.ApiExceptionType.*;
 
@@ -48,6 +48,6 @@ public record ErrorResponse(String message, ErrorData data) {
     return new ErrorResponse(
         INTERNAL_SERVER_ERROR.getMessage(),
         ErrorData.of(
-            "Something went wrong. Please try again later.", INTERNAL_SERVER_ERROR.getCode()));
+            "Interal Server Error", INTERNAL_SERVER_ERROR.getCode()));
   }
 }

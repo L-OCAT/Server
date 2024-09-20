@@ -1,7 +1,7 @@
-package com.locat.api.domain.core;
+package com.locat.api.domain.common.dto;
 
 /**
- * 클라이언트에게 전달할 메세지, 코드를 포함하는 record
+ * 예외 발생 시 클라이언트에게 전달할 메세지, 코드 정보 DTO
  *
  * @param message 메세지
  * @param code 코드

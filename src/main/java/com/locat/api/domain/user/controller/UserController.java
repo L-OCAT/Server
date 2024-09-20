@@ -1,6 +1,6 @@
 package com.locat.api.domain.user.controller;
 
-import com.locat.api.domain.core.BaseResponse;
+import com.locat.api.domain.common.dto.BaseResponse;
 import com.locat.api.domain.user.dto.UserInfoUpdateDto;
 import com.locat.api.domain.user.dto.UserRegisterDto;
 import com.locat.api.domain.user.dto.request.UserInfoUpdateRequest;

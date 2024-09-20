@@ -1,11 +1,12 @@
 package com.locat.api.domain.auth.controller;
 
-import com.locat.api.domain.auth.dto.EmailVerificationRequest;
-import com.locat.api.domain.auth.dto.OAuth2AuthorizeRequest;
-import com.locat.api.domain.auth.dto.TokenRenewRequest;
+import com.locat.api.domain.auth.dto.request.EmailVerificationRequest;
+import com.locat.api.domain.auth.dto.request.OAuth2AuthorizeRequest;
+import com.locat.api.domain.auth.dto.request.TokenIssueRequest;
+import com.locat.api.domain.auth.dto.request.TokenRenewRequest;
 import com.locat.api.domain.auth.service.AuthService;
 import com.locat.api.domain.auth.service.OAuth2Service;
-import com.locat.api.domain.core.BaseResponse;
+import com.locat.api.domain.common.dto.BaseResponse;
 import com.locat.api.global.auth.jwt.LocatTokenDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -31,8 +32,9 @@ public class AuthController {
   }
 
   @PostMapping("/token")
-  public ResponseEntity<BaseResponse<LocatTokenDto>> authenticate(final String oAuthId) {
-    LocatTokenDto locatTokenDto = this.authService.authenticate(oAuthId);
+  public ResponseEntity<BaseResponse<LocatTokenDto>> authenticate(
+      @RequestBody @Valid final TokenIssueRequest request) {
+    LocatTokenDto locatTokenDto = this.authService.authenticate(request.oAuthId());
     return ResponseEntity.ok((BaseResponse.of(locatTokenDto)));
   }
 

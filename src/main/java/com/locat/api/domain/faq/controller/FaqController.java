@@ -1,6 +1,6 @@
 package com.locat.api.domain.faq.controller;
 
-import com.locat.api.domain.core.BaseResponse;
+import com.locat.api.domain.common.dto.BaseResponse;
 import com.locat.api.domain.faq.dto.FaqResponse;
 import com.locat.api.domain.faq.entity.FaqType;
 import com.locat.api.domain.faq.service.FaqService;

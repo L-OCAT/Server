@@ -15,7 +15,7 @@ public class UserWithdrawalLogServiceImpl implements UserWithdrawalLogService {
   private final UserWithdrawalLogRepository withdrawalLogRepository;
 
   @Override
-  public void withdrawal(Long id, String reason) {
+  public void save(Long id, String reason) {
     this.withdrawalLogRepository.save(UserWithdrawalLog.of(id, reason));
   }
 }

@@ -7,7 +7,7 @@ import io.jsonwebtoken.Claims;
 import lombok.Builder;
 
 /**
- * Open Connect ID 토큰(JWT)
+ * [Apple] Open Connect ID 토큰(JWT)
  *
  * @param issuer Issuer(Apple - {@code https://appleid.apple.com})
  * @param subject Subject(사용자 고유 ID)

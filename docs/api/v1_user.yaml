@@ -20,7 +20,7 @@ paths:
               schema:
                 $ref: '#/components/responses/LocatTokenDto'
         400:
-          description: "Bad request: 필수 요청 파라미터 누락"
+          description: "Bad request: 필수 요청 파라미터 누락(반드시 동의해야하는 약관에 미동의 등)"
           content:
             application/json:
               schema:
@@ -276,11 +276,11 @@ components:
           type: boolean
           example: true
           description: "개인정보 처리 방침 동의 여부(반드시 true)"
-        isLocationServiceAgreed:
+        isLocationPolicyAgreed:
           type: boolean
           example: true
           description: "위치 정보 이용 동의 여부(반드시 true)"
-        isMarketingAgreed:
+        isMarketingPolicyAgreed:
           type: boolean
           example: true
           description: "마케팅 정보 수신 동의 여부"
@@ -288,8 +288,8 @@ components:
         - oAuthId
         - isTermsOfServiceAgreed
         - isPrivacyPolicyAgreed
-        - isLocationServiceAgreed
-        - isMarketingAgreed
+        - isLocationPolicyAgreed
+        - isMarketingPolicyAgreed
     LocatTokenDto:
       description: "JWT 발급 응답"
       type: object

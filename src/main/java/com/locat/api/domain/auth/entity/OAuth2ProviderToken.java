@@ -12,13 +12,21 @@ import org.springframework.data.redis.core.TimeToLive;
 @Builder
 @RedisHash("OAUTH2_PROVIDER_TOKEN")
 public class OAuth2ProviderToken {
+
   @Id private String id;
+
   private OAuth2ProviderType providerType;
+
   private String accessToken;
+
   private String refreshToken;
+
   private String idToken;
+
   private Integer accessTokenExpiresIn;
+
   private Integer refreshTokenExpiresIn;
+
   @TimeToLive private Long timeToLive;
 
   public static OAuth2ProviderToken from(

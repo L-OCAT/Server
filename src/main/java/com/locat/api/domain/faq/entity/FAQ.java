@@ -1,6 +1,6 @@
 package com.locat.api.domain.faq.entity;
 
-import com.locat.api.domain.core.BaseEntity;
+import com.locat.api.domain.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;

@@ -1,6 +1,6 @@
 package com.locat.api.domain.user.entity;
 
-import com.locat.api.domain.core.SecuredBaseEntity;
+import com.locat.api.domain.common.entity.SecuredBaseEntity;
 import com.locat.api.domain.setting.AppSetting;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;

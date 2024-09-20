@@ -1,8 +1,7 @@
 package com.locat.api.global.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.locat.api.domain.core.ErrorResponse;
-import jakarta.servlet.ServletException;
+import com.locat.api.domain.common.dto.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -23,7 +22,7 @@ public class LocatAccessDeniedHandler implements AccessDeniedHandler {
       HttpServletRequest request,
       HttpServletResponse response,
       AccessDeniedException accessDeniedException)
-      throws IOException, ServletException {
+      throws IOException {
     if (log.isDebugEnabled()) {
       log.debug("Access Denied: {}", accessDeniedException.getMessage());
     }
