@@ -3,6 +3,7 @@ package com.locat.api.domain.geo.base.service.impl;
 import com.locat.api.domain.geo.base.entity.ColorCode;
 import com.locat.api.domain.geo.base.service.ColorCodeService;
 import com.locat.api.infrastructure.repository.geo.base.ColorCodeRepository;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,5 +20,10 @@ public class ColorCodeServiceImpl implements ColorCodeService {
   @Transactional(readOnly = true)
   public Optional<ColorCode> findById(Long id) {
     return this.colorCodeRepository.findById(id);
+  }
+
+  @Override
+  public List<ColorCode> findAll() {
+    return this.colorCodeRepository.findAll();
   }
 }
