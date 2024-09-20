@@ -28,7 +28,7 @@ public final class GeoUtils {
    * @param lat 위도
    * @param lng 경도
    * @return {@link Point} 객체
-   * @apiNote {@link #toPoint(Coordinate)} 메서드에게 위임합니다.
+   * @apiNote {@link #toPoint(Coordinate)} 메서드에 위임합니다.
    */
   public static Point toPoint(final double lat, final double lng) {
     return toPoint(new Coordinate(lng, lat));

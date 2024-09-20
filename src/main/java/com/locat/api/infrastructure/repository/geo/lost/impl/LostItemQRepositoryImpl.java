@@ -11,7 +11,8 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import org.springframework.data.geo.*;
+import org.locationtech.jts.geom.Point;
+import org.springframework.data.geo.Distance;
 import org.springframework.stereotype.Repository;
 
 @Repository
