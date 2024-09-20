@@ -1,6 +1,6 @@
 package com.locat.api.domain.geo.base.controller;
 
-import com.locat.api.domain.core.BaseResponse;
+import com.locat.api.domain.common.dto.BaseResponse;
 import com.locat.api.domain.geo.base.dto.ColorCodeResponse;
 import com.locat.api.domain.geo.base.service.ColorCodeService;
 import java.util.List;

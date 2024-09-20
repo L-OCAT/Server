@@ -6,7 +6,7 @@ import static org.mockito.Mockito.*;
 
 import com.locat.api.global.auth.LocatUserDetailsService;
 import com.locat.api.global.auth.jwt.JwtProvider;
-import com.locat.api.global.security.JwtAuthenticationFilter;
+import com.locat.api.global.security.filter.JwtAuthenticationFilter;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;

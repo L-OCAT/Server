@@ -1,4 +1,4 @@
-package com.locat.api.global.security;
+package com.locat.api.global.security.filter;
 
 import static com.locat.api.global.security.SecurityConfig.PUBLIC_API_PATHS;
 
@@ -26,12 +26,7 @@ public class ActiveUserFilter extends OncePerRequestFilter {
       filterChain.doFilter(request, response);
       return;
     }
-
-    final User user = this.getCurrentAuthenticatedUser();
-    if (!user.isActivated()) {
-      throw new AccessDeniedException("Access Denied: User is not activated.");
-    }
-
+    this.getCurrentAuthenticatedUser().assertActivated();
     filterChain.doFilter(request, response);
   }
 

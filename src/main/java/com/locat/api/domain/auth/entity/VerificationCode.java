@@ -10,9 +10,12 @@ import org.springframework.data.redis.core.TimeToLive;
 @Builder
 @RedisHash("VERIFICATION_CODE")
 public class VerificationCode {
-  @Id String email;
-  String code;
-  @TimeToLive Long timeToLive;
+
+  @Id private String email;
+
+  private String code;
+
+  @TimeToLive private Long timeToLive;
 
   public static VerificationCode of(final String email, final String code, final Long timeToLive) {
     return VerificationCode.builder().email(email).code(code).timeToLive(timeToLive).build();

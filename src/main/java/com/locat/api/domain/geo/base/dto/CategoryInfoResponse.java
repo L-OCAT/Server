@@ -1,23 +1,19 @@
 package com.locat.api.domain.geo.base.dto;
 
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
  * 카테고리 정보 응답 DTO
  *
- * @param categoryId 카테고리 ID
- * @param categoryName 카테고리 이름
- * @param parentCategoryId 상위 카테고리 ID (최상위 카테고리인 경우 {@code null})
- * @param parentCategoryName 상위 카테고리 이름 (최상위 카테고리인 경우 {@code null})
+ * @param id 카테고리 ID
+ * @param name 카테고리 이름
+ * @param parentId 상위 카테고리 ID (최상위 카테고리인 경우 {@code null})
+ * @param parentName 상위 카테고리 이름 (최상위 카테고리인 경우 {@code null})
  */
-public record CategoryInfoResponse(
-    Long categoryId, String categoryName, Long parentCategoryId, String parentCategoryName) {
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public record CategoryInfoResponse(Long id, String name, Long parentId, String parentName) {
 
-  public static List<CategoryInfoResponse> fromList(List<CategoryInfoDto> dtos) {
-    return dtos.stream().map(CategoryInfoResponse::from).toList();
-  }
-
-  public static CategoryInfoResponse from(CategoryInfoDto dto) {
+  public static CategoryInfoResponse toResponse(CategoryInfoDto dto) {
     return new CategoryInfoResponse(
         dto.categoryId(), dto.categoryName(), dto.parentCategoryId(), dto.parentCategoryName());
   }

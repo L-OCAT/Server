@@ -1,6 +1,6 @@
 package com.locat.api.domain.geo.base.entity;
 
-import com.locat.api.domain.core.SecuredBaseEntity;
+import com.locat.api.domain.common.entity.SecuredBaseEntity;
 import com.locat.api.domain.geo.found.entity.FoundItem;
 import com.locat.api.domain.geo.lost.entity.LostItem;
 import com.locat.api.domain.user.entity.User;

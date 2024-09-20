@@ -1,0 +1,159 @@
+openapi: 3.0.0
+info:
+  title: Common API
+  description: 공통 API(FAQ, 카테고리, 색상 코드 등)을 정의하는 문서입니다.
+  version: 0.0.1
+servers:
+  - url: https://api.locat.kr
+    description: Production
+paths:
+  /v1/categories:
+    get:
+      description: "카테고리 목록 조회 API"
+      security:
+        - bearerAuth: [ ]
+      responses:
+        200:
+          description: "카테고리 목록 조회 성공"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/responses/CategoryInfoResponse"
+  /v1/color-codes:
+    get:
+        description: "색상 코드 목록 조회 API"
+        security:
+            - bearerAuth: [ ]
+        responses:
+          200:
+            description: "색상 코드 목록 조회 성공"
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/responses/ColorCodeResponse"
+  /v1/faqs/{type}:
+    get:
+      description: "분류별 FAQ 조회 API"
+      parameters:
+        - name: type
+          in: path
+          description: "FAQ 분류 타입(Non-Case Sensitive)"
+          required: true
+          example: "GENERAL"
+          schema:
+            type: string
+            default: "GENERAL"
+            enum:
+              - "GENERAL"
+              - "USER"
+              - "LOST_FOUND"
+              - "SERVICE"
+              - "MISCELLANEOUS"
+      security:
+        - bearerAuth: [ ]
+      responses:
+        200:
+          $ref: "#/components/responses/FaqResponse"
+        400:
+          description: "Bad Request: type 입력이 잘못된 경우"
+components:
+  responses:
+    CategoryInfoResponse:
+      description: "카테고리 목록 조회 응답"
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "schemas.yaml#/components/schemas/BaseResponse"
+              - type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/CategoryInfoResponse"
+    ColorCodeResponse:
+        description: "색상 코드 목록 조회 응답"
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "schemas.yaml#/components/schemas/BaseResponse"
+                - type: object
+                  properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: "#/components/schemas/ColorCodeResponse"
+    FaqResponse:
+      description: "분류별 FAQ 조회 응답"
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "schemas.yaml#/components/schemas/BaseResponse"
+              - type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/FaqResponse"
+  schemas:
+    CategoryInfoResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: "카테고리 ID"
+        name:
+          type: string
+          description: "카테고리 이름"
+        parentId:
+          type: integer
+          description: "상위 카테고리 ID"
+        parentName:
+          type: string
+          description: "상위 카테고리 이름"
+    ColorCodeResponse:
+        type: object
+        properties:
+          id:
+            type: integer
+            description: "색상 코드 ID"
+          hexCode:
+            type: string
+            description: "색상 코드(HEX)"
+          name:
+            type: string
+            description: "색상 코드 이름"
+    FaqResponse:
+      type: object
+      properties:
+        type:
+          enum:
+            - "GENERAL"
+            - "USER"
+            - "LOST_FOUND"
+            - "SERVICE"
+            - "MISCELLANEOUS"
+          default: "GENERAL"
+          description: "FAQ 분류 타입(Non-Case Sensitive)"
+        title:
+          type: string
+          description: "제목"
+        content:
+          type: string
+          description: "본문"
+        createdAt:
+          type: string
+          format: date-time
+          description: "등록일시"
+        updatedAt:
+          type: string
+          format: date-time
+          description: "수정일시"
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+

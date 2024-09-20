@@ -29,7 +29,7 @@ public class CategoryQRepositoryImpl implements CategoryQRepository {
                 CategoryInfoDto.class,
                 qCategory.id,
                 qCategory.name,
-                qCategory.parentId,
+                parentCategory.id,
                 parentCategory.name))
         .from(qCategory)
         .leftJoin(parentCategory)

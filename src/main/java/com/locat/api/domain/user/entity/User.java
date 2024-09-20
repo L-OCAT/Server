@@ -1,11 +1,10 @@
 package com.locat.api.domain.user.entity;
 
-import com.locat.api.domain.core.BaseEntity;
+import com.locat.api.domain.common.entity.BaseEntity;
 import com.locat.api.domain.user.dto.OAuth2UserInfoDto;
-import com.locat.api.global.security.StringColumnEncryptionConverter;
+import com.locat.api.global.converter.StringColumnEncryptionConverter;
 import com.locat.api.global.utils.HashingUtils;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
@@ -13,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.*;
 import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.security.access.AccessDeniedException;
 
 @Entity
 @Getter
@@ -87,7 +87,7 @@ public class User extends BaseEntity {
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<UserEndpoint> userEndpoints = new ArrayList<>();
 
-  public static User fromOAuth(String nickname, OAuth2UserInfoDto userInfo) {
+  public static User of(String nickname, OAuth2UserInfoDto userInfo) {
     return User.builder()
         .nickname(nickname)
         .email(userInfo.getEmail())
@@ -99,15 +99,7 @@ public class User extends BaseEntity {
         .build();
   }
 
-  public boolean isActivated() {
-    return this.statusType == StatusType.ACTIVE;
-  }
-
-  public void delete() {
-    this.deletedAt = LocalDateTime.now();
-  }
-
-  public User update(@Email String email, String nickname) {
+  public User update(String email, String nickname) {
     if (email != null && emailHash != null) {
       this.email = email;
       this.emailHash = HashingUtils.hash(email);
@@ -116,5 +108,20 @@ public class User extends BaseEntity {
       this.nickname = nickname;
     }
     return this;
+  }
+
+  public void delete() {
+    this.statusType = StatusType.INACTIVE;
+    this.deletedAt = LocalDateTime.now();
+  }
+
+  public boolean isNotActivated() {
+    return this.statusType != StatusType.ACTIVE;
+  }
+
+  public void assertActivated() {
+    if (this.isNotActivated()) {
+      throw new AccessDeniedException("Access Denied: User is not activated.");
+    }
   }
 }

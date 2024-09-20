@@ -3,6 +3,7 @@ package com.locat.api.domain.user.dto.request;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
 /**
  * 사용자 회원가입 요청 DTO
@@ -16,7 +17,11 @@ import jakarta.validation.constraints.NotNull;
  */
 public record UserRegisterRequest(
     @NotEmpty String oAuthId,
-    @NotEmpty String nickname,
+    @Pattern(
+            regexp = "^(?=[^ㄱ-ㅎㅏ-ㅣ]*$)[가-힣a-zA-Z0-9]{2,12}$",
+            message =
+                "Invalid nickname. (2-12 characters long and contain only Korean, English, and numbers)")
+        String nickname,
     @AssertTrue(message = "You MUST agree to the terms of service") Boolean isTermsOfServiceAgreed,
     @AssertTrue(message = "You MUST agree to the privacy policy") Boolean isPrivacyPolicyAgreed,
     @AssertTrue(message = "You MUST agree to the location policy") Boolean isLocationPolicyAgreed,

@@ -3,7 +3,7 @@ package com.locat.api.unit.security;
 import static com.locat.api.global.security.SecurityConfig.API_KEY_HEADER;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
 
-import com.locat.api.global.security.PublicApiKeyFilter;
+import com.locat.api.global.security.filter.PublicApiKeyFilter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

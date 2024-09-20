@@ -1,4 +1,4 @@
-package com.locat.api.global.security;
+package com.locat.api.global.security.filter;
 
 import static com.locat.api.global.security.SecurityConfig.API_KEY_HEADER;
 import static com.locat.api.global.security.SecurityConfig.PUBLIC_API_PATHS;
@@ -10,16 +10,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Optional;
-import org.springframework.core.env.Environment;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+@RequiredArgsConstructor
 public class PublicApiKeyFilter extends OncePerRequestFilter {
 
   private final String apiKey;
-
-  public PublicApiKeyFilter(Environment environment) {
-    this.apiKey = environment.getProperty("service.api-key");
-  }
 
   @Override
   public void doFilterInternal(

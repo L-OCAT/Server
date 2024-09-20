@@ -1,4 +1,4 @@
-package com.locat.api.domain.core;
+package com.locat.api.domain.common.entity;
 
 import com.locat.api.global.security.LocatAuditorAware;
 import jakarta.persistence.Column;

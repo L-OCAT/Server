@@ -12,4 +12,6 @@ public interface OAuth2Service {
    * @return OAuth2 제공자가 관리하는 고유 ID
    */
   String authenticate(OAuth2ProviderType provider, String code);
+
+  Boolean isAuthenticated(final String oAuthId);
 }

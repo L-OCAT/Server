@@ -18,6 +18,11 @@ public abstract class AbstractOAuth2Template implements OAuth2Template {
   protected final OAuth2Properties oAuth2Properties;
   protected final OAuth2ProviderTokenRepository providerTokenRepository;
 
+  @Override
+  public Boolean isAuthenticated(String oAuthId) {
+    return this.providerTokenRepository.existsById(oAuthId);
+  }
+
   protected OAuth2ProviderToken fetchTokenByAccessToken(String accessToken) {
     return this.providerTokenRepository
         .findByAccessToken(accessToken)

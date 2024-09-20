@@ -8,18 +8,16 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 public enum ApiExceptionType {
   BAD_REQUEST(400, "Bad Request", 400000),
-  INVALID_PARAMETER(400, "Bad Request: Required Parameters are Invalid or Missing.", 400001),
-  FILE_EXTENSION_NOT_PROVIDED(400, "Bad Request: File Extension Not Provided", 400002),
-  FILE_SIZE_LIMIT_EXCEEDED(400, "Bad Request: File Size Limit Exceeded", 400003),
-  FILE_EXTENSION_NOT_SUPPORTED(400, "Bad Request: File Extension Not Supported", 400004),
+  INVALID_PARAMETER(400, "Bad Request: Required parameters are invalid or missing.", 400001),
+  FILE_EXTENSION_NOT_PROVIDED(400, "Bad Request: File extension NOT provided", 400002),
+  FILE_SIZE_LIMIT_EXCEEDED(400, "Bad Request: File size limit exceeded", 400003),
+  FILE_EXTENSION_NOT_SUPPORTED(400, "Bad Request: File extension not supported", 400004),
   INVALID_EMAIL_VERIFICATION_CODE(
-      400, "Bad Request: Provided Verification Code is Not Matched", 400005),
-  INVALID_PLATFORM(400, "Bad Request: Platform Type is Invalid", 400006),
+      400, "Bad Request: Verification code is not matched", 400005),
+  INVALID_PLATFORM(400, "Bad Request: Invalid platform type", 400006),
 
   UNAUTHORIZED(401, "Unauthorized", 401000),
-  INVALID_TOKEN(401, "Unauthorized: Invalid JWT", 401001),
-  INVALID_REFRESH_TOKEN(
-      401, "Unauthorized: Invalid Refresh Token (Expired or Not Matched)", 401002),
+  INVALID_TOKEN(401, "Unauthorized: Invalid JWT (expired or not matched)", 401001),
 
   FORBIDDEN(403, "Forbidden", 403000),
 
@@ -31,26 +29,26 @@ public enum ApiExceptionType {
   NOT_FOUND_ITEM_LOST(404, "Not Found: Lost Item", 404005),
   NOT_FOUND_CATEGORY(404, "Not Found: Category", 404006),
   NOT_FOUND_COLOR_CODE(404, "Not Found: Color Code", 404007),
-  NOT_FOUND_ENDPOINT(404, "Not Found: Endpoint ARN Not Found", 404008),
+  NOT_FOUND_ENDPOINT(404, "Not Found: Endpoint ARN", 404008),
   NOT_FOUND_TERMS(404, "Not Found: Terms", 404009),
 
   NOT_ALLOWED_METHOD(405, "Method Not Allowed", 405000),
 
   CONFLICT(409, "Conflict", 409000),
+  RESOURCE_ALREADY_EXISTS(409, "Conflict: The requested resource already exists", 409001),
+  RESOURCE_IDENTICAL(409, "Conflict: The requested resource is identical", 409002),
 
   TOO_MANY_REQUESTS(429, "Too Many Requests", 429000),
-  VERIFICATION_EMAIL_ALREADY_SENT(429, "Email Verification Code Already Sent", 429001),
+  VERIFICATION_EMAIL_ALREADY_SENT(429, "Code already sent", 429001),
 
   INTERNAL_SERVER_ERROR(500, "Internal Server Error", 500000),
-  FAIL_TO_CONSTRUCT_EMAIL(500, "Failed to Construct Mail", 500001),
-  FAIL_TO_SEND_EMAIL(500, "Failed to Send Mail", 500002),
-  S3_ERROR(500, "Something went Wrong with S3", 500003),
-  FAIL_TO_READ_FILES(500, "Failed to Read Files", 500004),
-  CANNOT_PROCESS_JWT_NO_MATCHING_ALGORITHM(
-      500, "Cannot Process JWT: No Matching Algorithm", 500005),
-  FAIL_TO_SEND_PUSH_NOTIFICATION(500, "Failed to Send Push Notification", 500006),
-  FAIL_TO_CREATE_ENDPOINT(500, "Failed to Create Platform Endpoint", 500007),
-  FAIL_TO_SUBSCRIBE_TOPIC(500, "Failed to Subscribe Endpoint to Topic", 500008);
+  FAIL_TO_CONSTRUCT_EMAIL(500, "Failed to construct mail", 500001),
+  FAIL_TO_SEND_EMAIL(500, "Failed to send mail", 500002),
+  S3_ERROR(500, "Something went wrong with S3", 500003),
+  FAIL_TO_READ_FILES(500, "Failed to read files", 500004),
+  FAIL_TO_SEND_PUSH_NOTIFICATION(500, "Failed to send push notification", 500005),
+  FAIL_TO_CREATE_ENDPOINT(500, "Failed to create platform endpoint", 500006),
+  FAIL_TO_SUBSCRIBE_TOPIC(500, "Failed to subscribe endpoint to topic", 500007);
 
   /**
    * 각 예외 상황에 대한 적절한 HTTP Status Code

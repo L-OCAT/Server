@@ -6,6 +6,7 @@ import com.locat.api.domain.auth.entity.LocatRefreshToken;
 import com.locat.api.global.auth.LocatUserDetails;
 import com.locat.api.global.auth.LocatUserDetailsService;
 import com.locat.api.global.exception.ApiExceptionType;
+import com.locat.api.global.utils.TypeCaster;
 import com.locat.api.infrastructure.redis.LocatRefreshTokenRepository;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -34,9 +35,7 @@ public class JwtProviderImpl implements JwtProvider {
   public static final Duration ACCESS_TOKEN_EXPIRATION = Duration.ofHours(2);
   public static final Duration REFRESH_TOKEN_EXPIRATION = Duration.ofDays(14);
 
-  private final Clock clock;
-  private final LocatUserDetailsService userDetailsService;
-  private final LocatRefreshTokenRepository refreshTokenRepository;
+  private static final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS512;
 
   @Value("${security.jwt.secret}")
   private String secretKey;
@@ -46,15 +45,14 @@ public class JwtProviderImpl implements JwtProvider {
 
   private Key key;
 
-  private JwtParser parser;
-
-  private static final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS512;
+  private final Clock clock;
+  private final LocatUserDetailsService userDetailsService;
+  private final LocatRefreshTokenRepository refreshTokenRepository;
 
   @PostConstruct
   private void init() {
     byte[] bytes = Base64.getDecoder().decode(this.secretKey);
     this.key = Keys.hmacShaKeyFor(bytes);
-    this.parser = Jwts.parserBuilder().setSigningKey(this.key).build();
   }
 
   @Override
@@ -80,10 +78,10 @@ public class JwtProviderImpl implements JwtProvider {
   @Override
   public LocatTokenDto renew(String oldAccessToken, String refreshToken) {
     Claims claims = this.parse(oldAccessToken);
-    String username = claims.getSubject();
+    String userId = claims.getSubject();
 
-    this.validateRefreshToken(username, refreshToken);
-    Authentication authentication = this.userDetailsService.createAuthentication(username);
+    this.validateRefreshToken(userId, refreshToken);
+    Authentication authentication = this.userDetailsService.createAuthentication(userId);
 
     String newAccessToken = this.createAccessToken(authentication);
     return LocatTokenDto.jwtBuilder()
@@ -93,17 +91,17 @@ public class JwtProviderImpl implements JwtProvider {
         .create();
   }
 
-  private void validateRefreshToken(String username, String refreshToken) {
+  private void validateRefreshToken(String userId, String refreshToken) {
     this.refreshTokenRepository
-        .findByEmail(username)
+        .findById(TypeCaster.cast(userId, Long.class))
         .ifPresentOrElse(
-            t -> {
-              if (t.isNotMatched(refreshToken)) {
-                throw new TokenException(ApiExceptionType.INVALID_REFRESH_TOKEN);
+            token -> {
+              if (token.isNotMatched(refreshToken)) {
+                throw new TokenException(ApiExceptionType.INVALID_TOKEN);
               }
             },
             () -> {
-              throw new TokenException(ApiExceptionType.INVALID_REFRESH_TOKEN);
+              throw new TokenException(ApiExceptionType.INVALID_TOKEN);
             });
   }
 
@@ -119,7 +117,12 @@ public class JwtProviderImpl implements JwtProvider {
   @Override
   public Claims parse(String token) {
     try {
-      return this.parser.parseClaimsJws(token).getBody();
+      return Jwts.parserBuilder()
+          .requireIssuer(this.serviceUrl)
+          .setSigningKey(this.key)
+          .build()
+          .parseClaimsJws(token)
+          .getBody();
     } catch (ExpiredJwtException ex) {
       return ex.getClaims();
     } catch (JwtException ex) {

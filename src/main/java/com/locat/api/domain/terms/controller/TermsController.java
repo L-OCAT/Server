@@ -1,6 +1,6 @@
 package com.locat.api.domain.terms.controller;
 
-import com.locat.api.domain.core.BaseResponse;
+import com.locat.api.domain.common.dto.BaseResponse;
 import com.locat.api.domain.terms.dto.TermsRegisterDto;
 import com.locat.api.domain.terms.dto.TermsRegisterRequest;
 import com.locat.api.domain.terms.dto.TermsResponse;

@@ -1,4 +1,4 @@
-package com.locat.api.domain.core;
+package com.locat.api.domain.common.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;

@@ -8,7 +8,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
-/** Auditing을 위한 현재 사용자 정보를 제공하는 클래스입니다.<br> */
+/** Auditing을 위한 현재 사용자 정보를 제공하는 클래스 */
 @Component
 public class LocatAuditorAware implements AuditorAware<Long> {
 

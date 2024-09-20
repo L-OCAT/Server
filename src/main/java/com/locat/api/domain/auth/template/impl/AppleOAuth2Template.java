@@ -9,8 +9,7 @@ import com.locat.api.domain.auth.utils.AppleClientSecretProvider;
 import com.locat.api.domain.auth.utils.OpenIDConnectTokenUtils;
 import com.locat.api.domain.user.dto.OAuth2UserInfoDto;
 import com.locat.api.domain.user.entity.OAuth2ProviderType;
-import com.locat.api.global.auth.AuthenticationException;
-import com.locat.api.global.exception.ApiExceptionType;
+import com.locat.api.global.exception.InternalProcessingException;
 import com.locat.api.infrastructure.external.AppleOAuth2Client;
 import com.locat.api.infrastructure.redis.OAuth2ProviderTokenRepository;
 import java.util.Arrays;
@@ -58,14 +57,6 @@ public class AppleOAuth2Template extends AbstractOAuth2Template {
   }
 
   @Override
-  public OAuth2UserInfoDto fetchUserInfoByAdmin(String userOAuthId) {
-    OAuth2ProviderToken providerToken = super.fetchToken(userOAuthId);
-    OAuth2ProviderJsonWebKey jsonWebKey = this.getMatchingJsonWebKey(providerToken.getIdToken());
-    return OpenIDConnectTokenUtils.parseIdToken(
-        providerToken.getIdToken(), jsonWebKey.n(), jsonWebKey.e());
-  }
-
-  @Override
   @Transactional
   public void withdrawal(String userOAuthId) {
     final String clientSecret = AppleClientSecretProvider.create(super.oAuth2Properties);
@@ -85,9 +76,7 @@ public class AppleOAuth2Template extends AbstractOAuth2Template {
         .filter(jwk -> jwk.kid().equals(keyId))
         .findFirst()
         .orElseThrow(
-            () ->
-                new AuthenticationException(
-                    ApiExceptionType.CANNOT_PROCESS_JWT_NO_MATCHING_ALGORITHM));
+            () -> new InternalProcessingException("Cannot Process JWT: No matching algorithm"));
   }
 
   private void revokeAccessToken(String clientSecret, String accessToken) {

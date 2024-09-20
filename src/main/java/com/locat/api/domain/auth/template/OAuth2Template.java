@@ -14,20 +14,20 @@ public interface OAuth2Template {
   OAuth2ProviderToken issueToken(final String code);
 
   /**
+   * 사용자가 인증되었는지 확인합니다.
+   *
+   * @param oAuthId 확인할 사용자의 OAuth ID
+   * @return 사용자가 인증되었는지 여부
+   */
+  Boolean isAuthenticated(final String oAuthId);
+
+  /**
    * 사용자의 액세스 토큰으로 사용자 정보를 가져옵니다.
    *
    * @param accessToken 액세스 토큰
    * @return 사용자 정보
    */
   OAuth2UserInfoDto fetchUserInfo(final String accessToken);
-
-  /**
-   * 관리자 권한으로 사용자의 OAuth ID를 기반으로 사용자 정보를 가져옵니다.
-   *
-   * @param userOAuthId 조회할 사용자의 OAuth ID
-   * @return 사용자 정보
-   */
-  OAuth2UserInfoDto fetchUserInfoByAdmin(final String userOAuthId);
 
   /**
    * 회원 탈퇴(OAuth2 연결 끊기, 토큰 삭제) 작업을 수행합니다.

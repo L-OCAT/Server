@@ -1,6 +1,6 @@
 package com.locat.api.domain.terms.entity;
 
-import com.locat.api.domain.core.BaseEntity;
+import com.locat.api.domain.common.entity.BaseEntity;
 import com.locat.api.domain.terms.dto.TermsRegisterDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Digits;
