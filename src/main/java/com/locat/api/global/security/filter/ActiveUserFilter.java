@@ -1,7 +1,5 @@
 package com.locat.api.global.security.filter;
 
-import static com.locat.api.global.security.SecurityConfig.PUBLIC_API_PATHS;
-
 import com.locat.api.domain.user.entity.User;
 import com.locat.api.global.auth.LocatUserDetails;
 import jakarta.servlet.FilterChain;
@@ -14,9 +12,8 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.filter.OncePerRequestFilter;
 
-public class ActiveUserFilter extends OncePerRequestFilter {
+public class ActiveUserFilter extends AbstractLocatSecurityFilter {
 
   @Override
   protected void doFilterInternal(
@@ -39,9 +36,5 @@ public class ActiveUserFilter extends OncePerRequestFilter {
         .map(LocatUserDetails::getUser)
         .orElseThrow(
             () -> new AccessDeniedException("Access Denied: Unable to retrieve user details."));
-  }
-
-  private boolean isPublicApi(HttpServletRequest request) {
-    return PUBLIC_API_PATHS.stream().anyMatch(request.getRequestURI()::startsWith);
   }
 }

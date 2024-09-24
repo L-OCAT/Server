@@ -1,8 +1,5 @@
 package com.locat.api.global.security.filter;
 
-import static com.locat.api.global.security.SecurityConfig.API_KEY_HEADER;
-import static com.locat.api.global.security.SecurityConfig.PUBLIC_API_PATHS;
-
 import com.locat.api.global.exception.NoApiKeyException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -11,18 +8,17 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.filter.OncePerRequestFilter;
 
 @RequiredArgsConstructor
-public class PublicApiKeyFilter extends OncePerRequestFilter {
+public class PublicApiKeyFilter extends AbstractLocatSecurityFilter {
 
-  private final String apiKey;
+  private final String publicApiKey;
 
   @Override
   public void doFilterInternal(
       HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
       throws ServletException, IOException {
-    if (this.isPublicApi(request)) {
+    if (super.isPublicApi(request)) {
       Optional.of(request)
           .map(r -> r.getHeader(API_KEY_HEADER))
           .ifPresentOrElse(
@@ -35,12 +31,8 @@ public class PublicApiKeyFilter extends OncePerRequestFilter {
   }
 
   private void validateApiKey(String requestedApiKey) {
-    if (!this.apiKey.equals(requestedApiKey)) {
+    if (!this.publicApiKey.equals(requestedApiKey)) {
       throw new NoApiKeyException("Access Denied: Invalid API Key.");
     }
-  }
-
-  private boolean isPublicApi(HttpServletRequest request) {
-    return PUBLIC_API_PATHS.stream().anyMatch(request.getRequestURI()::startsWith);
   }
 }

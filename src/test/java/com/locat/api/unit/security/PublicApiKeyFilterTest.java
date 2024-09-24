@@ -1,6 +1,6 @@
 package com.locat.api.unit.security;
 
-import static com.locat.api.global.security.SecurityConfig.API_KEY_HEADER;
+import static com.locat.api.global.security.filter.AbstractLocatSecurityFilter.API_KEY_HEADER;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
 
 import com.locat.api.global.security.filter.PublicApiKeyFilter;
