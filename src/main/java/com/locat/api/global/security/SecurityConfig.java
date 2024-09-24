@@ -49,7 +49,7 @@ public class SecurityConfig {
     return http.httpBasic(AbstractHttpConfigurer::disable)
         .csrf(AbstractHttpConfigurer::disable)
         .formLogin(AbstractHttpConfigurer::disable)
-//        .requiresChannel(channel -> channel.anyRequest().requiresSecure())
+        //        .requiresChannel(channel -> channel.anyRequest().requiresSecure())
         .cors(cors -> cors.configurationSource(this.corsConfigurationSource()))
         .sessionManagement(
             session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
