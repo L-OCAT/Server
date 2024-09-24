@@ -7,21 +7,6 @@ servers:
   - url: https://api.locat.kr
     description: Production
 paths:
-  /v1/auth:
-    description: OAuth2 사용자 인증 API
-    post:
-      summary: 소셜 로그인 기반 사용자 인증을 처리합니다.
-      requestBody:
-        $ref: "#/components/requestBodies/OAuth2AuthorizeRequest"
-      responses:
-        200:
-          $ref: "#/components/responses/OAuth2AuthenticatedResponse"
-        500:
-          description: "Internal Server Error"
-          content:
-            application/json:
-              schema:
-                $ref: "schemas.yaml#/components/schemas/ErrorResponse"
   /v1/auth/token:
     description: 토큰 발급 API
     post:
