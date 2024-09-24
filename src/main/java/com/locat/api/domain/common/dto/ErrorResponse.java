@@ -47,7 +47,6 @@ public record ErrorResponse(String message, ErrorData data) {
   public static ErrorResponse internalServerError() {
     return new ErrorResponse(
         INTERNAL_SERVER_ERROR.getMessage(),
-        ErrorData.of(
-            "Interal Server Error", INTERNAL_SERVER_ERROR.getCode()));
+        ErrorData.of("Interal Server Error", INTERNAL_SERVER_ERROR.getCode()));
   }
 }

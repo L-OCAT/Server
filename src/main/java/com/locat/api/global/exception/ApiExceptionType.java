@@ -12,8 +12,7 @@ public enum ApiExceptionType {
   FILE_EXTENSION_NOT_PROVIDED(400, "Bad Request: File extension NOT provided", 400002),
   FILE_SIZE_LIMIT_EXCEEDED(400, "Bad Request: File size limit exceeded", 400003),
   FILE_EXTENSION_NOT_SUPPORTED(400, "Bad Request: File extension not supported", 400004),
-  INVALID_EMAIL_VERIFICATION_CODE(
-      400, "Bad Request: Verification code is not matched", 400005),
+  INVALID_EMAIL_VERIFICATION_CODE(400, "Bad Request: Verification code is not matched", 400005),
   INVALID_PLATFORM(400, "Bad Request: Invalid platform type", 400006),
 
   UNAUTHORIZED(401, "Unauthorized", 401000),
