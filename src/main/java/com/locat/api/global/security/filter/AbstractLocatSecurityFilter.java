@@ -19,10 +19,13 @@ public abstract class AbstractLocatSecurityFilter extends OncePerRequestFilter {
    * OAuth2 리다이렉트 URI <br>
    * Filter에서 제외되어야함
    */
-  protected static final String OAUTH2_REDIRECT_PATH = "/v1/auth/oauth2/redirect";
+  protected static final String OAUTH2_REDIRECT_PATH = "/v1/oauth2/redirect";
 
   protected boolean isPublicApi(HttpServletRequest request) {
-    return !request.getRequestURI().startsWith(OAUTH2_REDIRECT_PATH)
-        && PUBLIC_API_PATHS.stream().anyMatch(request.getRequestURI()::startsWith);
+    return PUBLIC_API_PATHS.stream().anyMatch(request.getRequestURI()::startsWith);
+  }
+
+  protected boolean isOAuthRedirect(HttpServletRequest request) {
+    return request.getRequestURI().startsWith(OAUTH2_REDIRECT_PATH);
   }
 }

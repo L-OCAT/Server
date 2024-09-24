@@ -19,7 +19,7 @@ public class ActiveUserFilter extends AbstractLocatSecurityFilter {
   protected void doFilterInternal(
       HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
       throws ServletException, IOException {
-    if (this.isPublicApi(request)) {
+    if (super.isPublicApi(request) || super.isOAuthRedirect(request)) {
       filterChain.doFilter(request, response);
       return;
     }

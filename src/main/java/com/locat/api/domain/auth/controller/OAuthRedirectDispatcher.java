@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/auth/oauth2/redirect")
+@RequestMapping("/v1/oauth2/redirect")
 public class OAuthRedirectDispatcher {
 
   private final OAuth2Service oAuth2Service;
