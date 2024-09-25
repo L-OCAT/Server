@@ -92,6 +92,7 @@ paths:
             application/json:
               schema:
                 $ref: "schemas.yaml#/components/schemas/ErrorResponse"
+  /v1/users/me/delete:
     put:
       summary: 사용자 탈퇴 요청 API
       security:

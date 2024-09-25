@@ -21,10 +21,10 @@ public class MatchedItemController {
 
   /** 매칭된 분실물 / 습득물 개수 조회 */
   @GetMapping("/{type}/{id}/matched-count")
-  public ResponseEntity<BaseResponse<Integer>> countMatchedLostItems(
+  public ResponseEntity<BaseResponse<Long>> countMatchedLostItems(
       @PathVariable final String type, @PathVariable final Long id) {
     final GeoItemType geoItemType = GeoItemType.fromValue(type);
-    final int itemCount =
+    final long itemCount =
         switch (geoItemType) {
           case LOSTS -> this.matchedItemService.countMatchedLostItems(id);
           case FOUNDS -> this.matchedItemService.countMatchedFoundItems(id);

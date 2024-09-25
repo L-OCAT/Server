@@ -61,7 +61,7 @@ public class LostItemServiceImpl implements LostItemService {
         registerDto.colorIds().stream().map(this::fetchColorCodeById).collect(Collectors.toSet());
     String imageUrl = null;
 
-    if (!lostItemImage.isEmpty()) {
+    if (lostItemImage != null) {
       imageUrl = this.fileService.upload(LOST_ITEM_IMAGE_DIRECTORY, lostItemImage);
     }
     return this.lostItemRepository

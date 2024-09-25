@@ -35,7 +35,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
 
     OAuth2ProviderToken token = this.findTokenById(userRegisterDto.oAuthId());
     OAuth2UserInfoDto userInfo = this.fetchUserInfo(token);
-    final User user = User.of(userRegisterDto.nickname(), userInfo);
+    final User user = User.of(userRegisterDto.nickname(), userInfo); // TODO: 프로필 URL 선택 & 저장 로직 추가
 
     this.userService.save(user);
     this.userSettingService.registerDefaultSettings(user);

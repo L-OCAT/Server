@@ -4,6 +4,7 @@ import static org.springframework.http.HttpMethod.*;
 
 import com.locat.api.global.auth.LocatUserDetailsService;
 import com.locat.api.global.auth.jwt.JwtProvider;
+import com.locat.api.global.security.filter.ActiveUserFilter;
 import com.locat.api.global.security.filter.JwtAuthenticationFilter;
 import com.locat.api.global.security.filter.PublicApiKeyFilter;
 import java.util.List;
@@ -69,7 +70,7 @@ public class SecurityConfig {
         .addFilterAfter(
             new JwtAuthenticationFilter(this.jwtProvider, this.userDetailsService),
             PublicApiKeyFilter.class)
-        //        .addFilterAfter(new ActiveUserFilter(), JwtAuthenticationFilter.class)
+        .addFilterAfter(new ActiveUserFilter(), JwtAuthenticationFilter.class)
         .exceptionHandling(
             exception ->
                 exception

@@ -9,7 +9,7 @@ public interface MatchedItemService {
    * @param foundItemId 기준이 되는 습득물 ID
    * @return 매칭된 분실물 개수
    */
-  Integer countMatchedLostItems(final Long foundItemId);
+  Long countMatchedLostItems(final Long foundItemId);
 
   /**
    * 매칭 조건에 맞는 습득물 개수 조회
@@ -17,5 +17,5 @@ public interface MatchedItemService {
    * @param lostItemId 기준이 되는 분실물 ID
    * @return 매칭된 습득물 개수
    */
-  Integer countMatchedFoundItems(final Long lostItemId);
+  Long countMatchedFoundItems(final Long lostItemId);
 }

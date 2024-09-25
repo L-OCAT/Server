@@ -62,7 +62,7 @@ public class FoundItemServiceImpl implements FoundItemService {
         registerDto.colorIds().stream().map(this::fetchColorCodeById).collect(Collectors.toSet());
 
     String imageUrl = null;
-    if (!foundItemImage.isEmpty()) {
+    if (foundItemImage != null) {
       imageUrl = this.fileService.upload(FOUND_ITEM_IMAGE_DIRECTORY, foundItemImage);
     }
     return this.foundItemRepository

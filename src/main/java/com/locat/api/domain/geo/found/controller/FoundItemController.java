@@ -54,7 +54,7 @@ public class FoundItemController {
   public ResponseEntity<BaseResponse<Void>> register(
       @AuthenticationPrincipal LocatUserDetails userDetails,
       @RequestPart("request") @Valid FoundItemRegisterRequest request,
-      @RequestPart(name = "image") MultipartFile image) {
+      @RequestPart(name = "image", required = false) MultipartFile image) {
     final long userId = userDetails.getId();
     final String foundItemId =
         this.foundItemService

@@ -7,7 +7,9 @@ import com.locat.api.domain.geo.lost.dto.LostItemRegisterDto;
 import com.locat.api.domain.user.entity.User;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -25,6 +27,13 @@ public class LostItem extends GeoItem {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id", columnDefinition = "int UNSIGNED not null")
   private Long id;
+
+  @ManyToMany(fetch = FetchType.LAZY)
+  @JoinTable(
+      name = "lost_item_color_code",
+      joinColumns = @JoinColumn(name = "item_id"),
+      inverseJoinColumns = @JoinColumn(name = "color_id"))
+  private Set<ColorCode> colorCodes = new HashSet<>();
 
   @Column(name = "is_willing_to_pay_gratuity")
   private Boolean isWillingToPayGratuity;
@@ -57,5 +66,10 @@ public class LostItem extends GeoItem {
         .statusType(LostItemStatusType.REGISTERED)
         .imageUrl(imageUrl)
         .build();
+  }
+
+  @Override
+  public Set<String> getColorNames() {
+    return this.colorCodes.stream().map(ColorCode::getName).collect(Collectors.toSet());
   }
 }
