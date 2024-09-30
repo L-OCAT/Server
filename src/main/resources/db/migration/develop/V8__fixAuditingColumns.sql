@@ -31,3 +31,6 @@ CREATE TABLE lost_item_color_code
     COLLATE = 'UTF8MB4_GENERAL_CI',
     ROW_FORMAT = Dynamic,
     ENGINE = InnoDB;
+
+CREATE INDEX idx_lost_item_category ON lost_item (category_id);
+CREATE INDEX idx_found_item_category ON found_item (category_id);

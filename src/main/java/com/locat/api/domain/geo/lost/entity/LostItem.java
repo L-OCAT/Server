@@ -18,7 +18,10 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @Table(
     name = "lost_item",
-    indexes = {@Index(name = "idx_lost_item_location", columnList = "location")})
+    indexes = {
+      @Index(name = "idx_lost_item_location", columnList = "location"),
+      @Index(name = "idx_lost_item_category", columnList = "category_id")
+    })
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class LostItem extends GeoItem {

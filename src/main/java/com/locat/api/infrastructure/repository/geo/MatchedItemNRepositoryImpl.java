@@ -24,8 +24,8 @@ public class MatchedItemNRepositoryImpl implements MatchedItemNRepository {
          FROM lost_item li
          INNER JOIN lost_item_color_code licc ON licc.item_id = li.id
          WHERE li.category_id = :categoryId
-         AND licc.color_code_id IN (:colorCodes)
-         AND ST_DWithin(li.location, :location, :distance)
+         AND licc.color_id IN (:colorCodes)
+         AND MBRWithin(li.location, ST_Buffer(:location, :distance)) = 1
          """;
 
   private static final String QUERY_COUNT_MATCHED_FOUND_ITEMS =
@@ -34,8 +34,8 @@ public class MatchedItemNRepositoryImpl implements MatchedItemNRepository {
             FROM found_item fi
             INNER JOIN found_item_color_code ficc ON ficc.item_id = fi.id
             WHERE fi.category_id = :categoryId
-            AND ficc.color_code_id IN (:colorCodes)
-            AND ST_DWithin(fi.location, :location, :distance)
+            AND ficc.color_id IN (:colorCodes)
+            AND MBRWithin(fi.location, ST_Buffer(:location, :distance)) = 1
             """;
 
   @Override
@@ -66,7 +66,7 @@ public class MatchedItemNRepositoryImpl implements MatchedItemNRepository {
       Double distance) {
     Query nativeQuery = this.entityManager.createNativeQuery(queryString, Long.class);
     nativeQuery.setParameter("categoryId", categoryId);
-    nativeQuery.setParameter("colorCodes", colorCodes);
+    nativeQuery.setParameter("colorCodes", colorCodes.stream().map(ColorCode::getId).toList());
     nativeQuery.setParameter("location", location);
     nativeQuery.setParameter("distance", GeoUtils.toMeter(distance));
     return (Long) nativeQuery.getSingleResult();
