@@ -29,14 +29,14 @@ public class TermsController {
   public ResponseEntity<BaseResponse<TermsResponse>> create(
       @RequestBody @Valid final TermsRegisterRequest request) {
     TermsResponse response =
-        TermsResponse.fromEntity(this.termsService.register(TermsRegisterDto.fromRequest(request)));
+        TermsResponse.toDetailed(this.termsService.register(TermsRegisterDto.fromRequest(request)));
     return ResponseEntity.ok(BaseResponse.of(response));
   }
 
   @GetMapping
   public ResponseEntity<BaseResponse<List<TermsResponse>>> findAllLatest() {
     List<TermsResponse> response =
-        this.termsService.findAllLatest().stream().map(TermsResponse::fromEntity).toList();
+        this.termsService.findAllLatest().stream().map(TermsResponse::toCompact).toList();
     return ResponseEntity.ok(BaseResponse.of(response));
   }
 
@@ -47,7 +47,7 @@ public class TermsController {
         this.termsService
             .findLatestByType(TermsType.fromValue(type))
             .orElseThrow(() -> new NoSuchEntityException(ApiExceptionType.NOT_FOUND_TERMS));
-    TermsResponse response = TermsResponse.fromEntity(terms);
+    TermsResponse response = TermsResponse.toDetailed(terms);
     return ResponseEntity.ok(BaseResponse.of(response));
   }
 }
