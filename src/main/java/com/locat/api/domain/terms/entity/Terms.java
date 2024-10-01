@@ -22,6 +22,9 @@ import lombok.*;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Terms extends BaseEntity {
+
+  @Transient private static final BigDecimal VERSION_INCREMENT = new BigDecimal("0.1");
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id", columnDefinition = "int UNSIGNED not null")
@@ -43,12 +46,12 @@ public class Terms extends BaseEntity {
   @Column(name = "version", nullable = false, precision = 3, scale = 1)
   private BigDecimal version;
 
-  public static Terms from(TermsRegisterDto registerDto, BigDecimal version) {
+  public static Terms from(TermsRegisterDto registerDto, BigDecimal previousVersion) {
     return Terms.builder()
         .type(registerDto.type())
         .title(registerDto.title())
         .content(registerDto.content())
-        .version(version)
+        .version(previousVersion.add(VERSION_INCREMENT))
         .build();
   }
 }

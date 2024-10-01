@@ -65,15 +65,18 @@ class GeoUtilsTest {
   }
 
   @Test
-  @DisplayName("미터 단위의 거리를 킬로미터 단위로 정확히 변환해야 한다.")
+  @DisplayName("Meter <-> Kilometer 간 변환을 정확히 수행해야 한다.")
   void testToKilometer() {
     // Given
-    double meter = 1234.0;
+    final double meter = 1234.0;
+    final double kilometer = 1.234;
 
     // When
-    double result = GeoUtils.toKilometer(meter);
+    double result1 = GeoUtils.toKilometer(meter);
+    double result2 = GeoUtils.toMeter(kilometer);
 
     // Then
-    assertThat(result).isEqualTo(1.234);
+    assertThat(result1).isEqualTo(1.234);
+    assertThat(result2).isEqualTo(1234.0);
   }
 }

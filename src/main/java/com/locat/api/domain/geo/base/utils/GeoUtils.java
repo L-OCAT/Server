@@ -65,10 +65,10 @@ public final class GeoUtils {
    * @return 두 좌표 간의 거리
    */
   public static double calculateDistanceBetween(final Point p1, final Point p2) {
-    final double lat1 = Math.toRadians(p1.getX());
-    final double lon1 = Math.toRadians(p1.getY());
-    final double lat2 = Math.toRadians(p2.getX());
-    final double lon2 = Math.toRadians(p2.getY());
+    final double lat1 = Math.toRadians(p1.getY());
+    final double lon1 = Math.toRadians(p1.getX());
+    final double lat2 = Math.toRadians(p2.getY());
+    final double lon2 = Math.toRadians(p2.getX());
 
     final double deltaLat = lat2 - lat1;
     final double deltaLon = lon2 - lon1;

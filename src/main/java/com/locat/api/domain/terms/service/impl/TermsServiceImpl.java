@@ -18,8 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class TermsServiceImpl implements TermsService {
 
-  private static final BigDecimal VERSION_INCREMENT = new BigDecimal("0.1");
-
   private final TermsRepository termsRepository;
   private final TermsQRepository termsQRepository;
 
@@ -30,8 +28,7 @@ public class TermsServiceImpl implements TermsService {
             .findByType(registerDto.type())
             .map(Terms::getVersion)
             .orElse(BigDecimal.ZERO);
-    return this.termsRepository.save(
-        Terms.from(registerDto, previousVersion.add(VERSION_INCREMENT)));
+    return this.termsRepository.save(Terms.from(registerDto, previousVersion));
   }
 
   @Override

@@ -39,7 +39,7 @@ public final class ValidationUtils {
    * @throws LocatApiException 조건에 맞지 않을 경우
    */
   public static <T> void throwIf(
-      T value, Predicate<T> predicate, Supplier<? extends LocatApiException> exceptionSupplier) {
+      T value, Predicate<T> predicate, Supplier<? extends RuntimeException> exceptionSupplier) {
     if (value != null && predicate.test(value)) {
       throw exceptionSupplier.get();
     }
@@ -52,13 +52,13 @@ public final class ValidationUtils {
    * @param predicates 검사할 조건을 정의하는 Predicate List
    * @param exceptionSuppliers 조건에 맞지 않을 경우 발생시킬 예외를 제공하는 Supplier List
    * @param <T> 검사할 값의 타입
-   * @throws LocatApiException 조건에 맞지 않을 경우
+   * @throws IllegalArgumentException 검사 조건과 예외 Supplier의 수가 일치하지 않을 경우
    * @apiNote {@link #throwIf(Object, Predicate, Supplier)} 메서드에 처리를 위임합니다.
    */
   public static <T> void throwIfAny(
       T value,
       List<Predicate<T>> predicates,
-      List<Supplier<? extends LocatApiException>> exceptionSuppliers) {
+      List<Supplier<? extends RuntimeException>> exceptionSuppliers) {
     if (predicates.size() != exceptionSuppliers.size()) {
       throw new IllegalArgumentException("Size of predicates and exceptionSuppliers MUST be same!");
     }

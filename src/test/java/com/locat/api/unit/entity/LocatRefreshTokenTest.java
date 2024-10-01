@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 class LocatRefreshTokenTest {
 
   private static final Long ID = 1L;
-  private static final String EMAIL = "user@example.com";
   private static final String REFRESH_TOKEN = "sample_refresh_token";
   private static final Duration EXPIRATION_TIME = Duration.ofHours(1);
 
@@ -24,7 +23,6 @@ class LocatRefreshTokenTest {
     locatRefreshToken =
         LocatRefreshToken.builder()
             .id(ID)
-            .email(EMAIL)
             .refreshToken(REFRESH_TOKEN)
             .refreshTokenExpiresIn(EXPIRATION_TIME.toSeconds())
             .build();
@@ -37,7 +35,6 @@ class LocatRefreshTokenTest {
     assertAll(
         () -> assertThat(locatRefreshToken).isNotNull(),
         () -> assertThat(locatRefreshToken.getId()).isEqualTo(ID),
-        () -> assertThat(locatRefreshToken.getEmail()).isEqualTo(EMAIL),
         () -> assertThat(locatRefreshToken.getRefreshToken()).isEqualTo(REFRESH_TOKEN),
         () ->
             assertThat(locatRefreshToken.getRefreshTokenExpiresIn())
@@ -51,13 +48,12 @@ class LocatRefreshTokenTest {
     Duration expirationTime = Duration.ofHours(2);
 
     // When
-    LocatRefreshToken newToken = LocatRefreshToken.from(ID, EMAIL, REFRESH_TOKEN, expirationTime);
+    LocatRefreshToken newToken = LocatRefreshToken.from(ID, REFRESH_TOKEN, expirationTime);
 
     // Then
     assertAll(
         () -> assertThat(newToken).isNotNull(),
         () -> assertThat(newToken.getId()).isEqualTo(ID),
-        () -> assertThat(newToken.getEmail()).isEqualTo(EMAIL),
         () -> assertThat(newToken.getRefreshToken()).isEqualTo(REFRESH_TOKEN),
         () -> assertThat(newToken.getRefreshTokenExpiresIn()).isNotNull(),
         () ->
