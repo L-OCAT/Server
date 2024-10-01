@@ -2,6 +2,7 @@ package com.locat.api.infrastructure.repository.geo.lost.impl;
 
 import com.locat.api.domain.geo.base.dto.GeoItemSearchCriteria;
 import com.locat.api.domain.geo.base.dto.GeoItemSortType;
+import com.locat.api.domain.geo.base.utils.GeoUtils;
 import com.locat.api.domain.geo.lost.entity.LostItem;
 import com.locat.api.domain.geo.lost.entity.QLostItem;
 import com.locat.api.infrastructure.repository.geo.AbstractGeoItemQRepository;
@@ -28,7 +29,10 @@ public class LostItemQRepositoryImpl extends AbstractGeoItemQRepository<LostItem
   protected NumberExpression<Double> createDistanceExpression(
       GeoItemSearchCriteria searchCriteria) {
     return Expressions.numberTemplate(
-        Double.class, "ST_Distance({0}, {1})", qLostItem.location, searchCriteria.getLocation());
+        Double.class,
+        "ST_Distance_Sphere({0}, {1})",
+        qLostItem.location,
+        searchCriteria.getLocation());
   }
 
   @Override
@@ -45,7 +49,8 @@ public class LostItemQRepositoryImpl extends AbstractGeoItemQRepository<LostItem
       return null;
     }
     return Expressions.booleanTemplate(
-        "ST_DWithin({0}, {1}, {2}) = true", qLostItem.location, location, distance.getValue());
+        "CAST(ST_DISTANCE_SPHERE({0}, {1}) AS DOUBLE) <= {2}",
+        qLostItem.location, location, GeoUtils.toMeter(distance.getValue()));
   }
 
   @Override

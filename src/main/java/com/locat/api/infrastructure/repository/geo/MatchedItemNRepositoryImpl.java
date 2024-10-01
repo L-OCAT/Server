@@ -25,7 +25,7 @@ public class MatchedItemNRepositoryImpl implements MatchedItemNRepository {
          INNER JOIN lost_item_color_code licc ON licc.item_id = li.id
          WHERE li.category_id = :categoryId
          AND licc.color_id IN (:colorCodes)
-         AND MBRWithin(li.location, ST_Buffer(:location, :distance)) = 1
+         AND ST_Distance_Sphere(li.location, :location) <= :distance
          """;
 
   private static final String QUERY_COUNT_MATCHED_FOUND_ITEMS =
@@ -35,7 +35,7 @@ public class MatchedItemNRepositoryImpl implements MatchedItemNRepository {
             INNER JOIN found_item_color_code ficc ON ficc.item_id = fi.id
             WHERE fi.category_id = :categoryId
             AND ficc.color_id IN (:colorCodes)
-            AND MBRWithin(fi.location, ST_Buffer(:location, :distance)) = 1
+            AND ST_Distance_Sphere(fi.location, :location) <= :distance
             """;
 
   @Override

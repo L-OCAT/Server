@@ -21,8 +21,8 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 public class GeoItemSearchArgumentResolver implements HandlerMethodArgumentResolver {
 
   private static final Class<?> SUPPORTED_CLASS = GeoItemSearchCriteria.class;
-  private static final String LOST_ITEM_URI = "v1/items/losts";
-  private static final String FOUND_ITEM_URI = "v1/items/founds";
+  private static final String LOST_ITEM_URI = "/v1/items/losts";
+  private static final String FOUND_ITEM_URI = "/v1/items/founds";
 
   @Override
   public boolean supportsParameter(MethodParameter parameter) {

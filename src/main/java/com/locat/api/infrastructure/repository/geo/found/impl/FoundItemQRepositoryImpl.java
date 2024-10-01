@@ -2,6 +2,7 @@ package com.locat.api.infrastructure.repository.geo.found.impl;
 
 import com.locat.api.domain.geo.base.dto.GeoItemSearchCriteria;
 import com.locat.api.domain.geo.base.dto.GeoItemSortType;
+import com.locat.api.domain.geo.base.utils.GeoUtils;
 import com.locat.api.domain.geo.found.entity.FoundItem;
 import com.locat.api.domain.geo.found.entity.QFoundItem;
 import com.locat.api.infrastructure.repository.geo.AbstractGeoItemQRepository;
@@ -28,13 +29,16 @@ public class FoundItemQRepositoryImpl extends AbstractGeoItemQRepository<FoundIt
   protected NumberExpression<Double> createDistanceExpression(
       GeoItemSearchCriteria searchCriteria) {
     return Expressions.numberTemplate(
-        Double.class, "ST_Distance({0}, {1})", qFountItem.location, searchCriteria.getLocation());
+        Double.class,
+        "ST_Distance_Sphere({0}, {1})",
+        qFountItem.location,
+        searchCriteria.getLocation());
   }
 
   @Override
   protected BooleanExpression userIdEquals(Boolean onlyMine, Long userId) {
     if (Boolean.FALSE.equals(onlyMine) || userId == null) {
-      return null;
+      return Expressions.TRUE;
     }
     return qFountItem.user.id.eq(userId);
   }
@@ -45,7 +49,8 @@ public class FoundItemQRepositoryImpl extends AbstractGeoItemQRepository<FoundIt
       return null;
     }
     return Expressions.booleanTemplate(
-        "ST_DWithin({0}, {1}, {2}) = true", qFountItem.location, location, distance.getValue());
+        "CAST(ST_DISTANCE_SPHERE({0}, {1}) AS DOUBLE) <= {2}",
+        qFountItem.location, location, GeoUtils.toMeter(distance.getValue()));
   }
 
   @Override

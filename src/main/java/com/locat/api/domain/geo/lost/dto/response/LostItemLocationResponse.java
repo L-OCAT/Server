@@ -1,6 +1,5 @@
 package com.locat.api.domain.geo.lost.dto.response;
 
-import com.locat.api.domain.geo.base.utils.GeoUtils;
 import com.locat.api.domain.geo.lost.entity.LostItem;
 import java.util.Set;
 import lombok.Builder;
@@ -43,7 +42,7 @@ public record LostItemLocationResponse(
         .description(item.getDescription())
         .lng(item.getLocation().getX())
         .lat(item.getLocation().getY())
-        .distance(GeoUtils.toMeter(lostItem.getDistance().getValue()))
+        .distance(Math.floor(lostItem.getDistance().getValue()))
         .imageUrl(item.getImageUrl())
         .lostAt(item.getLostAt().toString())
         .build();
