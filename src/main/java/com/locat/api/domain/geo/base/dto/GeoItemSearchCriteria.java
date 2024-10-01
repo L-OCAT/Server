@@ -11,6 +11,4 @@ public interface GeoItemSearchCriteria {
   Point getLocation();
 
   Distance getDistance();
-
-  GeoItemSortType getSort();
 }

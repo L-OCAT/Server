@@ -41,17 +41,11 @@ paths:
           schema:
             type: number
             example: 500
-        - name: s
+        - name: sort
           in: query
-          description: "정렬 기준(Non-Case Sensitive) / 기본 정렬: 등록일 내림차순"
+          description: "정렬 기준({정렬할 필드},{방향}) / 기본 정렬: 등록일 내림차순"
           required: false
-          schema:
-            enum:
-              - "CREATED_AT_ASC"
-              - "CREATED_AT_DESC"
-              - "LOST_AT_ASC"
-              - "LOST_AT_DESC"
-            example: "CREATED_AT_DESC"
+          example: "createdAt,desc / id,asc / lostAt,asc"
       responses:
         200:
           $ref: "#/components/responses/LostItemLocationResponse"

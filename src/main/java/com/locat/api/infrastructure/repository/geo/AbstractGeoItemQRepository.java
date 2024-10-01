@@ -1,18 +1,21 @@
 package com.locat.api.infrastructure.repository.geo;
 
 import com.locat.api.domain.geo.base.dto.GeoItemSearchCriteria;
-import com.locat.api.domain.geo.base.dto.GeoItemSortType;
 import com.locat.api.domain.geo.base.entity.GeoItem;
+import com.locat.api.global.exception.InvalidParameterException;
+import com.locat.api.global.utils.ValidationUtils;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.EntityPathBase;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.util.Arrays;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.geom.Point;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.geo.*;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,7 +52,7 @@ public abstract class AbstractGeoItemQRepository<T extends GeoItem>
                         searchCriteria.getLocation(), searchCriteria.getDistance()))
                 .limit(pageable.getPageSize())
                 .offset(pageable.getOffset())
-                .orderBy(distance.asc(), this.determineOrderSpecification(searchCriteria.getSort()))
+                .orderBy(distance.asc(), this.determineOrderSpecification(pageable.getSort()))
                 .fetch()
                 .stream()
                 .filter(tuple -> this.areTupleValuesNotNull(tuple, distance))
@@ -71,6 +74,15 @@ public abstract class AbstractGeoItemQRepository<T extends GeoItem>
                         .fetchOne())
             .orElse(0L);
     return new GeoPage<>(geoResults, pageable, totalCount);
+  }
+
+  protected void assertFieldExists(String fieldName) {
+    ValidationUtils.throwIf(
+        fieldName,
+        value ->
+            Arrays.stream(this.qEntity.getType().getDeclaredFields())
+                .noneMatch(field -> field.getName().equals(value)),
+        () -> new InvalidParameterException(String.format("Field %s does not exist", fieldName)));
   }
 
   /**
@@ -103,10 +115,10 @@ public abstract class AbstractGeoItemQRepository<T extends GeoItem>
   /**
    * 지정된 정렬 유형에 따라 정렬 기준을 반환합니다.
    *
-   * @param sort 정렬 기준을 나타내는 GeoItemSortType
+   * @param sort 정렬 기준을 나타내는 Sort 객체
    * @return 주어진 정렬 기준에 따라 생성된 OrderSpecifier 객체
    */
-  protected abstract OrderSpecifier<?> determineOrderSpecification(GeoItemSortType sort);
+  protected abstract OrderSpecifier<?> determineOrderSpecification(Sort sort);
 
   /**
    * Tuple에 포함된 값들이 null이 아닌지 확인합니다.

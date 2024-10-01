@@ -1,18 +1,16 @@
 package com.locat.api.infrastructure.repository.geo.found.impl;
 
 import com.locat.api.domain.geo.base.dto.GeoItemSearchCriteria;
-import com.locat.api.domain.geo.base.dto.GeoItemSortType;
 import com.locat.api.domain.geo.base.utils.GeoUtils;
 import com.locat.api.domain.geo.found.entity.FoundItem;
 import com.locat.api.domain.geo.found.entity.QFoundItem;
 import com.locat.api.infrastructure.repository.geo.AbstractGeoItemQRepository;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.core.types.dsl.NumberExpression;
+import com.querydsl.core.types.dsl.*;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.locationtech.jts.geom.Point;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.geo.Distance;
 import org.springframework.stereotype.Repository;
 
@@ -54,18 +52,17 @@ public class FoundItemQRepositoryImpl extends AbstractGeoItemQRepository<FoundIt
   }
 
   @Override
-  protected OrderSpecifier<?> determineOrderSpecification(GeoItemSortType sort) {
-    OrderSpecifier<?> orderSpecifier = qFountItem.createdAt.desc();
-    if (sort.isFoundAtAsc()) {
-      return qFountItem.foundAt.asc();
+  protected OrderSpecifier<?> determineOrderSpecification(Sort sort) {
+    if (sort.isUnsorted()) {
+      return qFountItem.createdAt.desc();
     }
-    if (sort.isFoundAtDesc()) {
-      return qFountItem.foundAt.desc();
-    }
-    if (sort.isCreatedAtAsc()) {
-      return qFountItem.createdAt.asc();
-    }
-    return orderSpecifier;
+    Sort.Order sortOrder = sort.iterator().next();
+    final String sortProperty = sortOrder.getProperty();
+    this.assertFieldExists(sortProperty);
+
+    StringPath path =
+        new PathBuilder<>(qFountItem.getType(), qFountItem.getMetadata()).getString(sortProperty);
+    return sortOrder.isAscending() ? path.asc() : path.desc();
   }
 
   @Override

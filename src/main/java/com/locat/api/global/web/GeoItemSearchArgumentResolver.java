@@ -1,7 +1,6 @@
 package com.locat.api.global.web;
 
 import com.locat.api.domain.geo.base.dto.GeoItemSearchCriteria;
-import com.locat.api.domain.geo.base.dto.GeoItemSortType;
 import com.locat.api.domain.geo.base.utils.GeoUtils;
 import com.locat.api.domain.geo.found.dto.FoundItemSearchDto;
 import com.locat.api.domain.geo.lost.dto.LostItemSearchDto;
@@ -43,14 +42,11 @@ public class GeoItemSearchArgumentResolver implements HandlerMethodArgumentResol
     final Double radius = RequestUtils.getParameterOrDefault(request, "r", Double.class, 500.0);
     final Boolean onlyMine =
         RequestUtils.getParameterOrDefault(request, "onlyMine", Boolean.class, true);
-    final String sort =
-        RequestUtils.getParameterOrDefault(
-            request, "s", String.class, GeoItemSortType.CREATED_AT_DESC.name());
     final Point location = GeoUtils.toPoint(latitude, longitude);
 
     return switch (requestUri) {
-      case LOST_ITEM_URI -> LostItemSearchDto.fromRequest(onlyMine, location, radius, sort);
-      case FOUND_ITEM_URI -> FoundItemSearchDto.fromRequest(onlyMine, location, radius, sort);
+      case LOST_ITEM_URI -> LostItemSearchDto.fromRequest(onlyMine, location, radius);
+      case FOUND_ITEM_URI -> FoundItemSearchDto.fromRequest(onlyMine, location, radius);
       default -> throw new InvalidParameterException("Unexpected URI: " + requestUri);
     };
   }
