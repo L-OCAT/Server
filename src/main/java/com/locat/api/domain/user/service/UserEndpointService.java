@@ -1,9 +1,7 @@
 package com.locat.api.domain.user.service;
 
-import com.locat.api.domain.user.dto.EndpointRegistrationRequest;
-import com.locat.api.domain.user.entity.User;
+import com.locat.api.domain.user.dto.EndpointRegisterDto;
 import com.locat.api.domain.user.entity.UserEndpoint;
-import com.locat.api.global.auth.LocatUserDetails;
 import java.util.List;
 
 public interface UserEndpointService {
@@ -11,13 +9,10 @@ public interface UserEndpointService {
   /**
    * 사용자에게 디바이스 토큰과 플랫폼 정보가 일치하는 endpoint가 있는지 확인하고, 없을 시 생성하여 저장합니다.
    *
-   * @param request 디바이스 토큰, 플랫폼 정보
-   * @param userDetails 유저 정보
+   * @param userId 등록하려는 사용자의 ID
+   * @param registerDto 디바이스 토큰, 플랫폼 등 Endpoint 등록에 필요한 정보 DTO
    */
-  void register(EndpointRegistrationRequest request, LocatUserDetails userDetails);
+  void register(final Long userId, EndpointRegisterDto registerDto);
 
   List<UserEndpoint> findUserEndpointsByUserId(Long userId);
-
-  void saveUserEndpoint(
-      User user, String deviceToken, String platform, String endPointArn, String subscriptionArn);
 }

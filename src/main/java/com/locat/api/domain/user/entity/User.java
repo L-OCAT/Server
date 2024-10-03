@@ -110,6 +110,10 @@ public class User extends BaseEntity {
     return this;
   }
 
+  public void updateStatus(StatusType statusType) {
+    this.statusType = statusType;
+  }
+
   public void delete() {
     this.statusType = StatusType.INACTIVE;
     this.deletedAt = LocalDateTime.now();

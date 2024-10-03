@@ -1,13 +1,11 @@
 package com.locat.api.domain.user.service.impl;
 
-import com.locat.api.domain.user.dto.EndpointRegistrationRequest;
-import com.locat.api.domain.user.entity.PlatformType;
+import com.locat.api.domain.user.dto.EndpointRegisterDto;
 import com.locat.api.domain.user.entity.User;
 import com.locat.api.domain.user.entity.UserEndpoint;
 import com.locat.api.domain.user.service.PlatformEndpointService;
 import com.locat.api.domain.user.service.UserEndpointService;
 import com.locat.api.domain.user.service.UserService;
-import com.locat.api.global.auth.LocatUserDetails;
 import com.locat.api.infrastructure.repository.user.UserEndpointRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -24,19 +22,20 @@ public class UserEndpointServiceImpl implements UserEndpointService {
   private final UserService userService;
 
   @Override
-  public void register(EndpointRegistrationRequest request, LocatUserDetails userDetails) {
-    List<UserEndpoint> endpoints = this.findUserEndpointsByUserId(userDetails.getId());
-    boolean endpointExists = this.isEndpointExists(request, endpoints);
+  public void register(Long userId, EndpointRegisterDto registerDto) {
+    User user = this.userService.findById(userId);
+    List<UserEndpoint> userEndpoints = this.findUserEndpointsByUserId(userId);
 
-    if (!endpointExists) {
-      String endpointArn =
-          this.platformEndpointService.create(request.deviceToken(), request.platform());
-      String subscriptionArn = this.platformEndpointService.subscribeToTopic(endpointArn);
-
-      User user = this.userService.findById(userDetails.getId());
-      this.saveUserEndpoint(
-          user, request.deviceToken(), request.platform(), endpointArn, subscriptionArn);
+    if (this.isEndpointExists(registerDto, userEndpoints)) {
+      return;
     }
+
+    String endpointArn =
+        this.platformEndpointService.create(registerDto.deviceToken(), registerDto.platformType());
+    String subscriptionArn = this.platformEndpointService.subscribeToTopic(endpointArn);
+
+    this.userEndpointRepository.save(
+        UserEndpoint.of(user, endpointArn, subscriptionArn, registerDto));
   }
 
   @Override
@@ -44,29 +43,9 @@ public class UserEndpointServiceImpl implements UserEndpointService {
     return this.userEndpointRepository.findByUserId(userId);
   }
 
-  @Override
-  public void saveUserEndpoint(
-      User user, String deviceToken, String platform, String endPointArn, String subscriptionArn) {
-    PlatformType platformType = PlatformType.valueOf(platform);
-
-    UserEndpoint userEndpoint =
-        UserEndpoint.builder()
-            .user(user)
-            .deviceToken(deviceToken)
-            .platformType(platformType)
-            .endpointArn(endPointArn)
-            .subscriptionArn(subscriptionArn)
-            .build();
-
-    this.userEndpointRepository.save(userEndpoint);
-  }
-
-  private boolean isEndpointExists(
-      EndpointRegistrationRequest request, List<UserEndpoint> endpoints) {
+  private boolean isEndpointExists(EndpointRegisterDto registerDto, List<UserEndpoint> endpoints) {
     return endpoints.stream()
         .anyMatch(
-            e ->
-                e.getDeviceToken().equals(request.deviceToken())
-                    && e.getPlatformType().getValue().equals(request.platform()));
+            endpoint -> endpoint.matches(registerDto.deviceToken(), registerDto.platformType()));
   }
 }

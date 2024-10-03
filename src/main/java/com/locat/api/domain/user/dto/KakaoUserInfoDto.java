@@ -10,12 +10,12 @@ public record KakaoUserInfoDto(String id, @JsonProperty("kakao_account") KakaoAc
 
   @Override
   public String getId() {
-    return this.id();
+    return this.id;
   }
 
   @Override
   public String getEmail() {
-    return this.kakaoAccount.email();
+    return this.kakaoAccount.email;
   }
 
   @Override

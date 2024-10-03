@@ -1,15 +1,17 @@
 package com.locat.api.domain.user.service;
 
+import com.locat.api.domain.user.entity.PlatformType;
+
 public interface PlatformEndpointService {
 
   /**
    * 디바이스 토큰과 플랫폼을 기준으로 엔드포인트를 생성합니다.
    *
    * @param token 디바이스 토큰
-   * @param platform 플랫폼 - ios, android
+   * @param platformType 플랫폼 - ios, android
    * @return 생성된 디바이스별 엔드포인트리 arn
    */
-  String create(String token, String platform);
+  String create(String token, PlatformType platformType);
 
   /**
    * 엔드포인트를 AWS SNS Topic에 구독시킵니다.

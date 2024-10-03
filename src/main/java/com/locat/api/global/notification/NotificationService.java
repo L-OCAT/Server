@@ -3,21 +3,23 @@ package com.locat.api.global.notification;
 public interface NotificationService {
 
   /**
-   * 단체 앱 푸시 알림을 전송합니다.
+   * 모든 사용자에게 메세지를 브로드캐스트합니다.
    *
-   * @param message 메시지 내용
    * @param subject 메시지 제목
-   * @return SNS에 발송된 메시지의 고유 아이디
+   * @param message 메시지 내용
+   * @return 발송된 메시지의 고유 ID
+   * @throws NotificationException 메세지 발송에 실패한 경우
    */
-  String sendGeneralNotification(String message, String subject);
+  String broadcast(String subject, String message);
 
   /**
-   * 개인용 앱 푸시 알림을 사용자의 모든 디바이스로 전송합니다.
+   * 특정 사용자에게 등록된 모든 디바이스에 Push Notification을 발송합니다.
    *
-   * @param userId 사용자 id
-   * @param message 메시지 내용
+   * @param userId 사용자 ID
    * @param subject 메시지 제목
-   * @return SNS에 발송된 메시지의 고유 아이디 리스트
+   * @param message 메시지 내용
+   * @return 발송된 메시지의 고유 ID 목록(","로 구분)
+   * @throws NotificationException 사용자에게 등록된 디바이스가 없거나, 메세지 발송에 실패한 경우
    */
-  String sendUserNotification(Long userId, String message, String subject);
+  String unicast(Long userId, String subject, String message);
 }

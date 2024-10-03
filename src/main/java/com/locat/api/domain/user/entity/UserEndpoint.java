@@ -1,6 +1,7 @@
 package com.locat.api.domain.user.entity;
 
 import com.locat.api.domain.common.entity.SecuredBaseEntity;
+import com.locat.api.domain.user.dto.EndpointRegisterDto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -33,4 +34,19 @@ public class UserEndpoint extends SecuredBaseEntity {
 
   @Column(name = "subscription_arn", nullable = false)
   private String subscriptionArn;
+
+  public static UserEndpoint of(
+      User user, String endpointArn, String subscriptionArn, EndpointRegisterDto registerDto) {
+    return UserEndpoint.builder()
+        .user(user)
+        .deviceToken(registerDto.deviceToken())
+        .platformType(registerDto.platformType())
+        .endpointArn(endpointArn)
+        .subscriptionArn(subscriptionArn)
+        .build();
+  }
+
+  public boolean matches(String deviceToken, PlatformType platformType) {
+    return this.deviceToken.equals(deviceToken) && this.platformType.equals(platformType);
+  }
 }
