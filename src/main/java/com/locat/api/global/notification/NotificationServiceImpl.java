@@ -31,7 +31,7 @@ public class NotificationServiceImpl implements NotificationService {
           .publish(request -> request.topicArn(this.topicArn).subject(subject).message(message))
           .messageId();
     } catch (SnsException e) {
-      throw new NotificationException(ApiExceptionType.FAIL_TO_SEND_PUSH_NOTIFICATION);
+      throw new NotificationException(ApiExceptionType.FAIL_TO_SEND_PUSH_NOTIFICATION, e);
     }
   }
 
@@ -58,7 +58,7 @@ public class NotificationServiceImpl implements NotificationService {
                     .messageId();
             publishedMessageIds.add(publishedMessageId);
           } catch (SnsException e) {
-            throw new NotificationException(ApiExceptionType.FAIL_TO_SEND_PUSH_NOTIFICATION);
+            throw new NotificationException(ApiExceptionType.FAIL_TO_SEND_PUSH_NOTIFICATION, e);
           }
         });
     return String.join(MESSAGE_ID_DELIMETER, publishedMessageIds);

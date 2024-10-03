@@ -42,8 +42,7 @@ public class StringColumnEncryptionConverter implements AttributeConverter<Strin
       this.cipher = Cipher.getInstance(ENCRYPTION_TRANSFORM);
       this.secretKeySpec = generateAESKey(this.encryptionKey);
     } catch (GeneralSecurityException e) {
-      throw new InternalProcessingException(
-          "Failed to initialize Cipher. / Reason: " + e.getMessage());
+      throw new InternalProcessingException("Failed to initialize Cipher.", e);
     }
   }
 
@@ -73,7 +72,7 @@ public class StringColumnEncryptionConverter implements AttributeConverter<Strin
 
       return Base64.toBase64String(encryptedWithIv);
     } catch (GeneralSecurityException e) {
-      throw new InternalProcessingException("Failed to encrypt data. / Reason: " + e.getMessage());
+      throw new InternalProcessingException("Failed to encrypt data.", e);
     }
   }
 
@@ -109,7 +108,7 @@ public class StringColumnEncryptionConverter implements AttributeConverter<Strin
       byte[] decryptedData = this.cipher.doFinal(encryptedData);
       return new String(decryptedData, DEFAULT_ENCODING);
     } catch (GeneralSecurityException e) {
-      throw new InternalProcessingException("Failed to decrypt data. / Reason: " + e.getMessage());
+      throw new InternalProcessingException("Failed to decrypt data.", e);
     }
   }
 
