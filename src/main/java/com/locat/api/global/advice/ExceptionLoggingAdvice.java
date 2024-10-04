@@ -23,10 +23,10 @@ public class ExceptionLoggingAdvice {
     log.error(
         "[Exception Log] Resolved exception[{}] | Message: {} | Method: {}:{} (Location: {})",
         ex.getClass().getSimpleName(),
+        ex.getMessage(),
         signature.getDeclaringTypeName(),
         signature.getName(),
-        signature.toShortString(),
-        ex.getMessage());
+        signature.toShortString());
     if (log.isDebugEnabled()) {
       Optional.of(ex)
           .map(Throwable::getCause)
