@@ -31,7 +31,6 @@ class RandomCodeGeneratorTest {
     final byte[] generatedBytes = RandomGenerator.generateRandomBytes(requiredLength);
 
     // Then
-    assertThat(generatedBytes).hasSize(requiredLength);
-    assertThat(generatedBytes).doesNotContain((byte) 0);
+    assertThat(generatedBytes).hasSize(requiredLength).doesNotContain((byte) 0);
   }
 }

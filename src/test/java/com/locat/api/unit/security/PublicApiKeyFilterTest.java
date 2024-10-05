@@ -3,6 +3,7 @@ package com.locat.api.unit.security;
 import static com.locat.api.global.security.filter.AbstractLocatSecurityFilter.API_KEY_HEADER;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
 
+import com.locat.api.global.exception.NoApiKeyException;
 import com.locat.api.global.security.filter.PublicApiKeyFilter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,7 +19,6 @@ import org.springframework.test.util.ReflectionTestUtils;
 class PublicApiKeyFilterTest {
 
   @InjectMocks private PublicApiKeyFilter publicApiKeyFilter;
-
   @Mock private MockFilterChain filterChain;
 
   @BeforeEach
@@ -56,6 +56,6 @@ class PublicApiKeyFilterTest {
     // When & Then
     assertThatCode(
             () -> this.publicApiKeyFilter.doFilterInternal(request, response, this.filterChain))
-        .isExactlyInstanceOf(RuntimeException.class);
+        .isExactlyInstanceOf(NoApiKeyException.class);
   }
 }

@@ -5,7 +5,6 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import com.locat.api.domain.auth.entity.LocatRefreshToken;
 import com.locat.api.global.auth.LocatUserDetails;
 import com.locat.api.global.auth.LocatUserDetailsService;
-import com.locat.api.global.exception.ApiExceptionType;
 import com.locat.api.global.utils.TypeCaster;
 import com.locat.api.infrastructure.redis.LocatRefreshTokenRepository;
 import io.jsonwebtoken.*;
@@ -97,11 +96,11 @@ public class JwtProviderImpl implements JwtProvider {
         .ifPresentOrElse(
             token -> {
               if (token.isNotMatched(refreshToken)) {
-                throw new TokenException(ApiExceptionType.INVALID_TOKEN);
+                throw new TokenException();
               }
             },
             () -> {
-              throw new TokenException(ApiExceptionType.INVALID_TOKEN);
+              throw new TokenException();
             });
   }
 
@@ -127,7 +126,7 @@ public class JwtProviderImpl implements JwtProvider {
       return ex.getClaims();
     } catch (JwtException ex) {
       log.debug("Could not parse JWT Cliams. / Reason: {}", ex.getMessage());
-      throw new TokenException();
+      throw new TokenException(ex);
     }
   }
 

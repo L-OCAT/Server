@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.ses.SesClient;
-import software.amazon.awssdk.services.ses.model.SendEmailRequest;
 import software.amazon.awssdk.services.ses.model.SesException;
 
 @Service
@@ -25,16 +24,15 @@ public class MailServiceImpl implements MailService {
   @Override
   public void send(final String to, final String subject, final String content) {
     try {
-      SendEmailRequest request =
-          SendEmailRequest.builder()
-              .source(this.fromEmail)
-              .destination(d -> d.toAddresses(to))
-              .message(
-                  m ->
-                      m.subject(s -> s.charset(MAILER_CHARSET).data(subject))
-                          .body(b -> b.html(h -> h.charset(MAILER_CHARSET).data(content))))
-              .build();
-      this.sesClient.sendEmail(request);
+      this.sesClient.sendEmail(
+          request ->
+              request
+                  .source(this.fromEmail)
+                  .destination(d -> d.toAddresses(to))
+                  .message(
+                      m ->
+                          m.subject(s -> s.charset(MAILER_CHARSET).data(subject))
+                              .body(b -> b.html(h -> h.charset(MAILER_CHARSET).data(content)))));
     } catch (SesException ex) {
       log.error(
           "SesException occurred while sending email. [Subject: {}] / Reason: {}",

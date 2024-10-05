@@ -1,6 +1,7 @@
 package com.locat.api.unit.security;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 import com.locat.api.domain.user.entity.User;
@@ -79,7 +80,7 @@ class ActiveUserFilterTest {
     SecurityContextHolder.setContext(securityContext);
 
     // Then
-    assertThatCode(() -> this.filter.doFilter(request, response, filterChain))
+    assertThatThrownBy(() -> this.filter.doFilter(request, response, filterChain))
         .isExactlyInstanceOf(AccessDeniedException.class)
         .hasMessage("Access Denied: User is not activated.");
   }

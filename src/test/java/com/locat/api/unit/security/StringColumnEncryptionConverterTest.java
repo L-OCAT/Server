@@ -35,8 +35,7 @@ class StringColumnEncryptionConverterTest {
     String encrypted = this.converter.convertToDatabaseColumn(plainText);
 
     // Then
-    assertThat(encrypted).isNotNull();
-    assertThat(encrypted).isNotEqualTo(plainText);
+    assertThat(encrypted).isNotNull().isNotEqualTo(plainText);
   }
 
   @Test
@@ -50,8 +49,7 @@ class StringColumnEncryptionConverterTest {
     String actual = this.converter.convertToEntityAttribute(encryptedExpect);
 
     // Then
-    assertThat(actual).isNotNull();
-    assertThat(actual).isEqualTo(expected);
+    assertThat(actual).isNotNull().isEqualTo(expected);
   }
 
   @Test

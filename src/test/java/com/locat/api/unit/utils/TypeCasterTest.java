@@ -19,8 +19,7 @@ class TypeCasterTest {
     Integer result = TypeCaster.cast(value, Integer.class);
 
     // Then
-    assertThat(result).isEqualTo(123);
-    assertThat(result).isExactlyInstanceOf(Integer.class);
+    assertThat(result).isEqualTo(123).isExactlyInstanceOf(Integer.class);
   }
 
   @Test
@@ -33,8 +32,7 @@ class TypeCasterTest {
     Double result = TypeCaster.cast(value, Double.class);
 
     // Then
-    assertThat(result).isEqualTo(123.45);
-    assertThat(result).isExactlyInstanceOf(Double.class);
+    assertThat(result).isEqualTo(123.45).isExactlyInstanceOf(Double.class);
   }
 
   @Test
@@ -47,8 +45,7 @@ class TypeCasterTest {
     Boolean result = TypeCaster.cast(value, Boolean.class);
 
     // Then
-    assertThat(result).isTrue();
-    assertThat(result).isExactlyInstanceOf(Boolean.class);
+    assertThat(result).isTrue().isExactlyInstanceOf(Boolean.class);
   }
 
   @Test

@@ -10,7 +10,7 @@ public class TokenException extends LocatApiException {
     super(ApiExceptionType.INVALID_TOKEN);
   }
 
-  public TokenException(ApiExceptionType apiExceptionType) {
-    super(apiExceptionType);
+  public TokenException(Throwable cause) {
+    super(ApiExceptionType.INVALID_TOKEN, cause);
   }
 }

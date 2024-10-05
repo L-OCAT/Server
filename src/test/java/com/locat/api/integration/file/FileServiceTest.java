@@ -1,4 +1,4 @@
-package com.locat.api.unit.file;
+package com.locat.api.integration.file;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
@@ -68,7 +68,7 @@ class FileServiceTest {
         "유효한 파일을 업로드하면, 성공적으로 업로드되어야 한다.",
         () -> {
           // When
-          String fileName = fileService.upload("test-directory", file);
+          String fileName = this.fileService.upload("test-directory", file);
 
           // Then
           assertThat(fileName).isNotNull();
@@ -80,10 +80,10 @@ class FileServiceTest {
         "존재하는 파일을 삭제하면, 성공적으로 삭제되어야 한다.",
         () -> {
           // When
-          fileService.delete("test-directory/test.jpg");
+          this.fileService.delete("test-directory/test.jpg");
 
           // Then
-          verify(s3Client, times(1)).deleteObject(any(DeleteObjectRequest.class));
+          verify(this.s3Client, times(1)).deleteObject(any(DeleteObjectRequest.class));
         });
   }
 
@@ -92,8 +92,8 @@ class FileServiceTest {
         "유효하지 않은 포맷의 파일을 업로드하면, 예외를 던져야 한다.",
         () -> {
           // When & Then
-          assertThatThrownBy(() -> fileService.upload("test-directory", file))
-              .isInstanceOf(FileOperationFailedException.class);
+          assertThatThrownBy(() -> this.fileService.upload("test-directory", file))
+              .isExactlyInstanceOf(FileOperationFailedException.class);
         });
   }
 
@@ -102,8 +102,8 @@ class FileServiceTest {
         "파일 크기가 50MB를 초과하면, 예외를 던져야 한다.",
         () -> {
           // When & Then
-          assertThatThrownBy(() -> fileService.upload("test-directory", file))
-              .isInstanceOf(FileOperationFailedException.class);
+          assertThatThrownBy(() -> this.fileService.upload("test-directory", file))
+              .isExactlyInstanceOf(FileOperationFailedException.class);
         });
   }
 
@@ -113,17 +113,17 @@ class FileServiceTest {
         () -> {
           // Given
           doThrow(S3Exception.builder().message("S3 error").build())
-              .when(s3Client)
+              .when(this.s3Client)
               .putObject(any(PutObjectRequest.class), any(RequestBody.class));
 
           // When & Then
-          assertThatThrownBy(() -> fileService.upload("test-directory", file))
-              .isInstanceOf(FileOperationFailedException.class);
+          assertThatThrownBy(() -> this.fileService.upload("test-directory", file))
+              .isExactlyInstanceOf(FileOperationFailedException.class);
         });
   }
 
   @AfterAll
-  public static void tearDownAll() {
+  static void tearDownAll() {
     localStack.stop();
   }
 }

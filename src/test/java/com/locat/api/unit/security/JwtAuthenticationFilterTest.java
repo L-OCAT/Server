@@ -28,15 +28,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 class JwtAuthenticationFilterTest {
 
-  @Mock private JwtProvider jwtProvider;
-
-  @Mock private LocatUserDetailsService userDetailsService;
-
-  @Mock private FilterChain filterChain;
-
-  @Mock private Authentication authentication;
-
   @InjectMocks private JwtAuthenticationFilter jwtAuthenticationFilter;
+  @Mock private JwtProvider jwtProvider;
+  @Mock private LocatUserDetailsService userDetailsService;
+  @Mock private FilterChain filterChain;
+  @Mock private Authentication authentication;
 
   private MockHttpServletRequest request;
   private MockHttpServletResponse response;

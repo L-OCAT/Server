@@ -1,8 +1,7 @@
 package com.locat.api.unit.utils;
 
 import static com.locat.api.global.utils.ValidationUtils.*;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
+import static org.assertj.core.api.AssertionsForClassTypes.*;
 
 import com.locat.api.global.utils.ValidationUtils;
 import java.util.List;
@@ -44,12 +43,13 @@ class ValidationUtilsTest {
     String value = "value";
 
     // When & Then
-    assertThatCode(() -> ValidationUtils.throwIf(value, v -> !v.isEmpty(), RuntimeException::new))
+    assertThatThrownBy(
+            () -> ValidationUtils.throwIf(value, v -> !v.isEmpty(), RuntimeException::new))
         .isExactlyInstanceOf(RuntimeException.class);
-    assertThatCode(
+    assertThatThrownBy(
             () -> ValidationUtils.throwIf(value, v -> v.equals("value"), RuntimeException::new))
         .isExactlyInstanceOf(RuntimeException.class);
-    assertThatCode(
+    assertThatThrownBy(
             () ->
                 ValidationUtils.throwIfAny(
                     value,
@@ -91,7 +91,7 @@ class ValidationUtilsTest {
     String value = "value";
 
     // When & Then
-    assertThatCode(
+    assertThatThrownBy(
             () ->
                 ValidationUtils.throwIfAny(
                     value,

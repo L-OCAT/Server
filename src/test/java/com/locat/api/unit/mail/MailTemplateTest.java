@@ -1,4 +1,4 @@
-package com.locat.api.unit.utils;
+package com.locat.api.unit.mail;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -16,7 +16,6 @@ class MailTemplateTest {
     String message = MailTemplate.createMailVerifyMessage(verificationCode);
 
     // Then
-    assertThat(message).contains(verificationCode);
-    assertThat(message).contains("이메일 본인 인증 코드");
+    assertThat(message).contains(verificationCode).contains("이메일 본인 인증 코드");
   }
 }
