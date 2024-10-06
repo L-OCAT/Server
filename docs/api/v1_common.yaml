@@ -14,23 +14,15 @@ paths:
         - bearerAuth: [ ]
       responses:
         200:
-          description: "카테고리 목록 조회 성공"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/CategoryInfoResponse"
+          $ref: "#/components/responses/CategoryInfoResponse"
   /v1/color-codes:
     get:
-        description: "색상 코드 목록 조회 API"
-        security:
-            - bearerAuth: [ ]
-        responses:
-          200:
-            description: "색상 코드 목록 조회 성공"
-            content:
-              application/json:
-                schema:
-                  $ref: "#/components/responses/ColorCodeResponse"
+      description: "색상 코드 목록 조회 API"
+      security:
+        - bearerAuth: [ ]
+      responses:
+        200:
+          $ref: "#/components/responses/ColorCodeResponse"
   /v1/faqs/{type}:
     get:
       description: "분류별 FAQ 조회 API"
@@ -72,18 +64,18 @@ components:
                     items:
                       $ref: "#/components/schemas/CategoryInfoResponse"
     ColorCodeResponse:
-        description: "색상 코드 목록 조회 응답"
-        content:
-          application/json:
-            schema:
-              allOf:
-                - $ref: "schemas.yaml#/components/schemas/BaseResponse"
-                - type: object
-                  properties:
-                    data:
-                      type: array
-                      items:
-                        $ref: "#/components/schemas/ColorCodeResponse"
+      description: "색상 코드 목록 조회 응답"
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "schemas.yaml#/components/schemas/BaseResponse"
+              - type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ColorCodeResponse"
     FaqResponse:
       description: "분류별 FAQ 조회 응답"
       content:
@@ -114,17 +106,17 @@ components:
           type: string
           description: "상위 카테고리 이름"
     ColorCodeResponse:
-        type: object
-        properties:
-          id:
-            type: integer
-            description: "색상 코드 ID"
-          hexCode:
-            type: string
-            description: "색상 코드(HEX)"
-          name:
-            type: string
-            description: "색상 코드 이름"
+      type: object
+      properties:
+        id:
+          type: integer
+          description: "색상 코드 ID"
+        hexCode:
+          type: string
+          description: "색상 코드(HEX)"
+        name:
+          type: string
+          description: "색상 코드 이름"
     FaqResponse:
       type: object
       properties:
@@ -156,4 +148,3 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
-
