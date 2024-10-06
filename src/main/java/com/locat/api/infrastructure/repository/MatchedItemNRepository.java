@@ -23,6 +23,9 @@ public interface MatchedItemNRepository {
   /** 매칭 여부 판단 시, 기준이 되는 거리 */
   Distance DEFAULT_MATCH_DISTANCE = new Distance(0.5, Metrics.KILOMETERS);
 
+  /** 매칭되는 아이템이 없는 경우에 대한 상수 값 */
+  Long NONE_MATCHED = 0L;
+
   Long countMatchedLostItems(FoundItem foundItem);
 
   Long countMatchedFoundItems(LostItem lostItem);

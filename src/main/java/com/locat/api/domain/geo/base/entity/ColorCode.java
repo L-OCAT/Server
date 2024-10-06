@@ -12,6 +12,8 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ColorCode extends BaseEntity {
 
+  private static final String NAME_OTHERS = "기타";
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id", columnDefinition = "int UNSIGNED not null")
@@ -25,5 +27,9 @@ public class ColorCode extends BaseEntity {
 
   public static ColorCode of(String hexCode, String name) {
     return ColorCode.builder().hexCode(hexCode).name(name).build();
+  }
+
+  public boolean isOthers() {
+    return NAME_OTHERS.equals(this.name);
   }
 }

@@ -4,7 +4,6 @@ import com.locat.api.domain.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import java.util.Objects;
 import lombok.*;
 
 @Entity
@@ -13,7 +12,9 @@ import lombok.*;
 @Table(name = "category")
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Category extends BaseEntity implements Comparable<Category> {
+public class Category extends BaseEntity {
+
+  private static final String NAME_OTHERS = "기타";
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,27 +28,7 @@ public class Category extends BaseEntity implements Comparable<Category> {
   @Column(name = "parent_id", columnDefinition = "int UNSIGNED")
   private Long parentId;
 
-  @Override
-  public int compareTo(Category other) {
-    return this.id.compareTo(other.id);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.id, this.name, this.parentId);
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    if (this == obj) {
-      return true;
-    }
-    if (obj == null || getClass() != obj.getClass()) {
-      return false;
-    }
-    Category category = (Category) obj;
-    return Objects.equals(this.id, category.id)
-        && Objects.equals(this.name, category.name)
-        && Objects.equals(this.parentId, category.parentId);
+  public boolean isOthers() {
+    return NAME_OTHERS.equals(this.name);
   }
 }

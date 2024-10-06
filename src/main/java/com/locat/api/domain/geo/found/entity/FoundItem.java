@@ -68,6 +68,11 @@ public class FoundItem extends GeoItem {
   }
 
   @Override
+  public boolean isMatchable() {
+    return !this.category.isOthers() || this.colorCodes.stream().noneMatch(ColorCode::isOthers);
+  }
+
+  @Override
   public Set<String> getColorNames() {
     return this.colorCodes.stream().map(ColorCode::getName).collect(Collectors.toSet());
   }

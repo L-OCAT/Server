@@ -3,13 +3,13 @@ package com.locat.api.unit.entity;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
-import com.locat.api.helper.TestDataFactory;
 import com.locat.api.domain.user.dto.OAuth2UserInfoDto;
 import com.locat.api.domain.user.entity.OAuth2ProviderType;
 import com.locat.api.domain.user.entity.StatusType;
 import com.locat.api.domain.user.entity.User;
 import com.locat.api.domain.user.entity.UserType;
 import com.locat.api.global.utils.HashingUtils;
+import com.locat.api.helper.TestDataFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

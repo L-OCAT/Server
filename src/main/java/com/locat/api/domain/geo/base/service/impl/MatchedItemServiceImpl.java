@@ -1,5 +1,7 @@
 package com.locat.api.domain.geo.base.service.impl;
 
+import static com.locat.api.infrastructure.repository.MatchedItemNRepository.NONE_MATCHED;
+
 import com.locat.api.domain.geo.base.service.MatchedItemService;
 import com.locat.api.domain.geo.found.entity.FoundItem;
 import com.locat.api.domain.geo.found.service.FoundItemService;
@@ -22,12 +24,16 @@ public class MatchedItemServiceImpl implements MatchedItemService {
   @Override
   public Long countMatchedLostItems(Long foundItemId) {
     final FoundItem foundItem = this.foundItemService.findById(foundItemId);
-    return this.matchedItemNRepository.countMatchedLostItems(foundItem);
+    return foundItem.isMatchable()
+        ? this.matchedItemNRepository.countMatchedLostItems(foundItem)
+        : NONE_MATCHED;
   }
 
   @Override
   public Long countMatchedFoundItems(Long lostItemId) {
     final LostItem lostItem = this.lostItemService.findById(lostItemId);
-    return this.matchedItemNRepository.countMatchedFoundItems(lostItem);
+    return lostItem.isMatchable()
+        ? this.matchedItemNRepository.countMatchedFoundItems(lostItem)
+        : NONE_MATCHED;
   }
 }

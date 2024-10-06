@@ -39,7 +39,7 @@ public class GeoItemSearchArgumentResolver implements HandlerMethodArgumentResol
 
     final Double latitude = RequestUtils.getParameterOrDefault(request, "lat", Double.class, null);
     final Double longitude = RequestUtils.getParameterOrDefault(request, "lng", Double.class, null);
-    final Double radius = RequestUtils.getParameterOrDefault(request, "r", Double.class, 500.0);
+    final Double radius = RequestUtils.getParameterOrDefault(request, "r", Double.class, 50.0);
     final Boolean onlyMine =
         RequestUtils.getParameterOrDefault(request, "onlyMine", Boolean.class, true);
     final Point location = GeoUtils.toPoint(latitude, longitude);

@@ -2,13 +2,13 @@ package com.locat.api.unit.entity;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.locat.api.helper.TestDataFactory;
 import com.locat.api.domain.geo.base.entity.Category;
 import com.locat.api.domain.geo.base.entity.ColorCode;
 import com.locat.api.domain.geo.found.dto.FoundItemRegisterDto;
 import com.locat.api.domain.geo.found.entity.FoundItem;
 import com.locat.api.domain.geo.found.entity.FoundItemStatusType;
 import com.locat.api.domain.user.entity.User;
+import com.locat.api.helper.TestDataFactory;
 import java.util.HashSet;
 import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
