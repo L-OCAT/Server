@@ -14,6 +14,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Set-up Test Environment with Docker Compose
+        run: |
+          cat <<EOF > docker-compose.yaml
+          ${{ secrets.DOCKER_COMPOSE_INTEGRATION }}
+          EOF
+          docker-compose up -d
+
       - name: Set-up Java
         uses: actions/setup-java@v4
         with:
@@ -38,6 +45,9 @@ jobs:
 
       - name: Set properties for CI
         run: |
+          cat <<EOF > .src/test/resources/application-test.yaml
+          ${{ secrets.APPLICATION_INTEGRATION }}
+          EOF
           cat <<EOF > ./src/main/resources/application-develop.yaml
           ${{ secrets.APPLICATION_DEVELOP }}
           EOF
@@ -46,17 +56,19 @@ jobs:
           EOF
 
       - name: Build & Test with Gradle
-        run: ./gradlew clean build --info
+        run: ./gradlew clean build > build-report.txt
 
       - name: Notify Discord on Test Failure
         if: failure()
-        uses: Ilshidur/action-discord@master
         env:
           DISCORD_WEBHOOK: ${{ secrets.WEBHOOK_URL }}
-        with:
-          args: "⚠️ Tests failed in the CI pipeline!"
+        run: |
+          SUMMARY=${grep -A 10 "FAILURE:" build-report.txt | tail -n +1}
+          curl -H "Content-Type: application/json" \
+               -d "{\"content\": \"⚠️ CI Action Failed! \n [Root Cause] \n\`\`\`${SUMMARY}\`\`\`\"}" \
+               $DISCORD_WEBHOOK
 
-      - name: Jacoco Report to PR
+      - name: Comment on PR with Jacoco Report
         uses: madrapps/jacoco-report@v1.7.1
         if: success()
         with:
