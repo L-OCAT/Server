@@ -47,8 +47,7 @@ class JwtAuthenticationFilterTest {
 
   @Test
   @DisplayName("유효한 토큰이 주어지면 인증을 설정한다.")
-  void testWhenValidAuthorizationHeader()
-      throws ServletException, IOException {
+  void testWhenValidAuthorizationHeader() throws ServletException, IOException {
     // Given
     String token = "validToken";
     String username = "user";
@@ -73,8 +72,7 @@ class JwtAuthenticationFilterTest {
 
   @Test
   @DisplayName("유효하지 않은 토큰이 주어지면 인증을 설정하지 않는다.")
-  void testWhenInvalidAuthorizationHeader()
-      throws ServletException, IOException {
+  void testWhenInvalidAuthorizationHeader() throws ServletException, IOException {
     // Given
     String token = "invalidToken";
 
@@ -93,8 +91,7 @@ class JwtAuthenticationFilterTest {
 
   @Test
   @DisplayName("토큰이 주어지지 않으면 인증을 설정하지 않는다.")
-  void testWhenNoAuthorizationHeader()
-      throws ServletException, IOException {
+  void testWhenNoAuthorizationHeader() throws ServletException, IOException {
     // Given
     when(this.jwtProvider.resolve(any(HttpServletRequest.class))).thenReturn(null);
 
