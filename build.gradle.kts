@@ -134,7 +134,8 @@ tasks.jacocoTestCoverageVerification {
         rule {
             enabled = true
             isFailOnViolation = true
-            includes = listOf("com.locat.*")
+            includes = listOf("com.locat.api.**")
+            element = "BUNDLE"
             limit {
                 counter = "LINE"
                 value = "COVEREDRATIO"
