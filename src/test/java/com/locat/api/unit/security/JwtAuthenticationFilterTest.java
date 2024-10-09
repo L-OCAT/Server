@@ -42,11 +42,12 @@ class JwtAuthenticationFilterTest {
     MockitoAnnotations.openMocks(this);
     this.request = new MockHttpServletRequest();
     this.response = new MockHttpServletResponse();
+    SecurityContextHolder.clearContext();
   }
 
   @Test
   @DisplayName("유효한 토큰이 주어지면 인증을 설정한다.")
-  void givenValidToken_whenDoFilterInternal_thenSetAuthentication()
+  void testWhenValidAuthorizationHeader()
       throws ServletException, IOException {
     // Given
     String token = "validToken";
@@ -72,7 +73,7 @@ class JwtAuthenticationFilterTest {
 
   @Test
   @DisplayName("유효하지 않은 토큰이 주어지면 인증을 설정하지 않는다.")
-  void givenInvalidToken_whenDoFilterInternal_thenSendUnauthorized()
+  void testWhenInvalidAuthorizationHeader()
       throws ServletException, IOException {
     // Given
     String token = "invalidToken";
@@ -92,7 +93,7 @@ class JwtAuthenticationFilterTest {
 
   @Test
   @DisplayName("토큰이 주어지지 않으면 인증을 설정하지 않는다.")
-  void givenNoToken_whenDoFilterInternal_thenDoNotSetAuthentication()
+  void testWhenNoAuthorizationHeader()
       throws ServletException, IOException {
     // Given
     when(this.jwtProvider.resolve(any(HttpServletRequest.class))).thenReturn(null);
