@@ -132,7 +132,7 @@ tasks.jacocoTestCoverageVerification {
     dependsOn(tasks.jacocoTestReport)
     violationRules {
         rule {
-            enabled = false // 추후에 true로 바꾸기
+            enabled = true
             isFailOnViolation = true
             includes = listOf("com.locat.*")
             element = "CLASS"
