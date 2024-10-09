@@ -51,7 +51,7 @@ jobs:
       - name: Notify Discord on Test Failure
         uses: Ilshidur/action-discord@master
         env:
-          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          DISCORD_WEBHOOK: ${{ secrets.WEBHOOK_URL }}
         with:
           args: "⚠️ Tests failed in the CI pipeline!"
 
