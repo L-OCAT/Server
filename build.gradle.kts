@@ -108,7 +108,9 @@ tasks.withType<Test> {
         html.required.set(false)
         junitXml.required.set(false)
     }
-    maxParallelForks = (Runtime.getRuntime().availableProcessors() / 2).coerceAtLeast(1)
+    maxParallelForks = (Runtime.getRuntime().availableProcessors() / 2)
+        .coerceAtLeast(1)
+        .coerceAtMost(6)
 }
 
 tasks.jacocoTestReport {

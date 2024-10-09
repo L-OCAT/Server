@@ -31,7 +31,7 @@ class PublicApiKeyFilterTest {
 
   @Test
   @DisplayName("적절한 API Key를 제공한 경우, 요청을 통과 시켜야한다.")
-  void testDoFilterInternal_NotPublicApi() {
+  void testWhenValidApiKeyProvided() {
     // Given
     MockHttpServletRequest request = new MockHttpServletRequest();
     MockHttpServletResponse response = new MockHttpServletResponse();
@@ -46,7 +46,7 @@ class PublicApiKeyFilterTest {
 
   @Test
   @DisplayName("올바르지 않은 API Key를 제공한 경우, 예외를 던져야 한다.")
-  void testDoFilterInternal_InvalidApiKey() {
+  void testWhenInvalidApiKeyProvided() {
     // Given
     MockHttpServletRequest request = new MockHttpServletRequest();
     MockHttpServletResponse response = new MockHttpServletResponse();
