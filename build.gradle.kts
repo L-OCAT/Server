@@ -102,7 +102,7 @@ tasks.jar {
 
 tasks.withType<Test> {
     useJUnitPlatform()
-//    finalizedBy (tasks.jacocoTestReport, tasks.jacocoTestCoverageVerification)
+    finalizedBy(tasks.jacocoTestReport, tasks.jacocoTestCoverageVerification)
     reports {
         html.required.set(false)
         junitXml.required.set(false)
@@ -119,29 +119,27 @@ tasks.jacocoTestReport {
         xml.outputLocation.set(layout.buildDirectory.file("reports/jacoco/xml/jacocoTestReport.xml"))
         html.outputLocation.set(layout.buildDirectory.dir("reports/jacoco/html"))
     }
-    afterEvaluate {
-        classDirectories.setFrom(
-            files(classDirectories.files.map {
-                fileTree(it).matching {
-                    include("com/locat/api/**")
-                }
-            })
-        )
-    }
+    classDirectories.setFrom(
+        files(classDirectories.files.map {
+            fileTree(it).matching {
+                include("com/locat/api/**")
+            }
+        })
+    )
 }
 
 tasks.jacocoTestCoverageVerification {
     dependsOn(tasks.jacocoTestReport)
     violationRules {
         rule {
-            enabled = false // 추후에 true로 바꾸기
+            enabled = true
             isFailOnViolation = true
-            includes = listOf("com.locat.*")
-            element = "CLASS"
+            includes = listOf("com.locat.api.**")
+            element = "BUNDLE"
             limit {
                 counter = "LINE"
                 value = "COVEREDRATIO"
-                minimum = BigDecimal(0.8)
+                minimum = BigDecimal(0.7)
             }
         }
     }
