@@ -135,7 +135,6 @@ tasks.jacocoTestCoverageVerification {
             enabled = true
             isFailOnViolation = true
             includes = listOf("com.locat.*")
-            element = "CLASS"
             limit {
                 counter = "LINE"
                 value = "COVEREDRATIO"
