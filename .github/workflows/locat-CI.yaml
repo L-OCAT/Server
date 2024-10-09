@@ -60,7 +60,7 @@ jobs:
         uses: madrapps/jacoco-report@v1.7.1
         if: success()
         with:
-          paths: ${{ github.workspace }}/build/reports/jacoco/xml
+          paths: ${{ github.workspace }}/build/reports/jacoco/xml/jacocoTestReport.xml
           token: ${{ secrets.GITHUB_TOKEN }}
           title: "⭐Coverage Report"
           update-comment: true
