@@ -53,13 +53,13 @@ jobs:
           EOF
 
       - name: Build & Test with Gradle
-        run: ./gradlew clean build > build-report.txt
+        run: ./gradlew clean build --info
 
-      - name: Notify Discord on Test Failure
-        if: failure()
-        uses: Ilshidur/action-discord@master
-        env:
-          DISCORD_WEBHOOK: ${{ secrets.WEBHOOK_URL }}
+#      - name: Notify Discord on Test Failure
+#        if: failure()
+#        uses: Ilshidur/action-discord@master
+#        env:
+#          DISCORD_WEBHOOK: ${{ secrets.WEBHOOK_URL }}
         with:
           args: "⚠️ Tests failed in the CI pipeline!"
 
