@@ -60,8 +60,8 @@ jobs:
 #        uses: Ilshidur/action-discord@master
 #        env:
 #          DISCORD_WEBHOOK: ${{ secrets.WEBHOOK_URL }}
-        with:
-          args: "⚠️ Tests failed in the CI pipeline!"
+#        with:
+#          args: "⚠️ Tests failed in the CI pipeline!"
 
       - name: Comment on PR with Jacoco Report
         uses: madrapps/jacoco-report@v1.7.1
