@@ -8,7 +8,7 @@ on:
 jobs:
   locat-CI:
     runs-on: ubuntu-latest
-    permissions: read-all
+    permissions: write-all
 
     steps:
       - name: Checkout repository
@@ -48,13 +48,12 @@ jobs:
       - name: Build & Test with Gradle
         run: ./gradlew clean build
 
-#      알림 설정
-#      - name: Notify Discord on Test Failure
-#        if: failure()
-#        uses: Ilshidur/action-discord@v2
-#        with:
-#          webhook: ${{ secrets.DISCORD_WEBHOOK_URL }}
-#          message: "⚠️ Tests failed in the CI pipeline!"
+      - name: Notify Discord on Test Failure
+        uses: Ilshidur/action-discord@master
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        with:
+          args: "⚠️ Tests failed in the CI pipeline!"
 
       - name: Jacoco Report to PR
         uses: madrapps/jacoco-report@v1.7.1
