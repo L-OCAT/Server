@@ -49,6 +49,7 @@ jobs:
         run: ./gradlew clean build
 
       - name: Notify Discord on Test Failure
+        if: failure()
         uses: Ilshidur/action-discord@master
         env:
           DISCORD_WEBHOOK: ${{ secrets.WEBHOOK_URL }}
@@ -63,7 +64,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           title: "⭐Coverage Report"
           update-comment: true
-          skip-if-no-changes: true
+          skip-if-no-changes: false
           min-coverage-overall: '70'
           debug-mode: 'true'
 
