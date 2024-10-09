@@ -1,6 +1,6 @@
 package com.locat.api.global.advice;
 
-import com.locat.api.domain.core.WebhookRequest;
+import com.locat.api.domain.common.misc.WebhookRequest;
 import com.locat.api.global.annotation.RequireAdminNotification;
 import com.locat.api.global.utils.LocatSpelParser;
 import com.locat.api.infrastructure.external.DiscordClient;

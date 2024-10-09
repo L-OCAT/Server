@@ -21,13 +21,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 @ExtendWith(MockitoExtension.class)
 class AuditorAwareTest {
 
-  @Mock private SecurityContext securityContext;
-
-  @Mock private Authentication authentication;
-
-  @Mock private LocatUserDetails locatUserDetails;
-
   @InjectMocks private LocatAuditorAware locatAuditorAware;
+  @Mock private SecurityContext securityContext;
+  @Mock private Authentication authentication;
+  @Mock private LocatUserDetails locatUserDetails;
 
   @BeforeEach
   void setUp() {

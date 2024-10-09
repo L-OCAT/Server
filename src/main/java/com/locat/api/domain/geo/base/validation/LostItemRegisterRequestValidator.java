@@ -21,7 +21,7 @@ public class LostItemRegisterRequestValidator
 
   /** 보상금 지급 의사가 있다고 표시했지만, 보상금 비율을 입력하지 않은 경우 커스텀 메시지 */
   private static final String GRATUITY_VALUE_CONSTRAINT_VIOLATION_MESSAGE =
-      "If the intent to pay gratuity is indicated, the gratuity value must be provided.";
+      "If the intent to pay gratuity is indicated, the gratuity value must be provided";
 
   @Override
   public boolean isValid(LostItemRegisterRequest request, ConstraintValidatorContext context) {
@@ -41,8 +41,8 @@ public class LostItemRegisterRequestValidator
 
   @Override
   protected boolean validateCoordinates(LostItemRegisterRequest request) {
-    return LATITUDE_LONGITUDE_PATTERN.matcher(request.lat().toString()).matches()
-        && LATITUDE_LONGITUDE_PATTERN.matcher(request.lng().toString()).matches();
+    return LATITUDE_PATTERN.matcher(request.lat().toString()).matches()
+        && LONGITUDE_PATTERN.matcher(request.lng().toString()).matches();
   }
 
   @Override

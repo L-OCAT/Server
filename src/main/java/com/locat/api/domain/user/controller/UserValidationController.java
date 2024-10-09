@@ -1,16 +1,14 @@
 package com.locat.api.domain.user.controller;
 
-import com.locat.api.domain.core.BaseResponse;
+import com.locat.api.domain.common.dto.BaseResponse;
+import com.locat.api.domain.user.enums.UserInfoValidationType;
 import com.locat.api.domain.user.service.UserValidationService;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,7 +19,7 @@ public class UserValidationController {
 
   @GetMapping("/email")
   public ResponseEntity<BaseResponse<Boolean>> validateEmail(@RequestParam @Email String email) {
-    final boolean result = this.userValidationService.isEmailExists(email);
+    final boolean result = this.userValidationService.isExists(email, UserInfoValidationType.EMAIL);
     HttpStatus httpStatus = this.getHttpStatus(result);
     return ResponseEntity.status(httpStatus).build();
   }
@@ -29,7 +27,8 @@ public class UserValidationController {
   @GetMapping("/nickname")
   public ResponseEntity<BaseResponse<Boolean>> validateNickname(
       @RequestParam @NotEmpty String nickname) {
-    final boolean result = this.userValidationService.isNicknameExists(nickname);
+    final boolean result =
+        this.userValidationService.isExists(nickname, UserInfoValidationType.NICKNAME);
     HttpStatus httpStatus = this.getHttpStatus(result);
     return ResponseEntity.status(httpStatus).build();
   }

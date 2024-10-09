@@ -8,4 +8,8 @@ public class NotificationException extends LocatApiException {
   public NotificationException(ApiExceptionType apiExceptionType) {
     super(apiExceptionType);
   }
+
+  public NotificationException(ApiExceptionType apiExceptionType, Throwable cause) {
+    super(apiExceptionType, cause);
+  }
 }

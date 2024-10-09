@@ -1,6 +1,5 @@
 package com.locat.api.domain.geo.found.dto.response;
 
-import com.locat.api.domain.geo.base.utils.GeoUtils;
 import com.locat.api.domain.geo.found.entity.FoundItem;
 import java.util.Set;
 import lombok.Builder;
@@ -47,7 +46,7 @@ public record FoundItemLocationResponse(
         .imageUrl(item.getImageUrl())
         .lng(item.getLocation().getX())
         .lat(item.getLocation().getY())
-        .distance(GeoUtils.toMeter(foundItemGeoResult.getDistance().getValue()))
+        .distance(Math.floor(foundItemGeoResult.getDistance().getValue()))
         .foundAt(item.getFoundAt().toString())
         .build();
   }

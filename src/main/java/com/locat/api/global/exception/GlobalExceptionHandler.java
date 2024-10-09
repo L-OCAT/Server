@@ -3,12 +3,13 @@ package com.locat.api.global.exception;
 import static org.springframework.http.HttpStatus.METHOD_NOT_ALLOWED;
 
 import com.locat.api.domain.auth.exception.EmailAlreadySentException;
-import com.locat.api.domain.core.ErrorResponse;
+import com.locat.api.domain.common.dto.ErrorResponse;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -16,6 +17,7 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -49,7 +51,7 @@ public class GlobalExceptionHandler {
             .orElse("None");
     String message =
         """
-				지원하지 않는 메서드입니다.
+				Unsupported HTTP Methods!
 				[Requested: %s, Supported: %s]
 				"""
             .formatted(ex.getMethod(), supportedMethods);
@@ -87,5 +89,12 @@ public class GlobalExceptionHandler {
                         .formatted(violation.getPropertyPath(), violation.getMessage()))
             .collect(Collectors.joining());
     return ResponseEntity.badRequest().body(ErrorResponse.badRequest(message));
+  }
+
+  @ExceptionHandler(NoHandlerFoundException.class)
+  protected ResponseEntity<ErrorResponse> handleNoHandlerFoundException(
+      NoHandlerFoundException ignored) {
+    return ResponseEntity.status(HttpStatus.NOT_FOUND)
+        .body(ErrorResponse.notFound("The API endpoint does not exist."));
   }
 }

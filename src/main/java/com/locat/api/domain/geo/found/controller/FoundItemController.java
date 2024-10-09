@@ -1,6 +1,6 @@
 package com.locat.api.domain.geo.found.controller;
 
-import com.locat.api.domain.core.BaseResponse;
+import com.locat.api.domain.common.dto.BaseResponse;
 import com.locat.api.domain.geo.found.dto.FoundItemRegisterDto;
 import com.locat.api.domain.geo.found.dto.FoundItemSearchDto;
 import com.locat.api.domain.geo.found.dto.request.FoundItemRegisterRequest;
@@ -53,8 +53,8 @@ public class FoundItemController {
   @PostMapping
   public ResponseEntity<BaseResponse<Void>> register(
       @AuthenticationPrincipal LocatUserDetails userDetails,
-      @RequestBody @Valid FoundItemRegisterRequest request,
-      @RequestParam("image") MultipartFile image) {
+      @RequestPart("request") @Valid FoundItemRegisterRequest request,
+      @RequestPart(name = "image", required = false) MultipartFile image) {
     final long userId = userDetails.getId();
     final String foundItemId =
         this.foundItemService

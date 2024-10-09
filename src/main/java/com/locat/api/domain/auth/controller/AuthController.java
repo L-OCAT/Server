@@ -1,11 +1,10 @@
 package com.locat.api.domain.auth.controller;
 
-import com.locat.api.domain.auth.dto.EmailVerificationRequest;
-import com.locat.api.domain.auth.dto.OAuth2AuthorizeRequest;
-import com.locat.api.domain.auth.dto.TokenRenewRequest;
+import com.locat.api.domain.auth.dto.request.EmailVerificationRequest;
+import com.locat.api.domain.auth.dto.request.TokenIssueRequest;
+import com.locat.api.domain.auth.dto.request.TokenRenewRequest;
 import com.locat.api.domain.auth.service.AuthService;
-import com.locat.api.domain.auth.service.OAuth2Service;
-import com.locat.api.domain.core.BaseResponse;
+import com.locat.api.domain.common.dto.BaseResponse;
 import com.locat.api.global.auth.jwt.LocatTokenDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,13 +20,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
   private final AuthService authService;
-  private final OAuth2Service oAuth2Service;
 
-  @PostMapping
-  public ResponseEntity<BaseResponse<String>> authenticate(
-      @RequestBody final OAuth2AuthorizeRequest request) {
-    String oauthId = this.oAuth2Service.authenticate(request.providerType(), request.code());
-    return ResponseEntity.ok((BaseResponse.of(oauthId)));
+  @PostMapping("/token")
+  public ResponseEntity<BaseResponse<LocatTokenDto>> authenticate(
+      @RequestBody @Valid final TokenIssueRequest request) {
+    LocatTokenDto locatTokenDto = this.authService.authenticate(request.oAuthId());
+    return ResponseEntity.ok((BaseResponse.of(locatTokenDto)));
   }
 
   @PostMapping("/renew")

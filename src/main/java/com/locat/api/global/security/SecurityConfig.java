@@ -4,12 +4,14 @@ import static org.springframework.http.HttpMethod.*;
 
 import com.locat.api.global.auth.LocatUserDetailsService;
 import com.locat.api.global.auth.jwt.JwtProvider;
+import com.locat.api.global.security.filter.ActiveUserFilter;
+import com.locat.api.global.security.filter.JwtAuthenticationFilter;
+import com.locat.api.global.security.filter.PublicApiKeyFilter;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.core.env.Environment;
 import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.authorization.AuthorizationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -33,27 +35,12 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-  /** Public API로 간주되는 요청 헤더 이름 */
-  public static final String API_KEY_HEADER = "Locat-API-Key";
-
-  /**
-   * Public API로 간주되는 URI 목록 <br>
-   * <li>{@code startWith} 메서드를 사용하여 URI를 비교합니다.
-   */
-  public static final List<String> PUBLIC_API_PATHS = List.of("/v1/auth");
-
   private static final List<String> DEFAULT_PERMIT_METHODS =
       List.of(GET.name(), HEAD.name(), POST.name(), PUT.name(), PATCH.name(), DELETE.name());
 
-  private final Environment environment;
+  private final SecurityProperties securityProperties;
   private final JwtProvider jwtProvider;
   private final LocatUserDetailsService userDetailsService;
-
-  /** 비밀번호 등 해시화를 위한 PasswordEncoder */
-  @Bean
-  public PasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder();
-  }
 
   /** 상용(또는 개발) 환경에서 사용하는 SecurityFilterChain을 설정합니다. */
   @Bean
@@ -78,7 +65,8 @@ public class SecurityConfig {
                     .anyRequest()
                     .denyAll())
         .addFilterBefore(
-            new PublicApiKeyFilter(this.environment), UsernamePasswordAuthenticationFilter.class)
+            new PublicApiKeyFilter(this.securityProperties.getApiKey()),
+            UsernamePasswordAuthenticationFilter.class)
         .addFilterAfter(
             new JwtAuthenticationFilter(this.jwtProvider, this.userDetailsService),
             PublicApiKeyFilter.class)
@@ -107,7 +95,16 @@ public class SecurityConfig {
         .sessionManagement(
             session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(authorize -> authorize.anyRequest().access(this.localHostOnly))
+        .addFilterBefore(
+            new JwtAuthenticationFilter(this.jwtProvider, this.userDetailsService),
+            UsernamePasswordAuthenticationFilter.class)
         .build();
+  }
+
+  /** 비밀번호 등 해시화를 위한 PasswordEncoder */
+  @Bean
+  public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
   }
 
   /** CORS(Cross-Origin Resource Sharing) 설정 */

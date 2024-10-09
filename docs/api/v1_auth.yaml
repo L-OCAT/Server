@@ -7,15 +7,21 @@ servers:
   - url: https://api.locat.kr
     description: Production
 paths:
-  /v1/auth:
-    description: OAuth2 사용자 인증 API
+  /v1/auth/token:
+    description: 토큰 발급 API
     post:
-      summary: 소셜 로그인 기반 사용자 인증을 처리합니다.
+      summary: 사용자 인증 후 Access 토큰을 발급합니다.
       requestBody:
-        $ref: "#/components/requestBodies/OAuth2AuthorizeRequest"
+        $ref: "#/components/requestBodies/TokenIssueRequest"
       responses:
         200:
-          $ref: "#/components/responses/OAuth2AuthenticatedResponse"
+          $ref: "#/components/responses/LocatTokenDto"
+        401:
+          description: "Unauthorized(유효하지 않은 포맷, 서명 등)"
+          content:
+            application/json:
+              schema:
+                $ref: "schemas.yaml#/components/schemas/ErrorResponse"
         500:
           description: "Internal Server Error"
           content:
@@ -88,6 +94,12 @@ components:
         application/json:
           schema:
             $ref: "#/components/schemas/OAuth2AuthorizeRequest"
+    TokenIssueRequest:
+      description: "토큰 발급 요청"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/TokenIssueRequest"
     TokenRenewRequest:
       required: true
       description: "토큰 갱신 요청"
@@ -173,6 +185,14 @@ components:
           type: string
           example: "OKR8jXv9ACEe2bBkOf05"
           description: "소셜 로그인 인가 코드"
+    TokenIssueRequest:
+      description: "토큰 발급 요청"
+      type: object
+      properties:
+        oAuthId:
+          type: string
+          example: "51269223"
+          description: "소셜 로그인 요청 성공 후에 반환된 OAuth2 ID"
     TokenRenewRequest:
       description: "토큰 갱신 요청"
       type: object
@@ -202,5 +222,3 @@ components:
           type: string
           example: "B9AF2S"
           description: "이메일 인증 코드(6자리)"
-
-

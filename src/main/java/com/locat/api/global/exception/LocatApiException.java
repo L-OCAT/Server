@@ -1,5 +1,6 @@
 package com.locat.api.global.exception;
 
+import jakarta.annotation.Nullable;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,11 +14,17 @@ public abstract class LocatApiException extends RuntimeException {
   private final HttpStatus httpStatus;
   private final String message;
   private final Integer code;
+  @Nullable private final Throwable cause;
 
   protected LocatApiException(ApiExceptionType apiExceptionType) {
-    super(apiExceptionType.getMessage());
+    this(apiExceptionType, null);
+  }
+
+  protected LocatApiException(ApiExceptionType apiExceptionType, Throwable cause) {
+    super(apiExceptionType.getMessage(), cause);
     this.httpStatus = HttpStatus.resolve(apiExceptionType.getStatusCode());
     this.message = apiExceptionType.getMessage();
     this.code = apiExceptionType.getCode();
+    this.cause = cause;
   }
 }

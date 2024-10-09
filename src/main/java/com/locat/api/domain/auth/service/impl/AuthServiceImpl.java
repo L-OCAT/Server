@@ -3,10 +3,14 @@ package com.locat.api.domain.auth.service.impl;
 import com.locat.api.domain.auth.entity.VerificationCode;
 import com.locat.api.domain.auth.exception.EmailAlreadySentException;
 import com.locat.api.domain.auth.service.AuthService;
+import com.locat.api.domain.auth.service.OAuth2Service;
+import com.locat.api.domain.user.entity.User;
+import com.locat.api.domain.user.service.UserService;
 import com.locat.api.global.auth.AuthenticationException;
 import com.locat.api.global.auth.jwt.JwtProvider;
 import com.locat.api.global.auth.jwt.LocatTokenDto;
 import com.locat.api.global.exception.ApiExceptionType;
+import com.locat.api.global.exception.NoSuchEntityException;
 import com.locat.api.global.mail.MailService;
 import com.locat.api.global.mail.MailTemplate;
 import com.locat.api.global.utils.RandomGenerator;
@@ -22,9 +26,25 @@ public class AuthServiceImpl implements AuthService {
   public static final int VERIFICATION_CODE_LENGTH = 6;
   public static final Duration VERIFICATION_CODE_EXPIRATION = Duration.ofMinutes(5);
 
+  private final UserService userService;
   private final MailService mailService;
   private final JwtProvider jwtProvider;
+  private final OAuth2Service oAuth2Service;
   private final VerificationCodeRepository verificationCodeRepository;
+
+  @Override
+  public LocatTokenDto authenticate(String oAuthId) {
+    this.validateAuthentication(oAuthId);
+    return this.userService
+        .findByOAuthId(oAuthId)
+        .map(this::issueTokenIfActivated)
+        .orElseThrow(() -> new NoSuchEntityException(ApiExceptionType.NOT_FOUND_USER));
+  }
+
+  private LocatTokenDto issueTokenIfActivated(User user) {
+    user.assertActivated();
+    return this.jwtProvider.create(user.getId());
+  }
 
   @Override
   public LocatTokenDto renew(final String accessToken, final String refreshToken) {
@@ -49,6 +69,12 @@ public class AuthServiceImpl implements AuthService {
       throw new AuthenticationException(ApiExceptionType.INVALID_EMAIL_VERIFICATION_CODE);
     }
     this.finalizeUserAuthentication(email);
+  }
+
+  private void validateAuthentication(String oAuthId) {
+    if (Boolean.FALSE.equals(this.oAuth2Service.isAuthenticated(oAuthId))) {
+      throw new AuthenticationException(ApiExceptionType.UNAUTHORIZED);
+    }
   }
 
   private void finalizeUserAuthentication(final String email) {

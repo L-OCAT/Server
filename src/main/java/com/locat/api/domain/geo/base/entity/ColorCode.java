@@ -1,6 +1,6 @@
 package com.locat.api.domain.geo.base.entity;
 
-import com.locat.api.domain.core.SecuredBaseEntity;
+import com.locat.api.domain.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -10,7 +10,9 @@ import lombok.*;
 @Table(name = "color_code")
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ColorCode extends SecuredBaseEntity {
+public class ColorCode extends BaseEntity {
+
+  private static final String NAME_OTHERS = "기타";
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,5 +27,9 @@ public class ColorCode extends SecuredBaseEntity {
 
   public static ColorCode of(String hexCode, String name) {
     return ColorCode.builder().hexCode(hexCode).name(name).build();
+  }
+
+  public boolean isOthers() {
+    return NAME_OTHERS.equals(this.name);
   }
 }

@@ -21,7 +21,7 @@ import java.util.Set;
 @LostItemValidation
 public record LostItemRegisterRequest(
     @Positive Long categoryId,
-    @Positive Set<Long> colorIds,
+    Set<Long> colorIds,
     @NotEmpty String itemName,
     @NotEmpty String description,
     @NotNull Boolean isWillingToPayGratuity,

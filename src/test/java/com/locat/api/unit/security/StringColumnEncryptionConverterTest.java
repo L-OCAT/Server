@@ -2,7 +2,7 @@ package com.locat.api.unit.security;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-import com.locat.api.global.security.StringColumnEncryptionConverter;
+import com.locat.api.global.converter.StringColumnEncryptionConverter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,8 +35,7 @@ class StringColumnEncryptionConverterTest {
     String encrypted = this.converter.convertToDatabaseColumn(plainText);
 
     // Then
-    assertThat(encrypted).isNotNull();
-    assertThat(encrypted).isNotEqualTo(plainText);
+    assertThat(encrypted).isNotNull().isNotEqualTo(plainText);
   }
 
   @Test
@@ -50,8 +49,7 @@ class StringColumnEncryptionConverterTest {
     String actual = this.converter.convertToEntityAttribute(encryptedExpect);
 
     // Then
-    assertThat(actual).isNotNull();
-    assertThat(actual).isEqualTo(expected);
+    assertThat(actual).isNotNull().isEqualTo(expected);
   }
 
   @Test

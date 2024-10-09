@@ -38,6 +38,13 @@ class FileUtilsTest {
     MockMultipartFile file1 = new MockMultipartFile("file", "file1", "text/plain", new byte[1024]);
     MockMultipartFile file2 = new MockMultipartFile("file", "file2.", "image/jpeg", new byte[1024]);
     MockMultipartFile file3 = new MockMultipartFile("file", "file3", "image/png", new byte[1024]);
+    MockMultipartFile file4 =
+        new MockMultipartFile("file", new byte[1024]) {
+          @Override
+          public String getOriginalFilename() {
+            return null;
+          }
+        };
 
     // When & Then
     assertThatThrownBy(() -> FileUtils.extractExtension(file1))
@@ -45,6 +52,8 @@ class FileUtilsTest {
     assertThatThrownBy(() -> FileUtils.extractExtension(file2))
         .isExactlyInstanceOf(FileOperationFailedException.class);
     assertThatThrownBy(() -> FileUtils.extractExtension(file3))
+        .isExactlyInstanceOf(FileOperationFailedException.class);
+    assertThatThrownBy(() -> FileUtils.extractExtension(file4))
         .isExactlyInstanceOf(FileOperationFailedException.class);
   }
 }

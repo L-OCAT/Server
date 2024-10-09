@@ -5,6 +5,10 @@ on:
     branches: [ "main", "develop" ]
     types: [ opened, reopened, synchronize, ready_for_review ]
 
+concurrency:
+  group: locat-ci
+  cancel-in-progress: true
+
 jobs:
   LOCAT-CI:
     runs-on: ubuntu-latest
@@ -13,6 +17,10 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Set-up Test Environment
+        run: |
+          docker run -d --name LOCAT-Redis -p 6379:6379 redis:7.0.10
 
       - name: Set-up Java
         uses: actions/setup-java@v4
@@ -38,6 +46,9 @@ jobs:
 
       - name: Set properties for CI
         run: |
+          cat <<EOF > ./src/test/resources/application-test.yaml
+          ${{ secrets.APPLICATION_INTEGRATION }}
+          EOF
           cat <<EOF > ./src/main/resources/application-develop.yaml
           ${{ secrets.APPLICATION_DEVELOP }}
           EOF
@@ -46,7 +57,7 @@ jobs:
           EOF
 
       - name: Build & Test with Gradle
-        run: ./gradlew clean build
+        run: ./gradlew clean build --info
 
       - name: Notify Discord on Test Failure
         if: failure()
@@ -54,9 +65,9 @@ jobs:
         env:
           DISCORD_WEBHOOK: ${{ secrets.WEBHOOK_URL }}
         with:
-          args: "⚠️ Tests failed in the CI pipeline!"
+          args: "⚠️ Tests failed in the CI pipeline! (Link: ${{ github.event.pull_request.html_url }})"
 
-      - name: Jacoco Report to PR
+      - name: Comment on PR with Jacoco Report
         uses: madrapps/jacoco-report@v1.7.1
         if: success()
         with:

@@ -1,17 +1,17 @@
 package com.locat.api.infrastructure.repository.geo.lost.impl;
 
 import com.locat.api.domain.geo.base.dto.GeoItemSearchCriteria;
-import com.locat.api.domain.geo.base.dto.GeoItemSortType;
+import com.locat.api.domain.geo.base.utils.GeoUtils;
 import com.locat.api.domain.geo.lost.entity.LostItem;
 import com.locat.api.domain.geo.lost.entity.QLostItem;
 import com.locat.api.infrastructure.repository.geo.AbstractGeoItemQRepository;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.core.types.dsl.NumberExpression;
+import com.querydsl.core.types.dsl.*;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import org.springframework.data.geo.*;
+import org.locationtech.jts.geom.Point;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.geo.Distance;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -27,7 +27,10 @@ public class LostItemQRepositoryImpl extends AbstractGeoItemQRepository<LostItem
   protected NumberExpression<Double> createDistanceExpression(
       GeoItemSearchCriteria searchCriteria) {
     return Expressions.numberTemplate(
-        Double.class, "ST_Distance({0}, {1})", qLostItem.location, searchCriteria.getLocation());
+        Double.class,
+        "ST_Distance_Sphere({0}, {1})",
+        qLostItem.location,
+        searchCriteria.getLocation());
   }
 
   @Override
@@ -44,22 +47,21 @@ public class LostItemQRepositoryImpl extends AbstractGeoItemQRepository<LostItem
       return null;
     }
     return Expressions.booleanTemplate(
-        "ST_DWithin({0}, {1}, {2}) = true", qLostItem.location, location, distance.getValue());
+        "CAST(ST_DISTANCE_SPHERE({0}, {1}) AS DOUBLE) <= {2}",
+        qLostItem.location, location, GeoUtils.toMeter(distance.getValue()));
   }
 
   @Override
-  protected OrderSpecifier<?> determineOrderSpecification(GeoItemSortType sort) {
-    OrderSpecifier<?> orderSpecifier = qLostItem.createdAt.desc();
-    if (sort.isLostAtDesc()) {
-      return qLostItem.lostAt.desc();
+  protected OrderSpecifier<?> determineOrderSpecification(Sort sort) {
+    if (sort.isUnsorted()) {
+      return qLostItem.createdAt.desc();
     }
-    if (sort.isLostAtAsc()) {
-      return qLostItem.lostAt.asc();
-    }
-    if (sort.isCreatedAtAsc()) {
-      return qLostItem.createdAt.asc();
-    }
-    return orderSpecifier;
+    Sort.Order sortOrder = sort.iterator().next();
+    final String sortProperty = sortOrder.getProperty();
+    this.assertFieldExists(sortProperty);
+    StringPath sortPath =
+        new PathBuilder<>(qLostItem.getType(), qLostItem.getMetadata()).getString(sortProperty);
+    return sortOrder.isAscending() ? sortPath.asc() : sortPath.desc();
   }
 
   @Override

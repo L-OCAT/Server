@@ -1,11 +1,10 @@
 package com.locat.api.unit.security;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.*;
 
 import com.locat.api.global.security.LocatAccessDeniedHandler;
 import com.locat.api.global.security.LocatAuthEntryPoint;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import org.junit.jupiter.api.DisplayName;
@@ -40,7 +39,7 @@ class SecurityExceptionHandlerTest {
 
   @Test
   @DisplayName("인가되지 않은 요청 시 403 상태 코드와 JSON 에러 메시지를 반환해야 한다")
-  void testHandle() throws IOException, ServletException {
+  void testHandle() throws IOException {
     // Given
     LocatAccessDeniedHandler accessDeniedHandler = new LocatAccessDeniedHandler();
     MockHttpServletRequest request = new MockHttpServletRequest();

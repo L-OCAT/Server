@@ -1,6 +1,6 @@
 package com.locat.api.domain.geo.base.entity;
 
-import com.locat.api.domain.core.SecuredBaseEntity;
+import com.locat.api.domain.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -12,7 +12,9 @@ import lombok.*;
 @Table(name = "category")
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Category extends SecuredBaseEntity {
+public class Category extends BaseEntity {
+
+  private static final String NAME_OTHERS = "기타";
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,4 +27,8 @@ public class Category extends SecuredBaseEntity {
 
   @Column(name = "parent_id", columnDefinition = "int UNSIGNED")
   private Long parentId;
+
+  public boolean isOthers() {
+    return NAME_OTHERS.equals(this.name);
+  }
 }

@@ -1,6 +1,6 @@
 package com.locat.api.domain.geo.lost.controller;
 
-import com.locat.api.domain.core.BaseResponse;
+import com.locat.api.domain.common.dto.BaseResponse;
 import com.locat.api.domain.geo.lost.dto.LostItemRegisterDto;
 import com.locat.api.domain.geo.lost.dto.LostItemSearchDto;
 import com.locat.api.domain.geo.lost.dto.request.LostItemRegisterRequest;
@@ -53,8 +53,8 @@ public class LostItemController {
   @PostMapping
   public ResponseEntity<BaseResponse<Void>> register(
       @AuthenticationPrincipal LocatUserDetails userDetails,
-      @RequestBody @Valid LostItemRegisterRequest request,
-      @RequestParam("image") MultipartFile image) {
+      @RequestPart("request") @Valid LostItemRegisterRequest request,
+      @RequestPart(name = "image", required = false) MultipartFile image) {
     final long userId = userDetails.getId();
     final String lostItemId =
         this.lostItemService.register(userId, LostItemRegisterDto.from(request), image).toString();

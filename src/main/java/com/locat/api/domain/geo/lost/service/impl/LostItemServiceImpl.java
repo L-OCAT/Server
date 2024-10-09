@@ -59,8 +59,11 @@ public class LostItemServiceImpl implements LostItemService {
     final Category category = this.fetchCategoryById(registerDto.categoryId());
     final Set<ColorCode> colorCodes =
         registerDto.colorIds().stream().map(this::fetchColorCodeById).collect(Collectors.toSet());
+    String imageUrl = null;
 
-    final String imageUrl = this.fileService.upload(LOST_ITEM_IMAGE_DIRECTORY, lostItemImage);
+    if (lostItemImage != null) {
+      imageUrl = this.fileService.upload(LOST_ITEM_IMAGE_DIRECTORY, lostItemImage);
+    }
     return this.lostItemRepository
         .save(LostItem.of(user, category, colorCodes, registerDto, imageUrl))
         .getId();

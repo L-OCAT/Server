@@ -17,7 +17,6 @@ public interface OAuth2TemplateFactory {
    *
    * @param oAuthId OAuth2ProviderToken의 id
    * @return 선택된 OAuth2Template
-   * @throws IllegalArgumentException OAuth2ProviderToken이 없을 경우
    */
   OAuth2Template getById(final String oAuthId);
 }

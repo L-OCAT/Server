@@ -1,18 +1,18 @@
 package com.locat.api.domain.user.entity;
 
-import com.locat.api.domain.core.SecuredBaseEntity;
+import com.locat.api.domain.common.entity.BaseEntity;
 import com.locat.api.domain.user.dto.OAuth2UserInfoDto;
-import com.locat.api.global.security.StringColumnEncryptionConverter;
+import com.locat.api.global.converter.StringColumnEncryptionConverter;
 import com.locat.api.global.utils.HashingUtils;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.*;
-import org.hibernate.annotations.SQLSelect;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.security.access.AccessDeniedException;
 
 @Entity
 @Getter
@@ -32,8 +32,7 @@ import org.hibernate.annotations.SQLSelect;
     })
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SQLSelect(sql = "SELECT * FROM user WHERE deleted_at IS NULL")
-public class User extends SecuredBaseEntity {
+public class User extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -72,6 +71,10 @@ public class User extends SecuredBaseEntity {
   @Column(name = "status_type")
   private StatusType statusType;
 
+  @LastModifiedBy
+  @Column(name = "updated_by")
+  private Long updatedBy;
+
   @Column(name = "deleted_at")
   private LocalDateTime deletedAt;
 
@@ -84,8 +87,9 @@ public class User extends SecuredBaseEntity {
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<UserEndpoint> userEndpoints = new ArrayList<>();
 
-  public static User fromOAuth(OAuth2UserInfoDto userInfo) {
+  public static User of(String nickname, OAuth2UserInfoDto userInfo) {
     return User.builder()
+        .nickname(nickname)
         .email(userInfo.getEmail())
         .emailHash(HashingUtils.hash(userInfo.getEmail()))
         .oauthId(userInfo.getId())
@@ -95,15 +99,7 @@ public class User extends SecuredBaseEntity {
         .build();
   }
 
-  public boolean isActivated() {
-    return this.statusType == StatusType.ACTIVE;
-  }
-
-  public void delete() {
-    this.deletedAt = LocalDateTime.now();
-  }
-
-  public User update(@Email String email, String nickname) {
+  public User update(String email, String nickname) {
     if (email != null && emailHash != null) {
       this.email = email;
       this.emailHash = HashingUtils.hash(email);
@@ -112,5 +108,24 @@ public class User extends SecuredBaseEntity {
       this.nickname = nickname;
     }
     return this;
+  }
+
+  public void updateStatus(StatusType statusType) {
+    this.statusType = statusType;
+  }
+
+  public void delete() {
+    this.statusType = StatusType.INACTIVE;
+    this.deletedAt = LocalDateTime.now();
+  }
+
+  public boolean isNotActivated() {
+    return this.statusType != StatusType.ACTIVE;
+  }
+
+  public void assertActivated() {
+    if (this.isNotActivated()) {
+      throw new AccessDeniedException("Access Denied: User is not activated.");
+    }
   }
 }

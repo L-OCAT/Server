@@ -1,9 +1,10 @@
 package com.locat.api.domain.geo.found.dto;
 
+import com.locat.api.domain.geo.base.utils.GeoUtils;
 import com.locat.api.domain.geo.found.dto.request.FoundItemRegisterRequest;
 import java.util.Set;
 import lombok.Builder;
-import org.springframework.data.geo.Point;
+import org.locationtech.jts.geom.Point;
 
 /**
  * 습득물 등록 DTO
@@ -31,7 +32,7 @@ public record FoundItemRegisterDto(
         .itemName(request.itemName())
         .description(request.description())
         .custodyLocation(request.custodyLocation())
-        .location(new Point(request.lng(), request.lat()))
+        .location(GeoUtils.toPoint(request.lat(), request.lng()))
         .build();
   }
 }

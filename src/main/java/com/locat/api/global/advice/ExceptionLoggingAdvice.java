@@ -1,14 +1,16 @@
 package com.locat.api.global.advice;
 
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
 
 @Aspect
 @Component
-@Slf4j(topic = "exceptionLogger")
+@Slf4j
 public class ExceptionLoggingAdvice {
 
   @AfterThrowing(pointcut = "execution(* com.locat.api..*.*(..))", throwing = "ex")
@@ -17,13 +19,23 @@ public class ExceptionLoggingAdvice {
   }
 
   private void doLogExceptionInternal(JoinPoint joinPoint, Throwable ex) {
-    StackTraceElement invokedMethod = ex.getStackTrace()[0];
+    Signature signature = joinPoint.getSignature();
     log.error(
-        "Resolved exception[{}] | Location: {} | Method: {}:{} | Message: {}",
+        "[Exception Log] Resolved exception[{}] | Message: {} | Method: {}:{} (Location: {})",
         ex.getClass().getSimpleName(),
-        joinPoint.getSignature().toShortString(),
-        invokedMethod.getMethodName(),
-        invokedMethod.getLineNumber(),
-        ex.getMessage());
+        ex.getMessage(),
+        signature.getDeclaringTypeName(),
+        signature.getName(),
+        signature.toShortString());
+    if (log.isDebugEnabled()) {
+      Optional.of(ex)
+          .map(Throwable::getCause)
+          .ifPresent(
+              cause ->
+                  log.debug(
+                      "> Caused by [{}] | Message: {}",
+                      cause.getClass().getSimpleName(),
+                      cause.getMessage()));
+    }
   }
 }

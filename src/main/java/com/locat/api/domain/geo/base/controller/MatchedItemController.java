@@ -1,6 +1,6 @@
 package com.locat.api.domain.geo.base.controller;
 
-import com.locat.api.domain.core.BaseResponse;
+import com.locat.api.domain.common.dto.BaseResponse;
 import com.locat.api.domain.geo.base.dto.GeoItemType;
 import com.locat.api.domain.geo.base.service.MatchedItemService;
 import lombok.RequiredArgsConstructor;
@@ -21,13 +21,13 @@ public class MatchedItemController {
 
   /** 매칭된 분실물 / 습득물 개수 조회 */
   @GetMapping("/{type}/{id}/matched-count")
-  public ResponseEntity<BaseResponse<Integer>> countMatchedLostItems(
+  public ResponseEntity<BaseResponse<Long>> countMatchedLostItems(
       @PathVariable final String type, @PathVariable final Long id) {
     final GeoItemType geoItemType = GeoItemType.fromValue(type);
-    final int itemCount =
+    final long itemCount =
         switch (geoItemType) {
-          case LOSTS -> this.matchedItemService.countMatchedLostItems(id);
-          case FOUNDS -> this.matchedItemService.countMatchedFoundItems(id);
+          case LOSTS -> this.matchedItemService.countMatchedFoundItems(id);
+          case FOUNDS -> this.matchedItemService.countMatchedLostItems(id);
         };
     return ResponseEntity.ok(BaseResponse.of(itemCount));
   }

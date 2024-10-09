@@ -34,15 +34,15 @@ public class TermsQRepositoryImpl implements TermsQRepository {
 
   @Override
   public List<Terms> findAllLatest() {
+    QTerms subTerms = new QTerms("subTerms");
     return this.jpaQueryFactory
         .selectFrom(qTerms)
         .where(
-            qTerms.version.in(
+            qTerms.version.eq(
                 this.jpaQueryFactory
-                    .select(qTerms.version.max())
-                    .from(qTerms)
-                    .groupBy(qTerms.type)))
-        .groupBy(qTerms.type)
+                    .select(subTerms.version.max())
+                    .from(subTerms)
+                    .where(subTerms.type.eq(qTerms.type))))
         .fetch();
   }
 }

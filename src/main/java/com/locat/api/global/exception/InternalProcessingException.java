@@ -9,8 +9,12 @@ import lombok.Getter;
 @Getter
 public class InternalProcessingException extends LocatApiException {
 
-  public InternalProcessingException(final String message) {
-    super(ApiExceptionType.INTERNAL_SERVER_ERROR);
-    log.error(message);
+  public InternalProcessingException(String message) {
+    this(message, null);
+  }
+
+  public InternalProcessingException(String message, Throwable cause) {
+    super(ApiExceptionType.INTERNAL_SERVER_ERROR, cause);
+    log.error(message, cause);
   }
 }

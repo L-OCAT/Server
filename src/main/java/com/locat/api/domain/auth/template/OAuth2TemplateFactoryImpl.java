@@ -4,6 +4,8 @@ import com.locat.api.domain.auth.entity.OAuth2ProviderToken;
 import com.locat.api.domain.auth.template.impl.AppleOAuth2Template;
 import com.locat.api.domain.auth.template.impl.KakaoOAuth2Template;
 import com.locat.api.domain.user.entity.OAuth2ProviderType;
+import com.locat.api.global.auth.AuthenticationException;
+import com.locat.api.global.exception.ApiExceptionType;
 import com.locat.api.infrastructure.redis.OAuth2ProviderTokenRepository;
 import java.util.Collections;
 import java.util.EnumMap;
@@ -48,10 +50,10 @@ public class OAuth2TemplateFactoryImpl implements OAuth2TemplateFactory {
    */
   @Override
   public OAuth2Template getById(final String oAuthId) {
-    return providerTokenRepository
+    return this.providerTokenRepository
         .findById(oAuthId)
         .map(OAuth2ProviderToken::getProviderType)
         .map(this::getByType)
-        .orElseThrow(() -> new IllegalArgumentException("OAuth2ProviderToken not found"));
+        .orElseThrow(() -> new AuthenticationException(ApiExceptionType.UNAUTHORIZED));
   }
 }

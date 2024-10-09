@@ -6,12 +6,12 @@ import com.locat.api.domain.auth.template.OAuth2TemplateFactory;
 import com.locat.api.domain.user.dto.OAuth2UserInfoDto;
 import com.locat.api.domain.user.dto.UserRegisterDto;
 import com.locat.api.domain.user.entity.User;
-import com.locat.api.domain.user.service.UserRegistrationService;
-import com.locat.api.domain.user.service.UserService;
-import com.locat.api.domain.user.service.UserSettingService;
-import com.locat.api.domain.user.service.UserTermsService;
+import com.locat.api.domain.user.enums.UserInfoValidationType;
+import com.locat.api.domain.user.service.*;
+import com.locat.api.global.exception.ApiExceptionType;
+import com.locat.api.global.exception.DuplicatedException;
+import com.locat.api.global.utils.ValidationUtils;
 import com.locat.api.infrastructure.redis.OAuth2ProviderTokenRepository;
-import java.util.concurrent.CompletableFuture;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,24 +24,30 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
   private final UserService userService;
   private final UserTermsService userTermsService;
   private final UserSettingService userSettingService;
+  private final UserValidationService userValidationService;
   private final OAuth2TemplateFactory oAuth2TemplateFactory;
   private final OAuth2ProviderTokenRepository providerTokenRepository;
 
   @Override
   public User register(UserRegisterDto userRegisterDto) {
+    this.assertUserNotExists(userRegisterDto.oAuthId());
+    this.userValidationService.validateNickname(userRegisterDto.nickname());
+
     OAuth2ProviderToken token = this.findTokenById(userRegisterDto.oAuthId());
     OAuth2UserInfoDto userInfo = this.fetchUserInfo(token);
-    final User user = User.fromOAuth(userInfo);
+    final User user = User.of(userRegisterDto.nickname(), userInfo); // TODO: 프로필 URL 선택 & 저장 로직 추가
 
-    CompletableFuture<Void> userFuture =
-        CompletableFuture.runAsync(() -> this.userService.save(user));
-    CompletableFuture<Void> userSettingFuture =
-        userFuture.thenRunAsync(() -> this.userSettingService.registerDefaultSettings(user));
-    CompletableFuture<Void> userTermsAgreementFuture =
-        userFuture.thenRunAsync(() -> this.userTermsService.register(user, userRegisterDto));
-
-    CompletableFuture.allOf(userFuture, userSettingFuture, userTermsAgreementFuture).join();
+    this.userService.save(user);
+    this.userSettingService.registerDefaultSettings(user);
+    this.userTermsService.register(user, userRegisterDto);
     return user;
+  }
+
+  private void assertUserNotExists(String oAuthId) {
+    ValidationUtils.throwIf(
+        oAuthId,
+        value -> this.userValidationService.isExists(value, UserInfoValidationType.OAUTH_ID),
+        () -> new DuplicatedException(ApiExceptionType.RESOURCE_ALREADY_EXISTS));
   }
 
   private OAuth2UserInfoDto fetchUserInfo(OAuth2ProviderToken token) {
