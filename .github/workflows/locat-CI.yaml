@@ -42,7 +42,7 @@ jobs:
 
       - name: Set properties for CI
         run: |
-          cat <<EOF > .src/test/resources/application-test.yaml
+          cat <<EOF > ./src/test/resources/application-test.yaml
           ${{ secrets.APPLICATION_INTEGRATION }}
           EOF
           cat <<EOF > ./src/main/resources/application-develop.yaml
