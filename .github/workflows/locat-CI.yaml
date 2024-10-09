@@ -55,13 +55,13 @@ jobs:
       - name: Build & Test with Gradle
         run: ./gradlew clean build --info
 
-#      - name: Notify Discord on Test Failure
-#        if: failure()
-#        uses: Ilshidur/action-discord@master
-#        env:
-#          DISCORD_WEBHOOK: ${{ secrets.WEBHOOK_URL }}
-#        with:
-#          args: "⚠️ Tests failed in the CI pipeline!"
+      - name: Notify Discord on Test Failure
+        if: failure()
+        uses: Ilshidur/action-discord@master
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.WEBHOOK_URL }}
+        with:
+          args: "⚠️ Tests failed in the CI pipeline! (Link: ${{ github.event.pull_request.html_url }})"
 
       - name: Comment on PR with Jacoco Report
         uses: madrapps/jacoco-report@v1.7.1
