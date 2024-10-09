@@ -46,7 +46,7 @@ jobs:
           EOF
 
       - name: Build & Test with Gradle
-        run: ./gradlew clean build -x test
+        run: ./gradlew clean build
         continue-on-error: true
 
       - name: Notify Discord on Test Failure
