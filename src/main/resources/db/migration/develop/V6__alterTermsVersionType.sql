@@ -27,6 +27,7 @@ VALUES ('GENERAL', 'FAQ 제목', 'FAQ 내용', 1, NOW(), 1, NOW()),
        ('MISCELLANEOUS', 'FAQ 제목', 'FAQ 내용', 1, NOW(), 1, NOW());
 
 -- 약관 초기 데이터 추가
+DELETE FROM terms WHERE 1;
 INSERT INTO terms (type, title, content, version, created_at, created_by, updated_at, updated_by)
 VALUES ('TERMS_OF_SERVICE', '서비스 이용약관', 'PLACEHOLDER', 1, NOW(), 1, NOW(), 1),
        ('PRIVACY_POLICY', '개인정보 처리방침', 'PLACEHOLDER', 1, NOW(), 1, NOW(), 1),
