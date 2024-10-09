@@ -5,6 +5,10 @@ on:
     branches: [ "main", "develop" ]
     types: [ opened, reopened, synchronize, ready_for_review ]
 
+concurrency:
+  group: locat-ci
+  cancel-in-progress: true
+
 jobs:
   LOCAT-CI:
     runs-on: ubuntu-latest

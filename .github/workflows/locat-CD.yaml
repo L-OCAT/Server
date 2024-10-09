@@ -4,6 +4,10 @@ on:
   push:
     branches: [ "main" ]
 
+concurrency:
+  group: locat-cd
+  cancel-in-progress: true
+
 jobs:
   LOCAT-CD:
     runs-on: ubuntu-latest
