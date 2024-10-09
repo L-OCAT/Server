@@ -7,7 +7,6 @@ import static org.mockito.Mockito.verify;
 
 import com.locat.api.global.mail.MailOperationFailedException;
 import com.locat.api.global.mail.MailServiceImpl;
-import java.util.function.Consumer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.util.ReflectionTestUtils;
 import software.amazon.awssdk.services.ses.SesClient;
+import software.amazon.awssdk.services.ses.model.SendEmailRequest;
 import software.amazon.awssdk.services.ses.model.SesException;
 
 class MailServiceTest {
@@ -44,7 +44,7 @@ class MailServiceTest {
     this.mailService.send(to, subject, content);
 
     // Then
-    verify(this.sesClient).sendEmail(any(Consumer.class));
+    verify(this.sesClient).sendEmail(any(SendEmailRequest.class));
   }
 
   @Test
@@ -54,7 +54,7 @@ class MailServiceTest {
     String to = "recipient@locat.kr";
     String subject = "제목";
     String content = "내용";
-    doThrow(SesException.class).when(this.sesClient).sendEmail(any(Consumer.class));
+    doThrow(SesException.class).when(this.sesClient).sendEmail(any(SendEmailRequest.class));
 
     // When & Then
     assertThatThrownBy(() -> this.mailService.send(to, subject, content))
