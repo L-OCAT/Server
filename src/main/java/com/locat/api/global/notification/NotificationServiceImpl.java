@@ -27,9 +27,13 @@ public class NotificationServiceImpl implements NotificationService {
   @Override
   public String broadcast(String subject, String message) {
     try {
-      return this.snsClient
-          .publish(request -> request.topicArn(this.topicArn).subject(subject).message(message))
-          .messageId();
+      PublishRequest request =
+          PublishRequest.builder()
+              .topicArn(this.topicArn)
+              .subject(subject)
+              .message(message)
+              .build();
+      return this.snsClient.publish(request).messageId();
     } catch (SnsException e) {
       throw new NotificationException(ApiExceptionType.FAIL_TO_SEND_PUSH_NOTIFICATION, e);
     }
@@ -47,15 +51,13 @@ public class NotificationServiceImpl implements NotificationService {
     userEndpoints.forEach(
         endpoint -> {
           try {
-            String publishedMessageId =
-                this.snsClient
-                    .publish(
-                        request ->
-                            request
-                                .targetArn(endpoint.getEndpointArn())
-                                .subject(subject)
-                                .message(message))
-                    .messageId();
+            PublishRequest request =
+                PublishRequest.builder()
+                    .targetArn(endpoint.getEndpointArn())
+                    .subject(subject)
+                    .message(message)
+                    .build();
+            String publishedMessageId = this.snsClient.publish(request).messageId();
             publishedMessageIds.add(publishedMessageId);
           } catch (SnsException e) {
             throw new NotificationException(ApiExceptionType.FAIL_TO_SEND_PUSH_NOTIFICATION, e);

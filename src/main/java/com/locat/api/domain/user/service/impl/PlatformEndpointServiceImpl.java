@@ -23,10 +23,12 @@ public class PlatformEndpointServiceImpl implements PlatformEndpointService {
   public String create(String token, PlatformType platformType) {
     String platformApplicationArn = this.snsProperties.getPlatformArn(platformType);
     try {
-      return this.snsClient
-          .createPlatformEndpoint(
-              request -> request.token(token).platformApplicationArn(platformApplicationArn))
-          .endpointArn();
+      CreatePlatformEndpointRequest request =
+          CreatePlatformEndpointRequest.builder()
+              .token(token)
+              .platformApplicationArn(platformApplicationArn)
+              .build();
+      return this.snsClient.createPlatformEndpoint(request).endpointArn();
     } catch (SnsException e) {
       throw new UserEndpointException(ApiExceptionType.FAIL_TO_CREATE_ENDPOINT);
     }
@@ -35,15 +37,14 @@ public class PlatformEndpointServiceImpl implements PlatformEndpointService {
   @Override
   public String subscribeToTopic(String endpointArn) {
     try {
-      return this.snsClient
-          .subscribe(
-              request ->
-                  request
-                      .protocol(DEFAULT_SNS_PROTOCOL)
-                      .endpoint(endpointArn)
-                      .returnSubscriptionArn(true)
-                      .topicArn(this.snsProperties.getTopicArn()))
-          .subscriptionArn();
+      SubscribeRequest subscribeRequest =
+          SubscribeRequest.builder()
+              .protocol(DEFAULT_SNS_PROTOCOL)
+              .endpoint(endpointArn)
+              .returnSubscriptionArn(true)
+              .topicArn(this.snsProperties.getTopicArn())
+              .build();
+      return this.snsClient.subscribe(subscribeRequest).subscriptionArn();
     } catch (SnsException e) {
       throw new UserEndpointException(ApiExceptionType.FAIL_TO_SUBSCRIBE_TOPIC);
     }
