@@ -1,6 +1,6 @@
 package com.locat.api.domain.auth.service;
 
-import com.locat.api.domain.user.entity.OAuth2ProviderType;
+import com.locat.api.domain.user.enums.OAuth2ProviderType;
 
 public interface OAuth2Service {
 

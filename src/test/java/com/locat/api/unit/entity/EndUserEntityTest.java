@@ -4,10 +4,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
 import com.locat.api.domain.user.dto.OAuth2UserInfoDto;
-import com.locat.api.domain.user.entity.OAuth2ProviderType;
-import com.locat.api.domain.user.entity.StatusType;
-import com.locat.api.domain.user.entity.User;
-import com.locat.api.domain.user.entity.UserType;
+import com.locat.api.domain.user.entity.EndUser;
+import com.locat.api.domain.user.enums.OAuth2ProviderType;
+import com.locat.api.domain.user.enums.StatusType;
+import com.locat.api.domain.user.enums.UserType;
 import com.locat.api.global.utils.HashingUtils;
 import com.locat.api.helper.TestDataFactory;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,7 +17,7 @@ import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.access.AccessDeniedException;
 
-class UserEntityTest {
+class EndUserEntityTest {
 
   private static final String EMAIL = "user@example.com";
   private static final String OAUTH_ID = "512351278326";
@@ -26,14 +26,14 @@ class UserEntityTest {
   private static final String PROFILE_IMAGE = "profile.jpg";
   private static final UserType USER_TYPE = UserType.ADMIN;
   private static final StatusType STATUS_TYPE = StatusType.ACTIVE;
-  @InjectMocks private User user;
+  @InjectMocks private EndUser user;
 
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this);
     // Given
     this.user =
-        User.builder()
+        EndUser.builder()
             .email(EMAIL)
             .emailHash(HashingUtils.hash(EMAIL))
             .oauthId(OAUTH_ID)
@@ -72,7 +72,7 @@ class UserEntityTest {
     OAuth2UserInfoDto mockUserInfoDto = TestDataFactory.create(OAUTH_ID, EMAIL);
 
     // When
-    User createdUser = User.of(NICKNAME, mockUserInfoDto);
+    EndUser createdUser = EndUser.of(NICKNAME, mockUserInfoDto);
 
     // Then
     assertThat(createdUser).isNotNull();
@@ -98,7 +98,7 @@ class UserEntityTest {
     String newNickname = "newUser";
 
     // When
-    User updatedUser = this.user.update(newEmail, newNickname);
+    EndUser updatedUser = this.user.update(newEmail, newNickname);
 
     // Then
     assertThat(updatedUser.getEmail()).isEqualTo(newEmail);
@@ -110,7 +110,7 @@ class UserEntityTest {
   @DisplayName("null이 주어지면, User 객체의 필드 값을 업데이트하지 않아야 한다.")
   void testUpdateWithNull() {
     // Given & When
-    User updatedUser = this.user.update(null, null);
+    EndUser updatedUser = this.user.update(null, null);
 
     // Then
     assertThat(updatedUser.getEmail()).isEqualTo(EMAIL);

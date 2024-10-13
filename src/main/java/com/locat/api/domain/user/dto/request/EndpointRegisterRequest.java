@@ -1,6 +1,6 @@
 package com.locat.api.domain.user.dto.request;
 
-import com.locat.api.domain.user.entity.PlatformType;
+import com.locat.api.domain.user.enums.PlatformType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 

@@ -3,7 +3,7 @@ package com.locat.api.domain.auth.service.impl;
 import com.locat.api.domain.auth.service.OAuth2Service;
 import com.locat.api.domain.auth.template.OAuth2Template;
 import com.locat.api.domain.auth.template.OAuth2TemplateFactory;
-import com.locat.api.domain.user.entity.OAuth2ProviderType;
+import com.locat.api.domain.user.enums.OAuth2ProviderType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

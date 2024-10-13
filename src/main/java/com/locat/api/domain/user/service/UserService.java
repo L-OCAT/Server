@@ -1,15 +1,12 @@
 package com.locat.api.domain.user.service;
 
 import com.locat.api.domain.user.dto.UserInfoUpdateDto;
+import com.locat.api.domain.user.entity.EndUser;
 import com.locat.api.domain.user.entity.User;
 import com.locat.api.global.exception.NoSuchEntityException;
 import java.util.Optional;
 
 public interface UserService {
-
-  User save(final User user);
-
-  User update(final Long id, final UserInfoUpdateDto infoUpdateDto);
 
   /**
    * 사용자 ID로 사용자 조회
@@ -18,9 +15,21 @@ public interface UserService {
    * @return 사용자 정보
    * @throws NoSuchEntityException 해당 ID의 사용자가 없을 경우
    */
-  User findById(final Long id);
+  Optional<User> findById(final Long id);
 
-  Optional<User> findByOAuthId(final String oAuthId);
+  /**
+   * 사용자 이메일 해시로 사용자 조회
+   *
+   * @param email 사용자 이메일(Not Hashed)
+   * @return 사용자 정보
+   */
+  Optional<User> findByEmail(final String email);
+
+  EndUser save(final EndUser user);
+
+  EndUser update(final Long id, final UserInfoUpdateDto infoUpdateDto);
+
+  Optional<EndUser> findEndUserByOAuthId(final String oAuthId);
 
   /**
    * 사용자 탈퇴

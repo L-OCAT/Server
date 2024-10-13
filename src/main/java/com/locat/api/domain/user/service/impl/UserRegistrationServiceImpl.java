@@ -5,7 +5,7 @@ import com.locat.api.domain.auth.template.OAuth2Template;
 import com.locat.api.domain.auth.template.OAuth2TemplateFactory;
 import com.locat.api.domain.user.dto.OAuth2UserInfoDto;
 import com.locat.api.domain.user.dto.UserRegisterDto;
-import com.locat.api.domain.user.entity.User;
+import com.locat.api.domain.user.entity.EndUser;
 import com.locat.api.domain.user.enums.UserInfoValidationType;
 import com.locat.api.domain.user.service.*;
 import com.locat.api.global.exception.ApiExceptionType;
@@ -29,13 +29,14 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
   private final OAuth2ProviderTokenRepository providerTokenRepository;
 
   @Override
-  public User register(UserRegisterDto userRegisterDto) {
+  public EndUser register(UserRegisterDto userRegisterDto) {
     this.assertUserNotExists(userRegisterDto.oAuthId());
     this.userValidationService.validateNickname(userRegisterDto.nickname());
 
     OAuth2ProviderToken token = this.findTokenById(userRegisterDto.oAuthId());
     OAuth2UserInfoDto userInfo = this.fetchUserInfo(token);
-    final User user = User.of(userRegisterDto.nickname(), userInfo); // TODO: 프로필 URL 선택 & 저장 로직 추가
+    final EndUser user =
+        EndUser.of(userRegisterDto.nickname(), userInfo); // TODO: 프로필 URL 선택 & 저장 로직 추가
 
     this.userService.save(user);
     this.userSettingService.registerDefaultSettings(user);

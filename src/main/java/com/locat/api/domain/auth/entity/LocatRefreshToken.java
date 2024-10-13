@@ -14,14 +14,20 @@ public class LocatRefreshToken {
 
   @Id private Long id;
 
+  private String email;
+
   private String refreshToken;
 
   @TimeToLive private Long refreshTokenExpiresIn;
 
   public static LocatRefreshToken from(
-      final Long id, final String refreshToken, final Duration refreshTokenExpiresIn) {
+      final Long id,
+      final String email,
+      final String refreshToken,
+      final Duration refreshTokenExpiresIn) {
     return LocatRefreshToken.builder()
         .id(id)
+        .email(email)
         .refreshToken(refreshToken)
         .refreshTokenExpiresIn(refreshTokenExpiresIn.toSeconds())
         .build();

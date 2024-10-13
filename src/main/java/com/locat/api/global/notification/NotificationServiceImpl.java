@@ -1,6 +1,6 @@
 package com.locat.api.global.notification;
 
-import com.locat.api.domain.user.entity.UserEndpoint;
+import com.locat.api.domain.user.entity.association.UserEndpoint;
 import com.locat.api.domain.user.service.UserEndpointService;
 import com.locat.api.global.exception.ApiExceptionType;
 import java.util.HashSet;

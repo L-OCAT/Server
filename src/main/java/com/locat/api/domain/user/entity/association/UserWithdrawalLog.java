@@ -1,4 +1,4 @@
-package com.locat.api.domain.user.entity;
+package com.locat.api.domain.user.entity.association;
 
 import com.locat.api.domain.common.entity.SecuredBaseEntity;
 import jakarta.persistence.*;

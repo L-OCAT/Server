@@ -5,7 +5,6 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import com.locat.api.domain.auth.entity.LocatRefreshToken;
 import com.locat.api.global.auth.LocatUserDetails;
 import com.locat.api.global.auth.LocatUserDetailsService;
-import com.locat.api.global.utils.TypeCaster;
 import com.locat.api.infrastructure.redis.LocatRefreshTokenRepository;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -17,6 +16,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.Base64;
 import java.util.Date;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,6 +30,7 @@ import org.springframework.util.StringUtils;
 public class JwtProviderImpl implements JwtProvider {
 
   public static final String AUTHORIZATION_KEY = "auth";
+  public static final String USER_NAME_KEY = "name";
   public static final String BEARER_PREFIX = "Bearer ";
   public static final Duration ACCESS_TOKEN_EXPIRATION = Duration.ofHours(2);
   public static final Duration REFRESH_TOKEN_EXPIRATION = Duration.ofDays(14);
@@ -55,11 +56,10 @@ public class JwtProviderImpl implements JwtProvider {
   }
 
   @Override
-  public LocatTokenDto create(final Long userId) {
-    final String userIdStr = userId.toString();
+  public LocatTokenDto create(final String userEmail) {
     LocatUserDetails userDetails =
-        (LocatUserDetails) this.userDetailsService.loadUserByUsername(userIdStr);
-    Authentication authentication = this.userDetailsService.createAuthentication(userIdStr);
+        (LocatUserDetails) this.userDetailsService.loadUserByUsername(userEmail);
+    Authentication authentication = this.userDetailsService.createAuthentication(userEmail);
 
     String accessToken = this.createAccessToken(authentication);
     String refreshToken = this.createRefreshToken(authentication.getName());
@@ -77,10 +77,10 @@ public class JwtProviderImpl implements JwtProvider {
   @Override
   public LocatTokenDto renew(String oldAccessToken, String refreshToken) {
     Claims claims = this.parse(oldAccessToken);
-    String userId = claims.getSubject();
+    String userEmail = claims.getSubject();
 
-    this.validateRefreshToken(userId, refreshToken);
-    Authentication authentication = this.userDetailsService.createAuthentication(userId);
+    this.validateRefreshToken(userEmail, refreshToken);
+    Authentication authentication = this.userDetailsService.createAuthentication(userEmail);
 
     String newAccessToken = this.createAccessToken(authentication);
     return LocatTokenDto.jwtBuilder()
@@ -90,9 +90,9 @@ public class JwtProviderImpl implements JwtProvider {
         .create();
   }
 
-  private void validateRefreshToken(String userId, String refreshToken) {
+  private void validateRefreshToken(String userEmail, String refreshToken) {
     this.refreshTokenRepository
-        .findById(TypeCaster.cast(userId, Long.class))
+        .findByEmail(userEmail)
         .ifPresentOrElse(
             token -> {
               if (token.isNotMatched(refreshToken)) {
@@ -131,9 +131,15 @@ public class JwtProviderImpl implements JwtProvider {
   }
 
   private String createAccessToken(Authentication authentication) {
+    LocatUserDetails userDetails = (LocatUserDetails) authentication.getPrincipal();
     return Jwts.builder()
         .setSubject(authentication.getName())
-        .claim(AUTHORIZATION_KEY, authentication.getAuthorities())
+        .setClaims(
+            Map.of(
+                AUTHORIZATION_KEY,
+                authentication.getAuthorities(),
+                USER_NAME_KEY,
+                userDetails.getUser().getNickname()))
         .setIssuer(this.serviceUrl)
         .setIssuedAt(Date.from(Instant.now(this.clock)))
         .setExpiration(getExpirationDate(ACCESS_TOKEN_EXPIRATION))
@@ -152,9 +158,12 @@ public class JwtProviderImpl implements JwtProvider {
   }
 
   private void saveRefreshToken(LocatUserDetails userDetails, String refreshToken) {
-    final long id = userDetails.getId();
     this.refreshTokenRepository.save(
-        LocatRefreshToken.from(id, refreshToken, REFRESH_TOKEN_EXPIRATION));
+        LocatRefreshToken.from(
+            userDetails.getId(),
+            userDetails.getUsername(),
+            refreshToken,
+            REFRESH_TOKEN_EXPIRATION));
   }
 
   private static Date getExpirationDate(Duration duration) {

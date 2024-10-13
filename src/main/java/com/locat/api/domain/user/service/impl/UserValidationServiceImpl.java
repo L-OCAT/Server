@@ -10,7 +10,7 @@ import com.locat.api.global.exception.ApiExceptionType;
 import com.locat.api.global.exception.DuplicatedException;
 import com.locat.api.global.exception.InvalidParameterException;
 import com.locat.api.global.utils.HashingUtils;
-import com.locat.api.infrastructure.repository.user.UserRepository;
+import com.locat.api.infrastructure.repository.user.EndUserRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserValidationServiceImpl implements UserValidationService {
 
-  private final UserRepository userRepository;
+  private final EndUserRepository userRepository;
 
   @Override
   @Transactional(readOnly = true)

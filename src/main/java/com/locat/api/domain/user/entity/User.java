@@ -1,122 +1,110 @@
 package com.locat.api.domain.user.entity;
 
 import com.locat.api.domain.common.entity.BaseEntity;
-import com.locat.api.domain.user.dto.OAuth2UserInfoDto;
+import com.locat.api.domain.user.enums.StatusType;
+import com.locat.api.domain.user.enums.UserType;
 import com.locat.api.global.converter.StringColumnEncryptionConverter;
-import com.locat.api.global.utils.HashingUtils;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.security.access.AccessDeniedException;
 
 @Entity
 @Getter
-@Builder
+@SuperBuilder
 @Table(
     name = "user",
     uniqueConstraints = {
       @UniqueConstraint(
-          name = "unique_oauth_id",
-          columnNames = {"oauth_id"}),
-      @UniqueConstraint(
           name = "unique_email",
-          columnNames = {"email"}),
+          columnNames = {"email_hash"}),
       @UniqueConstraint(
           name = "unique_nickname",
           columnNames = {"nickname"})
     })
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@Inheritance(strategy = InheritanceType.JOINED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User extends BaseEntity {
+public abstract class User extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id", columnDefinition = "int UNSIGNED not null")
-  private Long id;
-
-  @Column(name = "oauth_id", nullable = false, length = 100)
-  private String oauthId;
-
-  @Enumerated(EnumType.STRING)
-  @Column(name = "oauth_type")
-  private OAuth2ProviderType oauthType;
+  protected Long id;
 
   @Size(max = 100)
   @NotNull @Column(name = "email", nullable = false, length = 100)
   @Convert(converter = StringColumnEncryptionConverter.class)
-  private String email;
+  protected String email;
 
   @Size(max = 255)
   @NotNull @Column(name = "email_hash", nullable = false)
-  private String emailHash;
+  protected String emailHash;
 
   @Size(max = 100)
   @NotNull @Column(name = "nickname", nullable = false, length = 100)
-  private String nickname;
-
-  @Size(max = 255)
-  @Column(name = "profile_image")
-  private String profileImage;
+  protected String nickname;
 
   @Enumerated(EnumType.STRING)
   @Column(name = "user_type")
-  private UserType userType;
+  protected UserType userType;
 
   @Enumerated(EnumType.STRING)
   @Column(name = "status_type")
-  private StatusType statusType;
+  protected StatusType statusType;
 
   @LastModifiedBy
   @Column(name = "updated_by")
-  private Long updatedBy;
+  protected Long updatedBy;
 
   @Column(name = "deleted_at")
-  private LocalDateTime deletedAt;
+  protected LocalDateTime deletedAt;
 
-  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<UserSetting> userSettings = new ArrayList<>();
-
-  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<UserTermsAgreement> termsAgreements = new ArrayList<>();
-
-  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<UserEndpoint> userEndpoints = new ArrayList<>();
-
-  public static User of(String nickname, OAuth2UserInfoDto userInfo) {
-    return User.builder()
-        .nickname(nickname)
-        .email(userInfo.getEmail())
-        .emailHash(HashingUtils.hash(userInfo.getEmail()))
-        .oauthId(userInfo.getId())
-        .oauthType(userInfo.getProvider())
-        .userType(UserType.USER)
-        .statusType(StatusType.ACTIVE)
-        .build();
+  /**
+   * 조회된 사용자가 일반 사용자라면, {@code EndUser}로 변환합니다.
+   *
+   * @return {@code EndUser}
+   * @throws IllegalStateException 조회된 사용자가 일반 사용자가 아닌 경우
+   */
+  public EndUser asEndUser() {
+    if (!this.isAdmin() && this instanceof EndUser endUser) {
+      return endUser;
+    }
+    throw new IllegalStateException("User[" + this.id + "] is not EndUser!");
   }
 
-  public User update(String email, String nickname) {
-    if (email != null && emailHash != null) {
-      this.email = email;
-      this.emailHash = HashingUtils.hash(email);
+  /**
+   * 조회된 사용자가 관리자라면, {@code AdminUser}로 변환합니다.
+   *
+   * @return {@code AdminUser}
+   * @throws IllegalStateException 조회된 사용자가 관리자가 아닌 경우
+   */
+  public AdminUser asAdmin() {
+    if (this.isAdmin() && this instanceof AdminUser adminUser) {
+      return adminUser;
     }
-    if (nickname != null) {
-      this.nickname = nickname;
-    }
-    return this;
+    throw new IllegalStateException("User[" + this.id + "] is not Admin!");
+  }
+
+  /** 사용자를 삭제(Soft Delete)합니다. */
+  public void delete() {
+    this.statusType = StatusType.INACTIVE;
+    this.deletedAt = LocalDateTime.now();
   }
 
   public void updateStatus(StatusType statusType) {
     this.statusType = statusType;
   }
 
-  public void delete() {
-    this.statusType = StatusType.INACTIVE;
-    this.deletedAt = LocalDateTime.now();
+  public boolean isAdmin() {
+    return this.userType.isAdmin();
   }
 
   public boolean isNotActivated() {

@@ -3,7 +3,7 @@ package com.locat.api.domain.auth.template;
 import com.locat.api.domain.auth.entity.OAuth2ProviderToken;
 import com.locat.api.domain.auth.template.impl.AppleOAuth2Template;
 import com.locat.api.domain.auth.template.impl.KakaoOAuth2Template;
-import com.locat.api.domain.user.entity.OAuth2ProviderType;
+import com.locat.api.domain.user.enums.OAuth2ProviderType;
 import com.locat.api.global.auth.AuthenticationException;
 import com.locat.api.global.exception.ApiExceptionType;
 import com.locat.api.infrastructure.redis.OAuth2ProviderTokenRepository;

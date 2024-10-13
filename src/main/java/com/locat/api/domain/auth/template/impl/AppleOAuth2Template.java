@@ -8,7 +8,7 @@ import com.locat.api.domain.auth.template.OAuth2Properties;
 import com.locat.api.domain.auth.utils.AppleClientSecretProvider;
 import com.locat.api.domain.auth.utils.OpenIDConnectTokenUtils;
 import com.locat.api.domain.user.dto.OAuth2UserInfoDto;
-import com.locat.api.domain.user.entity.OAuth2ProviderType;
+import com.locat.api.domain.user.enums.OAuth2ProviderType;
 import com.locat.api.global.exception.InternalProcessingException;
 import com.locat.api.infrastructure.external.AppleOAuth2Client;
 import com.locat.api.infrastructure.redis.OAuth2ProviderTokenRepository;

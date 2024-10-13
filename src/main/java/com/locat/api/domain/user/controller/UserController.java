@@ -7,12 +7,15 @@ import com.locat.api.domain.user.dto.request.UserInfoUpdateRequest;
 import com.locat.api.domain.user.dto.request.UserRegisterRequest;
 import com.locat.api.domain.user.dto.request.UserWithDrawalRequest;
 import com.locat.api.domain.user.dto.response.UserInfoResponse;
+import com.locat.api.domain.user.entity.EndUser;
 import com.locat.api.domain.user.entity.User;
 import com.locat.api.domain.user.service.UserRegistrationService;
 import com.locat.api.domain.user.service.UserService;
 import com.locat.api.global.auth.LocatUserDetails;
 import com.locat.api.global.auth.jwt.JwtProvider;
 import com.locat.api.global.auth.jwt.LocatTokenDto;
+import com.locat.api.global.exception.ApiExceptionType;
+import com.locat.api.global.exception.NoSuchEntityException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -34,8 +37,8 @@ public class UserController {
   @PostMapping
   public ResponseEntity<BaseResponse<LocatTokenDto>> register(
       @RequestBody @Valid final UserRegisterRequest request) {
-    User user = this.userRegistrationService.register(UserRegisterDto.fromRequest(request));
-    LocatTokenDto locatTokenDto = this.jwtProvider.create(user.getId());
+    EndUser user = this.userRegistrationService.register(UserRegisterDto.fromRequest(request));
+    LocatTokenDto locatTokenDto = this.jwtProvider.create(user.getEmail());
     return ResponseEntity.status(HttpStatus.CREATED).body(BaseResponse.of(locatTokenDto));
   }
 
@@ -45,8 +48,12 @@ public class UserController {
   public ResponseEntity<BaseResponse<UserInfoResponse>> me(
       @AuthenticationPrincipal LocatUserDetails userDetails) {
     final long userId = userDetails.getId();
-    UserInfoResponse userInfoResponse =
-        UserInfoResponse.fromEntity(this.userService.findById(userId));
+    EndUser user =
+        this.userService
+            .findById(userId)
+            .map(User::asEndUser)
+            .orElseThrow(() -> new NoSuchEntityException(ApiExceptionType.NOT_FOUND_USER));
+    UserInfoResponse userInfoResponse = UserInfoResponse.fromEntity(user);
     return ResponseEntity.ok(BaseResponse.of(userInfoResponse));
   }
 
@@ -59,7 +66,7 @@ public class UserController {
     final long userId = userDetails.getId();
     UserInfoResponse userInfoResponse =
         UserInfoResponse.fromEntity(
-            this.userService.update(userId, UserInfoUpdateDto.from(request)));
+            this.userService.update(userId, UserInfoUpdateDto.from(request)).asEndUser());
     return ResponseEntity.ok(BaseResponse.of(userInfoResponse));
   }
 

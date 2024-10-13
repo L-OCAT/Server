@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.mockito.Mockito.*;
 
+import com.locat.api.domain.user.entity.User;
 import com.locat.api.global.auth.LocatUserDetails;
 import com.locat.api.global.auth.LocatUserDetailsService;
 import com.locat.api.global.auth.jwt.JwtProviderImpl;
@@ -54,15 +55,19 @@ class JwtProviderTest {
   @DisplayName("JWT 생성 테스트")
   void shouldCreateTokenDto() {
     // Given
-    String userIdStr = "1";
+    String userEmail = "test@locat.kr";
+    User user = mock(User.class);
     LocatUserDetails userDetails = mock(LocatUserDetails.class);
     Authentication authentication = mock(Authentication.class);
-    when(this.userDetailsService.loadUserByUsername(userIdStr)).thenReturn(userDetails);
-    when(this.userDetailsService.createAuthentication(userIdStr)).thenReturn(authentication);
-    when(authentication.getName()).thenReturn(userIdStr);
+    when(this.userDetailsService.loadUserByUsername(userEmail)).thenReturn(userDetails);
+    when(this.userDetailsService.createAuthentication(userEmail)).thenReturn(authentication);
+    when(authentication.getPrincipal()).thenReturn(userDetails);
+    when(userDetails.getUser()).thenReturn(user);
+    when(user.getNickname()).thenReturn("test");
+    when(authentication.getName()).thenReturn(userEmail);
 
     // When
-    LocatTokenDto tokenDto = this.jwtProvider.create(Long.parseLong(userIdStr));
+    LocatTokenDto tokenDto = this.jwtProvider.create(userEmail);
 
     // Then
     assertThat(tokenDto).isNotNull();

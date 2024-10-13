@@ -1,6 +1,6 @@
 package com.locat.api.infrastructure.aws;
 
-import com.locat.api.domain.user.entity.PlatformType;
+import com.locat.api.domain.user.enums.PlatformType;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.Map;

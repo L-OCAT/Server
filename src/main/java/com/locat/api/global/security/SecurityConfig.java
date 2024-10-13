@@ -36,7 +36,14 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 public class SecurityConfig {
 
   private static final List<String> DEFAULT_PERMIT_METHODS =
-      List.of(GET.name(), HEAD.name(), POST.name(), PUT.name(), PATCH.name(), DELETE.name());
+      List.of(
+          GET.name(),
+          HEAD.name(),
+          POST.name(),
+          PUT.name(),
+          PATCH.name(),
+          DELETE.name(),
+          OPTIONS.name());
 
   private final SecurityProperties securityProperties;
   private final JwtProvider jwtProvider;
@@ -92,9 +99,16 @@ public class SecurityConfig {
     return http.httpBasic(AbstractHttpConfigurer::disable)
         .csrf(AbstractHttpConfigurer::disable)
         .formLogin(AbstractHttpConfigurer::disable)
+        .cors(cors -> cors.configurationSource(this.corsConfigurationSource()))
         .sessionManagement(
             session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .authorizeHttpRequests(authorize -> authorize.anyRequest().access(this.localHostOnly))
+        .authorizeHttpRequests(
+            authorize ->
+                authorize
+                    .requestMatchers(CorsUtils::isPreFlightRequest)
+                    .permitAll()
+                    .anyRequest()
+                    .access(this.localHostOnly))
         .addFilterBefore(
             new JwtAuthenticationFilter(this.jwtProvider, this.userDetailsService),
             UsernamePasswordAuthenticationFilter.class)
@@ -111,7 +125,7 @@ public class SecurityConfig {
   @Bean
   protected CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration corsConfiguration = new CorsConfiguration();
-    corsConfiguration.addAllowedOriginPattern("*"); // update 필요
+    corsConfiguration.addAllowedOriginPattern("*");
     corsConfiguration.addAllowedHeader("*");
     corsConfiguration.setAllowedMethods(DEFAULT_PERMIT_METHODS);
     corsConfiguration.setAllowCredentials(true);
