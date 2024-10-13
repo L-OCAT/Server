@@ -1,7 +1,8 @@
-package com.locat.api.domain.user.entity;
+package com.locat.api.domain.user.entity.association;
 
 import com.locat.api.domain.common.entity.SecuredBaseEntity;
 import com.locat.api.domain.terms.entity.Terms;
+import com.locat.api.domain.user.entity.EndUser;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -26,13 +27,13 @@ public class UserTermsAgreement extends SecuredBaseEntity {
 
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(name = "user_id", nullable = false)
-  private User user;
+  private EndUser user;
 
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(name = "terms_id", nullable = false)
   private Terms terms;
 
-  public static UserTermsAgreement of(User user, Terms agreement) {
+  public static UserTermsAgreement of(EndUser user, Terms agreement) {
     return UserTermsAgreement.builder().user(user).terms(agreement).build();
   }
 }

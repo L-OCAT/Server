@@ -1,6 +1,6 @@
 package com.locat.api.global.auth.jwt;
 
-import com.locat.api.domain.user.entity.User;
+import com.locat.api.domain.user.entity.EndUser;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -8,13 +8,13 @@ import jakarta.servlet.http.HttpServletRequest;
 public interface JwtProvider {
 
   /**
-   * {@link User}의 ID를 기반으로 서버 토큰을 생성합니다.
+   * {@link EndUser}의 ID를 기반으로 서버 토큰을 생성합니다.
    *
-   * @param userId 사용자 ID
+   * @param userEmail 사용자 Email
    * @return 토큰 발급 응답 DTO
    * @apiNote 갱신 토큰은 캐시 저장소에 저장됩니다.
    */
-  LocatTokenDto create(Long userId);
+  LocatTokenDto create(String userEmail);
 
   /**
    * 액세스 토큰을 갱신합니다.

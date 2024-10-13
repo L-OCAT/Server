@@ -7,13 +7,13 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 public interface LocatUserDetailsService extends UserDetailsService {
 
   /**
-   * 사용자 ID로 인증 객체 {@link Authentication}을 생성합니다.
+   * 사용자 Email로 인증 객체 {@link Authentication}을 생성합니다.
    *
-   * @param userId 사용자 ID
+   * @param userEmail 사용자 Email
    * @return 인증 객체 {@link Authentication}
    * @throws NoSuchEntityException 해당 ID를 가지는 사용자가 없을 경우
    */
-  Authentication createAuthentication(String userId);
+  Authentication createAuthentication(String userEmail);
 
   /**
    * 인증 객체로부터 권한 정보를 추출합니다.

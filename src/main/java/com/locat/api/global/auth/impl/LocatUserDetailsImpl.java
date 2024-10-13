@@ -33,7 +33,7 @@ public record LocatUserDetailsImpl(User user) implements LocatUserDetails, Seria
 
   @Override
   public String getUsername() {
-    return this.user.getId().toString();
+    return this.user.getEmail();
   }
 
   @Override

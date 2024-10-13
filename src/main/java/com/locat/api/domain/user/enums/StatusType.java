@@ -1,4 +1,4 @@
-package com.locat.api.domain.user.entity;
+package com.locat.api.domain.user.enums;
 
 /** 사용자 상태 Enum */
 public enum StatusType {

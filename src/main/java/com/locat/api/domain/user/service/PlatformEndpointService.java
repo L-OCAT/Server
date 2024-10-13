@@ -1,6 +1,6 @@
 package com.locat.api.domain.user.service;
 
-import com.locat.api.domain.user.entity.PlatformType;
+import com.locat.api.domain.user.enums.PlatformType;
 
 public interface PlatformEndpointService {
 

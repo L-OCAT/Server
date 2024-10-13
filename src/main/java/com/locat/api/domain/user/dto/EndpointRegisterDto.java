@@ -1,7 +1,7 @@
 package com.locat.api.domain.user.dto;
 
 import com.locat.api.domain.user.dto.request.EndpointRegisterRequest;
-import com.locat.api.domain.user.entity.PlatformType;
+import com.locat.api.domain.user.enums.PlatformType;
 
 public record EndpointRegisterDto(String deviceToken, PlatformType platformType) {
 

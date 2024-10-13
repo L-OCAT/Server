@@ -1,7 +1,8 @@
-package com.locat.api.domain.user.entity;
+package com.locat.api.domain.user.entity.association;
 
 import com.locat.api.domain.common.entity.SecuredBaseEntity;
 import com.locat.api.domain.setting.AppSetting;
+import com.locat.api.domain.user.entity.EndUser;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -26,7 +27,7 @@ public class UserSetting extends SecuredBaseEntity {
 
   @ManyToOne(fetch = FetchType.EAGER, optional = false)
   @JoinColumn(name = "user_id", nullable = false, columnDefinition = "int UNSIGNED")
-  private User user;
+  private EndUser user;
 
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "setting_id", nullable = false, columnDefinition = "int UNSIGNED")
@@ -36,7 +37,7 @@ public class UserSetting extends SecuredBaseEntity {
   @Column(name = "value", nullable = false)
   private String value;
 
-  public static UserSetting ofDefault(User user, AppSetting appSetting) {
+  public static UserSetting ofDefault(EndUser user, AppSetting appSetting) {
     return UserSetting.builder()
         .user(user)
         .appSetting(appSetting)

@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 class LocatRefreshTokenTest {
 
   private static final Long ID = 1L;
+  private static final String EMAIL = "test@locat.kr";
   private static final String REFRESH_TOKEN = "sample_refresh_token";
   private static final Duration EXPIRATION_TIME = Duration.ofHours(1);
 
@@ -20,9 +21,10 @@ class LocatRefreshTokenTest {
   @BeforeEach
   void setUp() {
     // Given
-    locatRefreshToken =
+    this.locatRefreshToken =
         LocatRefreshToken.builder()
             .id(ID)
+            .email(EMAIL)
             .refreshToken(REFRESH_TOKEN)
             .refreshTokenExpiresIn(EXPIRATION_TIME.toSeconds())
             .build();
@@ -33,9 +35,10 @@ class LocatRefreshTokenTest {
   void testLocatRefreshTokenBuilder() {
     // When & Then
     assertAll(
-        () -> assertThat(locatRefreshToken).isNotNull(),
-        () -> assertThat(locatRefreshToken.getId()).isEqualTo(ID),
-        () -> assertThat(locatRefreshToken.getRefreshToken()).isEqualTo(REFRESH_TOKEN),
+        () -> assertThat(this.locatRefreshToken).isNotNull(),
+        () -> assertThat(this.locatRefreshToken.getId()).isEqualTo(ID),
+        () -> assertThat(this.locatRefreshToken.getEmail()).isEqualTo(EMAIL),
+        () -> assertThat(this.locatRefreshToken.getRefreshToken()).isEqualTo(REFRESH_TOKEN),
         () ->
             assertThat(locatRefreshToken.getRefreshTokenExpiresIn())
                 .isEqualTo(EXPIRATION_TIME.toSeconds()));
@@ -48,7 +51,7 @@ class LocatRefreshTokenTest {
     Duration expirationTime = Duration.ofHours(2);
 
     // When
-    LocatRefreshToken newToken = LocatRefreshToken.from(ID, REFRESH_TOKEN, expirationTime);
+    LocatRefreshToken newToken = LocatRefreshToken.from(ID, EMAIL, REFRESH_TOKEN, expirationTime);
 
     // Then
     assertAll(
@@ -65,7 +68,7 @@ class LocatRefreshTokenTest {
   void testIsNotMatched() {
     // When & Then
     assertAll(
-        () -> assertThat(locatRefreshToken.isNotMatched("wrong_token")).isTrue(),
-        () -> assertThat(locatRefreshToken.isNotMatched(REFRESH_TOKEN)).isFalse());
+        () -> assertThat(this.locatRefreshToken.isNotMatched("wrong_token")).isTrue(),
+        () -> assertThat(this.locatRefreshToken.isNotMatched(REFRESH_TOKEN)).isFalse());
   }
 }

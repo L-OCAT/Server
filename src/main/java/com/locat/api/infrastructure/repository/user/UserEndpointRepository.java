@@ -1,6 +1,6 @@
 package com.locat.api.infrastructure.repository.user;
 
-import com.locat.api.domain.user.entity.UserEndpoint;
+import com.locat.api.domain.user.entity.association.UserEndpoint;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 

@@ -8,6 +8,7 @@ import com.locat.api.domain.geo.lost.dto.LostItemRegisterDto;
 import com.locat.api.domain.geo.lost.dto.LostItemSearchDto;
 import com.locat.api.domain.geo.lost.entity.LostItem;
 import com.locat.api.domain.geo.lost.service.LostItemService;
+import com.locat.api.domain.user.entity.EndUser;
 import com.locat.api.domain.user.entity.User;
 import com.locat.api.domain.user.service.UserService;
 import com.locat.api.global.exception.ApiExceptionType;
@@ -55,7 +56,11 @@ public class LostItemServiceImpl implements LostItemService {
 
   @Override
   public Long register(Long userId, LostItemRegisterDto registerDto, MultipartFile lostItemImage) {
-    final User user = this.userService.findById(userId);
+    final EndUser user =
+        this.userService
+            .findById(userId)
+            .map(User::asEndUser)
+            .orElseThrow(() -> new NoSuchEntityException(ApiExceptionType.NOT_FOUND_USER));
     final Category category = this.fetchCategoryById(registerDto.categoryId());
     final Set<ColorCode> colorCodes =
         registerDto.colorIds().stream().map(this::fetchColorCodeById).collect(Collectors.toSet());

@@ -1,4 +1,4 @@
-package com.locat.api.domain.user.entity;
+package com.locat.api.domain.user.enums;
 
 import com.locat.api.global.exception.ApiExceptionType;
 import com.locat.api.global.notification.NotificationException;

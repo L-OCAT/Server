@@ -2,7 +2,7 @@ package com.locat.api.domain.auth.controller;
 
 import com.locat.api.domain.auth.service.OAuth2Service;
 import com.locat.api.domain.common.dto.BaseResponse;
-import com.locat.api.domain.user.entity.OAuth2ProviderType;
+import com.locat.api.domain.user.enums.OAuth2ProviderType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
