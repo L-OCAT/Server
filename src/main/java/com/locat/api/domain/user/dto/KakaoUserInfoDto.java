@@ -3,7 +3,7 @@ package com.locat.api.domain.user.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import com.locat.api.domain.user.entity.OAuth2ProviderType;
+import com.locat.api.domain.user.enums.OAuth2ProviderType;
 
 public record KakaoUserInfoDto(String id, @JsonProperty("kakao_account") KakaoAccount kakaoAccount)
     implements OAuth2UserInfoDto {

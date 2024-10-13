@@ -1,6 +1,6 @@
 package com.locat.api.domain.auth.dto.request;
 
-import com.locat.api.domain.user.entity.OAuth2ProviderType;
+import com.locat.api.domain.user.enums.OAuth2ProviderType;
 
 /**
  * OAuth2 인증 요청 DTO

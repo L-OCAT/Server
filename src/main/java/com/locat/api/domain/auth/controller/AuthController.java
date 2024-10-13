@@ -1,8 +1,11 @@
 package com.locat.api.domain.auth.controller;
 
+import com.locat.api.domain.auth.dto.AdminLoginDto;
+import com.locat.api.domain.auth.dto.request.AdminLoginRequest;
 import com.locat.api.domain.auth.dto.request.EmailVerificationRequest;
 import com.locat.api.domain.auth.dto.request.TokenIssueRequest;
 import com.locat.api.domain.auth.dto.request.TokenRenewRequest;
+import com.locat.api.domain.auth.dto.response.AdminLoginResponse;
 import com.locat.api.domain.auth.service.AuthService;
 import com.locat.api.domain.common.dto.BaseResponse;
 import com.locat.api.global.auth.jwt.LocatTokenDto;
@@ -26,6 +29,14 @@ public class AuthController {
       @RequestBody @Valid final TokenIssueRequest request) {
     LocatTokenDto locatTokenDto = this.authService.authenticate(request.oAuthId());
     return ResponseEntity.ok((BaseResponse.of(locatTokenDto)));
+  }
+
+  @PostMapping("/admin/token")
+  public ResponseEntity<BaseResponse<AdminLoginResponse>> authenticateAdmin(
+      @RequestBody @Valid final AdminLoginRequest request) {
+    AdminLoginResponse adminLoginResponse =
+        this.authService.authenticate(AdminLoginDto.fromRequest(request));
+    return ResponseEntity.ok((BaseResponse.of(adminLoginResponse)));
   }
 
   @PostMapping("/renew")

@@ -1,6 +1,6 @@
 package com.locat.api.domain.user.service.impl;
 
-import com.locat.api.domain.user.entity.UserWithdrawalLog;
+import com.locat.api.domain.user.entity.association.UserWithdrawalLog;
 import com.locat.api.domain.user.service.UserWithdrawalLogService;
 import com.locat.api.infrastructure.repository.user.UserWithdrawalLogRepository;
 import lombok.RequiredArgsConstructor;

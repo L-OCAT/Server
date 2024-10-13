@@ -1,6 +1,6 @@
 package com.locat.api.domain.user.dto;
 
-import com.locat.api.domain.user.entity.OAuth2ProviderType;
+import com.locat.api.domain.user.enums.OAuth2ProviderType;
 import java.util.List;
 
 public record KakaoUserTermsAgreementDto(String id, List<AgreementDetails> agreementDetails)

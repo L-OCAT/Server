@@ -8,6 +8,7 @@ import com.locat.api.domain.geo.found.dto.FoundItemRegisterDto;
 import com.locat.api.domain.geo.found.dto.FoundItemSearchDto;
 import com.locat.api.domain.geo.found.entity.FoundItem;
 import com.locat.api.domain.geo.found.service.FoundItemService;
+import com.locat.api.domain.user.entity.EndUser;
 import com.locat.api.domain.user.entity.User;
 import com.locat.api.domain.user.service.UserService;
 import com.locat.api.global.exception.ApiExceptionType;
@@ -56,7 +57,11 @@ public class FoundItemServiceImpl implements FoundItemService {
   @Override
   public Long register(
       Long userId, FoundItemRegisterDto registerDto, MultipartFile foundItemImage) {
-    User user = this.userService.findById(userId);
+    EndUser user =
+        this.userService
+            .findById(userId)
+            .map(User::asEndUser)
+            .orElseThrow(() -> new NoSuchEntityException(ApiExceptionType.NOT_FOUND_USER));
     final Category category = this.fetchCategoryById(registerDto.categoryId());
     final Set<ColorCode> colorCodes =
         registerDto.colorIds().stream().map(this::fetchColorCodeById).collect(Collectors.toSet());

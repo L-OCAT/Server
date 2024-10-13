@@ -1,7 +1,7 @@
 package com.locat.api.domain.user.service;
 
 import com.locat.api.domain.user.dto.EndpointRegisterDto;
-import com.locat.api.domain.user.entity.UserEndpoint;
+import com.locat.api.domain.user.entity.association.UserEndpoint;
 import java.util.List;
 
 public interface UserEndpointService {

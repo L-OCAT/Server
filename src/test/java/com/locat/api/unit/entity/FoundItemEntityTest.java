@@ -7,7 +7,7 @@ import com.locat.api.domain.geo.base.entity.ColorCode;
 import com.locat.api.domain.geo.found.dto.FoundItemRegisterDto;
 import com.locat.api.domain.geo.found.entity.FoundItem;
 import com.locat.api.domain.geo.found.entity.FoundItemStatusType;
-import com.locat.api.domain.user.entity.User;
+import com.locat.api.domain.user.entity.EndUser;
 import com.locat.api.helper.TestDataFactory;
 import java.util.HashSet;
 import java.util.Set;
@@ -32,7 +32,7 @@ class FoundItemEntityTest {
     MockitoAnnotations.openMocks(this);
 
     // Mock 데이터 준비
-    User mockUser = Mockito.mock(User.class);
+    EndUser mockUser = Mockito.mock(EndUser.class);
     Category mockCategory = Mockito.mock(Category.class);
     Set<ColorCode> mockColorCodes =
         new HashSet<>(Set.of(ColorCode.of("#FF0000", "Red"), ColorCode.of("#000000", "Black")));

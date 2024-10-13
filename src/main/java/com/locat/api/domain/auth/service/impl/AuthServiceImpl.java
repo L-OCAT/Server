@@ -1,5 +1,7 @@
 package com.locat.api.domain.auth.service.impl;
 
+import com.locat.api.domain.auth.dto.AdminLoginDto;
+import com.locat.api.domain.auth.dto.response.AdminLoginResponse;
 import com.locat.api.domain.auth.entity.VerificationCode;
 import com.locat.api.domain.auth.exception.EmailAlreadySentException;
 import com.locat.api.domain.auth.service.AuthService;
@@ -17,7 +19,9 @@ import com.locat.api.global.utils.RandomGenerator;
 import com.locat.api.infrastructure.redis.VerificationCodeRepository;
 import java.time.Duration;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -30,20 +34,38 @@ public class AuthServiceImpl implements AuthService {
   private final MailService mailService;
   private final JwtProvider jwtProvider;
   private final OAuth2Service oAuth2Service;
+  private final PasswordEncoder passwordEncoder;
   private final VerificationCodeRepository verificationCodeRepository;
 
   @Override
+  @Transactional(readOnly = true)
   public LocatTokenDto authenticate(String oAuthId) {
     this.validateAuthentication(oAuthId);
     return this.userService
-        .findByOAuthId(oAuthId)
+        .findEndUserByOAuthId(oAuthId)
         .map(this::issueTokenIfActivated)
         .orElseThrow(() -> new NoSuchEntityException(ApiExceptionType.NOT_FOUND_USER));
   }
 
+  @Override
+  @Transactional(readOnly = true)
+  public AdminLoginResponse authenticate(AdminLoginDto loginDto) {
+    return this.userService
+        .findByEmail(loginDto.userId())
+        .map(User::asAdmin)
+        .filter(user -> this.passwordEncoder.matches(loginDto.password(), user.getPassword()))
+        .map(
+            user -> {
+              final boolean isDeviceTrusted = !user.isTrustedDevice(loginDto.deviceId());
+              final LocatTokenDto token = this.issueTokenIfActivated(user);
+              return AdminLoginResponse.of(user.isPasswordExpired(), isDeviceTrusted, token);
+            })
+        .orElseThrow(() -> new AuthenticationException(ApiExceptionType.UNAUTHORIZED));
+  }
+
   private LocatTokenDto issueTokenIfActivated(User user) {
     user.assertActivated();
-    return this.jwtProvider.create(user.getId());
+    return this.jwtProvider.create(user.getEmail());
   }
 
   @Override

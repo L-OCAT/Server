@@ -4,7 +4,7 @@ import com.locat.api.domain.geo.base.entity.Category;
 import com.locat.api.domain.geo.base.entity.ColorCode;
 import com.locat.api.domain.geo.base.entity.GeoItem;
 import com.locat.api.domain.geo.lost.dto.LostItemRegisterDto;
-import com.locat.api.domain.user.entity.User;
+import com.locat.api.domain.user.entity.EndUser;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -51,7 +51,7 @@ public class LostItem extends GeoItem {
   private LostItemStatusType statusType;
 
   public static LostItem of(
-      User user,
+      EndUser user,
       Category category,
       Set<ColorCode> colorCodes,
       LostItemRegisterDto registerDto,

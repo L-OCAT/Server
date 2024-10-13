@@ -1,6 +1,6 @@
 package com.locat.api.domain.user.dto.response;
 
-import com.locat.api.domain.user.entity.User;
+import com.locat.api.domain.user.entity.EndUser;
 
 /**
  * 사용자 정보 조회 응답
@@ -19,7 +19,7 @@ public record UserInfoResponse(
     String profileImageUrl,
     String createdAt,
     String updatedAt) {
-  public static UserInfoResponse fromEntity(User user) {
+  public static UserInfoResponse fromEntity(EndUser user) {
     return new UserInfoResponse(
         user.getId(),
         user.getEmail(),

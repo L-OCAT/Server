@@ -1,7 +1,9 @@
-package com.locat.api.domain.user.entity;
+package com.locat.api.domain.user.entity.association;
 
 import com.locat.api.domain.common.entity.SecuredBaseEntity;
 import com.locat.api.domain.user.dto.EndpointRegisterDto;
+import com.locat.api.domain.user.entity.EndUser;
+import com.locat.api.domain.user.enums.PlatformType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,7 +22,7 @@ public class UserEndpoint extends SecuredBaseEntity {
 
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(name = "user_id", nullable = false)
-  private User user;
+  private EndUser user;
 
   @Column(name = "device_token", nullable = false)
   private String deviceToken;
@@ -36,7 +38,7 @@ public class UserEndpoint extends SecuredBaseEntity {
   private String subscriptionArn;
 
   public static UserEndpoint of(
-      User user, String endpointArn, String subscriptionArn, EndpointRegisterDto registerDto) {
+      EndUser user, String endpointArn, String subscriptionArn, EndpointRegisterDto registerDto) {
     return UserEndpoint.builder()
         .user(user)
         .deviceToken(registerDto.deviceToken())

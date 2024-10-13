@@ -2,7 +2,7 @@ package com.locat.api.domain.user.service.impl;
 
 import static com.locat.api.infrastructure.aws.AwsSnsProperties.DEFAULT_SNS_PROTOCOL;
 
-import com.locat.api.domain.user.entity.PlatformType;
+import com.locat.api.domain.user.enums.PlatformType;
 import com.locat.api.domain.user.exception.UserEndpointException;
 import com.locat.api.domain.user.service.PlatformEndpointService;
 import com.locat.api.global.exception.ApiExceptionType;
