@@ -13,7 +13,7 @@ public abstract class AbstractLocatSecurityFilter extends OncePerRequestFilter {
    * Public API로 간주되는 URI 목록 <br>
    * <li>{@code startWith} 메서드를 사용하여 URI를 비교합니다.
    */
-  protected static final List<String> PUBLIC_API_PATHS = List.of("/v1/auth");
+  protected static final List<String> PUBLIC_API_PATHS = List.of("/v1/auth", "/actuator");
 
   /**
    * OAuth2 리다이렉트 URI <br>

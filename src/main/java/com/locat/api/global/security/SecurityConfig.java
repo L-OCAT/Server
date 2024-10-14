@@ -7,13 +7,12 @@ import com.locat.api.global.auth.jwt.JwtProvider;
 import com.locat.api.global.security.filter.ActiveUserFilter;
 import com.locat.api.global.security.filter.JwtAuthenticationFilter;
 import com.locat.api.global.security.filter.PublicApiKeyFilter;
+import com.locat.api.global.security.manager.ActuatorAuthorizationManager;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.security.authorization.AuthorizationDecision;
-import org.springframework.security.authorization.AuthorizationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -22,7 +21,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -46,8 +44,8 @@ public class SecurityConfig {
           OPTIONS.name());
 
   private final SecurityProperties securityProperties;
-  private final JwtProvider jwtProvider;
   private final LocatUserDetailsService userDetailsService;
+  private final JwtProvider jwtProvider;
 
   /** 상용(또는 개발) 환경에서 사용하는 SecurityFilterChain을 설정합니다. */
   @Bean
@@ -68,7 +66,7 @@ public class SecurityConfig {
                     .requestMatchers("/v*/**")
                     .permitAll()
                     .requestMatchers("/actuator/**")
-                    .access(this.localHostOnly)
+                    .access(new ActuatorAuthorizationManager(this.securityProperties.getAdminUrl()))
                     .anyRequest()
                     .denyAll())
         .addFilterBefore(
@@ -87,7 +85,7 @@ public class SecurityConfig {
   }
 
   /**
-   * 개발 환경에서 사용하는 SecurityFilterChain을 설정합니다.
+   * 로컬 환경에서 사용하는 SecurityFilterChain을 설정합니다.
    *
    * <p>상용 SecurityFilterChain과 다른 점
    * <li>HTTPS를 요구하지 않음
@@ -108,7 +106,7 @@ public class SecurityConfig {
                     .requestMatchers(CorsUtils::isPreFlightRequest)
                     .permitAll()
                     .anyRequest()
-                    .access(this.localHostOnly))
+                    .permitAll())
         .addFilterBefore(
             new JwtAuthenticationFilter(this.jwtProvider, this.userDetailsService),
             UsernamePasswordAuthenticationFilter.class)
@@ -134,15 +132,4 @@ public class SecurityConfig {
     source.registerCorsConfiguration("/**", corsConfiguration);
     return source;
   }
-
-  /**
-   * localhost의 요청만 허용하는 AuthorizationManager <br>
-   * <li>Actuator, Prometheus 등 Monitoring을 위한 Endpoint에 대한 접근 제어 등에 사용
-   */
-  protected AuthorizationManager<RequestAuthorizationContext> localHostOnly =
-      (auth, context) -> {
-        String ip = context.getRequest().getRemoteAddr();
-        boolean isLocalHost = ip.equals("127.0.0.1") || ip.equals("0:0:0:0:0:0:0:1");
-        return new AuthorizationDecision(isLocalHost);
-      };
 }
