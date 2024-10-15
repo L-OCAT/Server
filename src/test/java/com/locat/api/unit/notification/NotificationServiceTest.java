@@ -6,9 +6,9 @@ import static org.mockito.Mockito.*;
 
 import com.locat.api.domain.user.entity.association.UserEndpoint;
 import com.locat.api.domain.user.service.UserEndpointService;
-import com.locat.api.global.exception.ApiExceptionType;
 import com.locat.api.global.notification.NotificationException;
 import com.locat.api.global.notification.NotificationServiceImpl;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,8 +22,6 @@ import software.amazon.awssdk.services.sns.SnsClient;
 import software.amazon.awssdk.services.sns.model.PublishRequest;
 import software.amazon.awssdk.services.sns.model.PublishResponse;
 import software.amazon.awssdk.services.sns.model.SnsException;
-
-import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
 class NotificationServiceTest {
@@ -46,12 +44,13 @@ class NotificationServiceTest {
 
   @BeforeEach
   void setUp() {
-    ReflectionTestUtils.setField(notificationService, "topicArn", TEST_TOPIC_ARN, String.class);
+    ReflectionTestUtils.setField(
+        this.notificationService, "topicArn", TEST_TOPIC_ARN, String.class);
   }
 
   @Test
   @DisplayName("PublishRequest가 올바르게 생성되고, SNS topic에 성공적으로 publish 해야 한다.")
-  void testBroadcastSucceed() {
+  void testBroadcastSuccess() {
     // Given
     final String messageId = "broadcast123";
     when(this.snsClient.publish(any(PublishRequest.class)))
@@ -85,52 +84,52 @@ class NotificationServiceTest {
         .hasMessageContaining(FAIL_TO_SEND_PUSH_NOTIFICATION.getMessage());
   }
 
-    @Test
-    @DisplayName("하나의 엔드포인트가 있을 때, 성공적으로 메시지를 전송해야 한다.")
-    void testSingleUnicastSucceed() {
-      //Given
-      when(this.userEndpoint1.getEndpointArn()).thenReturn(TEST_ENDPOINT_ARN1);
-      when(this.userEndpointService.findUserEndpointsByUserId(TEST_USER_ID))
-              .thenReturn(List.of(this.userEndpoint1));
+  @Test
+  @DisplayName("하나의 엔드포인트가 있을 때, 성공적으로 메시지를 전송해야 한다.")
+  void testSingleUnicastSuccess() {
+    // Given
+    when(this.userEndpoint1.getEndpointArn()).thenReturn(TEST_ENDPOINT_ARN1);
+    when(this.userEndpointService.findUserEndpointsByUserId(TEST_USER_ID))
+        .thenReturn(List.of(this.userEndpoint1));
 
-      final String expectedId = "unicastSingle1";
-      when(this.snsClient.publish(any(PublishRequest.class)))
-              .thenReturn(PublishResponse.builder().messageId(expectedId).build());
+    final String expectedId = "unicastSingle1";
+    when(this.snsClient.publish(any(PublishRequest.class)))
+        .thenReturn(PublishResponse.builder().messageId(expectedId).build());
 
-      ArgumentCaptor<PublishRequest> argumentCaptor = ArgumentCaptor.forClass(PublishRequest.class);
+    ArgumentCaptor<PublishRequest> argumentCaptor = ArgumentCaptor.forClass(PublishRequest.class);
 
-      //When
-      String result = this.notificationService.unicast(TEST_USER_ID, TEST_SUBJECT, TEST_MESSAGE);
+    // When
+    String result = this.notificationService.unicast(TEST_USER_ID, TEST_SUBJECT, TEST_MESSAGE);
 
-      //Then
-      assertThat(result).isEqualTo(expectedId);
-      verify(this.userEndpointService, times(1)).findUserEndpointsByUserId(TEST_USER_ID);
-      verify(this.snsClient, times(1)).publish(argumentCaptor.capture());
+    // Then
+    assertThat(result).isEqualTo(expectedId);
+    verify(this.userEndpointService, times(1)).findUserEndpointsByUserId(TEST_USER_ID);
+    verify(this.snsClient, times(1)).publish(argumentCaptor.capture());
 
-      verifyPublishRequest(argumentCaptor.getValue(), TEST_ENDPOINT_ARN1);
-    }
+    verifyPublishRequest(argumentCaptor.getValue(), TEST_ENDPOINT_ARN1);
+  }
 
   @Test
   @DisplayName("여러 엔드포인트가 있을 때, 각 엔드포인트에 성공적으로 메시지를 전송해야 한다.")
-  void testMultipleEndpointSucceed() {
-    //Given
+  void testMultipleEndpointSuccess() {
+    // Given
     when(this.userEndpoint1.getEndpointArn()).thenReturn(TEST_ENDPOINT_ARN1);
     when(this.userEndpoint2.getEndpointArn()).thenReturn(TEST_ENDPOINT_ARN2);
     when(this.userEndpointService.findUserEndpointsByUserId(TEST_USER_ID))
-            .thenReturn(List.of(this.userEndpoint1, this.userEndpoint2));
+        .thenReturn(List.of(this.userEndpoint1, this.userEndpoint2));
 
     final String expectedId1 = "unicastMulti1";
     final String expectedId2 = "unicastMulti2";
     when(this.snsClient.publish(any(PublishRequest.class)))
-            .thenReturn(PublishResponse.builder().messageId(expectedId1).build())
-            .thenReturn(PublishResponse.builder().messageId(expectedId2).build());
+        .thenReturn(PublishResponse.builder().messageId(expectedId1).build())
+        .thenReturn(PublishResponse.builder().messageId(expectedId2).build());
 
     ArgumentCaptor<PublishRequest> argumentCaptor = ArgumentCaptor.forClass(PublishRequest.class);
 
-    //When
+    // When
     String result = this.notificationService.unicast(TEST_USER_ID, TEST_SUBJECT, TEST_MESSAGE);
 
-    //Then
+    // Then
     assertThat(result).contains(expectedId1, expectedId2);
     verify(this.userEndpointService, times(1)).findUserEndpointsByUserId(TEST_USER_ID);
     verify(this.snsClient, times(2)).publish(argumentCaptor.capture());
@@ -144,31 +143,33 @@ class NotificationServiceTest {
   @Test
   @DisplayName("UserEndpoint가 존재하지 않는다면, 예외를 발생시켜야 한다.")
   void testUserEndpointNotExists() {
-    //Given
-    when(this.userEndpointService.findUserEndpointsByUserId(TEST_USER_ID))
-            .thenReturn(List.of());
+    // Given
+    when(this.userEndpointService.findUserEndpointsByUserId(TEST_USER_ID)).thenReturn(List.of());
 
-    //When & Then
-    assertThatThrownBy(() -> this.notificationService.unicast(TEST_USER_ID, TEST_SUBJECT, TEST_MESSAGE))
-            .isInstanceOf(NotificationException.class)
-            .hasMessageContaining(NOT_FOUND_ENDPOINT.getMessage());
+    // When & Then
+    assertThatThrownBy(
+            () -> this.notificationService.unicast(TEST_USER_ID, TEST_SUBJECT, TEST_MESSAGE))
+        .isInstanceOf(NotificationException.class)
+        .hasMessageContaining(NOT_FOUND_ENDPOINT.getMessage());
   }
 
   @Test
   @DisplayName("SnsException이 발생하면, unicast에 실패해야 한다.")
   void testUnicastFail() {
-    //Given
+    // Given
     when(this.userEndpoint1.getEndpointArn()).thenReturn(TEST_ENDPOINT_ARN1);
     when(this.userEndpointService.findUserEndpointsByUserId(TEST_USER_ID))
-            .thenReturn(List.of(this.userEndpoint1));
+        .thenReturn(List.of(this.userEndpoint1));
     when(this.snsClient.publish(any(PublishRequest.class)))
-            .thenThrow(SnsException.builder().build());
+        .thenThrow(SnsException.builder().build());
 
-    //When & Then
-    assertThatThrownBy(() -> this.notificationService.unicast(TEST_USER_ID, TEST_SUBJECT, TEST_MESSAGE))
-            .isInstanceOf(NotificationException.class)
-            .hasMessageContaining(FAIL_TO_SEND_PUSH_NOTIFICATION.getMessage());
+    // When & Then
+    assertThatThrownBy(
+            () -> this.notificationService.unicast(TEST_USER_ID, TEST_SUBJECT, TEST_MESSAGE))
+        .isInstanceOf(NotificationException.class)
+        .hasMessageContaining(FAIL_TO_SEND_PUSH_NOTIFICATION.getMessage());
   }
+
   private void verifyPublishRequest(PublishRequest request, String targetArn) {
     assertThat(request.targetArn()).isEqualTo(targetArn);
     assertThat(request.subject()).isEqualTo(TEST_SUBJECT);
