@@ -19,6 +19,6 @@ public class SecurityProperties {
         Objects.requireNonNull(environment.getProperty("service.url.api"), errorMessage);
     this.adminUrl =
         Objects.requireNonNull(environment.getProperty("service.url.admin"), errorMessage);
-    this.apiKey = Objects.requireNonNull(environment.getProperty("service.api.key"), errorMessage);
+    this.apiKey = Objects.requireNonNull(environment.getProperty("service.api-key"), errorMessage);
   }
 }
