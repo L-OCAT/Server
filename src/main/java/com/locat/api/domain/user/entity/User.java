@@ -68,26 +68,26 @@ public abstract class User extends BaseEntity {
   protected LocalDateTime deletedAt;
 
   /**
-   * 조회된 사용자가 일반 사용자라면, {@code EndUser}로 변환합니다.
+   * 조회된 사용자를, {@code EndUser} 인스턴스로 변환합니다.
    *
    * @return {@code EndUser}
    * @throws IllegalStateException 조회된 사용자가 일반 사용자가 아닌 경우
    */
   public EndUser asEndUser() {
-    if (!this.isAdmin() && this instanceof EndUser endUser) {
+    if (this instanceof EndUser endUser) {
       return endUser;
     }
     throw new IllegalStateException("User[" + this.id + "] is not EndUser!");
   }
 
   /**
-   * 조회된 사용자가 관리자라면, {@code AdminUser}로 변환합니다.
+   * 조회된 사용자가 관리자라면, {@code AdminUser} 인스턴스로 변환합니다.
    *
    * @return {@code AdminUser}
    * @throws IllegalStateException 조회된 사용자가 관리자가 아닌 경우
    */
   public AdminUser asAdmin() {
-    if (this.isAdmin() && this instanceof AdminUser adminUser) {
+    if (this instanceof AdminUser adminUser) {
       return adminUser;
     }
     throw new IllegalStateException("User[" + this.id + "] is not Admin!");
@@ -101,6 +101,10 @@ public abstract class User extends BaseEntity {
 
   public void updateStatus(StatusType statusType) {
     this.statusType = statusType;
+  }
+
+  public boolean isSuperAdmin() {
+    return this.userType.isSuperAdmin();
   }
 
   public boolean isAdmin() {

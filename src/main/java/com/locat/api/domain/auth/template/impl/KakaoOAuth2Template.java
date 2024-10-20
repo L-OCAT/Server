@@ -1,10 +1,10 @@
 package com.locat.api.domain.auth.template.impl;
 
-import com.locat.api.domain.auth.dto.OAuth2ProviderTokenDto;
+import com.locat.api.domain.auth.dto.OAuth2UserInfoDto;
+import com.locat.api.domain.auth.dto.token.OAuth2ProviderTokenDto;
 import com.locat.api.domain.auth.entity.OAuth2ProviderToken;
 import com.locat.api.domain.auth.template.AbstractOAuth2Template;
 import com.locat.api.domain.auth.template.OAuth2Properties;
-import com.locat.api.domain.user.dto.OAuth2UserInfoDto;
 import com.locat.api.domain.user.enums.OAuth2ProviderType;
 import com.locat.api.infrastructure.external.KakaoOAuth2Client;
 import com.locat.api.infrastructure.external.KakaoUserClient;

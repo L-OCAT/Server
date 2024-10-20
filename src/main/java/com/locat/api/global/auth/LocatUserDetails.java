@@ -8,4 +8,8 @@ public interface LocatUserDetails extends UserDetails {
   User getUser();
 
   Long getId();
+
+  boolean isSuperAdmin();
+
+  boolean isAdmin();
 }

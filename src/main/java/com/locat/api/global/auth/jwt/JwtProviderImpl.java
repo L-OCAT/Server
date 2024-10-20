@@ -134,7 +134,7 @@ public class JwtProviderImpl implements JwtProvider {
     LocatUserDetails userDetails = (LocatUserDetails) authentication.getPrincipal();
     return Jwts.builder()
         .setSubject(authentication.getName())
-        .setClaims(
+        .addClaims(
             Map.of(
                 AUTHORIZATION_KEY,
                 authentication.getAuthorities(),

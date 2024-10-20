@@ -16,6 +16,8 @@ import com.locat.api.infrastructure.repository.user.EndUserRepository;
 import com.locat.api.infrastructure.repository.user.UserRepository;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +31,11 @@ public class UserServiceImpl implements UserService {
   private final OAuth2TemplateFactory oAuth2TemplateFactory;
   private final UserValidationService userValidationService;
   private final UserWithdrawalLogService userWithdrawalLogService;
+
+  @Override
+  public Page<EndUser> findAll(Pageable pageable) {
+    return this.endUserRepository.findAll(pageable);
+  }
 
   @Override
   @Transactional(readOnly = true)

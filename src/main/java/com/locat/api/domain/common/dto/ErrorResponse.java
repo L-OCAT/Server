@@ -30,6 +30,10 @@ public record ErrorResponse(String message, ErrorData data) {
         ErrorData.of("Authentication method is NOT provided or Invalid.", UNAUTHORIZED.getCode()));
   }
 
+  public static ErrorResponse badRequest() {
+    return badRequest("Bad Request");
+  }
+
   public static ErrorResponse badRequest(String message) {
     return new ErrorResponse(
         BAD_REQUEST.getMessage(), ErrorData.of(message, BAD_REQUEST.getCode()));

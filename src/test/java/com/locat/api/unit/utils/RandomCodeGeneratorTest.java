@@ -3,6 +3,7 @@ package com.locat.api.unit.utils;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import com.locat.api.global.utils.RandomGenerator;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class RandomCodeGeneratorTest {
@@ -10,6 +11,7 @@ class RandomCodeGeneratorTest {
   private static final String CHARACTERS_FOR_CODE = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
   @Test
+  @DisplayName("주어진 길이의 랜덤 코드를 생성한다.")
   void testGenerateCode() {
     // Given
     final int requiredLength = 6;
@@ -23,6 +25,7 @@ class RandomCodeGeneratorTest {
   }
 
   @Test
+  @DisplayName("주어진 길이의 랜덤 바이트 배열을 생성한다.")
   void testGenerateBytes() {
     // Given
     final int requiredLength = 16;

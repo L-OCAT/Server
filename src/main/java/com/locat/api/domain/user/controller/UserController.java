@@ -6,11 +6,13 @@ import com.locat.api.domain.user.dto.UserRegisterDto;
 import com.locat.api.domain.user.dto.request.UserInfoUpdateRequest;
 import com.locat.api.domain.user.dto.request.UserRegisterRequest;
 import com.locat.api.domain.user.dto.request.UserWithDrawalRequest;
+import com.locat.api.domain.user.dto.response.AdminUserResponse;
 import com.locat.api.domain.user.dto.response.UserInfoResponse;
 import com.locat.api.domain.user.entity.EndUser;
 import com.locat.api.domain.user.entity.User;
 import com.locat.api.domain.user.service.UserRegistrationService;
 import com.locat.api.domain.user.service.UserService;
+import com.locat.api.global.annotation.AdminApi;
 import com.locat.api.global.auth.LocatUserDetails;
 import com.locat.api.global.auth.jwt.JwtProvider;
 import com.locat.api.global.auth.jwt.LocatTokenDto;
@@ -18,6 +20,8 @@ import com.locat.api.global.exception.ApiExceptionType;
 import com.locat.api.global.exception.NoSuchEntityException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -79,5 +83,12 @@ public class UserController {
     final long userId = userDetails.getId();
     this.userService.delete(userId, request.reason());
     return ResponseEntity.noContent().build();
+  }
+
+  @AdminApi
+  @GetMapping
+  public ResponseEntity<BaseResponse<Page<AdminUserResponse>>> findAllByAdmin(Pageable pageable) {
+    return ResponseEntity.ok(
+        BaseResponse.of(this.userService.findAll(pageable).map(AdminUserResponse::fromEntity)));
   }
 }

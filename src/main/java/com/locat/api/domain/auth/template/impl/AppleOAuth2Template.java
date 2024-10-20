@@ -1,13 +1,13 @@
 package com.locat.api.domain.auth.template.impl;
 
-import com.locat.api.domain.auth.dto.OAuth2ProviderJsonWebKey;
-import com.locat.api.domain.auth.dto.OAuth2ProviderTokenDto;
+import com.locat.api.domain.auth.dto.OAuth2UserInfoDto;
+import com.locat.api.domain.auth.dto.token.OAuth2ProviderJsonWebKey;
+import com.locat.api.domain.auth.dto.token.OAuth2ProviderTokenDto;
 import com.locat.api.domain.auth.entity.OAuth2ProviderToken;
 import com.locat.api.domain.auth.template.AbstractOAuth2Template;
 import com.locat.api.domain.auth.template.OAuth2Properties;
 import com.locat.api.domain.auth.utils.AppleClientSecretProvider;
 import com.locat.api.domain.auth.utils.OpenIDConnectTokenUtils;
-import com.locat.api.domain.user.dto.OAuth2UserInfoDto;
 import com.locat.api.domain.user.enums.OAuth2ProviderType;
 import com.locat.api.global.exception.InternalProcessingException;
 import com.locat.api.infrastructure.external.AppleOAuth2Client;

@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -25,6 +26,11 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(Exception.class)
   protected ResponseEntity<ErrorResponse> handleAllUncaughtException(Exception ignored) {
     return ResponseEntity.internalServerError().body(ErrorResponse.internalServerError());
+  }
+
+  @ExceptionHandler({IllegalArgumentException.class, HttpMessageNotReadableException.class})
+  protected ResponseEntity<ErrorResponse> handleBadRequestException(Exception ex) {
+    return ResponseEntity.badRequest().body(ErrorResponse.badRequest(ex.getMessage()));
   }
 
   @ExceptionHandler(LocatApiException.class)

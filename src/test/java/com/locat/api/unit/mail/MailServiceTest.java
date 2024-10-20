@@ -23,7 +23,6 @@ class MailServiceTest {
   private static final String TEST_FROM_EMAIL = "test@locat.kr";
 
   @InjectMocks private MailServiceImpl mailService;
-
   @Mock private SesClient sesClient;
 
   @BeforeEach

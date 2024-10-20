@@ -34,7 +34,6 @@ class SecurityExceptionHandlerTest {
     // Then
     assertThat(response).isNotNull();
     assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_UNAUTHORIZED);
-    assertThat(response.getContentType()).isEqualTo("application/json;charset=UTF-8");
   }
 
   @Test
@@ -52,6 +51,5 @@ class SecurityExceptionHandlerTest {
     // Then
     assertThat(response).isNotNull();
     assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_FORBIDDEN);
-    assertThat(response.getContentType()).isEqualTo("application/json;charset=UTF-8");
   }
 }

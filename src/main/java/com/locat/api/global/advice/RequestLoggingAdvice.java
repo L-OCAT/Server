@@ -11,7 +11,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 @Aspect
 @Component
-@Slf4j(topic = "requestLogger")
+@Slf4j
 public class RequestLoggingAdvice {
 
   @Before("execution(* com..*.controller.*.*(..))")

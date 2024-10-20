@@ -1,7 +1,7 @@
-package com.locat.api.domain.auth.dto;
+package com.locat.api.domain.auth.dto.token;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.locat.api.domain.user.dto.OAuth2UserInfoDto;
+import com.locat.api.domain.auth.dto.OAuth2UserInfoDto;
 import com.locat.api.domain.user.enums.OAuth2ProviderType;
 import io.jsonwebtoken.Claims;
 import lombok.Builder;
