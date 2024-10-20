@@ -32,6 +32,16 @@ public record LocatUserDetailsImpl(User user) implements LocatUserDetails, Seria
   }
 
   @Override
+  public boolean isSuperAdmin() {
+    return this.user.isSuperAdmin();
+  }
+
+  @Override
+  public boolean isAdmin() {
+    return this.user.isAdmin();
+  }
+
+  @Override
   public String getUsername() {
     return this.user.getEmail();
   }

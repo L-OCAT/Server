@@ -1,7 +1,7 @@
 package com.locat.api.infrastructure.external;
 
-import com.locat.api.domain.auth.dto.AppleOAuth2TokenDto;
-import com.locat.api.domain.auth.dto.OAuth2ProviderJsonWebKey;
+import com.locat.api.domain.auth.dto.token.AppleOAuth2TokenDto;
+import com.locat.api.domain.auth.dto.token.OAuth2ProviderJsonWebKey;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;

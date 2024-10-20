@@ -1,7 +1,7 @@
 package com.locat.api.helper;
 
+import com.locat.api.domain.auth.dto.KakaoUserInfoDto;
 import com.locat.api.domain.geo.found.dto.FoundItemRegisterDto;
-import com.locat.api.domain.user.dto.KakaoUserInfoDto;
 
 public final class TestDataFactory {
 

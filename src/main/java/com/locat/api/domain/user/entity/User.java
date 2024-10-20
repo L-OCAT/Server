@@ -87,7 +87,7 @@ public abstract class User extends BaseEntity {
    * @throws IllegalStateException 조회된 사용자가 관리자가 아닌 경우
    */
   public AdminUser asAdmin() {
-    if (this.isAdmin() && this instanceof AdminUser adminUser) {
+    if (this instanceof AdminUser adminUser) {
       return adminUser;
     }
     throw new IllegalStateException("User[" + this.id + "] is not Admin!");
@@ -101,6 +101,10 @@ public abstract class User extends BaseEntity {
 
   public void updateStatus(StatusType statusType) {
     this.statusType = statusType;
+  }
+
+  public boolean isSuperAdmin() {
+    return this.userType.isSuperAdmin();
   }
 
   public boolean isAdmin() {

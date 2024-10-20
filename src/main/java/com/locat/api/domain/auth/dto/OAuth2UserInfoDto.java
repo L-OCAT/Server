@@ -1,4 +1,4 @@
-package com.locat.api.domain.user.dto;
+package com.locat.api.domain.auth.dto;
 
 import com.locat.api.domain.user.enums.OAuth2ProviderType;
 

@@ -1,6 +1,6 @@
 package com.locat.api.domain.auth.utils;
 
-import com.locat.api.domain.auth.dto.AppleIdToken;
+import com.locat.api.domain.auth.dto.token.AppleIdToken;
 import com.locat.api.global.auth.AuthenticationException;
 import com.locat.api.global.auth.jwt.TokenException;
 import com.locat.api.global.exception.ApiExceptionType;

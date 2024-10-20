@@ -1,4 +1,4 @@
-package com.locat.api.domain.auth.dto;
+package com.locat.api.domain.auth.dto.token;
 
 /**
  * OAuth2 Provider JWT Web Key

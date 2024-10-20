@@ -5,8 +5,12 @@ import com.locat.api.domain.user.entity.EndUser;
 import com.locat.api.domain.user.entity.User;
 import com.locat.api.global.exception.NoSuchEntityException;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface UserService {
+
+  Page<EndUser> findAll(Pageable pageable);
 
   /**
    * 사용자 ID로 사용자 조회

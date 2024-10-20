@@ -1,6 +1,6 @@
 package com.locat.api.domain.user.entity;
 
-import com.locat.api.domain.user.dto.OAuth2UserInfoDto;
+import com.locat.api.domain.auth.dto.OAuth2UserInfoDto;
 import com.locat.api.domain.user.entity.association.UserEndpoint;
 import com.locat.api.domain.user.entity.association.UserSetting;
 import com.locat.api.domain.user.entity.association.UserTermsAgreement;

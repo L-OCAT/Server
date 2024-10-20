@@ -1,4 +1,4 @@
-package com.locat.api.domain.auth.dto;
+package com.locat.api.domain.auth.dto.token;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
