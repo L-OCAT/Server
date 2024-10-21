@@ -1,12 +1,12 @@
 package com.locat.api.domain.user.controller;
 
+import com.locat.api.domain.admin.dto.response.AdminUserInfoResponse;
 import com.locat.api.domain.common.dto.BaseResponse;
 import com.locat.api.domain.user.dto.UserInfoUpdateDto;
 import com.locat.api.domain.user.dto.UserRegisterDto;
 import com.locat.api.domain.user.dto.request.UserInfoUpdateRequest;
 import com.locat.api.domain.user.dto.request.UserRegisterRequest;
 import com.locat.api.domain.user.dto.request.UserWithDrawalRequest;
-import com.locat.api.domain.user.dto.response.AdminUserResponse;
 import com.locat.api.domain.user.dto.response.UserInfoResponse;
 import com.locat.api.domain.user.entity.EndUser;
 import com.locat.api.domain.user.entity.User;
@@ -87,8 +87,9 @@ public class UserController {
 
   @AdminApi
   @GetMapping
-  public ResponseEntity<BaseResponse<Page<AdminUserResponse>>> findAllByAdmin(Pageable pageable) {
+  public ResponseEntity<BaseResponse<Page<AdminUserInfoResponse>>> findAllByAdmin(
+      Pageable pageable) {
     return ResponseEntity.ok(
-        BaseResponse.of(this.userService.findAll(pageable).map(AdminUserResponse::fromEntity)));
+        BaseResponse.of(this.userService.findAll(pageable).map(AdminUserInfoResponse::fromEntity)));
   }
 }

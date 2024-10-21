@@ -111,6 +111,10 @@ public abstract class User extends BaseEntity {
     return this.userType.isAdmin();
   }
 
+  public String getDeletedAt() {
+    return this.deletedAt != null ? this.deletedAt.toString() : null;
+  }
+
   public boolean isNotActivated() {
     return this.statusType != StatusType.ACTIVE;
   }

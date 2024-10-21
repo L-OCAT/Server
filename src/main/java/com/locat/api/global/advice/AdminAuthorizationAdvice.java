@@ -22,12 +22,12 @@ public class AdminAuthorizationAdvice {
   @Before("@within(adminApi) || @annotation(adminApi)")
   public void enforceAdminAuthorization(JoinPoint joinPoint, AdminApi adminApi) {
     boolean onlySuperAdmin = this.getEffectiveOptions(joinPoint, adminApi);
-    if (this.hasRequiredAdminPrevilege(onlySuperAdmin)) {
+    if (!this.hasRequiredAdminPrivilege(onlySuperAdmin)) {
       throw new AccessDeniedException("Admin(or SuperAdmin) previlege required");
     }
   }
 
-  private boolean hasRequiredAdminPrevilege(boolean onlySuperAdmin) {
+  private boolean hasRequiredAdminPrivilege(boolean onlySuperAdmin) {
     return Optional.of(SecurityContextHolder.getContext())
         .map(SecurityContext::getAuthentication)
         .filter(Authentication::isAuthenticated)
@@ -52,6 +52,6 @@ public class AdminAuthorizationAdvice {
         .map(MethodSignature::getMethod)
         .map(method -> method.getAnnotation(AdminApi.class))
         .map(AdminApi::superAdminOnly)
-        .orElse(adminApi.superAdminOnly());
+        .orElseGet(() -> Optional.ofNullable(adminApi).map(AdminApi::superAdminOnly).orElse(false));
   }
 }

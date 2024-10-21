@@ -1,4 +1,4 @@
-package com.locat.api.infrastructure.repository;
+package com.locat.api.infrastructure.repository.geo;
 
 import com.locat.api.domain.geo.found.entity.FoundItem;
 import com.locat.api.domain.geo.lost.entity.LostItem;

@@ -1,4 +1,4 @@
-package com.locat.api.domain.admin.dto;
+package com.locat.api.domain.admin.dto.request;
 
 import jakarta.validation.constraints.NotEmpty;
 

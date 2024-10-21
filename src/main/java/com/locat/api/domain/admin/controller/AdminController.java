@@ -1,7 +1,7 @@
 package com.locat.api.domain.admin.controller;
 
-import com.locat.api.domain.admin.dto.AdminPasswordResetRequest;
-import com.locat.api.domain.admin.dto.AdminPromoteRequest;
+import com.locat.api.domain.admin.dto.request.AdminPasswordResetRequest;
+import com.locat.api.domain.admin.dto.request.AdminPromoteRequest;
 import com.locat.api.domain.admin.service.AdminInternalService;
 import com.locat.api.domain.common.dto.BaseResponse;
 import com.locat.api.global.annotation.AdminApi;

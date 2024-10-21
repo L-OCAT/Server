@@ -4,7 +4,6 @@ import com.locat.api.domain.geo.base.entity.ColorCode;
 import com.locat.api.domain.geo.base.utils.GeoUtils;
 import com.locat.api.domain.geo.found.entity.FoundItem;
 import com.locat.api.domain.geo.lost.entity.LostItem;
-import com.locat.api.infrastructure.repository.MatchedItemNRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;

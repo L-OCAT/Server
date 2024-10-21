@@ -1,4 +1,4 @@
-package com.locat.api.domain.user.dto.response;
+package com.locat.api.domain.admin.dto.response;
 
 import com.locat.api.domain.user.entity.User;
 
@@ -15,7 +15,7 @@ import com.locat.api.domain.user.entity.User;
  * @param updatedAt 최근 수정일시
  * @param deletedAt 탈퇴일시
  */
-public record AdminUserResponse(
+public record AdminUserInfoResponse(
     Long id,
     String type,
     String oAuthType,
@@ -26,8 +26,8 @@ public record AdminUserResponse(
     String updatedAt,
     String deletedAt) {
 
-  public static AdminUserResponse fromEntity(User user) {
-    return new AdminUserResponse(
+  public static AdminUserInfoResponse fromEntity(User user) {
+    return new AdminUserInfoResponse(
         user.getId(),
         user.getUserType().getRoleName(),
         user.asEndUser().getOauthType().name(),
@@ -36,6 +36,6 @@ public record AdminUserResponse(
         user.getStatusType().name(),
         user.getCreatedAt().toString(),
         user.getUpdatedAt().toString(),
-        user.getDeletedAt().toString());
+        user.getDeletedAt());
   }
 }
