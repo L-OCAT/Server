@@ -46,6 +46,8 @@ public class AdminAuthorizationAdvice {
   /** 우선 순위(메서드 > 클래스)에 따라 선언된 {@code adminOnly} 값을 가져옵니다. */
   private boolean getEffectiveOptions(JoinPoint joinPoint, AdminApi adminApi) {
     return Optional.of(joinPoint)
+        .map(JoinPoint::getSignature)
+        .filter(MethodSignature.class::isInstance)
         .map(MethodSignature.class::cast)
         .map(MethodSignature::getMethod)
         .map(method -> method.getAnnotation(AdminApi.class))
