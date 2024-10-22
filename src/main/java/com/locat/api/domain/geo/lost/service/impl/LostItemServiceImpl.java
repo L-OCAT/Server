@@ -15,6 +15,7 @@ import com.locat.api.global.exception.NoSuchEntityException;
 import com.locat.api.global.file.FileService;
 import com.locat.api.infrastructure.repository.geo.GeoItemQRepository;
 import com.locat.api.infrastructure.repository.geo.lost.LostItemRepository;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -51,6 +52,12 @@ public class LostItemServiceImpl implements LostItemService {
   public GeoPage<LostItem> findAllByCondition(
       Long userId, LostItemSearchDto searchDto, Pageable pageable) {
     return this.lostItemQRepository.findByCondition(userId, searchDto, pageable);
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public List<LostItem> findTop10ByEndUser(EndUser user) {
+    return this.lostItemRepository.findTop10ByUserOrderByCreatedAtDesc(user);
   }
 
   @Override

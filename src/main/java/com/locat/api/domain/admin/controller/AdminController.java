@@ -18,20 +18,20 @@ import org.springframework.web.bind.annotation.RestController;
 @AdminApi
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/admin")
+@RequestMapping("/v1/admin/users")
 public class AdminController {
 
   private final AdminInternalService adminInternalService;
 
   @AdminApi(superAdminOnly = true)
   @PostMapping
-  public ResponseEntity<BaseResponse<Void>> promote(
+  public ResponseEntity<BaseResponse<Void>> updateUserType(
       @RequestBody @Valid final AdminPromoteRequest request) {
-    this.adminInternalService.promote(request.id(), request.level());
+    this.adminInternalService.updateUserType(request.id(), request.level());
     return ResponseEntity.noContent().build();
   }
 
-  @PostMapping("/reset-password")
+  @PostMapping("/me/password")
   public ResponseEntity<BaseResponse<Void>> resetPassword(
       @AuthenticationPrincipal LocatUserDetails userDetails,
       @RequestBody @Valid final AdminPasswordResetRequest request) {

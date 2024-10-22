@@ -2,8 +2,24 @@ package com.locat.api.domain.admin.dto.response;
 
 import com.locat.api.domain.admin.dto.AdminUserStatDto;
 import java.util.List;
+import java.util.Objects;
 import lombok.Builder;
 
+/**
+ * 관리자용 사용자 통계 정보 응답
+ *
+ * @param id 사용자 ID
+ * @param type 사용자 유형
+ * @param oAuthType OAuth2 제공자 유형
+ * @param email 이메일
+ * @param nickname 닉네임
+ * @param statusType 상태 유형
+ * @param createdAt 생성 일시
+ * @param updatedAt 최종 수정 일시
+ * @param deletedAt 삭제 일시
+ * @param agreementDetails 약관 동의 정보
+ * @param activityDetails 활동 정보
+ */
 @Builder
 public record AdminUserStatResponse(
     Long id,
@@ -28,12 +44,19 @@ public record AdminUserStatResponse(
         .statusType(userStat.statusType().name())
         .createdAt(userStat.createdAt().toString())
         .updatedAt(userStat.updatedAt().toString())
-        .deletedAt(userStat.deletedAt() != null ? userStat.deletedAt().toString() : null)
+        .deletedAt(Objects.toString(userStat.deletedAt(), "-"))
         .agreementDetails(userStat.agreementDetails().stream().map(AgreementDetail::from).toList())
         .activityDetails(ActivityDetails.from(userStat.activityDetails()))
         .build();
   }
 
+  /**
+   * 사용자의 약관 동의 정보
+   *
+   * @param termsName 약관 이름
+   * @param isAgreed 동의 여부
+   * @param agreedAt 동의 일시
+   */
   @Builder
   record AgreementDetail(String termsName, boolean isAgreed, String agreedAt) {
 
@@ -41,11 +64,17 @@ public record AdminUserStatResponse(
       return AgreementDetail.builder()
           .termsName(agreementDetail.termsName().name())
           .isAgreed(agreementDetail.isAgreed())
-          .agreedAt(agreementDetail.agreedAt().toString())
+          .agreedAt(Objects.toString(agreementDetail.agreedAt(), "-"))
           .build();
     }
   }
 
+  /**
+   * 사용자의 활동 정보
+   *
+   * @param totalRegisteredLostItems 총 등록한 분실물 개수
+   * @param totalRegisteredFoundItems 총 등록한 습득물 개수
+   */
   record ActivityDetails(int totalRegisteredLostItems, int totalRegisteredFoundItems) {
 
     static ActivityDetails from(AdminUserStatDto.ActivityDetails activityDetails) {

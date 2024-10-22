@@ -1,6 +1,7 @@
 package com.locat.api.domain.admin.service.impl;
 
 import com.locat.api.domain.admin.service.AdminInternalService;
+import com.locat.api.domain.user.entity.AdminUser;
 import com.locat.api.domain.user.service.AdminUserService;
 import com.locat.api.global.exception.ApiExceptionType;
 import com.locat.api.global.exception.NoSuchEntityException;
@@ -25,6 +26,7 @@ public class AdminInternalServiceImpl implements AdminInternalService {
   public void resetPassword(Long userId, String newPassword) {
     this.adminUserService
         .findById(userId)
+        .filter(AdminUser::isPasswordExpired)
         .ifPresentOrElse(
             adminUser -> adminUser.resetPassword(this.passwordEncoder.encode(newPassword)),
             () -> {
@@ -33,7 +35,7 @@ public class AdminInternalServiceImpl implements AdminInternalService {
   }
 
   @Override
-  public void promote(Long userId, Integer level) {
+  public void updateUserType(Long userId, Integer level) {
     this.adminUserService
         .findById(userId)
         .ifPresentOrElse(

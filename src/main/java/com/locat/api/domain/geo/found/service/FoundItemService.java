@@ -3,6 +3,8 @@ package com.locat.api.domain.geo.found.service;
 import com.locat.api.domain.geo.found.dto.FoundItemRegisterDto;
 import com.locat.api.domain.geo.found.dto.FoundItemSearchDto;
 import com.locat.api.domain.geo.found.entity.FoundItem;
+import com.locat.api.domain.user.entity.EndUser;
+import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.geo.GeoPage;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,6 +30,14 @@ public interface FoundItemService {
    */
   GeoPage<FoundItem> findAllByCondition(
       final Long userId, FoundItemSearchDto searchDto, Pageable pageable);
+
+  /**
+   * 사용자가 등록한 습득물 목록을 조회합니다.
+   *
+   * @param user 목록을 조회할 사용자
+   * @return 사용자가 등록한 습득물 목록 (최대 10개)
+   */
+  List<FoundItem> findTop10ByEndUser(EndUser user);
 
   /**
    * 습득물 정보를 등록합니다.
