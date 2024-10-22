@@ -29,8 +29,6 @@ public class StringColumnEncryptionConverter implements AttributeConverter<Strin
 
   private static final Charset DEFAULT_ENCODING = StandardCharsets.UTF_8;
 
-  private Cipher cipher;
-
   private SecretKeySpec secretKeySpec;
 
   @Value("${service.encryption.key}")
@@ -38,12 +36,7 @@ public class StringColumnEncryptionConverter implements AttributeConverter<Strin
 
   @PostConstruct
   public void init() {
-    try {
-      this.cipher = Cipher.getInstance(ENCRYPTION_TRANSFORM);
-      this.secretKeySpec = generateAESKey(this.encryptionKey);
-    } catch (GeneralSecurityException e) {
-      throw new InternalProcessingException("Failed to initialize Cipher.", e);
-    }
+    this.secretKeySpec = generateAESKey(this.encryptionKey);
   }
 
   /**
@@ -59,11 +52,12 @@ public class StringColumnEncryptionConverter implements AttributeConverter<Strin
       return null;
     }
     try {
+      Cipher cipher = Cipher.getInstance(ENCRYPTION_TRANSFORM);
       final byte[] initialVector = RandomGenerator.generateRandomBytes(INITIAL_VECTOR_LENGTH);
       final GCMParameterSpec gcmParameterSpec = new GCMParameterSpec(128, initialVector);
-      this.cipher.init(Cipher.ENCRYPT_MODE, this.secretKeySpec, gcmParameterSpec);
+      cipher.init(Cipher.ENCRYPT_MODE, this.secretKeySpec, gcmParameterSpec);
 
-      byte[] encryptedData = this.cipher.doFinal(attribute.getBytes(DEFAULT_ENCODING));
+      byte[] encryptedData = cipher.doFinal(attribute.getBytes(DEFAULT_ENCODING));
       byte[] encryptedWithIv =
           ByteBuffer.allocate(initialVector.length + encryptedData.length)
               .put(initialVector)
@@ -93,6 +87,7 @@ public class StringColumnEncryptionConverter implements AttributeConverter<Strin
       return null;
     }
     try {
+      Cipher cipher = Cipher.getInstance(ENCRYPTION_TRANSFORM);
       byte[] decodedData = Base64.decode(dbData);
       ByteBuffer byteBuffer = ByteBuffer.wrap(decodedData);
 
@@ -103,9 +98,9 @@ public class StringColumnEncryptionConverter implements AttributeConverter<Strin
       byteBuffer.get(encryptedData);
 
       final GCMParameterSpec gcmParameterSpec = new GCMParameterSpec(128, initialVector);
-      this.cipher.init(Cipher.DECRYPT_MODE, this.secretKeySpec, gcmParameterSpec);
+      cipher.init(Cipher.DECRYPT_MODE, this.secretKeySpec, gcmParameterSpec);
 
-      byte[] decryptedData = this.cipher.doFinal(encryptedData);
+      byte[] decryptedData = cipher.doFinal(encryptedData);
       return new String(decryptedData, DEFAULT_ENCODING);
     } catch (GeneralSecurityException e) {
       throw new InternalProcessingException("Failed to decrypt data.", e);
