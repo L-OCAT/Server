@@ -50,13 +50,11 @@ class JwtAuthenticationFilterTest {
   void testWhenValidAuthorizationHeader() throws ServletException, IOException {
     // Given
     String token = "validToken";
-    String username = "user";
     Claims claims = mock(Claims.class);
 
     when(this.jwtProvider.resolve(any(HttpServletRequest.class))).thenReturn(token);
     when(this.jwtProvider.parse(token)).thenReturn(claims);
-    when(claims.getSubject()).thenReturn(username);
-    when(this.userDetailsService.createAuthentication(username)).thenReturn(this.authentication);
+    when(this.userDetailsService.createAuthentication(claims)).thenReturn(this.authentication);
 
     // When
     this.jwtAuthenticationFilter.doFilter(this.request, this.response, this.filterChain);
@@ -66,7 +64,7 @@ class JwtAuthenticationFilterTest {
     assertThat(context.getAuthentication()).isEqualTo(this.authentication);
     verify(this.jwtProvider).resolve(any(HttpServletRequest.class));
     verify(this.jwtProvider).parse(token);
-    verify(this.userDetailsService).createAuthentication(username);
+    verify(this.userDetailsService).createAuthentication(claims);
     verify(this.filterChain).doFilter(this.request, this.response);
   }
 

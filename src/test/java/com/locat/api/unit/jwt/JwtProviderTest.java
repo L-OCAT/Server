@@ -7,6 +7,7 @@ import static org.mockito.Mockito.*;
 import com.locat.api.domain.user.entity.User;
 import com.locat.api.global.auth.LocatUserDetails;
 import com.locat.api.global.auth.LocatUserDetailsService;
+import com.locat.api.global.auth.impl.LocatUserDetailsImpl;
 import com.locat.api.global.auth.jwt.JwtProviderImpl;
 import com.locat.api.global.auth.jwt.LocatTokenDto;
 import com.locat.api.global.auth.jwt.TokenException;
@@ -59,15 +60,18 @@ class JwtProviderTest {
     User user = mock(User.class);
     LocatUserDetails userDetails = mock(LocatUserDetails.class);
     Authentication authentication = mock(Authentication.class);
-    when(this.userDetailsService.loadUserByUsername(userEmail)).thenReturn(userDetails);
-    when(this.userDetailsService.createAuthentication(userEmail)).thenReturn(authentication);
+    mockStatic(LocatUserDetailsImpl.class)
+        .when(() -> LocatUserDetailsImpl.from(user))
+        .thenReturn(userDetails);
+    when(this.userDetailsService.createAuthentication(userDetails)).thenReturn(authentication);
     when(authentication.getPrincipal()).thenReturn(userDetails);
     when(userDetails.getUser()).thenReturn(user);
     when(user.getNickname()).thenReturn("test");
     when(authentication.getName()).thenReturn(userEmail);
+    when(this.userDetailsService.extractAuthority(authentication)).thenReturn("SOME_ROLE");
 
     // When
-    LocatTokenDto tokenDto = this.jwtProvider.create(userEmail);
+    LocatTokenDto tokenDto = this.jwtProvider.create(user);
 
     // Then
     assertThat(tokenDto).isNotNull();

@@ -1,8 +1,7 @@
 package com.locat.api.domain.admin.service.impl;
 
 import com.locat.api.domain.admin.service.AdminInternalService;
-import com.locat.api.domain.user.entity.User;
-import com.locat.api.domain.user.service.UserService;
+import com.locat.api.domain.user.service.AdminUserService;
 import com.locat.api.global.exception.ApiExceptionType;
 import com.locat.api.global.exception.NoSuchEntityException;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class AdminInternalServiceImpl implements AdminInternalService {
 
-  private final UserService userService;
+  private final AdminUserService adminUserService;
   private final PasswordEncoder passwordEncoder;
 
   @Value("${service.admin.temp-password}")
@@ -24,9 +23,8 @@ public class AdminInternalServiceImpl implements AdminInternalService {
 
   @Override
   public void resetPassword(Long userId, String newPassword) {
-    this.userService
+    this.adminUserService
         .findById(userId)
-        .map(User::asAdmin)
         .ifPresentOrElse(
             adminUser -> adminUser.resetPassword(this.passwordEncoder.encode(newPassword)),
             () -> {
@@ -36,9 +34,8 @@ public class AdminInternalServiceImpl implements AdminInternalService {
 
   @Override
   public void promote(Long userId, Integer level) {
-    this.userService
+    this.adminUserService
         .findById(userId)
-        .map(User::asAdmin)
         .ifPresentOrElse(
             adminUser -> adminUser.promote(level, this.passwordEncoder.encode(this.tempPassword)),
             () -> {

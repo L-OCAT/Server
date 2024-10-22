@@ -3,8 +3,7 @@ package com.locat.api.domain.user.service.impl;
 import com.locat.api.domain.auth.template.OAuth2TemplateFactory;
 import com.locat.api.domain.user.dto.UserInfoUpdateDto;
 import com.locat.api.domain.user.entity.EndUser;
-import com.locat.api.domain.user.entity.User;
-import com.locat.api.domain.user.service.UserService;
+import com.locat.api.domain.user.service.EndUserService;
 import com.locat.api.domain.user.service.UserValidationService;
 import com.locat.api.domain.user.service.UserWithdrawalLogService;
 import com.locat.api.global.exception.ApiExceptionType;
@@ -13,7 +12,6 @@ import com.locat.api.global.exception.NoSuchEntityException;
 import com.locat.api.global.utils.HashingUtils;
 import com.locat.api.global.utils.ValidationUtils;
 import com.locat.api.infrastructure.repository.user.EndUserRepository;
-import com.locat.api.infrastructure.repository.user.UserRepository;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -24,30 +22,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService {
+public class EndUserServiceImpl implements EndUserService {
 
-  private final UserRepository userRepository;
   private final EndUserRepository endUserRepository;
   private final OAuth2TemplateFactory oAuth2TemplateFactory;
   private final UserValidationService userValidationService;
   private final UserWithdrawalLogService userWithdrawalLogService;
-
-  @Override
-  public Page<EndUser> findAll(Pageable pageable) {
-    return this.endUserRepository.findAll(pageable);
-  }
-
-  @Override
-  @Transactional(readOnly = true)
-  public Optional<User> findById(final Long id) {
-    return this.userRepository.findById(id);
-  }
-
-  @Override
-  @Transactional(readOnly = true)
-  public Optional<User> findByEmail(String email) {
-    return this.userRepository.findByEmailHash(HashingUtils.hash(email.trim()));
-  }
 
   @Override
   public EndUser save(EndUser user) {
@@ -55,19 +35,35 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public EndUser update(Long id, UserInfoUpdateDto infoUpdateDto) {
-    final EndUser user =
-        this.findById(id)
-            .map(User::asEndUser)
-            .orElseThrow(() -> new NoSuchEntityException(ApiExceptionType.NOT_FOUND_USER));
-    this.validateRequestFields(user, infoUpdateDto);
-    return user.update(infoUpdateDto.email(), infoUpdateDto.nickname());
+  @Transactional(readOnly = true)
+  public Optional<EndUser> findById(final Long id) {
+    return this.endUserRepository.findById(id);
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public Optional<EndUser> findByEmail(String email) {
+    return this.endUserRepository.findByEmailHash(HashingUtils.hash(email.trim()));
   }
 
   @Override
   @Transactional(readOnly = true)
   public Optional<EndUser> findEndUserByOAuthId(String oAuthId) {
     return this.endUserRepository.findByOauthId(oAuthId);
+  }
+
+  @Override
+  public Page<EndUser> findAll(Pageable pageable) {
+    return this.endUserRepository.findAll(pageable);
+  }
+
+  @Override
+  public EndUser update(Long id, UserInfoUpdateDto infoUpdateDto) {
+    final EndUser user =
+        this.findById(id)
+            .orElseThrow(() -> new NoSuchEntityException(ApiExceptionType.NOT_FOUND_USER));
+    this.validateRequestFields(user, infoUpdateDto);
+    return user.update(infoUpdateDto.email(), infoUpdateDto.nickname());
   }
 
   @Override

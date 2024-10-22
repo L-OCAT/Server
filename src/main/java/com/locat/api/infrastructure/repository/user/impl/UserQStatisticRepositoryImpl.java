@@ -50,7 +50,7 @@ public class UserQStatisticRepositoryImpl implements UserQStatisticRepository {
         .on(qLostItem.user.eq(qEndUser))
         .leftJoin(qFoundItem)
         .on(qFoundItem.user.eq(qEndUser))
-        .where(qEndUser.eq(user.asEndUser()))
+        .where(qEndUser.eq(user))
         .groupBy(qEndUser.id)
         .fetchOne();
   }

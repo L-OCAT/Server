@@ -2,11 +2,10 @@ package com.locat.api.domain.user.service.impl;
 
 import com.locat.api.domain.user.dto.EndpointRegisterDto;
 import com.locat.api.domain.user.entity.EndUser;
-import com.locat.api.domain.user.entity.User;
 import com.locat.api.domain.user.entity.association.UserEndpoint;
+import com.locat.api.domain.user.service.EndUserService;
 import com.locat.api.domain.user.service.PlatformEndpointService;
 import com.locat.api.domain.user.service.UserEndpointService;
-import com.locat.api.domain.user.service.UserService;
 import com.locat.api.global.exception.ApiExceptionType;
 import com.locat.api.global.exception.NoSuchEntityException;
 import com.locat.api.infrastructure.repository.user.UserEndpointRepository;
@@ -22,14 +21,13 @@ public class UserEndpointServiceImpl implements UserEndpointService {
 
   private final UserEndpointRepository userEndpointRepository;
   private final PlatformEndpointService platformEndpointService;
-  private final UserService userService;
+  private final EndUserService endUserService;
 
   @Override
   public void register(Long userId, EndpointRegisterDto registerDto) {
     EndUser user =
-        this.userService
+        this.endUserService
             .findById(userId)
-            .map(User::asEndUser)
             .orElseThrow(() -> new NoSuchEntityException(ApiExceptionType.NOT_FOUND_USER));
     List<UserEndpoint> userEndpoints = this.findUserEndpointsByUserId(userId);
 

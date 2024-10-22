@@ -1,6 +1,6 @@
 package com.locat.api.domain.admin.dto.response;
 
-import com.locat.api.domain.user.entity.User;
+import com.locat.api.domain.user.entity.EndUser;
 
 /**
  * 관리자 사용자 조회 응답 DTO
@@ -26,11 +26,11 @@ public record AdminUserInfoResponse(
     String updatedAt,
     String deletedAt) {
 
-  public static AdminUserInfoResponse fromEntity(User user) {
+  public static AdminUserInfoResponse fromEntity(EndUser user) {
     return new AdminUserInfoResponse(
         user.getId(),
         user.getUserType().getRoleName(),
-        user.asEndUser().getOauthType().name(),
+        user.getOauthType().name(),
         user.getEmail(),
         user.getNickname(),
         user.getStatusType().name(),

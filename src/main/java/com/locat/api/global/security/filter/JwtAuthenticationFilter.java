@@ -37,16 +37,16 @@ public class JwtAuthenticationFilter extends AbstractLocatSecurityFilter {
   private void processAuthentication(String token, HttpServletResponse response)
       throws IOException {
     try {
-      Claims userInfo = this.jwtProvider.parse(token);
-      this.setAuthentication(userInfo.getSubject());
+      Claims claims = this.jwtProvider.parse(token);
+      this.setAuthentication(claims);
     } catch (JwtException ex) {
       response.sendError(HttpServletResponse.SC_UNAUTHORIZED, ex.getMessage());
     }
   }
 
-  private void setAuthentication(String userId) {
+  private void setAuthentication(Claims claims) {
     SecurityContext context = SecurityContextHolder.createEmptyContext();
-    Authentication authentication = this.userDetailsService.createAuthentication(userId);
+    Authentication authentication = this.userDetailsService.createAuthentication(claims);
     context.setAuthentication(authentication);
     SecurityContextHolder.setContext(context);
   }

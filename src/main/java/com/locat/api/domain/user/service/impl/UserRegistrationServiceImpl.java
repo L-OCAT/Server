@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserRegistrationServiceImpl implements UserRegistrationService {
 
-  private final UserService userService;
+  private final EndUserService endUserService;
   private final UserTermsService userTermsService;
   private final UserSettingService userSettingService;
   private final UserValidationService userValidationService;
@@ -36,9 +36,9 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     OAuth2ProviderToken token = this.findTokenById(userRegisterDto.oAuthId());
     OAuth2UserInfoDto userInfo = this.fetchUserInfo(token);
     final EndUser user =
-        EndUser.of(userRegisterDto.nickname(), userInfo); // TODO: 프로필 URL 선택 & 저장 로직 추가
+        EndUser.of(userRegisterDto.nickname(), userInfo);
 
-    this.userService.save(user);
+    this.endUserService.save(user);
     this.userSettingService.registerDefaultSettings(user);
     this.userTermsService.register(user, userRegisterDto);
     return user;

@@ -3,8 +3,10 @@ package com.locat.api.global.auth.jwt;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 import com.locat.api.domain.auth.entity.LocatRefreshToken;
+import com.locat.api.domain.user.entity.User;
 import com.locat.api.global.auth.LocatUserDetails;
 import com.locat.api.global.auth.LocatUserDetailsService;
+import com.locat.api.global.auth.impl.LocatUserDetailsImpl;
 import com.locat.api.infrastructure.redis.LocatRefreshTokenRepository;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -56,10 +58,9 @@ public class JwtProviderImpl implements JwtProvider {
   }
 
   @Override
-  public LocatTokenDto create(final String userEmail) {
-    LocatUserDetails userDetails =
-        (LocatUserDetails) this.userDetailsService.loadUserByUsername(userEmail);
-    Authentication authentication = this.userDetailsService.createAuthentication(userEmail);
+  public LocatTokenDto create(final User user) {
+    LocatUserDetails userDetails = LocatUserDetailsImpl.from(user);
+    Authentication authentication = this.userDetailsService.createAuthentication(userDetails);
 
     String accessToken = this.createAccessToken(authentication);
     String refreshToken = this.createRefreshToken(authentication.getName());
@@ -77,10 +78,9 @@ public class JwtProviderImpl implements JwtProvider {
   @Override
   public LocatTokenDto renew(String oldAccessToken, String refreshToken) {
     Claims claims = this.parse(oldAccessToken);
-    String userEmail = claims.getSubject();
 
-    this.validateRefreshToken(userEmail, refreshToken);
-    Authentication authentication = this.userDetailsService.createAuthentication(userEmail);
+    this.validateRefreshToken(claims.getSubject(), refreshToken);
+    Authentication authentication = this.userDetailsService.createAuthentication(claims);
 
     String newAccessToken = this.createAccessToken(authentication);
     return LocatTokenDto.jwtBuilder()
@@ -137,7 +137,7 @@ public class JwtProviderImpl implements JwtProvider {
         .addClaims(
             Map.of(
                 AUTHORIZATION_KEY,
-                authentication.getAuthorities(),
+                this.userDetailsService.extractAuthority(authentication),
                 USER_NAME_KEY,
                 userDetails.getUser().getNickname()))
         .setIssuer(this.serviceUrl)

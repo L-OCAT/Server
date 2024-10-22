@@ -8,6 +8,8 @@ public interface EndUserRepository extends JpaRepository<EndUser, Long> {
 
   Optional<EndUser> findByOauthId(String oauthId);
 
+  Optional<EndUser> findByEmailHash(String emailHash);
+
   boolean existsByOauthId(String oauthId);
 
   boolean existsByEmailHash(String emailHash);

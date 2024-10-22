@@ -5,7 +5,7 @@ import com.locat.api.global.auth.LocatUserDetails;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.List;
+import java.util.Collections;
 import org.springframework.security.core.GrantedAuthority;
 
 public record LocatUserDetailsImpl(User user) implements LocatUserDetails, Serializable {
@@ -18,7 +18,7 @@ public record LocatUserDetailsImpl(User user) implements LocatUserDetails, Seria
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
-    return List.of(() -> this.user.getUserType().name());
+    return Collections.singleton((GrantedAuthority) () -> this.user.getUserType().name());
   }
 
   @Override
