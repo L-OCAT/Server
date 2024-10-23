@@ -7,7 +7,6 @@ import com.locat.api.global.auth.jwt.JwtProvider;
 import com.locat.api.global.security.filter.ActiveUserFilter;
 import com.locat.api.global.security.filter.JwtAuthenticationFilter;
 import com.locat.api.global.security.filter.PublicApiKeyFilter;
-import com.locat.api.global.security.manager.ActuatorAuthorizationManager;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -66,7 +65,7 @@ public class SecurityConfig {
                     .requestMatchers("/v*/**")
                     .permitAll()
                     .requestMatchers("/actuator/**")
-                    .access(new ActuatorAuthorizationManager(this.securityProperties.getAdminUrl()))
+                    .hasAnyRole("SUPER_ADMIN", "ADMIN")
                     .anyRequest()
                     .denyAll())
         .addFilterBefore(
