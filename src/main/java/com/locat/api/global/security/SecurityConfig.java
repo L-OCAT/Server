@@ -68,9 +68,6 @@ public class SecurityConfig {
                     .hasAnyRole("SUPER_ADMIN", "ADMIN")
                     .anyRequest()
                     .denyAll())
-        .addFilterBefore(
-            new PublicApiKeyFilter(this.securityProperties.getApiKey()),
-            UsernamePasswordAuthenticationFilter.class)
         .addFilterAfter(
             new JwtAuthenticationFilter(this.jwtProvider, this.userDetailsService),
             PublicApiKeyFilter.class)
