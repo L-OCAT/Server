@@ -44,7 +44,7 @@ public record AdminUserStatResponse(
         .statusType(userStat.statusType().name())
         .createdAt(userStat.createdAt().toString())
         .updatedAt(userStat.updatedAt().toString())
-        .deletedAt(Objects.toString(userStat.deletedAt(), "-"))
+        .deletedAt(Objects.toString(userStat.deletedAt(), null))
         .agreementDetails(userStat.agreementDetails().stream().map(AgreementDetail::from).toList())
         .activityDetails(ActivityDetails.from(userStat.activityDetails()))
         .build();
@@ -62,9 +62,9 @@ public record AdminUserStatResponse(
 
     static AgreementDetail from(AdminUserStatDto.AgreementDetail agreementDetail) {
       return AgreementDetail.builder()
-          .termsName(agreementDetail.termsName().name())
+          .termsName(agreementDetail.termsName().getTitle())
           .isAgreed(agreementDetail.isAgreed())
-          .agreedAt(Objects.toString(agreementDetail.agreedAt(), "-"))
+          .agreedAt(Objects.toString(agreementDetail.agreedAt(), null))
           .build();
     }
   }
