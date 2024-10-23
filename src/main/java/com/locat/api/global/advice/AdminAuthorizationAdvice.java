@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
-import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -45,13 +44,15 @@ public class AdminAuthorizationAdvice {
 
   /** 우선 순위(메서드 > 클래스)에 따라 선언된 {@code adminOnly} 값을 가져옵니다. */
   private boolean getEffectiveOptions(JoinPoint joinPoint, AdminApi adminApi) {
-    return Optional.of(joinPoint)
-        .map(JoinPoint::getSignature)
-        .filter(MethodSignature.class::isInstance)
-        .map(MethodSignature.class::cast)
-        .map(MethodSignature::getMethod)
-        .map(method -> method.getAnnotation(AdminApi.class))
+    return Optional.ofNullable(adminApi)
         .map(AdminApi::superAdminOnly)
-        .orElseGet(() -> Optional.ofNullable(adminApi).map(AdminApi::superAdminOnly).orElse(false));
+        .orElseGet(
+            () ->
+                Optional.of(joinPoint)
+                    .map(JoinPoint::getTarget)
+                    .map(Object::getClass)
+                    .map(clazz -> clazz.getAnnotation(AdminApi.class))
+                    .map(AdminApi::superAdminOnly)
+                    .orElse(false));
   }
 }
