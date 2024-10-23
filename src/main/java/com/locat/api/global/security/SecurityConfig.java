@@ -6,7 +6,6 @@ import com.locat.api.global.auth.LocatUserDetailsService;
 import com.locat.api.global.auth.jwt.JwtProvider;
 import com.locat.api.global.security.filter.ActiveUserFilter;
 import com.locat.api.global.security.filter.JwtAuthenticationFilter;
-import com.locat.api.global.security.filter.PublicApiKeyFilter;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -68,9 +67,9 @@ public class SecurityConfig {
                     .hasAnyRole("SUPER_ADMIN", "ADMIN")
                     .anyRequest()
                     .denyAll())
-        .addFilterAfter(
+        .addFilterBefore(
             new JwtAuthenticationFilter(this.jwtProvider, this.userDetailsService),
-            PublicApiKeyFilter.class)
+            UsernamePasswordAuthenticationFilter.class)
         .addFilterAfter(new ActiveUserFilter(), JwtAuthenticationFilter.class)
         .exceptionHandling(
             exception ->
