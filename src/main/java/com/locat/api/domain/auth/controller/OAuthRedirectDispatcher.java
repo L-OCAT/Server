@@ -5,6 +5,7 @@ import com.locat.api.domain.common.dto.BaseResponse;
 import com.locat.api.domain.user.enums.OAuth2ProviderType;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/v1/oauth2/redirect")
 public class OAuthRedirectDispatcher {
 
+  @Value("${service.url.admin}")
+  private String adminUrl;
+
   private final OAuth2Service oAuth2Service;
 
   @GetMapping("/{providerType}")
@@ -22,7 +26,7 @@ public class OAuthRedirectDispatcher {
     OAuth2ProviderType provider = OAuth2ProviderType.valueOf(providerType.toUpperCase());
     String oauthId = this.oAuth2Service.authenticate(provider, code);
     return ResponseEntity.status(HttpStatus.FOUND)
-        .location(URI.create("http://localhost:3000/?oAuthId=" + oauthId))
+        .location(URI.create(this.adminUrl.concat("/?oAuthId=").concat(oauthId)))
         .build();
   }
 }
