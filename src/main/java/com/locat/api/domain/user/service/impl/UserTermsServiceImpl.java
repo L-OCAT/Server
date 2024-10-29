@@ -3,7 +3,7 @@ package com.locat.api.domain.user.service.impl;
 import com.locat.api.domain.terms.entity.Terms;
 import com.locat.api.domain.terms.entity.TermsType;
 import com.locat.api.domain.user.dto.UserRegisterDto;
-import com.locat.api.domain.user.entity.EndUser;
+import com.locat.api.domain.user.entity.User;
 import com.locat.api.domain.user.entity.association.UserTermsAgreement;
 import com.locat.api.domain.user.service.UserTermsService;
 import com.locat.api.global.exception.InternalProcessingException;
@@ -24,13 +24,13 @@ public class UserTermsServiceImpl implements UserTermsService {
   private final UserTermsAgreementRepository userTermsAgreementRepository;
 
   @Override
-  public void register(EndUser user, UserRegisterDto registerDto) {
+  public void register(User user, UserRegisterDto registerDto) {
     List<UserTermsAgreement> userTermsAgreements = this.createUserTermsAgreement(user, registerDto);
     this.userTermsAgreementRepository.saveAll(userTermsAgreements);
   }
 
   private List<UserTermsAgreement> createUserTermsAgreement(
-      EndUser user, UserRegisterDto registerDto) {
+      User user, UserRegisterDto registerDto) {
     List<UserTermsAgreement> userTermsAgreements = new ArrayList<>();
     List<Terms> latestTermsList = this.termsQRepository.findAllLatest();
     if (Boolean.TRUE.equals(registerDto.isTermsOfServiceAgreed())) {

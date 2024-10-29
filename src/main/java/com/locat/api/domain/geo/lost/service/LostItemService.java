@@ -3,7 +3,7 @@ package com.locat.api.domain.geo.lost.service;
 import com.locat.api.domain.geo.lost.dto.LostItemRegisterDto;
 import com.locat.api.domain.geo.lost.dto.LostItemSearchDto;
 import com.locat.api.domain.geo.lost.entity.LostItem;
-import com.locat.api.domain.user.entity.EndUser;
+import com.locat.api.domain.user.entity.User;
 import com.locat.api.global.exception.NoSuchEntityException;
 import com.locat.api.global.file.FileOperationFailedException;
 import java.util.List;
@@ -34,7 +34,7 @@ public interface LostItemService {
   GeoPage<LostItem> findAllByCondition(
       final Long userId, LostItemSearchDto searchDto, Pageable pageable);
 
-  List<LostItem> findTop10ByEndUser(EndUser user);
+  List<LostItem> findTop10ByEndUser(User user);
 
   /**
    * 분실물 등록

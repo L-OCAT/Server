@@ -8,9 +8,9 @@ import com.locat.api.domain.user.dto.request.UserInfoUpdateRequest;
 import com.locat.api.domain.user.dto.request.UserRegisterRequest;
 import com.locat.api.domain.user.dto.request.UserWithDrawalRequest;
 import com.locat.api.domain.user.dto.response.UserInfoResponse;
-import com.locat.api.domain.user.entity.EndUser;
-import com.locat.api.domain.user.service.EndUserService;
+import com.locat.api.domain.user.entity.User;
 import com.locat.api.domain.user.service.UserRegistrationService;
+import com.locat.api.domain.user.service.UserService;
 import com.locat.api.global.annotation.AdminApi;
 import com.locat.api.global.auth.LocatUserDetails;
 import com.locat.api.global.auth.jwt.JwtProvider;
@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/v1/users")
 public class UserController {
 
-  private final EndUserService endUserService;
+  private final UserService userService;
   private final JwtProvider jwtProvider;
   private final UserRegistrationService userRegistrationService;
 
@@ -40,7 +40,7 @@ public class UserController {
   @PostMapping
   public ResponseEntity<BaseResponse<LocatTokenDto>> register(
       @RequestBody @Valid final UserRegisterRequest request) {
-    EndUser user = this.userRegistrationService.register(UserRegisterDto.fromRequest(request));
+    User user = this.userRegistrationService.register(UserRegisterDto.fromRequest(request));
     LocatTokenDto locatTokenDto = this.jwtProvider.create(user);
     return ResponseEntity.status(HttpStatus.CREATED).body(BaseResponse.of(locatTokenDto));
   }
@@ -51,8 +51,8 @@ public class UserController {
   public ResponseEntity<BaseResponse<UserInfoResponse>> me(
       @AuthenticationPrincipal LocatUserDetails userDetails) {
     final long userId = userDetails.getId();
-    EndUser user =
-        this.endUserService
+    User user =
+        this.userService
             .findById(userId)
             .orElseThrow(() -> new NoSuchEntityException(ApiExceptionType.NOT_FOUND_USER));
     UserInfoResponse userInfoResponse = UserInfoResponse.fromEntity(user);
@@ -68,7 +68,7 @@ public class UserController {
     final long userId = userDetails.getId();
     UserInfoResponse userInfoResponse =
         UserInfoResponse.fromEntity(
-            this.endUserService.update(userId, UserInfoUpdateDto.from(request)));
+            this.userService.update(userId, UserInfoUpdateDto.from(request)));
     return ResponseEntity.ok(BaseResponse.of(userInfoResponse));
   }
 
@@ -79,7 +79,7 @@ public class UserController {
       @AuthenticationPrincipal LocatUserDetails userDetails,
       @RequestBody @Valid final UserWithDrawalRequest request) {
     final long userId = userDetails.getId();
-    this.endUserService.delete(userId, request.reason());
+    this.userService.delete(userId, request.reason());
     return ResponseEntity.noContent().build();
   }
 
@@ -88,7 +88,6 @@ public class UserController {
   public ResponseEntity<BaseResponse<Page<AdminUserInfoResponse>>> findAllByAdmin(
       Pageable pageable) {
     return ResponseEntity.ok(
-        BaseResponse.of(
-            this.endUserService.findAll(pageable).map(AdminUserInfoResponse::fromEntity)));
+        BaseResponse.of(this.userService.findAll(pageable).map(AdminUserInfoResponse::fromEntity)));
   }
 }

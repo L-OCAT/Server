@@ -7,8 +7,7 @@ import com.locat.api.domain.auth.exception.EmailAlreadySentException;
 import com.locat.api.domain.auth.service.AuthService;
 import com.locat.api.domain.auth.service.OAuth2Service;
 import com.locat.api.domain.user.entity.User;
-import com.locat.api.domain.user.service.AdminUserService;
-import com.locat.api.domain.user.service.EndUserService;
+import com.locat.api.domain.user.service.UserService;
 import com.locat.api.global.auth.AuthenticationException;
 import com.locat.api.global.auth.jwt.JwtProvider;
 import com.locat.api.global.auth.jwt.LocatTokenDto;
@@ -31,8 +30,7 @@ public class AuthServiceImpl implements AuthService {
   public static final int VERIFICATION_CODE_LENGTH = 6;
   public static final Duration VERIFICATION_CODE_EXPIRATION = Duration.ofMinutes(5);
 
-  private final EndUserService endUserService;
-  private final AdminUserService adminUserService;
+  private final UserService userService;
   private final MailService mailService;
   private final JwtProvider jwtProvider;
   private final OAuth2Service oAuth2Service;
@@ -43,7 +41,7 @@ public class AuthServiceImpl implements AuthService {
   @Transactional(readOnly = true)
   public LocatTokenDto authenticate(String oAuthId) {
     this.validateAuthentication(oAuthId);
-    return this.endUserService
+    return this.userService
         .findEndUserByOAuthId(oAuthId)
         .map(this::issueTokenIfActivated)
         .orElseThrow(() -> new NoSuchEntityException(ApiExceptionType.NOT_FOUND_USER));
@@ -52,7 +50,7 @@ public class AuthServiceImpl implements AuthService {
   @Override
   @Transactional(readOnly = true)
   public AdminLoginResponse authenticate(AdminLoginDto loginDto) {
-    return this.adminUserService
+    return this.userService
         .findByEmail(loginDto.userId())
         .filter(user -> this.passwordEncoder.matches(loginDto.password(), user.getPassword()))
         .map(

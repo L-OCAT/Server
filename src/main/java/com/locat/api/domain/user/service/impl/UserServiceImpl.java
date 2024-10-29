@@ -2,8 +2,8 @@ package com.locat.api.domain.user.service.impl;
 
 import com.locat.api.domain.auth.template.OAuth2TemplateFactory;
 import com.locat.api.domain.user.dto.UserInfoUpdateDto;
-import com.locat.api.domain.user.entity.EndUser;
-import com.locat.api.domain.user.service.EndUserService;
+import com.locat.api.domain.user.entity.User;
+import com.locat.api.domain.user.service.UserService;
 import com.locat.api.domain.user.service.UserValidationService;
 import com.locat.api.domain.user.service.UserWithdrawalLogService;
 import com.locat.api.global.exception.ApiExceptionType;
@@ -11,7 +11,7 @@ import com.locat.api.global.exception.DuplicatedException;
 import com.locat.api.global.exception.NoSuchEntityException;
 import com.locat.api.global.utils.HashingUtils;
 import com.locat.api.global.utils.ValidationUtils;
-import com.locat.api.infrastructure.repository.user.EndUserRepository;
+import com.locat.api.infrastructure.repository.user.UserRepository;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -22,44 +22,44 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class EndUserServiceImpl implements EndUserService {
+public class UserServiceImpl implements UserService {
 
-  private final EndUserRepository endUserRepository;
+  private final UserRepository userRepository;
   private final OAuth2TemplateFactory oAuth2TemplateFactory;
   private final UserValidationService userValidationService;
   private final UserWithdrawalLogService userWithdrawalLogService;
 
   @Override
-  public EndUser save(EndUser user) {
-    return this.endUserRepository.save(user);
+  public User save(User user) {
+    return this.userRepository.save(user);
   }
 
   @Override
   @Transactional(readOnly = true)
-  public Optional<EndUser> findById(final Long id) {
-    return this.endUserRepository.findById(id);
+  public Optional<User> findById(final Long id) {
+    return this.userRepository.findById(id);
   }
 
   @Override
   @Transactional(readOnly = true)
-  public Optional<EndUser> findByEmail(String email) {
-    return this.endUserRepository.findByEmailHash(HashingUtils.hash(email.trim()));
+  public Optional<User> findByEmail(String email) {
+    return this.userRepository.findByEmailHash(HashingUtils.hash(email.trim()));
   }
 
   @Override
   @Transactional(readOnly = true)
-  public Optional<EndUser> findEndUserByOAuthId(String oAuthId) {
-    return this.endUserRepository.findByOauthId(oAuthId);
+  public Optional<User> findEndUserByOAuthId(String oAuthId) {
+    return this.userRepository.findByOauthId(oAuthId);
   }
 
   @Override
-  public Page<EndUser> findAll(Pageable pageable) {
-    return this.endUserRepository.findAll(pageable);
+  public Page<User> findAll(Pageable pageable) {
+    return this.userRepository.findAll(pageable);
   }
 
   @Override
-  public EndUser update(Long id, UserInfoUpdateDto infoUpdateDto) {
-    final EndUser user =
+  public User update(Long id, UserInfoUpdateDto infoUpdateDto) {
+    final User user =
         this.findById(id)
             .orElseThrow(() -> new NoSuchEntityException(ApiExceptionType.NOT_FOUND_USER));
     this.validateRequestFields(user, infoUpdateDto);
@@ -68,7 +68,7 @@ public class EndUserServiceImpl implements EndUserService {
 
   @Override
   public void delete(Long id, String reason) {
-    this.endUserRepository
+    this.userRepository
         .findById(id)
         .ifPresentOrElse(
             user -> {
@@ -81,12 +81,12 @@ public class EndUserServiceImpl implements EndUserService {
             });
   }
 
-  private void processOAuthWithdrawal(EndUser user) {
+  private void processOAuthWithdrawal(User user) {
     final String oauthId = user.getOauthId();
     this.oAuth2TemplateFactory.getById(oauthId).withdrawal(oauthId);
   }
 
-  private void validateRequestFields(EndUser user, UserInfoUpdateDto infoUpdateDto) {
+  private void validateRequestFields(User user, UserInfoUpdateDto infoUpdateDto) {
     ValidationUtils.throwIf(
         infoUpdateDto.email(),
         value -> user.getEmail().equals(value),

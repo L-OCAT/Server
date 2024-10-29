@@ -1,15 +1,15 @@
 package com.locat.api.domain.user.service;
 
 import com.locat.api.domain.user.dto.UserInfoUpdateDto;
-import com.locat.api.domain.user.entity.EndUser;
+import com.locat.api.domain.user.entity.User;
 import com.locat.api.global.exception.NoSuchEntityException;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-public interface EndUserService {
+public interface UserService {
 
-  EndUser save(final EndUser user);
+  User save(final User user);
 
   /**
    * 사용자 ID로 사용자 조회
@@ -18,7 +18,7 @@ public interface EndUserService {
    * @return 사용자 정보
    * @throws NoSuchEntityException 해당 ID의 사용자가 없을 경우
    */
-  Optional<EndUser> findById(final Long id);
+  Optional<User> findById(final Long id);
 
   /**
    * 사용자 이메일 해시로 사용자 조회
@@ -26,7 +26,7 @@ public interface EndUserService {
    * @param email 사용자 이메일(Not Hashed)
    * @return 사용자 정보
    */
-  Optional<EndUser> findByEmail(final String email);
+  Optional<User> findByEmail(final String email);
 
   /**
    * 사용자 OAuth ID로 사용자 조회
@@ -34,9 +34,9 @@ public interface EndUserService {
    * @param oAuthId 사용자 OAuth ID
    * @return 사용자 정보
    */
-  Optional<EndUser> findEndUserByOAuthId(final String oAuthId);
+  Optional<User> findEndUserByOAuthId(final String oAuthId);
 
-  Page<EndUser> findAll(Pageable pageable);
+  Page<User> findAll(Pageable pageable);
 
   /**
    * 사용자 정보 수정
@@ -45,7 +45,7 @@ public interface EndUserService {
    * @param infoUpdateDto 사용자 정보 수정 DTO
    * @return 수정된 사용자 정보
    */
-  EndUser update(final Long id, final UserInfoUpdateDto infoUpdateDto);
+  User update(final Long id, final UserInfoUpdateDto infoUpdateDto);
 
   /**
    * 사용자 탈퇴

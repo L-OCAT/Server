@@ -4,7 +4,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
-import com.locat.api.domain.user.entity.EndUser;
+import com.locat.api.domain.user.entity.User;
 import com.locat.api.global.auth.LocatUserDetails;
 import com.locat.api.global.security.filter.ActiveUserFilter;
 import jakarta.servlet.FilterChain;
@@ -64,7 +64,7 @@ class ActiveEndUserFilterTest {
     FilterChain filterChain = new MockFilterChain();
 
     // When
-    EndUser mockUser = mock(EndUser.class);
+    User mockUser = mock(User.class);
     LocatUserDetails mockUserDetails = mock(LocatUserDetails.class);
     when(mockUserDetails.getUser()).thenReturn(mockUser);
     doThrow(new AccessDeniedException("Access Denied: User is not activated."))

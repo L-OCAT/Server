@@ -5,7 +5,7 @@ import com.locat.api.domain.auth.entity.OAuth2ProviderToken;
 import com.locat.api.domain.auth.template.OAuth2Template;
 import com.locat.api.domain.auth.template.OAuth2TemplateFactory;
 import com.locat.api.domain.user.dto.UserRegisterDto;
-import com.locat.api.domain.user.entity.EndUser;
+import com.locat.api.domain.user.entity.User;
 import com.locat.api.domain.user.enums.UserInfoValidationType;
 import com.locat.api.domain.user.service.*;
 import com.locat.api.global.exception.ApiExceptionType;
@@ -13,6 +13,8 @@ import com.locat.api.global.exception.DuplicatedException;
 import com.locat.api.global.utils.ValidationUtils;
 import com.locat.api.infrastructure.redis.OAuth2ProviderTokenRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,23 +23,29 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserRegistrationServiceImpl implements UserRegistrationService {
 
-  private final EndUserService endUserService;
+  private final UserService userService;
   private final UserTermsService userTermsService;
   private final UserSettingService userSettingService;
   private final UserValidationService userValidationService;
   private final OAuth2TemplateFactory oAuth2TemplateFactory;
   private final OAuth2ProviderTokenRepository providerTokenRepository;
+  private final PasswordEncoder passwordEncoder;
+
+  @Value("${service.admin.temp-password}")
+  private String tempPassword;
 
   @Override
-  public EndUser register(UserRegisterDto userRegisterDto) {
+  public User register(UserRegisterDto userRegisterDto) {
     this.assertUserNotExists(userRegisterDto.oAuthId());
     this.userValidationService.validateNickname(userRegisterDto.nickname());
 
     OAuth2ProviderToken token = this.findTokenById(userRegisterDto.oAuthId());
     OAuth2UserInfoDto userInfo = this.fetchUserInfo(token);
-    final EndUser user = EndUser.of(userRegisterDto.nickname(), userInfo);
+    final User user =
+        User.of(
+            userRegisterDto.nickname(), this.passwordEncoder.encode(this.tempPassword), userInfo);
 
-    this.endUserService.save(user);
+    this.userService.save(user);
     this.userSettingService.registerDefaultSettings(user);
     this.userTermsService.register(user, userRegisterDto);
     return user;

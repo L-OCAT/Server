@@ -8,8 +8,8 @@ import com.locat.api.domain.geo.found.dto.FoundItemRegisterDto;
 import com.locat.api.domain.geo.found.dto.FoundItemSearchDto;
 import com.locat.api.domain.geo.found.entity.FoundItem;
 import com.locat.api.domain.geo.found.service.FoundItemService;
-import com.locat.api.domain.user.entity.EndUser;
-import com.locat.api.domain.user.service.EndUserService;
+import com.locat.api.domain.user.entity.User;
+import com.locat.api.domain.user.service.UserService;
 import com.locat.api.global.exception.ApiExceptionType;
 import com.locat.api.global.exception.NoSuchEntityException;
 import com.locat.api.global.file.FileService;
@@ -34,7 +34,7 @@ public class FoundItemServiceImpl implements FoundItemService {
 
   private final FoundItemRepository foundItemRepository;
   private final GeoItemQRepository<FoundItem> foundItemQRepository;
-  private final EndUserService endUserService;
+  private final UserService userService;
   private final CategoryService categoryService;
   private final ColorCodeService colorCodeService;
   private final FileService fileService;
@@ -56,15 +56,15 @@ public class FoundItemServiceImpl implements FoundItemService {
 
   @Override
   @Transactional(readOnly = true)
-  public List<FoundItem> findTop10ByEndUser(EndUser user) {
+  public List<FoundItem> findTop10ByEndUser(User user) {
     return this.foundItemRepository.findTop10ByUserOrderByCreatedAtDesc(user);
   }
 
   @Override
   public Long register(
       Long userId, FoundItemRegisterDto registerDto, MultipartFile foundItemImage) {
-    EndUser user =
-        this.endUserService
+    User user =
+        this.userService
             .findById(userId)
             .orElseThrow(() -> new NoSuchEntityException(ApiExceptionType.NOT_FOUND_USER));
     final Category category = this.fetchCategoryById(registerDto.categoryId());

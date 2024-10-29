@@ -4,7 +4,6 @@ import static org.springframework.http.HttpMethod.*;
 
 import com.locat.api.global.auth.LocatUserDetailsService;
 import com.locat.api.global.auth.jwt.JwtProvider;
-import com.locat.api.global.security.filter.ActiveUserFilter;
 import com.locat.api.global.security.filter.JwtAuthenticationFilter;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -64,13 +63,12 @@ public class SecurityConfig {
                     .requestMatchers("/v*/**")
                     .permitAll()
                     .requestMatchers("/actuator/**")
-                    .hasAnyRole("SUPER_ADMIN", "ADMIN")
+                    .hasAnyAuthority("ROLE_SUPER_ADMIN", "ROLE_ADMIN")
                     .anyRequest()
                     .denyAll())
         .addFilterBefore(
             new JwtAuthenticationFilter(this.jwtProvider, this.userDetailsService),
             UsernamePasswordAuthenticationFilter.class)
-        .addFilterAfter(new ActiveUserFilter(), JwtAuthenticationFilter.class)
         .exceptionHandling(
             exception ->
                 exception
@@ -100,6 +98,8 @@ public class SecurityConfig {
                 authorize
                     .requestMatchers(CorsUtils::isPreFlightRequest)
                     .permitAll()
+                    .requestMatchers("/actuator/**")
+                    .hasAnyAuthority("ROLE_SUPER_ADMIN", "ROLE_ADMIN")
                     .anyRequest()
                     .permitAll())
         .addFilterBefore(

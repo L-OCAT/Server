@@ -79,7 +79,7 @@ public record AdminUserStatResponse(
 
     static ActivityDetails from(AdminUserStatDto.ActivityDetails activityDetails) {
       return new ActivityDetails(
-          activityDetails.totalRegisteredLostItems(), activityDetails.totalRegisteredLostItems());
+          activityDetails.totalRegisteredLostItems(), activityDetails.totalRegisteredFoundItems());
     }
   }
 }
