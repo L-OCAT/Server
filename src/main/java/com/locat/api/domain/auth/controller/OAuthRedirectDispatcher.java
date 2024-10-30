@@ -3,6 +3,9 @@ package com.locat.api.domain.auth.controller;
 import com.locat.api.domain.auth.service.OAuth2Service;
 import com.locat.api.domain.common.dto.BaseResponse;
 import com.locat.api.domain.user.enums.OAuth2ProviderType;
+import com.locat.api.global.annotation.PublicApi;
+import com.locat.api.global.auth.enums.AccessLevel;
+import com.locat.api.global.auth.enums.KeyValidation;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,6 +23,7 @@ public class OAuthRedirectDispatcher {
 
   private final OAuth2Service oAuth2Service;
 
+  @PublicApi(accessLevel = AccessLevel.PUBLIC, keyValidation = KeyValidation.NONE)
   @GetMapping("/{providerType}")
   public ResponseEntity<BaseResponse<Void>> handleOAuth2Redirect(
       @PathVariable final String providerType, @RequestParam final String code) {

@@ -26,8 +26,7 @@ public class PublicApiAccessControlFilter extends AbstractLocatSecurityFilter {
     final boolean isPublicApi = optionalPublicApi.isPresent();
 
     if (isPublicApi && this.isAccessAllowed(request, optionalPublicApi.get())) {
-      this.forward(request, response);
-      return;
+      request.setAttribute(PUBLIC_API_AUTHORIZED, true);
     }
 
     filterChain.doFilter(request, response);

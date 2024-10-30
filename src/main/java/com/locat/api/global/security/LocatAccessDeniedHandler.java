@@ -19,6 +19,6 @@ public class LocatAccessDeniedHandler implements AccessDeniedHandler {
     if (log.isDebugEnabled()) {
       log.debug("Access Denied: {}", accessDeniedException.getMessage());
     }
-    response.sendError(HttpServletResponse.SC_FORBIDDEN);
+    response.sendError(HttpServletResponse.SC_FORBIDDEN, accessDeniedException.getMessage());
   }
 }

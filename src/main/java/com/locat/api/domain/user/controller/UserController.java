@@ -24,7 +24,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,7 +48,6 @@ public class UserController {
 
   /** 내 정보 조회 */
   @GetMapping("/me")
-  @PreAuthorize("isAuthenticated()")
   public ResponseEntity<BaseResponse<UserInfoResponse>> me(
       @AuthenticationPrincipal LocatUserDetails userDetails) {
     final long userId = userDetails.getId();
@@ -63,7 +61,6 @@ public class UserController {
 
   /** 내 정보(이메일 또는 닉네임) 수정 */
   @PatchMapping("/me")
-  @PreAuthorize("isAuthenticated()")
   public ResponseEntity<BaseResponse<UserInfoResponse>> updateMe(
       @AuthenticationPrincipal LocatUserDetails userDetails,
       @RequestBody @Valid final UserInfoUpdateRequest request) {
@@ -76,7 +73,6 @@ public class UserController {
 
   /** 회원 탈퇴 */
   @PutMapping("/me/delete")
-  @PreAuthorize("isAuthenticated()")
   public ResponseEntity<Void> deleteMe(
       @AuthenticationPrincipal LocatUserDetails userDetails,
       @RequestBody @Valid final UserWithDrawalRequest request) {

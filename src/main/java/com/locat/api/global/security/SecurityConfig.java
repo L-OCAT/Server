@@ -44,7 +44,7 @@ public class SecurityConfig {
           OPTIONS.name());
 
   private final SecurityProperties securityProperties;
-  private final HandlerMethodAnnotationResolver handlerMethodAnnotationResolver;
+  private final HandlerMethodAnnotationResolver annotationResolver;
   private final LocatUserDetailsService userDetailsService;
   private final JwtProvider jwtProvider;
 
@@ -67,19 +67,17 @@ public class SecurityConfig {
                     .requestMatchers("/v*/**")
                     .permitAll()
                     .requestMatchers("/actuator/**")
-                    .hasAnyAuthority("ROLE_SUPER_ADMIN", "ROLE_ADMIN")
+                    .hasAuthority("SUPER_ADMIN")
                     .anyRequest()
                     .denyAll())
         .addFilterBefore(
-            new PublicApiAccessControlFilter(
-                this.securityProperties, this.handlerMethodAnnotationResolver),
+            new PublicApiAccessControlFilter(this.securityProperties, this.annotationResolver),
             UsernamePasswordAuthenticationFilter.class)
         .addFilterAfter(
             new JwtAuthenticationFilter(this.jwtProvider, this.userDetailsService),
             PublicApiAccessControlFilter.class)
         .addFilterAfter(
-            new AdminApiAuthorizationFilter(this.handlerMethodAnnotationResolver),
-            JwtAuthenticationFilter.class)
+            new AdminApiAuthorizationFilter(this.annotationResolver), JwtAuthenticationFilter.class)
         .exceptionHandling(
             exception ->
                 exception
@@ -110,12 +108,17 @@ public class SecurityConfig {
                     .requestMatchers(CorsUtils::isPreFlightRequest)
                     .permitAll()
                     .requestMatchers("/actuator/**")
-                    .hasAnyAuthority("ROLE_SUPER_ADMIN", "ROLE_ADMIN")
+                    .hasAuthority("SUPER_ADMIN")
                     .anyRequest()
                     .permitAll())
         .addFilterBefore(
-            new JwtAuthenticationFilter(this.jwtProvider, this.userDetailsService),
+            new PublicApiAccessControlFilter(this.securityProperties, this.annotationResolver),
             UsernamePasswordAuthenticationFilter.class)
+        .addFilterAfter(
+            new JwtAuthenticationFilter(this.jwtProvider, this.userDetailsService),
+            PublicApiAccessControlFilter.class)
+        .addFilterAfter(
+            new AdminApiAuthorizationFilter(this.annotationResolver), JwtAuthenticationFilter.class)
         .build();
   }
 

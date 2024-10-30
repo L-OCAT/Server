@@ -23,6 +23,7 @@ public class LocatUserDetailsServiceImpl implements LocatUserDetailsService {
     User user =
         this.userService
             .findByEmail(username)
+            .filter(User::isActivated)
             .orElseThrow(() -> new NoSuchEntityException(ApiExceptionType.NOT_FOUND_USER));
     return LocatUserDetailsImpl.from(user);
   }
@@ -35,12 +36,8 @@ public class LocatUserDetailsServiceImpl implements LocatUserDetailsService {
   @Override
   public Authentication createAuthentication(Claims claims) {
     String userEmail = claims.getSubject();
-    return this.userService
-        .findByEmail(userEmail)
-        .filter(User::isActivated)
-        .map(LocatUserDetailsImpl::from)
-        .map(this::createAuthentication)
-        .orElseThrow(() -> new NoSuchEntityException(ApiExceptionType.NOT_FOUND_USER));
+    UserDetails userDetails = this.loadUserByUsername(userEmail);
+    return this.createAuthentication(userDetails);
   }
 
   @Override

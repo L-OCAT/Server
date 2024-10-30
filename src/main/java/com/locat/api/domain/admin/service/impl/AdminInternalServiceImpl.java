@@ -6,6 +6,7 @@ import com.locat.api.domain.user.enums.UserType;
 import com.locat.api.domain.user.service.UserService;
 import com.locat.api.global.exception.ApiExceptionType;
 import com.locat.api.global.exception.NoSuchEntityException;
+import com.locat.api.global.utils.HashingUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,9 +21,9 @@ public class AdminInternalServiceImpl implements AdminInternalService {
   private final PasswordEncoder passwordEncoder;
 
   @Override
-  public void resetPassword(Long userId, String newPassword) {
+  public void resetPassword(String userEmail, String newPassword) {
     this.userService
-        .findById(userId)
+        .findByEmail(HashingUtils.hash(userEmail))
         .filter(User::isPasswordExpired)
         .ifPresentOrElse(
             adminUser -> adminUser.resetPassword(this.passwordEncoder.encode(newPassword)),

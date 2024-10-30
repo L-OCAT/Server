@@ -9,11 +9,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 public abstract class AbstractLocatSecurityFilter extends OncePerRequestFilter {
 
-  /**
-   * OAuth2 리다이렉트 URI <br>
-   * Filter에서 제외되어야함
-   */
-  protected static final String OAUTH2_REDIRECT_PATH = "/v1/oauth2/redirect";
+  protected static final String PUBLIC_API_AUTHORIZED = "SECURITY_PUBLIC_API_AUTHORIZED";
 
   protected void proceed(
       HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -21,12 +17,7 @@ public abstract class AbstractLocatSecurityFilter extends OncePerRequestFilter {
     filterChain.doFilter(request, response);
   }
 
-  protected void forward(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
-    request.getRequestDispatcher(request.getServletPath()).forward(request, response);
-  }
-
-  protected boolean isOAuthRedirect(HttpServletRequest request) {
-    return request.getRequestURI().startsWith(OAUTH2_REDIRECT_PATH);
+  protected boolean isPublicApiAuthorized(HttpServletRequest request) {
+    return Boolean.TRUE.equals(request.getAttribute(PUBLIC_API_AUTHORIZED));
   }
 }

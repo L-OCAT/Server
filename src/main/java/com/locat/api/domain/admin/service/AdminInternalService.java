@@ -5,10 +5,10 @@ public interface AdminInternalService {
   /**
    * 관리자 사용자의 초기 비밀번호 초기화
    *
-   * @param userId 비밀번호를 초기화할 사용자 ID
+   * @param userEmail 비밀번호를 초기화할 사용자 이메일
    * @param newPassword 초기화할 비밀번호
    */
-  void resetPassword(final Long userId, final String newPassword);
+  void resetPassword(final String userEmail, final String newPassword);
 
   /**
    * 사용자의 유저 타입 변경

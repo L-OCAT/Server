@@ -25,13 +25,25 @@ public class JwtAuthenticationFilter extends AbstractLocatSecurityFilter {
   protected void doFilterInternal(
       HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
       throws ServletException, IOException {
+    if (this.shouldNotFilter(request)) {
+      this.proceed(request, response, filterChain);
+      return;
+    }
+
     Optional<String> userToken = Optional.of(request).map(this.jwtProvider::resolve);
 
     if (userToken.isPresent()) {
       this.processAuthentication(userToken.get(), response);
+      filterChain.doFilter(request, response);
+      return;
     }
 
-    filterChain.doFilter(request, response);
+    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "No Authorization Header");
+  }
+
+  @Override
+  protected boolean shouldNotFilter(HttpServletRequest request) {
+    return this.isPublicApiAuthorized(request);
   }
 
   private void processAuthentication(String token, HttpServletResponse response)

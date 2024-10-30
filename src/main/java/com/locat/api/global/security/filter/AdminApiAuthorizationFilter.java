@@ -44,7 +44,7 @@ public class AdminApiAuthorizationFilter extends AbstractLocatSecurityFilter {
 
   @Override
   protected boolean shouldNotFilter(HttpServletRequest request) {
-    return this.isOAuthRedirect(request);
+    return this.isPublicApiAuthorized(request);
   }
 
   private boolean isAuthorizedAdmin(AdminApi adminApi) {
