@@ -29,7 +29,7 @@ public record AdminUserInfoResponse(
   public static AdminUserInfoResponse fromEntity(User user) {
     return new AdminUserInfoResponse(
         user.getId(),
-        user.getUserType().getRoleName(),
+        user.getUserType().name(),
         user.getOauthType().name(),
         user.getEmail(),
         user.getNickname(),
