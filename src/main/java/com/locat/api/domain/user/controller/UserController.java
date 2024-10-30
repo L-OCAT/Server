@@ -12,6 +12,7 @@ import com.locat.api.domain.user.entity.User;
 import com.locat.api.domain.user.service.UserRegistrationService;
 import com.locat.api.domain.user.service.UserService;
 import com.locat.api.global.annotation.AdminApi;
+import com.locat.api.global.annotation.PublicApi;
 import com.locat.api.global.auth.LocatUserDetails;
 import com.locat.api.global.auth.jwt.JwtProvider;
 import com.locat.api.global.auth.jwt.LocatTokenDto;
@@ -37,6 +38,7 @@ public class UserController {
   private final UserRegistrationService userRegistrationService;
 
   /** 회원가입(OAuth2 인증 이후에) */
+  @PublicApi
   @PostMapping
   public ResponseEntity<BaseResponse<LocatTokenDto>> register(
       @RequestBody @Valid final UserRegisterRequest request) {

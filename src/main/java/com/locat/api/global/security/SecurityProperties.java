@@ -21,4 +21,8 @@ public class SecurityProperties {
         Objects.requireNonNull(environment.getProperty("service.url.admin"), errorMessage);
     this.apiKey = Objects.requireNonNull(environment.getProperty("service.api-key"), errorMessage);
   }
+
+  public boolean isKeyValid(final String key) {
+    return this.apiKey.equals(key);
+  }
 }

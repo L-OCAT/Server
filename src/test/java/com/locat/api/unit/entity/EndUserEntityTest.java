@@ -72,7 +72,7 @@ class EndUserEntityTest {
     OAuth2UserInfoDto mockUserInfoDto = TestDataFactory.create(OAUTH_ID, EMAIL);
 
     // When
-    User createdUser = User.of(NICKNAME, mockUserInfoDto);
+    User createdUser = User.of(NICKNAME, "temp1234", mockUserInfoDto);
 
     // Then
     assertThat(createdUser).isNotNull();
@@ -133,7 +133,7 @@ class EndUserEntityTest {
   @DisplayName("User가 활성화 상태일 때 status 관련 메서드 테스트")
   void testIfUserActivated() {
     // When & Then
-    assertThat(this.user.isNotActivated()).isFalse();
+    assertThat(this.user.isActivated()).isTrue();
     assertThatCode(this.user::assertActivated).doesNotThrowAnyException();
   }
 
@@ -144,7 +144,7 @@ class EndUserEntityTest {
     this.user.updateStatus(StatusType.INACTIVE);
 
     // When & Then
-    assertThat(this.user.isNotActivated()).isTrue();
+    assertThat(this.user.isActivated()).isFalse();
     assertThatCode(this.user::assertActivated)
         .isExactlyInstanceOf(AccessDeniedException.class)
         .hasMessageStartingWith("Access Denied:");

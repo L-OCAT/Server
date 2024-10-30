@@ -37,6 +37,7 @@ public class LocatUserDetailsServiceImpl implements LocatUserDetailsService {
     String userEmail = claims.getSubject();
     return this.userService
         .findByEmail(userEmail)
+        .filter(User::isActivated)
         .map(LocatUserDetailsImpl::from)
         .map(this::createAuthentication)
         .orElseThrow(() -> new NoSuchEntityException(ApiExceptionType.NOT_FOUND_USER));

@@ -174,12 +174,12 @@ public class User extends BaseEntity {
     return this.deletedAt != null ? this.deletedAt.toString() : null;
   }
 
-  public boolean isNotActivated() {
-    return this.statusType != StatusType.ACTIVE;
+  public boolean isActivated() {
+    return this.statusType == StatusType.ACTIVE;
   }
 
   public void assertActivated() {
-    if (this.isNotActivated()) {
+    if (!this.isActivated()) {
       throw new AccessDeniedException("Access Denied: User is not activated.");
     }
   }

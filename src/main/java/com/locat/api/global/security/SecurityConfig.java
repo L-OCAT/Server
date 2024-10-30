@@ -4,7 +4,10 @@ import static org.springframework.http.HttpMethod.*;
 
 import com.locat.api.global.auth.LocatUserDetailsService;
 import com.locat.api.global.auth.jwt.JwtProvider;
+import com.locat.api.global.security.filter.AdminApiAuthorizationFilter;
 import com.locat.api.global.security.filter.JwtAuthenticationFilter;
+import com.locat.api.global.security.filter.PublicApiAccessControlFilter;
+import com.locat.api.global.web.HandlerMethodAnnotationResolver;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -41,6 +44,7 @@ public class SecurityConfig {
           OPTIONS.name());
 
   private final SecurityProperties securityProperties;
+  private final HandlerMethodAnnotationResolver handlerMethodAnnotationResolver;
   private final LocatUserDetailsService userDetailsService;
   private final JwtProvider jwtProvider;
 
@@ -67,8 +71,15 @@ public class SecurityConfig {
                     .anyRequest()
                     .denyAll())
         .addFilterBefore(
-            new JwtAuthenticationFilter(this.jwtProvider, this.userDetailsService),
+            new PublicApiAccessControlFilter(
+                this.securityProperties, this.handlerMethodAnnotationResolver),
             UsernamePasswordAuthenticationFilter.class)
+        .addFilterAfter(
+            new JwtAuthenticationFilter(this.jwtProvider, this.userDetailsService),
+            PublicApiAccessControlFilter.class)
+        .addFilterAfter(
+            new AdminApiAuthorizationFilter(this.handlerMethodAnnotationResolver),
+            JwtAuthenticationFilter.class)
         .exceptionHandling(
             exception ->
                 exception
