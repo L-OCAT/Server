@@ -21,8 +21,7 @@ public class PublicApiAccessControlFilter extends AbstractLocatSecurityFilter {
   protected void doFilterInternal(
       HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
       throws ServletException, IOException {
-    Optional<PublicApi> optionalPublicApi =
-        this.annotationResolver.resolveAndFindAnnotation(request, PublicApi.class);
+    Optional<PublicApi> optionalPublicApi = this.annotationResolver.find(request, PublicApi.class);
     final boolean isPublicApi = optionalPublicApi.isPresent();
 
     if (isPublicApi && this.isAccessAllowed(request, optionalPublicApi.get())) {
