@@ -28,8 +28,7 @@ public class AdminApiAuthorizationFilter extends AbstractLocatSecurityFilter {
       return;
     }
 
-    Optional<AdminApi> optionalAdminApi =
-        this.annotationResolver.resolveAndFindAnnotation(request, AdminApi.class);
+    Optional<AdminApi> optionalAdminApi = this.annotationResolver.find(request, AdminApi.class);
     final boolean isNotAdminApi = optionalAdminApi.isEmpty();
     final boolean isAuthorizedRequest =
         isNotAdminApi || this.isAuthorizedAdmin(optionalAdminApi.get());

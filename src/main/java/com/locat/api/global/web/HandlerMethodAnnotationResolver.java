@@ -26,7 +26,7 @@ public class HandlerMethodAnnotationResolver {
    * @return 찾은 어노테이션, 없을 경우 {@link Optional#empty()}
    * @param <A> 찾을 어노테이션의 타입
    */
-  public <A extends Annotation> Optional<A> resolveAndFindAnnotation(
+  public <A extends Annotation> Optional<A> find(
       HttpServletRequest request, Class<A> targetAnnotation) {
     return this.resolve(request)
         .flatMap(handlerMethod -> this.findAnnotation(handlerMethod, targetAnnotation));
