@@ -34,7 +34,7 @@ public interface UserService {
    * @param oAuthId 사용자 OAuth ID
    * @return 사용자 정보
    */
-  Optional<User> findEndUserByOAuthId(final String oAuthId);
+  Optional<User> findByOAuthId(final String oAuthId);
 
   Page<User> findAll(Pageable pageable);
 

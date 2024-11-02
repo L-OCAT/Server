@@ -42,7 +42,7 @@ public class AuthServiceImpl implements AuthService {
   public LocatTokenDto authenticate(String oAuthId) {
     this.validateAuthentication(oAuthId);
     return this.userService
-        .findEndUserByOAuthId(oAuthId)
+        .findByOAuthId(oAuthId)
         .map(this::issueTokenIfActivated)
         .orElseThrow(() -> new NoSuchEntityException(ApiExceptionType.NOT_FOUND_USER));
   }
@@ -52,6 +52,7 @@ public class AuthServiceImpl implements AuthService {
   public AdminLoginResponse authenticate(AdminLoginDto loginDto) {
     return this.userService
         .findByEmail(loginDto.userId())
+        .filter(User::isAdmin)
         .filter(user -> this.passwordEncoder.matches(loginDto.password(), user.getPassword()))
         .map(
             user -> {

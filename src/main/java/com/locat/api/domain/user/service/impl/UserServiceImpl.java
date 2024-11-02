@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   @Transactional(readOnly = true)
-  public Optional<User> findEndUserByOAuthId(String oAuthId) {
+  public Optional<User> findByOAuthId(String oAuthId) {
     return this.userRepository.findByOauthId(oAuthId);
   }
 
