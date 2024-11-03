@@ -2,10 +2,7 @@ package com.locat.api.domain.admin.controller;
 
 import com.locat.api.domain.admin.dto.AdminUserFoundItemStatDto;
 import com.locat.api.domain.admin.dto.AdminUserLostItemStatDto;
-import com.locat.api.domain.admin.dto.AdminUserStatDto;
-import com.locat.api.domain.admin.dto.response.AdminUserFoundItemStatResponse;
-import com.locat.api.domain.admin.dto.response.AdminUserLostItemStatResponse;
-import com.locat.api.domain.admin.dto.response.AdminUserStatResponse;
+import com.locat.api.domain.admin.dto.response.*;
 import com.locat.api.domain.admin.service.AdminStatisticService;
 import com.locat.api.domain.common.dto.BaseResponse;
 import com.locat.api.global.annotation.AdminApi;
@@ -25,10 +22,32 @@ public class AdminStatisticController {
 
   private final AdminStatisticService adminStatisticService;
 
+  @GetMapping("/dashboard/summary")
+  public ResponseEntity<BaseResponse<AdminDashboardSummaryResponse>> getServiceSummary() {
+    AdminDashboardSummaryResponse summary =
+        AdminDashboardSummaryResponse.from(this.adminStatisticService.getSummary());
+    return ResponseEntity.ok(BaseResponse.of(summary));
+  }
+
+  @GetMapping("/dashboard/items/monthly")
+  public ResponseEntity<BaseResponse<AdminMontlyItemStatResponse>> getMonthlyItemStat() {
+    AdminMontlyItemStatResponse summary =
+        AdminMontlyItemStatResponse.from(this.adminStatisticService.getMonthlyItemStat());
+    return ResponseEntity.ok(BaseResponse.of(summary));
+  }
+
+  @GetMapping("/dashboard/items/by-categories")
+  public ResponseEntity<BaseResponse<AdminItemStatByCateogoryResponse>> getItemSummaryByCategory() {
+    AdminItemStatByCateogoryResponse summary =
+        AdminItemStatByCateogoryResponse.from(this.adminStatisticService.getStatByCategory());
+    return ResponseEntity.ok(BaseResponse.of(summary));
+  }
+
   @GetMapping("/users/{id}")
   public ResponseEntity<BaseResponse<AdminUserStatResponse>> getUserStat(@PathVariable Long id) {
-    AdminUserStatDto userStat = this.adminStatisticService.getEndUserStat(id);
-    return ResponseEntity.ok(BaseResponse.of(AdminUserStatResponse.from(userStat)));
+    AdminUserStatResponse userStat =
+        AdminUserStatResponse.from(this.adminStatisticService.getEndUserStat(id));
+    return ResponseEntity.ok(BaseResponse.of(userStat));
   }
 
   @GetMapping("/users/{id}/founds")

@@ -1,4 +1,4 @@
-package com.locat.api.infrastructure.repository.user.impl;
+package com.locat.api.infrastructure.repository.admin.impl;
 
 import com.locat.api.domain.admin.dto.AdminUserStatDto;
 import com.locat.api.domain.geo.found.entity.QFoundItem;
@@ -7,7 +7,7 @@ import com.locat.api.domain.terms.entity.QTerms;
 import com.locat.api.domain.user.entity.QUser;
 import com.locat.api.domain.user.entity.User;
 import com.locat.api.domain.user.entity.association.QUserTermsAgreement;
-import com.locat.api.infrastructure.repository.user.UserQStatisticRepository;
+import com.locat.api.infrastructure.repository.admin.UserStatisticQRepository;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
-public class UserQStatisticRepositoryImpl implements UserQStatisticRepository {
+public class UserStatisticQRepositoryImpl implements UserStatisticQRepository {
 
   private static final QUser qUser = QUser.user;
   private static final QTerms qTerms = QTerms.terms;
@@ -28,13 +28,13 @@ public class UserQStatisticRepositoryImpl implements UserQStatisticRepository {
   private static final QLostItem qLostItem = QLostItem.lostItem;
   private static final QFoundItem qFoundItem = QFoundItem.foundItem;
 
-  private final JPAQueryFactory jpaQueryFactory;
+  private final JPAQueryFactory queryFactory;
 
   @Override
   public AdminUserStatDto getUserStat(User user) {
     List<AdminUserStatDto.AgreementDetail> agreementDetail = this.fetchAgreementDetail(user);
     AdminUserStatDto adminUserStatDto =
-        this.jpaQueryFactory
+        this.queryFactory
             .select(
                 Projections.constructor(
                     AdminUserStatDto.class,
@@ -77,7 +77,7 @@ public class UserQStatisticRepositoryImpl implements UserQStatisticRepository {
   }
 
   private List<AdminUserStatDto.AgreementDetail> fetchAgreementDetail(User user) {
-    return this.jpaQueryFactory
+    return this.queryFactory
         .select(
             Projections.constructor(
                 AdminUserStatDto.AgreementDetail.class,

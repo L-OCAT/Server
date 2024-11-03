@@ -1,9 +1,9 @@
-package com.locat.api.infrastructure.repository.user;
+package com.locat.api.infrastructure.repository.admin;
 
 import com.locat.api.domain.admin.dto.AdminUserStatDto;
 import com.locat.api.domain.user.entity.User;
 
-public interface UserQStatisticRepository {
+public interface UserStatisticQRepository {
 
   AdminUserStatDto getUserStat(User user);
 }

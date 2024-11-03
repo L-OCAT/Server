@@ -1,8 +1,6 @@
 package com.locat.api.domain.admin.service.impl;
 
-import com.locat.api.domain.admin.dto.AdminUserFoundItemStatDto;
-import com.locat.api.domain.admin.dto.AdminUserLostItemStatDto;
-import com.locat.api.domain.admin.dto.AdminUserStatDto;
+import com.locat.api.domain.admin.dto.*;
 import com.locat.api.domain.admin.service.AdminStatisticService;
 import com.locat.api.domain.geo.found.service.FoundItemService;
 import com.locat.api.domain.geo.lost.service.LostItemService;
@@ -10,7 +8,8 @@ import com.locat.api.domain.user.entity.User;
 import com.locat.api.domain.user.service.UserService;
 import com.locat.api.global.exception.ApiExceptionType;
 import com.locat.api.global.exception.NoSuchEntityException;
-import com.locat.api.infrastructure.repository.user.UserQStatisticRepository;
+import com.locat.api.infrastructure.repository.admin.AdminDashboardQRepository;
+import com.locat.api.infrastructure.repository.admin.UserStatisticQRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,15 +20,31 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class AdminStatisticServiceImpl implements AdminStatisticService {
 
-  private final UserQStatisticRepository userQStatisticRepository;
+  private final AdminDashboardQRepository adminDashboardQRepository;
+  private final UserStatisticQRepository userStatisticQRepository;
   private final UserService userService;
   private final FoundItemService foundItemService;
   private final LostItemService lostItemService;
 
   @Override
+  public AdminDashboardSummaryDto getSummary() {
+    return this.adminDashboardQRepository.getSummary();
+  }
+
+  @Override
+  public AdminMonthlyItemStatDto getMonthlyItemStat() {
+    return this.adminDashboardQRepository.getMonthlyItemStat();
+  }
+
+  @Override
+  public List<AdminItemStatByCategoryDto> getStatByCategory() {
+    return this.adminDashboardQRepository.getStatByCategory();
+  }
+
+  @Override
   public AdminUserStatDto getEndUserStat(Long userId) {
     User user = this.findUser(userId);
-    return this.userQStatisticRepository.getUserStat(user);
+    return this.userStatisticQRepository.getUserStat(user);
   }
 
   @Override
