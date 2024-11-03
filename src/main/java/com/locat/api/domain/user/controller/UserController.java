@@ -2,6 +2,7 @@ package com.locat.api.domain.user.controller;
 
 import com.locat.api.domain.admin.dto.response.AdminUserInfoResponse;
 import com.locat.api.domain.common.dto.BaseResponse;
+import com.locat.api.domain.user.dto.AdminUserSearchCriteria;
 import com.locat.api.domain.user.dto.UserInfoUpdateDto;
 import com.locat.api.domain.user.dto.UserRegisterDto;
 import com.locat.api.domain.user.dto.request.UserInfoUpdateRequest;
@@ -19,6 +20,7 @@ import com.locat.api.global.auth.jwt.LocatTokenDto;
 import com.locat.api.global.exception.ApiExceptionType;
 import com.locat.api.global.exception.NoSuchEntityException;
 import jakarta.validation.Valid;
+import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -84,8 +86,15 @@ public class UserController {
   @AdminApi
   @GetMapping
   public ResponseEntity<BaseResponse<Page<AdminUserInfoResponse>>> findAllByAdmin(
+      @RequestParam(required = false) String email,
+      @RequestParam(required = false) String nickname,
+      @RequestParam(required = false) LocalDate startDate,
+      @RequestParam(required = false) LocalDate endDate,
       Pageable pageable) {
+    AdminUserSearchCriteria criteria =
+        AdminUserSearchCriteria.of(nickname, email, startDate, endDate);
     return ResponseEntity.ok(
-        BaseResponse.of(this.userService.findAll(pageable).map(AdminUserInfoResponse::fromEntity)));
+        BaseResponse.of(
+            this.userService.findAll(criteria, pageable).map(AdminUserInfoResponse::from)));
   }
 }

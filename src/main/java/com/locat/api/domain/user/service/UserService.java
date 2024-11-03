@@ -1,5 +1,7 @@
 package com.locat.api.domain.user.service;
 
+import com.locat.api.domain.user.dto.AdminUserSearchCriteria;
+import com.locat.api.domain.user.dto.UserInfoDto;
 import com.locat.api.domain.user.dto.UserInfoUpdateDto;
 import com.locat.api.domain.user.entity.User;
 import com.locat.api.global.exception.NoSuchEntityException;
@@ -36,7 +38,14 @@ public interface UserService {
    */
   Optional<User> findByOAuthId(final String oAuthId);
 
-  Page<User> findAll(Pageable pageable);
+  /**
+   * 사용자 목록 조회
+   *
+   * @param criteria 검색 조건
+   * @param pageable 페이징 정보
+   * @return 사용자 목록
+   */
+  Page<UserInfoDto> findAll(AdminUserSearchCriteria criteria, Pageable pageable);
 
   /**
    * 사용자 정보 수정

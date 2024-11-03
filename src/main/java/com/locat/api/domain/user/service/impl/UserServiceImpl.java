@@ -1,6 +1,8 @@
 package com.locat.api.domain.user.service.impl;
 
 import com.locat.api.domain.auth.template.OAuth2TemplateFactory;
+import com.locat.api.domain.user.dto.AdminUserSearchCriteria;
+import com.locat.api.domain.user.dto.UserInfoDto;
 import com.locat.api.domain.user.dto.UserInfoUpdateDto;
 import com.locat.api.domain.user.entity.User;
 import com.locat.api.domain.user.service.UserService;
@@ -11,6 +13,7 @@ import com.locat.api.global.exception.DuplicatedException;
 import com.locat.api.global.exception.NoSuchEntityException;
 import com.locat.api.global.utils.HashingUtils;
 import com.locat.api.global.utils.ValidationUtils;
+import com.locat.api.infrastructure.repository.user.UserQRepository;
 import com.locat.api.infrastructure.repository.user.UserRepository;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserServiceImpl implements UserService {
 
   private final UserRepository userRepository;
+  private final UserQRepository userQRepository;
   private final OAuth2TemplateFactory oAuth2TemplateFactory;
   private final UserValidationService userValidationService;
   private final UserWithdrawalLogService userWithdrawalLogService;
@@ -53,8 +57,8 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public Page<User> findAll(Pageable pageable) {
-    return this.userRepository.findAll(pageable);
+  public Page<UserInfoDto> findAll(AdminUserSearchCriteria criteria, Pageable pageable) {
+    return this.userQRepository.findAllByCriteria(criteria, pageable);
   }
 
   @Override
