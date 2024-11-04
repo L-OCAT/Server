@@ -30,7 +30,7 @@ public class OAuthRedirectDispatcher {
     OAuth2ProviderType provider = OAuth2ProviderType.valueOf(providerType.toUpperCase());
     String oauthId = this.oAuth2Service.authenticate(provider, code);
     return ResponseEntity.status(HttpStatus.FOUND)
-        .location(URI.create(this.adminUrl.concat("/?oAuthId=").concat(oauthId)))
+        .location(URI.create(this.adminUrl.concat("/login?oAuthId=").concat(oauthId)))
         .build();
   }
 }
