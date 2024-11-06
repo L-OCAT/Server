@@ -1,17 +1,15 @@
 package com.locat.api.domain.terms.entity;
 
 import com.locat.api.domain.common.entity.BaseEntity;
-import com.locat.api.domain.terms.dto.TermsRegisterDto;
+import com.locat.api.domain.terms.dto.TermsUpsertDto;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import java.math.BigDecimal;
 import lombok.*;
 
 @Entity
 @Getter
-@Builder
+@Builder(toBuilder = true)
 @Table(
     name = "terms",
     uniqueConstraints = {
@@ -23,7 +21,8 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Terms extends BaseEntity {
 
-  @Transient private static final BigDecimal VERSION_INCREMENT = new BigDecimal("0.1");
+  @Transient private static final double INITIAL_VERSION = 1.0;
+  @Transient private static final double VERSION_INCREMENT = 0.1;
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,6 +33,9 @@ public class Terms extends BaseEntity {
   @Column(name = "type", nullable = false)
   private TermsType type;
 
+  @Column(name = "is_required", nullable = false)
+  private boolean isRequired;
+
   @Size(max = 150)
   @NotNull @Column(name = "title", nullable = false, length = 150)
   private String title;
@@ -42,16 +44,25 @@ public class Terms extends BaseEntity {
   @Column(name = "content", nullable = false)
   private String content;
 
-  @NotNull @Digits(integer = 2, fraction = 1)
-  @Column(name = "version", nullable = false, precision = 3, scale = 1)
-  private BigDecimal version;
+  @NotNull @Column(name = "version", nullable = false)
+  private Double version;
 
-  public static Terms from(TermsRegisterDto registerDto, BigDecimal previousVersion) {
+  public static Terms create(TermsUpsertDto upsertDto) {
     return Terms.builder()
-        .type(registerDto.type())
-        .title(registerDto.title())
-        .content(registerDto.content())
-        .version(previousVersion.add(VERSION_INCREMENT))
+        .type(upsertDto.type())
+        .isRequired(upsertDto.isRequired())
+        .title(upsertDto.title())
+        .content(upsertDto.content())
+        .version(INITIAL_VERSION)
+        .build();
+  }
+
+  public Terms update(TermsUpsertDto upsertDto) {
+    return this.toBuilder()
+        .isRequired(upsertDto.isRequired())
+        .title(upsertDto.title())
+        .content(upsertDto.content())
+        .version(this.version + VERSION_INCREMENT)
         .build();
   }
 }
