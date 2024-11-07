@@ -32,6 +32,14 @@ public class LocatAuditorAware implements AuditorAware<Long> {
         .map(LocatUserDetails::getId);
   }
 
+  public Optional<String> getCurrentAuditorName() {
+    return Optional.of(SecurityContextHolder.getContext())
+        .map(SecurityContext::getAuthentication)
+        .filter(Authentication::isAuthenticated)
+        .filter(this::isNotAnonymous)
+        .map(Authentication::getName);
+  }
+
   private boolean isNotAnonymous(Authentication authentication) {
     return !PRINCIPAL_ANONYMOUS_USER.equalsIgnoreCase(authentication.getName());
   }

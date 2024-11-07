@@ -1,15 +1,22 @@
 package com.locat.api.global.security.filter;
 
+import static com.locat.api.global.security.LocatAuditorAware.PRINCIPAL_ANONYMOUS_USER;
+
 import com.locat.api.global.annotation.AdminApi;
 import com.locat.api.global.auth.LocatUserDetails;
+import com.locat.api.global.event.AdminAuditEvent;
+import com.locat.api.global.security.LocatAuditorAware;
 import com.locat.api.global.web.HandlerMethodAnnotationResolver;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,6 +25,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 public class AdminApiAuthorizationFilter extends AbstractLocatSecurityFilter {
 
   private final HandlerMethodAnnotationResolver annotationResolver;
+  private final LocatAuditorAware auditorAware;
+  private final ApplicationEventPublisher eventPublisher;
 
   @Override
   protected void doFilterInternal(
@@ -29,16 +38,22 @@ public class AdminApiAuthorizationFilter extends AbstractLocatSecurityFilter {
     }
 
     Optional<AdminApi> optionalAdminApi = this.annotationResolver.find(request, AdminApi.class);
-    final boolean isNotAdminApi = optionalAdminApi.isEmpty();
+    final boolean isAdminApi = optionalAdminApi.isPresent();
     final boolean isAuthorizedRequest =
-        isNotAdminApi || this.isAuthorizedAdmin(optionalAdminApi.get());
+        !isAdminApi || this.isAuthorizedAdmin(optionalAdminApi.get());
 
-    if (isAuthorizedRequest) {
-      this.proceed(request, response, filterChain);
+    if (!isAuthorizedRequest) {
+      this.handleUnauthorizedRequest(request, response, optionalAdminApi.get());
       return;
     }
 
-    response.sendError(HttpServletResponse.SC_FORBIDDEN);
+    try {
+      this.proceed(request, response, filterChain);
+    } finally {
+      if (isAdminApi && optionalAdminApi.get().audit()) {
+        this.publishAuditEvent(request, response, optionalAdminApi.get(), true);
+      }
+    }
   }
 
   @Override
@@ -59,5 +74,35 @@ public class AdminApiAuthorizationFilter extends AbstractLocatSecurityFilter {
       return adminApi.superAdminOnly() ? userDetails.isSuperAdmin() : userDetails.isAdmin();
     }
     return false;
+  }
+
+  private void handleUnauthorizedRequest(
+      HttpServletRequest request, HttpServletResponse response, AdminApi adminApi)
+      throws IOException {
+    if (adminApi.audit()) {
+      this.publishAuditEvent(request, response, adminApi, false);
+    }
+    response.sendError(HttpServletResponse.SC_FORBIDDEN);
+  }
+
+  private void publishAuditEvent(
+      HttpServletRequest request,
+      HttpServletResponse response,
+      AdminApi adminApi,
+      boolean isSuccessful) {
+    String username = this.auditorAware.getCurrentAuditorName().orElse(PRINCIPAL_ANONYMOUS_USER);
+    AdminAuditEvent auditEvent =
+        AdminAuditEvent.builder()
+            .email(username)
+            .superAdminOnly(adminApi.superAdminOnly())
+            .method(request.getMethod())
+            .requestUri(request.getRequestURI())
+            .httpStatus(response.getStatus())
+            .isSuccessful(isSuccessful)
+            .remoteAddress(request.getRemoteAddr())
+            .userAgent(request.getHeader(HttpHeaders.USER_AGENT))
+            .timestamp(LocalDateTime.now())
+            .build();
+    this.eventPublisher.publishEvent(auditEvent);
   }
 }

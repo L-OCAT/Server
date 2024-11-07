@@ -26,7 +26,7 @@ public class TermsController {
   private final TermsService termsService;
   private final TermsRevisionHistoryService revisionHistoryService;
 
-  @AdminApi(superAdminOnly = true)
+  @AdminApi(superAdminOnly = true, audit = true)
   @PostMapping
   public ResponseEntity<BaseResponse<TermsResponse>> upsert(
       @RequestBody @Valid final TermsUpsertRequest request) {

@@ -21,7 +21,7 @@ public class AdminController {
 
   private final AdminInternalService adminInternalService;
 
-  @AdminApi(superAdminOnly = true)
+  @AdminApi(superAdminOnly = true, audit = true)
   @PostMapping
   public ResponseEntity<BaseResponse<Void>> updateUserType(
       @RequestBody @Valid final AdminPromoteRequest request) {

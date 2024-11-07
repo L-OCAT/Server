@@ -25,7 +25,7 @@ public class TermsRevisionHistoryQRepositoryImpl implements TermsRevisionHistory
         .select(
             Projections.constructor(
                 TermsRevisionCompactHistoryDto.class,
-                qTermsRevisionHistory.title,
+                qTermsRevisionHistory.version,
                 qTermsRevisionHistory.revisionNote,
                 qTermsRevisionHistory.createdAt))
         .from(qTermsRevisionHistory)

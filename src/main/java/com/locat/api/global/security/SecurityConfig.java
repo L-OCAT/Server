@@ -2,12 +2,9 @@ package com.locat.api.global.security;
 
 import static org.springframework.http.HttpMethod.*;
 
-import com.locat.api.global.auth.LocatUserDetailsService;
-import com.locat.api.global.auth.jwt.JwtProvider;
-import com.locat.api.global.security.filter.AdminApiAuthorizationFilter;
 import com.locat.api.global.security.filter.JwtAuthenticationFilter;
 import com.locat.api.global.security.filter.PublicApiAccessControlFilter;
-import com.locat.api.global.web.HandlerMethodAnnotationResolver;
+import com.locat.api.global.security.filter.SecurityFilterFactory;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -43,10 +40,7 @@ public class SecurityConfig {
           DELETE.name(),
           OPTIONS.name());
 
-  private final SecurityProperties securityProperties;
-  private final HandlerMethodAnnotationResolver annotationResolver;
-  private final LocatUserDetailsService userDetailsService;
-  private final JwtProvider jwtProvider;
+  private final SecurityFilterFactory filterFactory;
 
   /** 상용(또는 개발) 환경에서 사용하는 SecurityFilterChain을 설정합니다. */
   @Bean
@@ -71,13 +65,9 @@ public class SecurityConfig {
                     .anyRequest()
                     .denyAll())
         .addFilterBefore(
-            new PublicApiAccessControlFilter(this.securityProperties, this.annotationResolver),
-            UsernamePasswordAuthenticationFilter.class)
-        .addFilterAfter(
-            new JwtAuthenticationFilter(this.jwtProvider, this.userDetailsService),
-            PublicApiAccessControlFilter.class)
-        .addFilterAfter(
-            new AdminApiAuthorizationFilter(this.annotationResolver), JwtAuthenticationFilter.class)
+            this.filterFactory.publicAccess(), UsernamePasswordAuthenticationFilter.class)
+        .addFilterAfter(this.filterFactory.jwtAuth(), PublicApiAccessControlFilter.class)
+        .addFilterAfter(this.filterFactory.adminAuth(), JwtAuthenticationFilter.class)
         .exceptionHandling(
             exception ->
                 exception
@@ -112,13 +102,9 @@ public class SecurityConfig {
                     .anyRequest()
                     .permitAll())
         .addFilterBefore(
-            new PublicApiAccessControlFilter(this.securityProperties, this.annotationResolver),
-            UsernamePasswordAuthenticationFilter.class)
-        .addFilterAfter(
-            new JwtAuthenticationFilter(this.jwtProvider, this.userDetailsService),
-            PublicApiAccessControlFilter.class)
-        .addFilterAfter(
-            new AdminApiAuthorizationFilter(this.annotationResolver), JwtAuthenticationFilter.class)
+            this.filterFactory.publicAccess(), UsernamePasswordAuthenticationFilter.class)
+        .addFilterAfter(this.filterFactory.jwtAuth(), PublicApiAccessControlFilter.class)
+        .addFilterAfter(this.filterFactory.adminAuth(), JwtAuthenticationFilter.class)
         .build();
   }
 
