@@ -12,4 +12,7 @@ public @interface AdminApi {
 
   /** 이 API를 {@link UserType#SUPER_ADMIN}만 사용할 수 있도록 설정합니다. */
   boolean superAdminOnly() default false;
+
+  /** 이 API 요청 시 감사 로그(logback & DB)를 남길지 여부를 설정합니다. */
+  boolean audit() default false;
 }
