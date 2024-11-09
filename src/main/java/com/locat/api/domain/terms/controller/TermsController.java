@@ -15,6 +15,7 @@ import com.locat.api.global.exception.NoSuchEntityException;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,11 +29,10 @@ public class TermsController {
 
   @AdminApi(superAdminOnly = true, audit = true)
   @PostMapping
-  public ResponseEntity<BaseResponse<TermsResponse>> upsert(
+  public ResponseEntity<BaseResponse<Void>> upsert(
       @RequestBody @Valid final TermsUpsertRequest request) {
-    TermsResponse response =
-        TermsResponse.toDetailed(this.termsService.upsert(TermsUpsertDto.fromRequest(request)));
-    return ResponseEntity.ok(BaseResponse.of(response));
+    this.termsService.upsert(TermsUpsertDto.fromRequest(request));
+    return ResponseEntity.status(HttpStatus.CREATED).body(BaseResponse.empty());
   }
 
   @GetMapping

@@ -12,10 +12,9 @@ public interface TermsService {
    * 새로 또는 수정된 약관을 등록합니다.
    *
    * @param upsertDto 등록 또는 수정할 약관 정보에 대한 DTO
-   * @return 등록 또는 수정된 약관 정보
    * @apiNote {@code version}은 자동 부여됩니다.
    */
-  Terms upsert(final TermsUpsertDto upsertDto);
+  void upsert(final TermsUpsertDto upsertDto);
 
   /**
    * 지정한 타입의 최신 버전 약관을 조회합니다.

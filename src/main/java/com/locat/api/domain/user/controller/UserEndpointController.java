@@ -27,6 +27,6 @@ public class UserEndpointController {
       @RequestBody @Valid final EndpointRegisterRequest request) {
     this.userEndpointService.register(
         userDetails.getId(), EndpointRegisterDto.fromRequest(request));
-    return ResponseEntity.ok(BaseResponse.ofEmpty());
+    return ResponseEntity.ok(BaseResponse.empty());
   }
 }
