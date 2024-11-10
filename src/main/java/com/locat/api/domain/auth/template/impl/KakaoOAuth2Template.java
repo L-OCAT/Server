@@ -44,7 +44,8 @@ public class KakaoOAuth2Template extends AbstractOAuth2Template {
   }
 
   @Override
-  public OAuth2UserInfoDto fetchUserInfo(String accessToken) {
+  public OAuth2UserInfoDto fetchUserInfo(String oAuthId) {
+    final String accessToken = super.fetchToken(oAuthId).getAccessToken();
     return this.kakaoUserClient.getUserInfo(prependBearer(accessToken));
   }
 

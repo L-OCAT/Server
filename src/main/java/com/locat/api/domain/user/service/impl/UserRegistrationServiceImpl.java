@@ -60,7 +60,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
 
   private OAuth2UserInfoDto fetchUserInfo(OAuth2ProviderToken token) {
     OAuth2Template oAuth2Template = this.oAuth2TemplateFactory.getByType(token.getProviderType());
-    return oAuth2Template.fetchUserInfo(token.getAccessToken());
+    return oAuth2Template.fetchUserInfo(token.getId());
   }
 
   private OAuth2ProviderToken findTokenById(String oAuthId) {

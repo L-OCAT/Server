@@ -53,8 +53,8 @@ public class AppleOAuth2Template extends AbstractOAuth2Template {
   }
 
   @Override
-  public OAuth2UserInfoDto fetchUserInfo(String accessToken) {
-    final String idToken = super.fetchTokenByAccessToken(accessToken).getIdToken();
+  public OAuth2UserInfoDto fetchUserInfo(String oAuthId) {
+    final String idToken = super.fetchToken(oAuthId).getIdToken();
     OAuth2ProviderJsonWebKey jsonWebKey = this.getMatchingJsonWebKey(idToken);
     return OpenIDConnectTokenUtils.parse(idToken, jsonWebKey.n(), jsonWebKey.e());
   }

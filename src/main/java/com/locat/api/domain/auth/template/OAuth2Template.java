@@ -22,12 +22,12 @@ public interface OAuth2Template {
   Boolean isAuthenticated(final String oAuthId);
 
   /**
-   * 사용자의 액세스 토큰으로 사용자 정보를 가져옵니다.
+   * 사용자의 OAuth ID으로 사용자 정보를 가져옵니다.
    *
-   * @param accessToken 액세스 토큰
+   * @param oAuthId 사용자의 OAuth ID
    * @return 사용자 정보
    */
-  OAuth2UserInfoDto fetchUserInfo(final String accessToken);
+  OAuth2UserInfoDto fetchUserInfo(final String oAuthId);
 
   /**
    * 회원 탈퇴(OAuth2 연결 끊기, 토큰 삭제) 작업을 수행합니다.
