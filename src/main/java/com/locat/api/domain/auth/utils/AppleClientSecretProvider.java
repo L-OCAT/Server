@@ -16,8 +16,8 @@ import java.security.PrivateKey;
 import java.security.Security;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
@@ -63,7 +63,7 @@ public final class AppleClientSecretProvider {
         .setIssuedAt(new Date())
         .setSubject(oAuth2Properties.getAppleClientId())
         .setAudience(APPLE_AUDIENCE)
-        .setExpiration(Date.from(Instant.now().plus(3, ChronoUnit.MONTHS)))
+        .setExpiration(createExpirationDate())
         .signWith(getAuthKey(oAuth2Properties.getAppleKeyPath()), SIGNATURE_ALGORITHM)
         .compact();
   }
@@ -83,5 +83,9 @@ public final class AppleClientSecretProvider {
       log.error("Failed to read Apple private key / Reason: {}", e.getMessage());
       throw new AuthenticationException(ApiExceptionType.INTERNAL_SERVER_ERROR);
     }
+  }
+
+  private static Date createExpirationDate() {
+    return Date.from(LocalDateTime.now().plusMonths(3).atZone(ZoneId.systemDefault()).toInstant());
   }
 }

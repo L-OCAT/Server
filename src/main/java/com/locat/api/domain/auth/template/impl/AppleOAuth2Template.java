@@ -12,7 +12,7 @@ import com.locat.api.domain.user.enums.OAuth2ProviderType;
 import com.locat.api.global.exception.InternalProcessingException;
 import com.locat.api.infrastructure.external.AppleOAuth2Client;
 import com.locat.api.infrastructure.redis.OAuth2ProviderTokenRepository;
-import java.util.Arrays;
+import java.util.List;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,18 +42,16 @@ public class AppleOAuth2Template extends AbstractOAuth2Template {
             OAuth2Properties.APPLE_GRANT_TYPE,
             super.oAuth2Properties.getAppleRedirectUri(),
             null);
-    OAuth2UserInfoDto appleIdToken = this.fetchUserInfo(appleOAuth2TokenDto.getAccessToken());
+    OAuth2UserInfoDto appleIdToken = this.fetchUserInfo(appleOAuth2TokenDto.getIdToken());
     return this.providerTokenRepository.save(
         OAuth2ProviderToken.from(
             OAuth2ProviderType.APPLE, appleIdToken.getId(), appleOAuth2TokenDto));
   }
 
   @Override
-  public OAuth2UserInfoDto fetchUserInfo(String accessToken) {
-    OAuth2ProviderToken providerToken = super.fetchTokenByAccessToken(accessToken);
-    OAuth2ProviderJsonWebKey jsonWebKey = this.getMatchingJsonWebKey(providerToken.getIdToken());
-    return OpenIDConnectTokenUtils.parseIdToken(
-        providerToken.getIdToken(), jsonWebKey.n(), jsonWebKey.e());
+  public OAuth2UserInfoDto fetchUserInfo(String idToken) {
+    OAuth2ProviderJsonWebKey jsonWebKey = this.getMatchingJsonWebKey(idToken);
+    return OpenIDConnectTokenUtils.parseIdToken(idToken, jsonWebKey.n(), jsonWebKey.e());
   }
 
   @Override
@@ -71,8 +69,8 @@ public class AppleOAuth2Template extends AbstractOAuth2Template {
     final String keyId =
         OpenIDConnectTokenUtils.parseKeyIdHeader(
             idToken, APPLE_AUDIENCE, this.oAuth2Properties.getAppleClientId());
-    OAuth2ProviderJsonWebKey[] jsonWebKeys = this.appleOAuth2Client.getPublicKeys();
-    return Arrays.stream(jsonWebKeys)
+    List<OAuth2ProviderJsonWebKey> jsonWebKeys = this.appleOAuth2Client.getPublicKeys().keys();
+    return jsonWebKeys.stream()
         .filter(jwk -> jwk.kid().equals(keyId))
         .findFirst()
         .orElseThrow(
