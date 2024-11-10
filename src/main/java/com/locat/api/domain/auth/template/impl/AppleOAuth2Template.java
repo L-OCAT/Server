@@ -1,6 +1,7 @@
 package com.locat.api.domain.auth.template.impl;
 
 import com.locat.api.domain.auth.dto.OAuth2UserInfoDto;
+import com.locat.api.domain.auth.dto.token.AppleIdToken;
 import com.locat.api.domain.auth.dto.token.OAuth2ProviderJsonWebKey;
 import com.locat.api.domain.auth.dto.token.OAuth2ProviderTokenDto;
 import com.locat.api.domain.auth.entity.OAuth2ProviderToken;
@@ -34,7 +35,7 @@ public class AppleOAuth2Template extends AbstractOAuth2Template {
   @Override
   public OAuth2ProviderToken issueToken(String code) {
     final String clientSecret = AppleClientSecretProvider.create(super.oAuth2Properties);
-    OAuth2ProviderTokenDto appleOAuth2TokenDto =
+    final OAuth2ProviderTokenDto appleOAuth2TokenDto =
         this.appleOAuth2Client.issueOrRenewToken(
             super.oAuth2Properties.getAppleClientId(),
             clientSecret,
@@ -42,16 +43,20 @@ public class AppleOAuth2Template extends AbstractOAuth2Template {
             OAuth2Properties.APPLE_GRANT_TYPE,
             super.oAuth2Properties.getAppleRedirectUri(),
             null);
-    OAuth2UserInfoDto appleIdToken = this.fetchUserInfo(appleOAuth2TokenDto.getIdToken());
+    final String idToken = appleOAuth2TokenDto.getIdToken();
+    OAuth2ProviderJsonWebKey jsonWebKey = this.getMatchingJsonWebKey(idToken);
+    AppleIdToken appleIdToken =
+        OpenIDConnectTokenUtils.parse(idToken, jsonWebKey.n(), jsonWebKey.e());
     return this.providerTokenRepository.save(
         OAuth2ProviderToken.from(
             OAuth2ProviderType.APPLE, appleIdToken.getId(), appleOAuth2TokenDto));
   }
 
   @Override
-  public OAuth2UserInfoDto fetchUserInfo(String idToken) {
+  public OAuth2UserInfoDto fetchUserInfo(String accessToken) {
+    final String idToken = super.fetchTokenByAccessToken(accessToken).getIdToken();
     OAuth2ProviderJsonWebKey jsonWebKey = this.getMatchingJsonWebKey(idToken);
-    return OpenIDConnectTokenUtils.parseIdToken(idToken, jsonWebKey.n(), jsonWebKey.e());
+    return OpenIDConnectTokenUtils.parse(idToken, jsonWebKey.n(), jsonWebKey.e());
   }
 
   @Override

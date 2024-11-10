@@ -28,7 +28,7 @@ public final class OpenIDConnectTokenUtils {
     // Utility class
   }
 
-  public static AppleIdToken parseIdToken(String idToken, String modulus, String exponent) {
+  public static AppleIdToken parse(String idToken, String modulus, String exponent) {
     Claims body = parseTokenClaims(idToken, modulus, exponent).getBody();
     return AppleIdToken.fromJwt(body);
   }
