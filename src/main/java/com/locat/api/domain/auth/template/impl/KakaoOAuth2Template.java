@@ -1,7 +1,7 @@
 package com.locat.api.domain.auth.template.impl;
 
-import com.locat.api.domain.auth.dto.OAuth2UserInfoDto;
-import com.locat.api.domain.auth.dto.token.OAuth2ProviderTokenDto;
+import com.locat.api.domain.auth.dto.OAuth2ProviderTokenDto;
+import com.locat.api.domain.auth.dto.OAuth2UserInfo;
 import com.locat.api.domain.auth.entity.OAuth2ProviderToken;
 import com.locat.api.domain.auth.template.AbstractOAuth2Template;
 import com.locat.api.domain.auth.template.OAuth2Properties;
@@ -30,12 +30,13 @@ public class KakaoOAuth2Template extends AbstractOAuth2Template {
 
   @Override
   public OAuth2ProviderToken issueToken(String code) {
+    OAuth2Properties.Kakao kakaoProperties = this.oAuth2Properties.kakao();
     OAuth2ProviderTokenDto tokenDto =
         this.kakaoOAuth2Client.issueOrRenewToken(
-            OAuth2Properties.KAKAO_GRANT_TYPE,
-            super.oAuth2Properties.getKakaoClientId(),
-            super.oAuth2Properties.getKakaoClientSecret(),
-            super.oAuth2Properties.getKakaoRedirectUri(),
+            OAuth2Properties.Kakao.GRANT_TYPE,
+            kakaoProperties.clientId(),
+            kakaoProperties.clientSecret(),
+            kakaoProperties.redirectUri(),
             code);
     final String oAuthId =
         this.kakaoUserClient.getUserInfo(prependBearer(tokenDto.getAccessToken())).id();
@@ -44,7 +45,7 @@ public class KakaoOAuth2Template extends AbstractOAuth2Template {
   }
 
   @Override
-  public OAuth2UserInfoDto fetchUserInfo(String oAuthId) {
+  public OAuth2UserInfo fetchUserInfo(String oAuthId) {
     final String accessToken = super.fetchToken(oAuthId).getAccessToken();
     return this.kakaoUserClient.getUserInfo(prependBearer(accessToken));
   }

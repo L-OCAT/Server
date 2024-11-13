@@ -3,7 +3,7 @@ package com.locat.api.unit.entity;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
-import com.locat.api.domain.auth.dto.OAuth2UserInfoDto;
+import com.locat.api.domain.auth.dto.OAuth2UserInfo;
 import com.locat.api.domain.user.entity.User;
 import com.locat.api.domain.user.enums.OAuth2ProviderType;
 import com.locat.api.domain.user.enums.StatusType;
@@ -69,7 +69,7 @@ class EndUserEntityTest {
   @DisplayName("of() 메서드로 생성한 User 객체는 주어진 값 또는 적절한 기본값을 가져야 한다.")
   void testOf() {
     // Given
-    OAuth2UserInfoDto mockUserInfoDto = TestDataFactory.create(OAUTH_ID, EMAIL);
+    OAuth2UserInfo mockUserInfoDto = TestDataFactory.create(OAUTH_ID, EMAIL);
 
     // When
     User createdUser = User.of(NICKNAME, "temp1234", mockUserInfoDto);

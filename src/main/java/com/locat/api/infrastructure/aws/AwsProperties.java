@@ -1,22 +1,13 @@
 package com.locat.api.infrastructure.aws;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
 
-@Getter
-@Setter
-@Configuration
+/**
+ * AWS 서비스에 접근하기 위한 정보를 담는 클래스
+ *
+ * @param accessKey 서비스 접근을 위한 Access Key
+ * @param secretKey 서비스 접근을 위한 Secret Key
+ * @param region 서비스가 위치한 리전
+ */
 @ConfigurationProperties(prefix = "service.aws")
-public class AwsProperties {
-
-  /** AWS 서비스에 접근하기 위한 Access Key */
-  private String accessKey;
-
-  /** AWS 서비스에 접근하기 위한 Secret Key */
-  private String secretKey;
-
-  /** AWS 서비스의 리전 */
-  private String region;
-}
+public record AwsProperties(String accessKey, String secretKey, String region) {}

@@ -1,43 +1,51 @@
 package com.locat.api.domain.auth.template;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
 
-@Configuration
-@Getter
-@Setter
+/**
+ * OAuth2 Client Properties 관리 클래스
+ *
+ * @param kakao Kakao OAuth2 관련 설정
+ * @param apple Apple OAuth2 관련 설정
+ */
 @ConfigurationProperties(prefix = "security.oauth2.client")
-public class OAuth2Properties {
+public record OAuth2Properties(Kakao kakao, Apple apple) {
+  /**
+   * Kakao OAuth2 Properties
+   *
+   * @param adminKey Kakao Admin Key
+   * @param clientId Kakao Client ID
+   * @param clientSecret Kakao Client Secret
+   * @param redirectUri Kakao Redirect URI
+   */
+  @SuppressWarnings("unused") // AdminKey 관련 상수는 추후 사용될 수 있으므로 "unused" 경고 무시
+  public record Kakao(String adminKey, String clientId, String clientSecret, String redirectUri) {
 
-  public static final String KAKAO_ADMIN_KEY = "KakaoAK";
+    public static final String ADMIN_KEY_PREFIX = "KakaoAK";
 
-  public static final String KAKAO_GRANT_TYPE = "authorization_code";
+    public static final String GRANT_TYPE = "authorization_code";
 
-  public static final String KAKAO_TARGET_ID_TYPE = "user_id";
+    public static final String TARGET_ID_TYPE = "user_id";
+  }
 
-  private String kakaoAdminKey;
+  /**
+   * Apple OAuth2 Properties
+   *
+   * @param teamId Apple Team ID
+   * @param clientId Client ID(App ID 또는 Services ID)
+   * @param redirectUri Apple Redirect URI
+   * @param keyId Apple Key ID
+   * @param keyPath Auth Key 파일 경로
+   */
+  public record Apple(
+      String teamId, String clientId, String redirectUri, String keyId, String keyPath) {
 
-  private String kakaoClientId;
+    public static final String AUDIENCE = "https://appleid.apple.com";
 
-  private String kakaoClientSecret;
+    public static final String GRANT_TYPE = "authorization_code";
 
-  private String kakaoRedirectUri;
+    public static final String ACCESS_TOKEN_HINT = "access_token";
 
-  public static final String APPLE_GRANT_TYPE = "authorization_code";
-
-  public static final String APPLE_ACCESS_TOKEN_HINT = "access_token";
-
-  public static final String APPLE_REFRESH_TOKEN_HINT = "refresh_token";
-
-  private String appleTeamId;
-
-  private String appleClientId;
-
-  private String appleRedirectUri;
-
-  private String appleKeyId;
-
-  private String appleKeyPath;
+    public static final String REFRESH_TOKEN_HINT = "refresh_token";
+  }
 }

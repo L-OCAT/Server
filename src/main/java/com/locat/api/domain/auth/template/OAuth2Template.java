@@ -1,6 +1,6 @@
 package com.locat.api.domain.auth.template;
 
-import com.locat.api.domain.auth.dto.OAuth2UserInfoDto;
+import com.locat.api.domain.auth.dto.OAuth2UserInfo;
 import com.locat.api.domain.auth.entity.OAuth2ProviderToken;
 
 public interface OAuth2Template {
@@ -27,7 +27,7 @@ public interface OAuth2Template {
    * @param oAuthId 사용자의 OAuth ID
    * @return 사용자 정보
    */
-  OAuth2UserInfoDto fetchUserInfo(final String oAuthId);
+  OAuth2UserInfo fetchUserInfo(final String oAuthId);
 
   /**
    * 회원 탈퇴(OAuth2 연결 끊기, 토큰 삭제) 작업을 수행합니다.

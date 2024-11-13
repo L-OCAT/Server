@@ -1,4 +1,4 @@
-package com.locat.api.domain.geo.base.dto;
+package com.locat.api.domain.geo.base.entity;
 
 import com.locat.api.global.exception.InvalidParameterException;
 import java.util.Arrays;

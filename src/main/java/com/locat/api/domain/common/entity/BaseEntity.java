@@ -14,7 +14,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 /**
- * Entity의 생성일시와 수정일시를 자동으로 관리하기 위한 추상 클래스입니다. <br>
+ * Entity의 생성일시와 수정일시를 자동으로 관리하기 위한 추상 클래스 <br>
  * 모든 Entity 클래스는 이 클래스 또는 {@link SecuredBaseEntity}를 상속받도록 구성해야 합니다.
  */
 @Getter

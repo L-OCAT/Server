@@ -19,7 +19,7 @@ public class AwsConfig {
   @Bean
   public S3Client s3Client(AwsBasicCredentials basicCredentials) {
     return S3Client.builder()
-        .region(Region.of(this.awsProperties.getRegion()))
+        .region(Region.of(this.awsProperties.region()))
         .credentialsProvider(StaticCredentialsProvider.create(basicCredentials))
         .build();
   }
@@ -27,7 +27,7 @@ public class AwsConfig {
   @Bean
   public SesClient sesClient(AwsBasicCredentials basicCredentials) {
     return SesClient.builder()
-        .region(Region.of(this.awsProperties.getRegion()))
+        .region(Region.of(this.awsProperties.region()))
         .credentialsProvider(StaticCredentialsProvider.create(basicCredentials))
         .build();
   }
@@ -35,7 +35,7 @@ public class AwsConfig {
   @Bean
   public SnsClient snsClient(AwsBasicCredentials basicCredentials) {
     return SnsClient.builder()
-        .region(Region.of(this.awsProperties.getRegion()))
+        .region(Region.of(this.awsProperties.region()))
         .credentialsProvider(StaticCredentialsProvider.create(basicCredentials))
         .build();
   }
@@ -43,6 +43,6 @@ public class AwsConfig {
   @Bean
   protected AwsBasicCredentials awsBasicCredentials() {
     return AwsBasicCredentials.create(
-        this.awsProperties.getAccessKey(), this.awsProperties.getSecretKey());
+        this.awsProperties.accessKey(), this.awsProperties.secretKey());
   }
 }

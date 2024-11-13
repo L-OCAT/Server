@@ -9,7 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 public final class FileValidator {
 
   private FileValidator() {
-    // 유틸리티 클래스는 인스턴스화할 수 없습니다.
+    // Utility class
   }
 
   /**
