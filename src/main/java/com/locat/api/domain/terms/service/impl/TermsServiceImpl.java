@@ -22,15 +22,15 @@ public class TermsServiceImpl implements TermsService {
   private final TermsRevisionHistoryService revisionHistoryService;
 
   @Override
-  public Terms upsert(TermsUpsertDto upsertDto) {
+  public void upsert(TermsUpsertDto upsertDto) {
     Terms terms =
         this.termsRepository
             .findByType(upsertDto.type())
             .map(exsting -> exsting.update(upsertDto))
             .orElse(Terms.create(upsertDto));
 
+    this.termsRepository.save(terms);
     this.revisionHistoryService.save(TermsRevisionHistory.of(terms, upsertDto.revisionNote()));
-    return this.termsRepository.save(terms);
   }
 
   @Override

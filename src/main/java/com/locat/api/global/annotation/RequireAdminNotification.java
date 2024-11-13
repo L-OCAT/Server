@@ -23,7 +23,7 @@ public @interface RequireAdminNotification {
   /**
    * 관리자에게 전달할 메시지
    *
-   * <p>메세지 접두사는 '[관리자 알림]'으로 고정되니, 메세지만 작성하면 됩니다.
+   * <p>메세지 접두사는 '[관리자 알림]'으로 고정
    *
    * @return 메세지 (never <code>null</code>)
    */

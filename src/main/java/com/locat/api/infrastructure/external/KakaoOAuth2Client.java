@@ -12,6 +12,16 @@ import org.springframework.web.bind.annotation.RequestParam;
     configuration = KakaoOAuth2ClientConfig.class)
 public interface KakaoOAuth2Client {
 
+  /**
+   * Kakao OAuth2 토큰 발급 또는 갱신
+   *
+   * @param grantType {@code authorization_code}로 고정
+   * @param clientId Client ID
+   * @param clientSecret Client Secret
+   * @param redirectUri 인가 요청시 사용된 리다이렉트 URI
+   * @param code 인가 요청으로부터 발급된 인가 코드
+   * @return Kakao OAuth2 토큰
+   */
   @PostMapping("/oauth/token")
   KakaoOAuth2TokenDto issueOrRenewToken(
       @RequestParam("grant_type") String grantType,

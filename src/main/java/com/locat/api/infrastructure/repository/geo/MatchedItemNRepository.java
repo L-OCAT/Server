@@ -26,7 +26,19 @@ public interface MatchedItemNRepository {
   /** 매칭되는 아이템이 없는 경우에 대한 상수 값 */
   Long NONE_MATCHED = 0L;
 
+  /**
+   * 분실물에 대해 매칭된 습득물의 개수를 조회합니다.
+   *
+   * @param foundItem 매칭 여부를 조회할 습득물
+   * @return 매칭된 습득물의 개수
+   */
   Long countMatchedLostItems(FoundItem foundItem);
 
+  /**
+   * 습득물에 대해 매칭된 분실물의 개수를 조회합니다.
+   *
+   * @param lostItem 매칭 여부를 조회할 분실물
+   * @return 매칭된 분실물의 개수
+   */
   Long countMatchedFoundItems(LostItem lostItem);
 }

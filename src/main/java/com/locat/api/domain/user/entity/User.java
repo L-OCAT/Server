@@ -1,6 +1,6 @@
 package com.locat.api.domain.user.entity;
 
-import com.locat.api.domain.auth.dto.OAuth2UserInfoDto;
+import com.locat.api.domain.auth.dto.OAuth2UserInfo;
 import com.locat.api.domain.common.entity.BaseEntity;
 import com.locat.api.domain.user.entity.association.AdminDeviceId;
 import com.locat.api.domain.user.entity.association.UserEndpoint;
@@ -106,7 +106,7 @@ public class User extends BaseEntity {
   @OneToMany(mappedBy = "adminUser", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<AdminDeviceId> adminDeviceIds = new ArrayList<>();
 
-  public static User of(String nickname, String tempPassword, OAuth2UserInfoDto userInfo) {
+  public static User of(String nickname, String tempPassword, OAuth2UserInfo userInfo) {
     return builder()
         .oauthId(userInfo.getId())
         .oauthType(userInfo.getProvider())

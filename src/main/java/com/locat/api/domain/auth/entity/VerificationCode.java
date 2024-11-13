@@ -6,6 +6,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.TimeToLive;
 
+/** 본인 이메일 인증 코드를 저장하는 Redis Entity */
 @Getter
 @Builder
 @RedisHash("VERIFICATION_CODE")

@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@PublicApi(accessLevel = AccessLevel.PUBLIC, keyValidation = KeyValidation.NONE)
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/oauth2/redirect")
@@ -23,14 +24,21 @@ public class OAuthRedirectDispatcher {
 
   private final OAuth2Service oAuth2Service;
 
-  @PublicApi(accessLevel = AccessLevel.PUBLIC, keyValidation = KeyValidation.NONE)
-  @GetMapping("/{providerType}")
-  public ResponseEntity<BaseResponse<Void>> handleOAuth2Redirect(
-      @PathVariable final String providerType, @RequestParam final String code) {
-    OAuth2ProviderType provider = OAuth2ProviderType.valueOf(providerType.toUpperCase());
-    String oauthId = this.oAuth2Service.authenticate(provider, code);
+  @GetMapping("/kakao")
+  public ResponseEntity<BaseResponse<Void>> doKakaoCallback(@RequestParam final String code) {
+    return this.processOAuth(OAuth2ProviderType.KAKAO, code);
+  }
+
+  @PostMapping("/apple")
+  public ResponseEntity<BaseResponse<Void>> doAppleCallback(@RequestParam final String code) {
+    return this.processOAuth(OAuth2ProviderType.APPLE, code);
+  }
+
+  private ResponseEntity<BaseResponse<Void>> processOAuth(
+      final OAuth2ProviderType providerType, final String code) {
+    String oAuthId = this.oAuth2Service.authenticate(providerType, code);
     return ResponseEntity.status(HttpStatus.FOUND)
-        .location(URI.create(this.adminUrl.concat("/login?oAuthId=").concat(oauthId)))
+        .location(URI.create(this.adminUrl.concat("/login?oAuthId=").concat(oAuthId)))
         .build();
   }
 }

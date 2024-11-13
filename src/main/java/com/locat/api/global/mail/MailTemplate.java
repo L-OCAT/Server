@@ -2,10 +2,14 @@ package com.locat.api.global.mail;
 
 import static j2html.TagCreator.*;
 
+/**
+ * 메일 템플릿을 정의하는 클래스 <br>
+ * <li>{@code j2html}을 사용하여 HTML 메일 템플릿을 생성 & 관리
+ */
 public final class MailTemplate {
 
   private MailTemplate() {
-    // 유틸리티 클래스는 인스턴스화할 수 없습니다.
+    // Utility class
   }
 
   /** HTML 메일 템플릿의 공통 스타일입니다. */

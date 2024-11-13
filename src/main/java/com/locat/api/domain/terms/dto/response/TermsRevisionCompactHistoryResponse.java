@@ -10,13 +10,11 @@ import com.locat.api.domain.terms.dto.TermsRevisionCompactHistoryDto;
  * @param createdAt 개정일시
  */
 public record TermsRevisionCompactHistoryResponse(
-    String version, String revisionNote, String createdAt) {
+    double version, String revisionNote, String createdAt) {
 
   public static TermsRevisionCompactHistoryResponse from(
       TermsRevisionCompactHistoryDto historyDto) {
     return new TermsRevisionCompactHistoryResponse(
-        historyDto.version().toString(),
-        historyDto.revisionNote(),
-        historyDto.createdAt().toString());
+        historyDto.version(), historyDto.revisionNote(), historyDto.createdAt().toString());
   }
 }

@@ -1,13 +1,13 @@
 package com.locat.api.domain.auth.dto.token;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.locat.api.domain.auth.dto.OAuth2UserInfoDto;
+import com.locat.api.domain.auth.dto.OAuth2UserInfo;
 import com.locat.api.domain.user.enums.OAuth2ProviderType;
 import io.jsonwebtoken.Claims;
 import lombok.Builder;
 
 /**
- * [Apple] Open Connect ID 토큰(JWT)
+ * Apple Open Connect ID 토큰(JWT)
  *
  * @param issuer Issuer(Apple - {@code https://appleid.apple.com})
  * @param subject Subject(사용자 고유 ID)
@@ -26,7 +26,7 @@ public record AppleIdToken(
     @JsonProperty("exp") Long expirationTime,
     String email,
     @JsonProperty("email_verified") Boolean emailVerified)
-    implements OAuth2UserInfoDto {
+    implements OAuth2UserInfo {
 
   @Override
   public String getId() {

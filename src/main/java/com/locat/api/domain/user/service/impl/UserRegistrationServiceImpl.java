@@ -1,6 +1,6 @@
 package com.locat.api.domain.user.service.impl;
 
-import com.locat.api.domain.auth.dto.OAuth2UserInfoDto;
+import com.locat.api.domain.auth.dto.OAuth2UserInfo;
 import com.locat.api.domain.auth.entity.OAuth2ProviderToken;
 import com.locat.api.domain.auth.template.OAuth2Template;
 import com.locat.api.domain.auth.template.OAuth2TemplateFactory;
@@ -40,7 +40,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     this.userValidationService.validateNickname(userRegisterDto.nickname());
 
     OAuth2ProviderToken token = this.findTokenById(userRegisterDto.oAuthId());
-    OAuth2UserInfoDto userInfo = this.fetchUserInfo(token);
+    OAuth2UserInfo userInfo = this.fetchUserInfo(token);
     final User user =
         User.of(
             userRegisterDto.nickname(), this.passwordEncoder.encode(this.tempPassword), userInfo);
@@ -58,9 +58,9 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
         () -> new DuplicatedException(ApiExceptionType.RESOURCE_ALREADY_EXISTS));
   }
 
-  private OAuth2UserInfoDto fetchUserInfo(OAuth2ProviderToken token) {
+  private OAuth2UserInfo fetchUserInfo(OAuth2ProviderToken token) {
     OAuth2Template oAuth2Template = this.oAuth2TemplateFactory.getByType(token.getProviderType());
-    return oAuth2Template.fetchUserInfo(token.getAccessToken());
+    return oAuth2Template.fetchUserInfo(token.getId());
   }
 
   private OAuth2ProviderToken findTokenById(String oAuthId) {

@@ -1,6 +1,7 @@
-package com.locat.api.domain.geo.base.dto;
+package com.locat.api.domain.geo.base.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.locat.api.domain.geo.base.dto.CategoryInfoDto;
 
 /**
  * 카테고리 정보 응답 DTO

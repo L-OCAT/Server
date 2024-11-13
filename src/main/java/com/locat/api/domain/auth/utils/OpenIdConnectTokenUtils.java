@@ -18,17 +18,17 @@ import java.util.regex.Pattern;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public final class OpenIDConnectTokenUtils {
+public final class OpenIdConnectTokenUtils {
 
   private static final int JWT_PARTS_COUNT = 3;
   private static final String HEADER_KEY_ID = "kid";
   private static final Pattern SPLITTER = Pattern.compile("\\.");
 
-  private OpenIDConnectTokenUtils() {
+  private OpenIdConnectTokenUtils() {
     // Utility class
   }
 
-  public static AppleIdToken parseIdToken(String idToken, String modulus, String exponent) {
+  public static AppleIdToken parse(String idToken, String modulus, String exponent) {
     Claims body = parseTokenClaims(idToken, modulus, exponent).getBody();
     return AppleIdToken.fromJwt(body);
   }
