@@ -1,6 +1,6 @@
 package com.locat.api.domain.auth.entity;
 
-import com.locat.api.domain.auth.dto.token.OAuth2ProviderTokenDto;
+import com.locat.api.domain.auth.dto.OAuth2ProviderTokenDto;
 import com.locat.api.domain.user.enums.OAuth2ProviderType;
 import jakarta.persistence.Id;
 import lombok.Builder;
@@ -8,6 +8,7 @@ import lombok.Getter;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.TimeToLive;
 
+/** OAuth2 제공자가 발급한 토큰을 저장하는 Redis Entity */
 @Getter
 @Builder
 @RedisHash("OAUTH2_PROVIDER_TOKEN")

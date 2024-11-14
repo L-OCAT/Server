@@ -1,13 +1,22 @@
 package com.locat.api.domain.user.entity;
 
+import com.locat.api.domain.auth.dto.OAuth2UserInfo;
 import com.locat.api.domain.common.entity.BaseEntity;
+import com.locat.api.domain.user.entity.association.AdminDeviceId;
+import com.locat.api.domain.user.entity.association.UserEndpoint;
+import com.locat.api.domain.user.entity.association.UserSetting;
+import com.locat.api.domain.user.entity.association.UserTermsAgreement;
+import com.locat.api.domain.user.enums.OAuth2ProviderType;
 import com.locat.api.domain.user.enums.StatusType;
 import com.locat.api.domain.user.enums.UserType;
-import com.locat.api.global.converter.StringColumnEncryptionConverter;
+import com.locat.api.global.persistance.StringColumnEncryptionConverter;
+import com.locat.api.global.utils.HashingUtils;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,12 +41,23 @@ import org.springframework.security.access.AccessDeniedException;
 @Inheritance(strategy = InheritanceType.JOINED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public abstract class User extends BaseEntity {
+public class User extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id", columnDefinition = "int UNSIGNED not null")
   protected Long id;
+
+  @Column(name = "oauth_id", nullable = false, length = 100)
+  private String oauthId;
+
+  @Enumerated(EnumType.STRING)
+  @Column(name = "oauth_type")
+  private OAuth2ProviderType oauthType;
+
+  @Size(max = 255)
+  @Column(name = "profile_image")
+  private String profileImage;
 
   @Size(max = 100)
   @NotNull @Column(name = "email", nullable = false, length = 100)
@@ -48,6 +68,13 @@ public abstract class User extends BaseEntity {
   @NotNull @Column(name = "email_hash", nullable = false)
   protected String emailHash;
 
+  @Size(max = 60)
+  @Column(name = "password", nullable = false, length = 60)
+  private String password;
+
+  @Column(name = "is_password_expired", nullable = false)
+  private boolean isPasswordExpired;
+
   @Size(max = 100)
   @NotNull @Column(name = "nickname", nullable = false, length = 100)
   protected String nickname;
@@ -55,6 +82,15 @@ public abstract class User extends BaseEntity {
   @Enumerated(EnumType.STRING)
   @Column(name = "user_type")
   protected UserType userType;
+
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<UserSetting> userSettings = new ArrayList<>();
+
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<UserTermsAgreement> termsAgreements = new ArrayList<>();
+
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<UserEndpoint> userEndpoints = new ArrayList<>();
 
   @Enumerated(EnumType.STRING)
   @Column(name = "status_type")
@@ -67,30 +103,40 @@ public abstract class User extends BaseEntity {
   @Column(name = "deleted_at")
   protected LocalDateTime deletedAt;
 
-  /**
-   * 조회된 사용자를, {@code EndUser} 인스턴스로 변환합니다.
-   *
-   * @return {@code EndUser}
-   * @throws IllegalStateException 조회된 사용자가 일반 사용자가 아닌 경우
-   */
-  public EndUser asEndUser() {
-    if (this instanceof EndUser endUser) {
-      return endUser;
-    }
-    throw new IllegalStateException("User[" + this.id + "] is not EndUser!");
+  @OneToMany(mappedBy = "adminUser", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<AdminDeviceId> adminDeviceIds = new ArrayList<>();
+
+  public static User of(String nickname, String tempPassword, OAuth2UserInfo userInfo) {
+    return builder()
+        .oauthId(userInfo.getId())
+        .oauthType(userInfo.getProvider())
+        .nickname(nickname)
+        .email(userInfo.getEmail())
+        .emailHash(HashingUtils.hash(userInfo.getEmail()))
+        .password(tempPassword)
+        .userType(UserType.USER)
+        .statusType(StatusType.ACTIVE)
+        .build();
   }
 
-  /**
-   * 조회된 사용자가 관리자라면, {@code AdminUser} 인스턴스로 변환합니다.
-   *
-   * @return {@code AdminUser}
-   * @throws IllegalStateException 조회된 사용자가 관리자가 아닌 경우
-   */
-  public AdminUser asAdmin() {
-    if (this instanceof AdminUser adminUser) {
-      return adminUser;
+  public User update(String email, String nickname) {
+    if (email != null && emailHash != null) {
+      this.email = email;
+      this.emailHash = HashingUtils.hash(email);
     }
-    throw new IllegalStateException("User[" + this.id + "] is not Admin!");
+    if (nickname != null) {
+      this.nickname = nickname;
+    }
+    return this;
+  }
+
+  public void promote(UserType userType) {
+    this.userType = userType;
+  }
+
+  public void resetPassword(String encodedPassword) {
+    this.password = encodedPassword;
+    this.isPasswordExpired = false;
   }
 
   /** 사용자를 삭제(Soft Delete)합니다. */
@@ -111,12 +157,29 @@ public abstract class User extends BaseEntity {
     return this.userType.isAdmin();
   }
 
-  public boolean isNotActivated() {
-    return this.statusType != StatusType.ACTIVE;
+  public boolean isTrustedDevice(String deviceId) {
+    return this.adminDeviceIds.stream()
+        .anyMatch(device -> device.getDeviceId().equals(deviceId) && device.isTrusted());
+  }
+
+  public void addTrustedDevice(String deviceId, boolean isTrusted) {
+    this.adminDeviceIds.add(AdminDeviceId.of(this, deviceId, isTrusted));
+  }
+
+  public void removeTrustedDevice(String deviceId) {
+    this.adminDeviceIds.removeIf(device -> device.getDeviceId().equals(deviceId));
+  }
+
+  public String getDeletedAt() {
+    return this.deletedAt != null ? this.deletedAt.toString() : null;
+  }
+
+  public boolean isActivated() {
+    return this.statusType == StatusType.ACTIVE;
   }
 
   public void assertActivated() {
-    if (this.isNotActivated()) {
+    if (!this.isActivated()) {
       throw new AccessDeniedException("Access Denied: User is not activated.");
     }
   }

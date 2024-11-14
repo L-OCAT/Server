@@ -1,18 +1,20 @@
 package com.locat.api.domain.user.service.impl;
 
-import com.locat.api.domain.auth.dto.OAuth2UserInfoDto;
+import com.locat.api.domain.auth.dto.OAuth2UserInfo;
 import com.locat.api.domain.auth.entity.OAuth2ProviderToken;
 import com.locat.api.domain.auth.template.OAuth2Template;
 import com.locat.api.domain.auth.template.OAuth2TemplateFactory;
 import com.locat.api.domain.user.dto.UserRegisterDto;
-import com.locat.api.domain.user.entity.EndUser;
+import com.locat.api.domain.user.entity.User;
 import com.locat.api.domain.user.enums.UserInfoValidationType;
 import com.locat.api.domain.user.service.*;
 import com.locat.api.global.exception.ApiExceptionType;
-import com.locat.api.global.exception.DuplicatedException;
+import com.locat.api.global.exception.custom.DuplicatedException;
 import com.locat.api.global.utils.ValidationUtils;
-import com.locat.api.infrastructure.redis.OAuth2ProviderTokenRepository;
+import com.locat.api.infra.redis.OAuth2ProviderTokenRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,16 +29,21 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
   private final UserValidationService userValidationService;
   private final OAuth2TemplateFactory oAuth2TemplateFactory;
   private final OAuth2ProviderTokenRepository providerTokenRepository;
+  private final PasswordEncoder passwordEncoder;
+
+  @Value("${service.admin.temp-password}")
+  private String tempPassword;
 
   @Override
-  public EndUser register(UserRegisterDto userRegisterDto) {
+  public User register(UserRegisterDto userRegisterDto) {
     this.assertUserNotExists(userRegisterDto.oAuthId());
     this.userValidationService.validateNickname(userRegisterDto.nickname());
 
     OAuth2ProviderToken token = this.findTokenById(userRegisterDto.oAuthId());
-    OAuth2UserInfoDto userInfo = this.fetchUserInfo(token);
-    final EndUser user =
-        EndUser.of(userRegisterDto.nickname(), userInfo); // TODO: 프로필 URL 선택 & 저장 로직 추가
+    OAuth2UserInfo userInfo = this.fetchUserInfo(token);
+    final User user =
+        User.of(
+            userRegisterDto.nickname(), this.passwordEncoder.encode(this.tempPassword), userInfo);
 
     this.userService.save(user);
     this.userSettingService.registerDefaultSettings(user);
@@ -51,9 +58,9 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
         () -> new DuplicatedException(ApiExceptionType.RESOURCE_ALREADY_EXISTS));
   }
 
-  private OAuth2UserInfoDto fetchUserInfo(OAuth2ProviderToken token) {
+  private OAuth2UserInfo fetchUserInfo(OAuth2ProviderToken token) {
     OAuth2Template oAuth2Template = this.oAuth2TemplateFactory.getByType(token.getProviderType());
-    return oAuth2Template.fetchUserInfo(token.getAccessToken());
+    return oAuth2Template.fetchUserInfo(token.getId());
   }
 
   private OAuth2ProviderToken findTokenById(String oAuthId) {

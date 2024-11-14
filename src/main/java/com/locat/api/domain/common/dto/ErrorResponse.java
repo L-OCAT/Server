@@ -19,21 +19,6 @@ public record ErrorResponse(String message, ErrorData data) {
         ex.getHttpStatus().getReasonPhrase(), ErrorData.of(ex.getMessage(), ex.getCode()));
   }
 
-  public static ErrorResponse forbidden() {
-    return new ErrorResponse(
-        FORBIDDEN.getMessage(), ErrorData.of("No permission.", FORBIDDEN.getCode()));
-  }
-
-  public static ErrorResponse unauthorized() {
-    return new ErrorResponse(
-        UNAUTHORIZED.getMessage(),
-        ErrorData.of("Authentication method is NOT provided or Invalid.", UNAUTHORIZED.getCode()));
-  }
-
-  public static ErrorResponse badRequest() {
-    return badRequest("Bad Request");
-  }
-
   public static ErrorResponse badRequest(String message) {
     return new ErrorResponse(
         BAD_REQUEST.getMessage(), ErrorData.of(message, BAD_REQUEST.getCode()));
@@ -51,6 +36,6 @@ public record ErrorResponse(String message, ErrorData data) {
   public static ErrorResponse internalServerError() {
     return new ErrorResponse(
         INTERNAL_SERVER_ERROR.getMessage(),
-        ErrorData.of("Interal Server Error", INTERNAL_SERVER_ERROR.getCode()));
+        ErrorData.of("Internal Server Error", INTERNAL_SERVER_ERROR.getCode()));
   }
 }

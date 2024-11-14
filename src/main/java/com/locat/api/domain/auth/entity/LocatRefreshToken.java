@@ -7,6 +7,7 @@ import lombok.Getter;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.TimeToLive;
 
+/** 서비스 내에서 사용하는 갱신 토큰(Refresh Token)을 저장하는 Redis Entity */
 @Getter
 @Builder
 @RedisHash("LOCAT_ACCESS_TOKEN")

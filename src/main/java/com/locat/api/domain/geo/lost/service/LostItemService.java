@@ -3,8 +3,10 @@ package com.locat.api.domain.geo.lost.service;
 import com.locat.api.domain.geo.lost.dto.LostItemRegisterDto;
 import com.locat.api.domain.geo.lost.dto.LostItemSearchDto;
 import com.locat.api.domain.geo.lost.entity.LostItem;
-import com.locat.api.global.exception.NoSuchEntityException;
-import com.locat.api.global.file.FileOperationFailedException;
+import com.locat.api.domain.user.entity.User;
+import com.locat.api.global.exception.custom.NoSuchEntityException;
+import com.locat.api.infra.aws.exception.FileOperationException;
+import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.geo.GeoPage;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,6 +34,8 @@ public interface LostItemService {
   GeoPage<LostItem> findAllByCondition(
       final Long userId, LostItemSearchDto searchDto, Pageable pageable);
 
+  List<LostItem> findTop10ByEndUser(User user);
+
   /**
    * 분실물 등록
    *
@@ -39,7 +43,7 @@ public interface LostItemService {
    * @param registerDto 분실물 등록 DTO
    * @param lostItemImage 분실물 이미지 파일
    * @return 등록된 분실물 ID
-   * @throws FileOperationFailedException 이미지 파일 처리에 실패한 경우
+   * @throws FileOperationException 이미지 파일 처리에 실패한 경우
    */
   Long register(
       final Long userId, final LostItemRegisterDto registerDto, final MultipartFile lostItemImage);

@@ -9,7 +9,7 @@ package com.locat.api.domain.common.dto;
  */
 public record BaseResponse<T>(String message, T data) {
 
-  public static <T> BaseResponse<T> ofEmpty() {
+  public static <T> BaseResponse<T> empty() {
     return new BaseResponse<>("OK", null);
   }
 

@@ -4,9 +4,9 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-import com.locat.api.global.auth.LocatUserDetailsService;
-import com.locat.api.global.auth.jwt.JwtProvider;
-import com.locat.api.global.security.filter.JwtAuthenticationFilter;
+import com.locat.api.global.security.filter.impl.JwtAuthenticationFilter;
+import com.locat.api.global.security.jwt.JwtProvider;
+import com.locat.api.global.security.userdetails.LocatUserDetailsService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
@@ -50,13 +50,11 @@ class JwtAuthenticationFilterTest {
   void testWhenValidAuthorizationHeader() throws ServletException, IOException {
     // Given
     String token = "validToken";
-    String username = "user";
     Claims claims = mock(Claims.class);
 
     when(this.jwtProvider.resolve(any(HttpServletRequest.class))).thenReturn(token);
     when(this.jwtProvider.parse(token)).thenReturn(claims);
-    when(claims.getSubject()).thenReturn(username);
-    when(this.userDetailsService.createAuthentication(username)).thenReturn(this.authentication);
+    when(this.userDetailsService.createAuthentication(claims)).thenReturn(this.authentication);
 
     // When
     this.jwtAuthenticationFilter.doFilter(this.request, this.response, this.filterChain);
@@ -66,7 +64,7 @@ class JwtAuthenticationFilterTest {
     assertThat(context.getAuthentication()).isEqualTo(this.authentication);
     verify(this.jwtProvider).resolve(any(HttpServletRequest.class));
     verify(this.jwtProvider).parse(token);
-    verify(this.userDetailsService).createAuthentication(username);
+    verify(this.userDetailsService).createAuthentication(claims);
     verify(this.filterChain).doFilter(this.request, this.response);
   }
 
@@ -90,7 +88,7 @@ class JwtAuthenticationFilterTest {
   }
 
   @Test
-  @DisplayName("토큰이 주어지지 않으면 인증을 설정하지 않는다.")
+  @DisplayName("토큰이 주어지지 않으면, Unauthorized 응답을 반환해야 한다.")
   void testWhenNoAuthorizationHeader() throws ServletException, IOException {
     // Given
     when(this.jwtProvider.resolve(any(HttpServletRequest.class))).thenReturn(null);
@@ -99,9 +97,8 @@ class JwtAuthenticationFilterTest {
     this.jwtAuthenticationFilter.doFilter(this.request, this.response, this.filterChain);
 
     // Then
+    assertThat(this.response.getStatus()).isEqualTo(HttpServletResponse.SC_UNAUTHORIZED);
     SecurityContext context = SecurityContextHolder.getContext();
     assertThat(context.getAuthentication()).isNull();
-    verify(this.jwtProvider).resolve(any(HttpServletRequest.class));
-    verify(this.filterChain).doFilter(this.request, this.response);
   }
 }

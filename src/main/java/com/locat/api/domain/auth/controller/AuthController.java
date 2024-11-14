@@ -8,7 +8,8 @@ import com.locat.api.domain.auth.dto.request.TokenRenewRequest;
 import com.locat.api.domain.auth.dto.response.AdminLoginResponse;
 import com.locat.api.domain.auth.service.AuthService;
 import com.locat.api.domain.common.dto.BaseResponse;
-import com.locat.api.global.auth.jwt.LocatTokenDto;
+import com.locat.api.global.security.annotation.PublicApi;
+import com.locat.api.global.security.jwt.dto.LocatTokenDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@PublicApi
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/auth")

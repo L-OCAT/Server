@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
+/** 전역 예외 처리 클래스 */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 

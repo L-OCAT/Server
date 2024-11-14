@@ -1,31 +1,30 @@
 package com.locat.api.global.security.filter;
 
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
-import java.util.List;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 public abstract class AbstractLocatSecurityFilter extends OncePerRequestFilter {
 
-  /** Public API로 간주되는 요청 헤더 이름 */
-  public static final String API_KEY_HEADER = "Locat-API-Key";
+  /** Public API로 인증된 요청임을 나타내는 {@link HttpServletRequest} 속성 이름 */
+  protected static final String PUBLIC_API_AUTHORIZED = "SECURITY_PUBLIC_API_AUTHORIZED";
 
-  /**
-   * Public API로 간주되는 URI 목록 <br>
-   * <li>{@code startWith} 메서드를 사용하여 URI를 비교합니다.
-   */
-  protected static final List<String> PUBLIC_API_PATHS = List.of("/v1/auth", "/actuator");
-
-  /**
-   * OAuth2 리다이렉트 URI <br>
-   * Filter에서 제외되어야함
-   */
-  protected static final String OAUTH2_REDIRECT_PATH = "/v1/oauth2/redirect";
-
-  protected boolean isPublicApi(HttpServletRequest request) {
-    return PUBLIC_API_PATHS.stream().anyMatch(request.getRequestURI()::startsWith);
+  protected void proceed(
+      HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+      throws ServletException, IOException {
+    filterChain.doFilter(request, response);
   }
 
-  protected boolean isOAuthRedirect(HttpServletRequest request) {
-    return request.getRequestURI().startsWith(OAUTH2_REDIRECT_PATH);
+  /**
+   * 현재 요청이 Public API로 인증된 요청인지 확인합니다.
+   *
+   * @param request 요청
+   * @return Public API로 인증된 요청인 경우 true, 그렇지 않은 경우 false
+   */
+  protected boolean isPublicApiAuthorized(HttpServletRequest request) {
+    return Boolean.TRUE.equals(request.getAttribute(PUBLIC_API_AUTHORIZED));
   }
 }

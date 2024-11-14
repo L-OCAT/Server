@@ -1,7 +1,7 @@
 package com.locat.api.domain.geo.base.validation;
 
-import com.locat.api.domain.geo.base.annotation.FoundItemValidation;
 import com.locat.api.domain.geo.found.dto.request.FoundItemRegisterRequest;
+import com.locat.api.global.web.validation.FoundItemValidation;
 
 public class FoundItemRegisterRequestValidator
     extends GeoItemRegisterRequestValidator<FoundItemValidation, FoundItemRegisterRequest> {

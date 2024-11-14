@@ -1,16 +1,17 @@
 package com.locat.api.domain.user.service;
 
+import com.locat.api.domain.user.dto.AdminUserSearchCriteria;
+import com.locat.api.domain.user.dto.UserInfoDto;
 import com.locat.api.domain.user.dto.UserInfoUpdateDto;
-import com.locat.api.domain.user.entity.EndUser;
 import com.locat.api.domain.user.entity.User;
-import com.locat.api.global.exception.NoSuchEntityException;
+import com.locat.api.global.exception.custom.NoSuchEntityException;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface UserService {
 
-  Page<EndUser> findAll(Pageable pageable);
+  User save(final User user);
 
   /**
    * 사용자 ID로 사용자 조회
@@ -29,11 +30,31 @@ public interface UserService {
    */
   Optional<User> findByEmail(final String email);
 
-  EndUser save(final EndUser user);
+  /**
+   * 사용자 OAuth ID로 사용자 조회
+   *
+   * @param oAuthId 사용자 OAuth ID
+   * @return 사용자 정보
+   */
+  Optional<User> findByOAuthId(final String oAuthId);
 
-  EndUser update(final Long id, final UserInfoUpdateDto infoUpdateDto);
+  /**
+   * 사용자 목록 조회
+   *
+   * @param criteria 검색 조건
+   * @param pageable 페이징 정보
+   * @return 사용자 목록
+   */
+  Page<UserInfoDto> findAll(AdminUserSearchCriteria criteria, Pageable pageable);
 
-  Optional<EndUser> findEndUserByOAuthId(final String oAuthId);
+  /**
+   * 사용자 정보 수정
+   *
+   * @param id 사용자 ID
+   * @param infoUpdateDto 사용자 정보 수정 DTO
+   * @return 수정된 사용자 정보
+   */
+  User update(final Long id, final UserInfoUpdateDto infoUpdateDto);
 
   /**
    * 사용자 탈퇴

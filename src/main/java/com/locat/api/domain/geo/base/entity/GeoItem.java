@@ -3,7 +3,7 @@ package com.locat.api.domain.geo.base.entity;
 import com.locat.api.domain.common.entity.SecuredBaseEntity;
 import com.locat.api.domain.geo.found.entity.FoundItem;
 import com.locat.api.domain.geo.lost.entity.LostItem;
-import com.locat.api.domain.user.entity.EndUser;
+import com.locat.api.domain.user.entity.User;
 import jakarta.persistence.*;
 import java.util.Set;
 import lombok.AccessLevel;
@@ -31,7 +31,7 @@ public abstract class GeoItem extends SecuredBaseEntity {
       updatable = false,
       columnDefinition = "int UNSIGNED",
       foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-  protected EndUser user;
+  protected User user;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "category_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))

@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 
 /**
+ * Push Notification Endpoint 등록 요청 DTO
+ *
  * @param deviceToken 사용자 디바이스 토큰
  * @param platform 사용자 플랫폼 정보 ({@link PlatformType})
  */

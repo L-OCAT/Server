@@ -2,7 +2,7 @@ package com.locat.api.domain.geo.base.service.impl;
 
 import com.locat.api.domain.geo.base.entity.ColorCode;
 import com.locat.api.domain.geo.base.service.ColorCodeService;
-import com.locat.api.infrastructure.repository.geo.base.ColorCodeRepository;
+import com.locat.api.infra.persistence.geo.base.ColorCodeRepository;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;

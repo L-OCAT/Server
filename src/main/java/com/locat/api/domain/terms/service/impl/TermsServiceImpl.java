@@ -1,12 +1,12 @@
 package com.locat.api.domain.terms.service.impl;
 
-import com.locat.api.domain.terms.dto.TermsRegisterDto;
+import com.locat.api.domain.terms.dto.TermsUpsertDto;
 import com.locat.api.domain.terms.entity.Terms;
+import com.locat.api.domain.terms.entity.TermsRevisionHistory;
 import com.locat.api.domain.terms.entity.TermsType;
+import com.locat.api.domain.terms.service.TermsRevisionHistoryService;
 import com.locat.api.domain.terms.service.TermsService;
-import com.locat.api.infrastructure.repository.terms.TermsQRepository;
-import com.locat.api.infrastructure.repository.terms.TermsRepository;
-import java.math.BigDecimal;
+import com.locat.api.infra.persistence.terms.TermsRepository;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -19,27 +19,29 @@ import org.springframework.transaction.annotation.Transactional;
 public class TermsServiceImpl implements TermsService {
 
   private final TermsRepository termsRepository;
-  private final TermsQRepository termsQRepository;
+  private final TermsRevisionHistoryService revisionHistoryService;
 
   @Override
-  public Terms register(TermsRegisterDto registerDto) {
-    BigDecimal previousVersion =
+  public void upsert(TermsUpsertDto upsertDto) {
+    Terms terms =
         this.termsRepository
-            .findByType(registerDto.type())
-            .map(Terms::getVersion)
-            .orElse(BigDecimal.ZERO);
-    return this.termsRepository.save(Terms.from(registerDto, previousVersion));
+            .findByType(upsertDto.type())
+            .map(exsting -> exsting.update(upsertDto))
+            .orElse(Terms.create(upsertDto));
+
+    this.termsRepository.save(terms);
+    this.revisionHistoryService.save(TermsRevisionHistory.of(terms, upsertDto.revisionNote()));
   }
 
   @Override
   @Transactional(readOnly = true)
-  public Optional<Terms> findLatestByType(TermsType termsType) {
-    return this.termsQRepository.findLatestByType(termsType);
+  public Optional<Terms> findByType(TermsType termsType) {
+    return this.termsRepository.findByType(termsType);
   }
 
   @Override
   @Transactional(readOnly = true)
-  public List<Terms> findAllLatest() {
-    return this.termsQRepository.findAllLatest();
+  public List<Terms> findAll() {
+    return this.termsRepository.findAll();
   }
 }

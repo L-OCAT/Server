@@ -1,13 +1,13 @@
 package com.locat.api.domain.geo.base.service.impl;
 
-import static com.locat.api.infrastructure.repository.MatchedItemNRepository.NONE_MATCHED;
+import static com.locat.api.infra.persistence.geo.MatchedItemNRepository.NONE_MATCHED;
 
 import com.locat.api.domain.geo.base.service.MatchedItemService;
 import com.locat.api.domain.geo.found.entity.FoundItem;
 import com.locat.api.domain.geo.found.service.FoundItemService;
 import com.locat.api.domain.geo.lost.entity.LostItem;
 import com.locat.api.domain.geo.lost.service.LostItemService;
-import com.locat.api.infrastructure.repository.MatchedItemNRepository;
+import com.locat.api.infra.persistence.geo.MatchedItemNRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

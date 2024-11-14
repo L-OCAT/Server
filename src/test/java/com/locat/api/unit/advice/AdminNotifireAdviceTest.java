@@ -5,9 +5,9 @@ import static org.mockito.Mockito.*;
 
 import com.locat.api.domain.common.misc.WebhookRequest;
 import com.locat.api.global.advice.AdminNotifierAdvice;
-import com.locat.api.global.annotation.RequireAdminNotification;
+import com.locat.api.global.advice.RequireAdminNotification;
 import com.locat.api.global.utils.LocatSpelParser;
-import com.locat.api.infrastructure.external.DiscordClient;
+import com.locat.api.infra.client.http.DiscordClient;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.junit.jupiter.api.BeforeAll;

@@ -8,7 +8,7 @@ import com.locat.api.domain.geo.found.dto.response.FoundItemDetailResponse;
 import com.locat.api.domain.geo.found.dto.response.FoundItemLocationResponse;
 import com.locat.api.domain.geo.found.entity.FoundItem;
 import com.locat.api.domain.geo.found.service.FoundItemService;
-import com.locat.api.global.auth.LocatUserDetails;
+import com.locat.api.global.security.userdetails.LocatUserDetails;
 import jakarta.validation.Valid;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;

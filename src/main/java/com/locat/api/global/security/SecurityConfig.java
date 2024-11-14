@@ -2,12 +2,11 @@ package com.locat.api.global.security;
 
 import static org.springframework.http.HttpMethod.*;
 
-import com.locat.api.global.auth.LocatUserDetailsService;
-import com.locat.api.global.auth.jwt.JwtProvider;
-import com.locat.api.global.security.filter.ActiveUserFilter;
-import com.locat.api.global.security.filter.JwtAuthenticationFilter;
-import com.locat.api.global.security.filter.PublicApiKeyFilter;
-import com.locat.api.global.security.manager.ActuatorAuthorizationManager;
+import com.locat.api.global.security.filter.SecurityFilterFactory;
+import com.locat.api.global.security.filter.impl.JwtAuthenticationFilter;
+import com.locat.api.global.security.filter.impl.PublicApiAccessControlFilter;
+import com.locat.api.global.security.handler.LocatAccessDeniedHandler;
+import com.locat.api.global.security.handler.LocatAuthEntryPoint;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -43,9 +42,7 @@ public class SecurityConfig {
           DELETE.name(),
           OPTIONS.name());
 
-  private final SecurityProperties securityProperties;
-  private final LocatUserDetailsService userDetailsService;
-  private final JwtProvider jwtProvider;
+  private final SecurityFilterFactory filterFactory;
 
   /** 상용(또는 개발) 환경에서 사용하는 SecurityFilterChain을 설정합니다. */
   @Bean
@@ -66,16 +63,13 @@ public class SecurityConfig {
                     .requestMatchers("/v*/**")
                     .permitAll()
                     .requestMatchers("/actuator/**")
-                    .access(new ActuatorAuthorizationManager(this.securityProperties.getAdminUrl()))
+                    .hasAuthority("SUPER_ADMIN")
                     .anyRequest()
                     .denyAll())
         .addFilterBefore(
-            new PublicApiKeyFilter(this.securityProperties.getApiKey()),
-            UsernamePasswordAuthenticationFilter.class)
-        .addFilterAfter(
-            new JwtAuthenticationFilter(this.jwtProvider, this.userDetailsService),
-            PublicApiKeyFilter.class)
-        .addFilterAfter(new ActiveUserFilter(), JwtAuthenticationFilter.class)
+            this.filterFactory.publicAccess(), UsernamePasswordAuthenticationFilter.class)
+        .addFilterAfter(this.filterFactory.jwtAuth(), PublicApiAccessControlFilter.class)
+        .addFilterAfter(this.filterFactory.adminAuth(), JwtAuthenticationFilter.class)
         .exceptionHandling(
             exception ->
                 exception
@@ -105,11 +99,14 @@ public class SecurityConfig {
                 authorize
                     .requestMatchers(CorsUtils::isPreFlightRequest)
                     .permitAll()
+                    .requestMatchers("/actuator/**")
+                    .hasAuthority("SUPER_ADMIN")
                     .anyRequest()
                     .permitAll())
         .addFilterBefore(
-            new JwtAuthenticationFilter(this.jwtProvider, this.userDetailsService),
-            UsernamePasswordAuthenticationFilter.class)
+            this.filterFactory.publicAccess(), UsernamePasswordAuthenticationFilter.class)
+        .addFilterAfter(this.filterFactory.jwtAuth(), PublicApiAccessControlFilter.class)
+        .addFilterAfter(this.filterFactory.adminAuth(), JwtAuthenticationFilter.class)
         .build();
   }
 

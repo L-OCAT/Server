@@ -1,7 +1,7 @@
 package com.locat.api.domain.geo.base.controller;
 
 import com.locat.api.domain.common.dto.BaseResponse;
-import com.locat.api.domain.geo.base.dto.GeoItemType;
+import com.locat.api.domain.geo.base.entity.GeoItemType;
 import com.locat.api.domain.geo.base.service.MatchedItemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

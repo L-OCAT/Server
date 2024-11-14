@@ -8,7 +8,7 @@ import com.locat.api.domain.geo.lost.dto.response.LostItemDetailResponse;
 import com.locat.api.domain.geo.lost.dto.response.LostItemLocationResponse;
 import com.locat.api.domain.geo.lost.entity.LostItem;
 import com.locat.api.domain.geo.lost.service.LostItemService;
-import com.locat.api.global.auth.LocatUserDetails;
+import com.locat.api.global.security.userdetails.LocatUserDetails;
 import jakarta.validation.Valid;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;

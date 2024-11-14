@@ -1,7 +1,7 @@
 package com.locat.api.domain.user.entity.association;
 
 import com.locat.api.domain.common.entity.BaseEntity;
-import com.locat.api.domain.user.entity.AdminUser;
+import com.locat.api.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -29,7 +29,7 @@ public class AdminDeviceId extends BaseEntity {
       name = "admin_user_id",
       nullable = false,
       foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-  private AdminUser adminUser;
+  private User adminUser;
 
   @Column(name = "device_id", nullable = false)
   private String deviceId;
@@ -37,11 +37,7 @@ public class AdminDeviceId extends BaseEntity {
   @Column(name = "is_trusted", nullable = false)
   private boolean isTrusted;
 
-  public static AdminDeviceId of(AdminUser adminUser, String deviceId, boolean isTrusted) {
-    return AdminDeviceId.builder()
-        .adminUser(adminUser)
-        .deviceId(deviceId)
-        .isTrusted(isTrusted)
-        .build();
+  public static AdminDeviceId of(User user, String deviceId, boolean isTrusted) {
+    return AdminDeviceId.builder().adminUser(user).deviceId(deviceId).isTrusted(isTrusted).build();
   }
 }

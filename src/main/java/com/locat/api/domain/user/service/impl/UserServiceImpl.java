@@ -1,19 +1,20 @@
 package com.locat.api.domain.user.service.impl;
 
 import com.locat.api.domain.auth.template.OAuth2TemplateFactory;
+import com.locat.api.domain.user.dto.AdminUserSearchCriteria;
+import com.locat.api.domain.user.dto.UserInfoDto;
 import com.locat.api.domain.user.dto.UserInfoUpdateDto;
-import com.locat.api.domain.user.entity.EndUser;
 import com.locat.api.domain.user.entity.User;
 import com.locat.api.domain.user.service.UserService;
 import com.locat.api.domain.user.service.UserValidationService;
 import com.locat.api.domain.user.service.UserWithdrawalLogService;
 import com.locat.api.global.exception.ApiExceptionType;
-import com.locat.api.global.exception.DuplicatedException;
-import com.locat.api.global.exception.NoSuchEntityException;
+import com.locat.api.global.exception.custom.DuplicatedException;
+import com.locat.api.global.exception.custom.NoSuchEntityException;
 import com.locat.api.global.utils.HashingUtils;
 import com.locat.api.global.utils.ValidationUtils;
-import com.locat.api.infrastructure.repository.user.EndUserRepository;
-import com.locat.api.infrastructure.repository.user.UserRepository;
+import com.locat.api.infra.persistence.user.UserQRepository;
+import com.locat.api.infra.persistence.user.UserRepository;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -27,14 +28,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserServiceImpl implements UserService {
 
   private final UserRepository userRepository;
-  private final EndUserRepository endUserRepository;
+  private final UserQRepository userQRepository;
   private final OAuth2TemplateFactory oAuth2TemplateFactory;
   private final UserValidationService userValidationService;
   private final UserWithdrawalLogService userWithdrawalLogService;
 
   @Override
-  public Page<EndUser> findAll(Pageable pageable) {
-    return this.endUserRepository.findAll(pageable);
+  public User save(User user) {
+    return this.userRepository.save(user);
   }
 
   @Override
@@ -50,29 +51,28 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public EndUser save(EndUser user) {
-    return this.endUserRepository.save(user);
+  @Transactional(readOnly = true)
+  public Optional<User> findByOAuthId(String oAuthId) {
+    return this.userRepository.findByOauthId(oAuthId);
   }
 
   @Override
-  public EndUser update(Long id, UserInfoUpdateDto infoUpdateDto) {
-    final EndUser user =
+  public Page<UserInfoDto> findAll(AdminUserSearchCriteria criteria, Pageable pageable) {
+    return this.userQRepository.findAllByCriteria(criteria, pageable);
+  }
+
+  @Override
+  public User update(Long id, UserInfoUpdateDto infoUpdateDto) {
+    final User user =
         this.findById(id)
-            .map(User::asEndUser)
             .orElseThrow(() -> new NoSuchEntityException(ApiExceptionType.NOT_FOUND_USER));
     this.validateRequestFields(user, infoUpdateDto);
     return user.update(infoUpdateDto.email(), infoUpdateDto.nickname());
   }
 
   @Override
-  @Transactional(readOnly = true)
-  public Optional<EndUser> findEndUserByOAuthId(String oAuthId) {
-    return this.endUserRepository.findByOauthId(oAuthId);
-  }
-
-  @Override
   public void delete(Long id, String reason) {
-    this.endUserRepository
+    this.userRepository
         .findById(id)
         .ifPresentOrElse(
             user -> {
@@ -85,12 +85,12 @@ public class UserServiceImpl implements UserService {
             });
   }
 
-  private void processOAuthWithdrawal(EndUser user) {
+  private void processOAuthWithdrawal(User user) {
     final String oauthId = user.getOauthId();
     this.oAuth2TemplateFactory.getById(oauthId).withdrawal(oauthId);
   }
 
-  private void validateRequestFields(EndUser user, UserInfoUpdateDto infoUpdateDto) {
+  private void validateRequestFields(User user, UserInfoUpdateDto infoUpdateDto) {
     ValidationUtils.throwIf(
         infoUpdateDto.email(),
         value -> user.getEmail().equals(value),

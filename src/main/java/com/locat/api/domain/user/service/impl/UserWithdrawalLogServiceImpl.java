@@ -2,7 +2,7 @@ package com.locat.api.domain.user.service.impl;
 
 import com.locat.api.domain.user.entity.association.UserWithdrawalLog;
 import com.locat.api.domain.user.service.UserWithdrawalLogService;
-import com.locat.api.infrastructure.repository.user.UserWithdrawalLogRepository;
+import com.locat.api.infra.persistence.user.UserWithdrawalLogRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

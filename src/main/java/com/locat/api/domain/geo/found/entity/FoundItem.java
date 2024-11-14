@@ -4,7 +4,7 @@ import com.locat.api.domain.geo.base.entity.Category;
 import com.locat.api.domain.geo.base.entity.ColorCode;
 import com.locat.api.domain.geo.base.entity.GeoItem;
 import com.locat.api.domain.geo.found.dto.FoundItemRegisterDto;
-import com.locat.api.domain.user.entity.EndUser;
+import com.locat.api.domain.user.entity.User;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -48,7 +48,7 @@ public class FoundItem extends GeoItem {
   private FoundItemStatusType statusType;
 
   public static FoundItem of(
-      EndUser user,
+      User user,
       Category category,
       Set<ColorCode> colorCodes,
       FoundItemRegisterDto registerDto,

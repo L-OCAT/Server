@@ -8,14 +8,14 @@ import com.locat.api.domain.geo.lost.dto.LostItemRegisterDto;
 import com.locat.api.domain.geo.lost.dto.LostItemSearchDto;
 import com.locat.api.domain.geo.lost.entity.LostItem;
 import com.locat.api.domain.geo.lost.service.LostItemService;
-import com.locat.api.domain.user.entity.EndUser;
 import com.locat.api.domain.user.entity.User;
 import com.locat.api.domain.user.service.UserService;
 import com.locat.api.global.exception.ApiExceptionType;
-import com.locat.api.global.exception.NoSuchEntityException;
-import com.locat.api.global.file.FileService;
-import com.locat.api.infrastructure.repository.geo.GeoItemQRepository;
-import com.locat.api.infrastructure.repository.geo.lost.LostItemRepository;
+import com.locat.api.global.exception.custom.NoSuchEntityException;
+import com.locat.api.infra.aws.s3.LocatS3Client;
+import com.locat.api.infra.persistence.geo.GeoItemQRepository;
+import com.locat.api.infra.persistence.geo.lost.LostItemRepository;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +37,7 @@ public class LostItemServiceImpl implements LostItemService {
   private final UserService userService;
   private final CategoryService categoryService;
   private final ColorCodeService colorCodeService;
-  private final FileService fileService;
+  private final LocatS3Client s3Client;
 
   @Override
   @Transactional(readOnly = true)
@@ -55,11 +55,16 @@ public class LostItemServiceImpl implements LostItemService {
   }
 
   @Override
+  @Transactional(readOnly = true)
+  public List<LostItem> findTop10ByEndUser(User user) {
+    return this.lostItemRepository.findTop10ByUserOrderByCreatedAtDesc(user);
+  }
+
+  @Override
   public Long register(Long userId, LostItemRegisterDto registerDto, MultipartFile lostItemImage) {
-    final EndUser user =
+    final User user =
         this.userService
             .findById(userId)
-            .map(User::asEndUser)
             .orElseThrow(() -> new NoSuchEntityException(ApiExceptionType.NOT_FOUND_USER));
     final Category category = this.fetchCategoryById(registerDto.categoryId());
     final Set<ColorCode> colorCodes =
@@ -67,7 +72,7 @@ public class LostItemServiceImpl implements LostItemService {
     String imageUrl = null;
 
     if (lostItemImage != null) {
-      imageUrl = this.fileService.upload(LOST_ITEM_IMAGE_DIRECTORY, lostItemImage);
+      imageUrl = this.s3Client.upload(LOST_ITEM_IMAGE_DIRECTORY, lostItemImage);
     }
     return this.lostItemRepository
         .save(LostItem.of(user, category, colorCodes, registerDto, imageUrl))

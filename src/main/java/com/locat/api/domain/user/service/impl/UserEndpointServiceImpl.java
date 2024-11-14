@@ -1,15 +1,14 @@
 package com.locat.api.domain.user.service.impl;
 
 import com.locat.api.domain.user.dto.EndpointRegisterDto;
-import com.locat.api.domain.user.entity.EndUser;
 import com.locat.api.domain.user.entity.User;
 import com.locat.api.domain.user.entity.association.UserEndpoint;
 import com.locat.api.domain.user.service.PlatformEndpointService;
 import com.locat.api.domain.user.service.UserEndpointService;
 import com.locat.api.domain.user.service.UserService;
 import com.locat.api.global.exception.ApiExceptionType;
-import com.locat.api.global.exception.NoSuchEntityException;
-import com.locat.api.infrastructure.repository.user.UserEndpointRepository;
+import com.locat.api.global.exception.custom.NoSuchEntityException;
+import com.locat.api.infra.persistence.user.UserEndpointRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,10 +25,9 @@ public class UserEndpointServiceImpl implements UserEndpointService {
 
   @Override
   public void register(Long userId, EndpointRegisterDto registerDto) {
-    EndUser user =
+    User user =
         this.userService
             .findById(userId)
-            .map(User::asEndUser)
             .orElseThrow(() -> new NoSuchEntityException(ApiExceptionType.NOT_FOUND_USER));
     List<UserEndpoint> userEndpoints = this.findUserEndpointsByUserId(userId);
 

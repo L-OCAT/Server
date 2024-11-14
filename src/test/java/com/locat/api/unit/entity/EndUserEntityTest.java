@@ -3,8 +3,8 @@ package com.locat.api.unit.entity;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
-import com.locat.api.domain.auth.dto.OAuth2UserInfoDto;
-import com.locat.api.domain.user.entity.EndUser;
+import com.locat.api.domain.auth.dto.OAuth2UserInfo;
+import com.locat.api.domain.user.entity.User;
 import com.locat.api.domain.user.enums.OAuth2ProviderType;
 import com.locat.api.domain.user.enums.StatusType;
 import com.locat.api.domain.user.enums.UserType;
@@ -26,14 +26,14 @@ class EndUserEntityTest {
   private static final String PROFILE_IMAGE = "profile.jpg";
   private static final UserType USER_TYPE = UserType.ADMIN;
   private static final StatusType STATUS_TYPE = StatusType.ACTIVE;
-  @InjectMocks private EndUser user;
+  @InjectMocks private User user;
 
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this);
     // Given
     this.user =
-        EndUser.builder()
+        User.builder()
             .email(EMAIL)
             .emailHash(HashingUtils.hash(EMAIL))
             .oauthId(OAUTH_ID)
@@ -69,10 +69,10 @@ class EndUserEntityTest {
   @DisplayName("of() 메서드로 생성한 User 객체는 주어진 값 또는 적절한 기본값을 가져야 한다.")
   void testOf() {
     // Given
-    OAuth2UserInfoDto mockUserInfoDto = TestDataFactory.create(OAUTH_ID, EMAIL);
+    OAuth2UserInfo mockUserInfoDto = TestDataFactory.create(OAUTH_ID, EMAIL);
 
     // When
-    EndUser createdUser = EndUser.of(NICKNAME, mockUserInfoDto);
+    User createdUser = User.of(NICKNAME, "temp1234", mockUserInfoDto);
 
     // Then
     assertThat(createdUser).isNotNull();
@@ -98,7 +98,7 @@ class EndUserEntityTest {
     String newNickname = "newUser";
 
     // When
-    EndUser updatedUser = this.user.update(newEmail, newNickname);
+    User updatedUser = this.user.update(newEmail, newNickname);
 
     // Then
     assertThat(updatedUser.getEmail()).isEqualTo(newEmail);
@@ -110,7 +110,7 @@ class EndUserEntityTest {
   @DisplayName("null이 주어지면, User 객체의 필드 값을 업데이트하지 않아야 한다.")
   void testUpdateWithNull() {
     // Given & When
-    EndUser updatedUser = this.user.update(null, null);
+    User updatedUser = this.user.update(null, null);
 
     // Then
     assertThat(updatedUser.getEmail()).isEqualTo(EMAIL);
@@ -133,7 +133,7 @@ class EndUserEntityTest {
   @DisplayName("User가 활성화 상태일 때 status 관련 메서드 테스트")
   void testIfUserActivated() {
     // When & Then
-    assertThat(this.user.isNotActivated()).isFalse();
+    assertThat(this.user.isActivated()).isTrue();
     assertThatCode(this.user::assertActivated).doesNotThrowAnyException();
   }
 
@@ -144,7 +144,7 @@ class EndUserEntityTest {
     this.user.updateStatus(StatusType.INACTIVE);
 
     // When & Then
-    assertThat(this.user.isNotActivated()).isTrue();
+    assertThat(this.user.isActivated()).isFalse();
     assertThatCode(this.user::assertActivated)
         .isExactlyInstanceOf(AccessDeniedException.class)
         .hasMessageStartingWith("Access Denied:");
