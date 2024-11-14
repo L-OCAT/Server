@@ -1,4 +1,4 @@
-package com.locat.api.global.persistance;
+package com.locat.api.global.persistence;
 
 import com.locat.api.global.exception.custom.InternalProcessingException;
 import com.locat.api.global.utils.RandomGenerator;

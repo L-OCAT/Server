@@ -2,7 +2,7 @@ package com.locat.api.unit.security;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-import com.locat.api.global.persistance.StringColumnEncryptionConverter;
+import com.locat.api.global.persistence.StringColumnEncryptionConverter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

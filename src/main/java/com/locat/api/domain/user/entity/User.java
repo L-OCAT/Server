@@ -9,7 +9,7 @@ import com.locat.api.domain.user.entity.association.UserTermsAgreement;
 import com.locat.api.domain.user.enums.OAuth2ProviderType;
 import com.locat.api.domain.user.enums.StatusType;
 import com.locat.api.domain.user.enums.UserType;
-import com.locat.api.global.persistance.StringColumnEncryptionConverter;
+import com.locat.api.global.persistence.StringColumnEncryptionConverter;
 import com.locat.api.global.utils.HashingUtils;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
