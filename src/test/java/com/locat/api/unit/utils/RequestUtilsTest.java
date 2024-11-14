@@ -5,7 +5,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.locat.api.global.exception.InvalidParameterException;
+import com.locat.api.global.exception.custom.InvalidParameterException;
 import com.locat.api.global.utils.RequestUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.DisplayName;

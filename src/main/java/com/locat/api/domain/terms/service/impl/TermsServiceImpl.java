@@ -6,7 +6,7 @@ import com.locat.api.domain.terms.entity.TermsRevisionHistory;
 import com.locat.api.domain.terms.entity.TermsType;
 import com.locat.api.domain.terms.service.TermsRevisionHistoryService;
 import com.locat.api.domain.terms.service.TermsService;
-import com.locat.api.infrastructure.repository.terms.TermsRepository;
+import com.locat.api.infra.persistence.terms.TermsRepository;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;

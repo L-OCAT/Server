@@ -3,8 +3,8 @@ package com.locat.api.unit.file;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
-import com.locat.api.global.file.FileOperationFailedException;
-import com.locat.api.global.file.FileUtils;
+import com.locat.api.infra.aws.exception.FileOperationException;
+import com.locat.api.infra.aws.s3.impl.FileUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockMultipartFile;
@@ -48,12 +48,12 @@ class FileUtilsTest {
 
     // When & Then
     assertThatThrownBy(() -> FileUtils.extractExtension(file1))
-        .isExactlyInstanceOf(FileOperationFailedException.class);
+        .isExactlyInstanceOf(FileOperationException.class);
     assertThatThrownBy(() -> FileUtils.extractExtension(file2))
-        .isExactlyInstanceOf(FileOperationFailedException.class);
+        .isExactlyInstanceOf(FileOperationException.class);
     assertThatThrownBy(() -> FileUtils.extractExtension(file3))
-        .isExactlyInstanceOf(FileOperationFailedException.class);
+        .isExactlyInstanceOf(FileOperationException.class);
     assertThatThrownBy(() -> FileUtils.extractExtension(file4))
-        .isExactlyInstanceOf(FileOperationFailedException.class);
+        .isExactlyInstanceOf(FileOperationException.class);
   }
 }

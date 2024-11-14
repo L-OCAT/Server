@@ -4,7 +4,7 @@ import com.locat.api.domain.user.dto.AdminUserSearchCriteria;
 import com.locat.api.domain.user.dto.UserInfoDto;
 import com.locat.api.domain.user.dto.UserInfoUpdateDto;
 import com.locat.api.domain.user.entity.User;
-import com.locat.api.global.exception.NoSuchEntityException;
+import com.locat.api.global.exception.custom.NoSuchEntityException;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

@@ -3,8 +3,8 @@ package com.locat.api.unit.security;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.*;
 
-import com.locat.api.global.auth.LocatUserDetails;
-import com.locat.api.global.security.LocatAuditorAware;
+import com.locat.api.global.security.handler.LocatAuditorAware;
+import com.locat.api.global.security.userdetails.LocatUserDetails;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

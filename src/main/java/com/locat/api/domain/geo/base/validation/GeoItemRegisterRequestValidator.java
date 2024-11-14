@@ -1,6 +1,6 @@
 package com.locat.api.domain.geo.base.validation;
 
-import com.locat.api.global.validation.LocatConstraintValidator;
+import com.locat.api.global.web.validation.LocatConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import java.lang.annotation.Annotation;
 import java.util.regex.Pattern;

@@ -2,7 +2,7 @@ package com.locat.api.unit.mail;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-import com.locat.api.global.mail.MailTemplate;
+import com.locat.api.infra.aws.ses.impl.MailTemplate;
 import org.junit.jupiter.api.Test;
 
 class MailTemplateTest {

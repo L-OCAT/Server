@@ -3,7 +3,7 @@ package com.locat.api.domain.faq.service.impl;
 import com.locat.api.domain.faq.entity.FAQ;
 import com.locat.api.domain.faq.entity.FaqType;
 import com.locat.api.domain.faq.service.FaqService;
-import com.locat.api.infrastructure.repository.faq.FAQRepository;
+import com.locat.api.infra.persistence.faq.FAQRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

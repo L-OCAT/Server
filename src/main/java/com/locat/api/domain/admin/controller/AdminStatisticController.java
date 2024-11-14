@@ -5,7 +5,7 @@ import com.locat.api.domain.admin.dto.AdminUserLostItemStatDto;
 import com.locat.api.domain.admin.dto.response.*;
 import com.locat.api.domain.admin.service.AdminStatisticService;
 import com.locat.api.domain.common.dto.BaseResponse;
-import com.locat.api.global.annotation.AdminApi;
+import com.locat.api.global.security.annotation.AdminApi;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

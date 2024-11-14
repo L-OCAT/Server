@@ -1,7 +1,7 @@
 package com.locat.api.domain.user.enums;
 
 import com.locat.api.global.exception.ApiExceptionType;
-import com.locat.api.global.notification.NotificationException;
+import com.locat.api.infra.aws.exception.NotificationException;
 import java.util.Arrays;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

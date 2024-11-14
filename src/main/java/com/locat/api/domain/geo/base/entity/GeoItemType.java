@@ -1,6 +1,6 @@
 package com.locat.api.domain.geo.base.entity;
 
-import com.locat.api.global.exception.InvalidParameterException;
+import com.locat.api.global.exception.custom.InvalidParameterException;
 import java.util.Arrays;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

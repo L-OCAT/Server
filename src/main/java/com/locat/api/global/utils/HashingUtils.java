@@ -1,6 +1,6 @@
 package com.locat.api.global.utils;
 
-import com.locat.api.global.exception.InternalProcessingException;
+import com.locat.api.global.exception.custom.InternalProcessingException;
 import jakarta.validation.constraints.NotNull;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

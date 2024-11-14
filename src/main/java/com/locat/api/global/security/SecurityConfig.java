@@ -2,9 +2,11 @@ package com.locat.api.global.security;
 
 import static org.springframework.http.HttpMethod.*;
 
-import com.locat.api.global.security.filter.JwtAuthenticationFilter;
-import com.locat.api.global.security.filter.PublicApiAccessControlFilter;
 import com.locat.api.global.security.filter.SecurityFilterFactory;
+import com.locat.api.global.security.filter.impl.JwtAuthenticationFilter;
+import com.locat.api.global.security.filter.impl.PublicApiAccessControlFilter;
+import com.locat.api.global.security.handler.LocatAccessDeniedHandler;
+import com.locat.api.global.security.handler.LocatAuthEntryPoint;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

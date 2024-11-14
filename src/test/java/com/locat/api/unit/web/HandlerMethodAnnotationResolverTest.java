@@ -5,7 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.locat.api.global.web.HandlerMethodAnnotationResolver;
+import com.locat.api.global.web.resolver.HandlerMethodAnnotationResolver;
 import jakarta.servlet.http.HttpServletRequest;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

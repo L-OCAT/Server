@@ -1,9 +1,8 @@
 package com.locat.api.global.advice;
 
 import com.locat.api.domain.common.misc.WebhookRequest;
-import com.locat.api.global.annotation.RequireAdminNotification;
 import com.locat.api.global.utils.LocatSpelParser;
-import com.locat.api.infrastructure.external.DiscordClient;
+import com.locat.api.infra.client.http.DiscordClient;
 import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;

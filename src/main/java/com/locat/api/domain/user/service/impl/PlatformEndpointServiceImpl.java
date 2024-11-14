@@ -1,12 +1,12 @@
 package com.locat.api.domain.user.service.impl;
 
-import static com.locat.api.infrastructure.aws.AwsSnsProperties.DEFAULT_SNS_PROTOCOL;
+import static com.locat.api.infra.aws.config.AwsSnsProperties.DEFAULT_SNS_PROTOCOL;
 
 import com.locat.api.domain.user.enums.PlatformType;
 import com.locat.api.domain.user.exception.UserEndpointException;
 import com.locat.api.domain.user.service.PlatformEndpointService;
 import com.locat.api.global.exception.ApiExceptionType;
-import com.locat.api.infrastructure.aws.AwsSnsProperties;
+import com.locat.api.infra.aws.config.AwsSnsProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.sns.SnsClient;

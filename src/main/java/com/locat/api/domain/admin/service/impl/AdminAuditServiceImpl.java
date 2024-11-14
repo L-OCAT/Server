@@ -3,7 +3,7 @@ package com.locat.api.domain.admin.service.impl;
 import com.locat.api.domain.admin.entity.AdminActivity;
 import com.locat.api.domain.admin.service.AdminAuditService;
 import com.locat.api.global.event.AdminAuditEvent;
-import com.locat.api.infrastructure.repository.admin.AdminActivityRepository;
+import com.locat.api.infra.persistence.admin.AdminActivityRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;

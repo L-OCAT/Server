@@ -4,7 +4,7 @@ import com.locat.api.domain.common.dto.BaseResponse;
 import com.locat.api.domain.user.dto.EndpointRegisterDto;
 import com.locat.api.domain.user.dto.request.EndpointRegisterRequest;
 import com.locat.api.domain.user.service.UserEndpointService;
-import com.locat.api.global.auth.LocatUserDetails;
+import com.locat.api.global.security.userdetails.LocatUserDetails;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

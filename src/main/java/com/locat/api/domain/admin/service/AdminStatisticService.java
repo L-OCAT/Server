@@ -2,7 +2,7 @@ package com.locat.api.domain.admin.service;
 
 import com.locat.api.domain.admin.dto.*;
 import com.locat.api.domain.geo.base.entity.GeoItem;
-import com.locat.api.global.exception.NoSuchEntityException;
+import com.locat.api.global.exception.custom.NoSuchEntityException;
 import java.util.List;
 
 public interface AdminStatisticService {

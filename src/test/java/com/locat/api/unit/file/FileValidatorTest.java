@@ -4,8 +4,8 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 import com.locat.api.global.exception.LocatApiException;
-import com.locat.api.global.file.FileOperationFailedException;
-import com.locat.api.global.file.FileValidator;
+import com.locat.api.infra.aws.exception.FileOperationException;
+import com.locat.api.infra.aws.s3.impl.FileValidator;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -39,20 +39,20 @@ class FileValidatorTest {
                 "file", "validFile.jpg", CONTENT_TYPE, new byte[1024 * 1024 * 49]),
             null,
             "유효한 파일"),
-        Arguments.of(null, FileOperationFailedException.class, "Null 파일"),
+        Arguments.of(null, FileOperationException.class, "Null 파일"),
         Arguments.of(
             new MockMultipartFile("file", "emptyFile.png", CONTENT_TYPE, new byte[0]),
-            FileOperationFailedException.class,
+            FileOperationException.class,
             "빈 파일"),
         Arguments.of(
             new MockMultipartFile(
                 "file", "invalidFile.xyz", "application/octet-stream", new byte[1024]),
-            FileOperationFailedException.class,
+            FileOperationException.class,
             "지원되지 않는 포맷 파일"),
         Arguments.of(
             new MockMultipartFile(
                 "file", "oversizedFile.txt", CONTENT_TYPE, new byte[1024 * 1024 * 51]),
-            FileOperationFailedException.class,
+            FileOperationException.class,
             "최대 크기를 넘는 파일"));
   }
 }

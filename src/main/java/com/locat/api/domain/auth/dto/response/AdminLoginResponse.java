@@ -1,6 +1,6 @@
 package com.locat.api.domain.auth.dto.response;
 
-import com.locat.api.global.auth.jwt.LocatTokenDto;
+import com.locat.api.global.security.jwt.dto.LocatTokenDto;
 
 /**
  * 관리자 로그인 응답

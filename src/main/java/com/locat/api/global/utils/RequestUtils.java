@@ -1,6 +1,6 @@
 package com.locat.api.global.utils;
 
-import com.locat.api.global.exception.InvalidParameterException;
+import com.locat.api.global.exception.custom.InvalidParameterException;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Optional;
 

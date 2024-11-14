@@ -11,10 +11,10 @@ import com.locat.api.domain.geo.found.service.FoundItemService;
 import com.locat.api.domain.user.entity.User;
 import com.locat.api.domain.user.service.UserService;
 import com.locat.api.global.exception.ApiExceptionType;
-import com.locat.api.global.exception.NoSuchEntityException;
-import com.locat.api.global.file.FileService;
-import com.locat.api.infrastructure.repository.geo.GeoItemQRepository;
-import com.locat.api.infrastructure.repository.geo.found.FoundItemRepository;
+import com.locat.api.global.exception.custom.NoSuchEntityException;
+import com.locat.api.infra.aws.s3.LocatS3Client;
+import com.locat.api.infra.persistence.geo.GeoItemQRepository;
+import com.locat.api.infra.persistence.geo.found.FoundItemRepository;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -37,7 +37,7 @@ public class FoundItemServiceImpl implements FoundItemService {
   private final UserService userService;
   private final CategoryService categoryService;
   private final ColorCodeService colorCodeService;
-  private final FileService fileService;
+  private final LocatS3Client s3Client;
 
   @Override
   @Transactional(readOnly = true)
@@ -73,7 +73,7 @@ public class FoundItemServiceImpl implements FoundItemService {
 
     String imageUrl = null;
     if (foundItemImage != null) {
-      imageUrl = this.fileService.upload(FOUND_ITEM_IMAGE_DIRECTORY, foundItemImage);
+      imageUrl = this.s3Client.upload(FOUND_ITEM_IMAGE_DIRECTORY, foundItemImage);
     }
     return this.foundItemRepository
         .save(FoundItem.of(user, category, colorCodes, registerDto, imageUrl))

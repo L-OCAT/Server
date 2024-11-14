@@ -1,8 +1,8 @@
 package com.locat.api.domain.user.service;
 
 import com.locat.api.domain.user.enums.UserInfoValidationType;
-import com.locat.api.global.exception.DuplicatedException;
-import com.locat.api.global.exception.InvalidParameterException;
+import com.locat.api.global.exception.custom.DuplicatedException;
+import com.locat.api.global.exception.custom.InvalidParameterException;
 
 public interface UserValidationService {
 

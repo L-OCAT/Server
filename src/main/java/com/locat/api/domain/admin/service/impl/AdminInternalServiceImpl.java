@@ -5,7 +5,7 @@ import com.locat.api.domain.user.entity.User;
 import com.locat.api.domain.user.enums.UserType;
 import com.locat.api.domain.user.service.UserService;
 import com.locat.api.global.exception.ApiExceptionType;
-import com.locat.api.global.exception.NoSuchEntityException;
+import com.locat.api.global.exception.custom.NoSuchEntityException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

@@ -3,12 +3,12 @@ package com.locat.api.unit.security;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
-import com.locat.api.global.annotation.PublicApi;
-import com.locat.api.global.auth.enums.AccessLevel;
-import com.locat.api.global.auth.enums.KeyValidation;
-import com.locat.api.global.security.SecurityProperties;
-import com.locat.api.global.security.filter.PublicApiAccessControlFilter;
-import com.locat.api.global.web.HandlerMethodAnnotationResolver;
+import com.locat.api.global.security.annotation.PublicApi;
+import com.locat.api.global.security.common.AccessLevel;
+import com.locat.api.global.security.common.KeyValidation;
+import com.locat.api.global.security.common.SecurityProperties;
+import com.locat.api.global.security.filter.impl.PublicApiAccessControlFilter;
+import com.locat.api.global.web.resolver.HandlerMethodAnnotationResolver;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

@@ -1,8 +1,8 @@
 package com.locat.api.domain.admin.entity;
 
 import com.locat.api.domain.common.entity.BaseEntity;
-import com.locat.api.global.converter.StringColumnEncryptionConverter;
 import com.locat.api.global.event.AdminAuditEvent;
+import com.locat.api.global.persistance.StringColumnEncryptionConverter;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;

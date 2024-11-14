@@ -8,15 +8,15 @@ import com.locat.api.domain.auth.service.AuthService;
 import com.locat.api.domain.auth.service.OAuth2Service;
 import com.locat.api.domain.user.entity.User;
 import com.locat.api.domain.user.service.UserService;
-import com.locat.api.global.auth.AuthenticationException;
-import com.locat.api.global.auth.jwt.JwtProvider;
-import com.locat.api.global.auth.jwt.LocatTokenDto;
 import com.locat.api.global.exception.ApiExceptionType;
-import com.locat.api.global.exception.NoSuchEntityException;
-import com.locat.api.global.mail.MailService;
-import com.locat.api.global.mail.MailTemplate;
+import com.locat.api.global.exception.custom.NoSuchEntityException;
+import com.locat.api.global.security.exception.AuthenticationException;
+import com.locat.api.global.security.jwt.JwtProvider;
+import com.locat.api.global.security.jwt.dto.LocatTokenDto;
 import com.locat.api.global.utils.RandomGenerator;
-import com.locat.api.infrastructure.redis.VerificationCodeRepository;
+import com.locat.api.infra.aws.ses.LocatSesClient;
+import com.locat.api.infra.aws.ses.impl.MailTemplate;
+import com.locat.api.infra.redis.VerificationCodeRepository;
 import java.time.Duration;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -31,7 +31,7 @@ public class AuthServiceImpl implements AuthService {
   public static final Duration VERIFICATION_CODE_EXPIRATION = Duration.ofMinutes(5);
 
   private final UserService userService;
-  private final MailService mailService;
+  private final LocatSesClient sesClient;
   private final JwtProvider jwtProvider;
   private final OAuth2Service oAuth2Service;
   private final PasswordEncoder passwordEncoder;
@@ -79,7 +79,7 @@ public class AuthServiceImpl implements AuthService {
     final String verificationCode = RandomGenerator.generateRandomCode(VERIFICATION_CODE_LENGTH);
     this.verificationCodeRepository.save(
         VerificationCode.of(email, verificationCode, VERIFICATION_CODE_EXPIRATION.toSeconds()));
-    this.mailService.send(
+    this.sesClient.send(
         email,
         MailTemplate.MAIL_VERIFY_TITLE,
         MailTemplate.createMailVerifyMessage(verificationCode));

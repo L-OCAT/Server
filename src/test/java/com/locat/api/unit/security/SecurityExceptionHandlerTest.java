@@ -3,8 +3,8 @@ package com.locat.api.unit.security;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.*;
 
-import com.locat.api.global.security.LocatAccessDeniedHandler;
-import com.locat.api.global.security.LocatAuthEntryPoint;
+import com.locat.api.global.security.handler.LocatAccessDeniedHandler;
+import com.locat.api.global.security.handler.LocatAuthEntryPoint;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import org.junit.jupiter.api.DisplayName;

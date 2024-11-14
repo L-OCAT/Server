@@ -1,6 +1,6 @@
 package com.locat.api.domain.geo.lost.dto.request;
 
-import com.locat.api.domain.geo.base.annotation.LostItemValidation;
+import com.locat.api.global.web.validation.LostItemValidation;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;

@@ -6,9 +6,9 @@ import com.locat.api.domain.auth.entity.OAuth2ProviderToken;
 import com.locat.api.domain.auth.template.AbstractOAuth2Template;
 import com.locat.api.domain.auth.template.OAuth2Properties;
 import com.locat.api.domain.user.enums.OAuth2ProviderType;
-import com.locat.api.infrastructure.external.KakaoOAuth2Client;
-import com.locat.api.infrastructure.external.KakaoUserClient;
-import com.locat.api.infrastructure.redis.OAuth2ProviderTokenRepository;
+import com.locat.api.infra.client.http.KakaoOAuth2Client;
+import com.locat.api.infra.client.http.KakaoUserClient;
+import com.locat.api.infra.redis.OAuth2ProviderTokenRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 

@@ -7,10 +7,11 @@ import static com.locat.api.global.utils.ValidationUtils.*;
 import com.locat.api.domain.user.enums.UserInfoValidationType;
 import com.locat.api.domain.user.service.UserValidationService;
 import com.locat.api.global.exception.ApiExceptionType;
-import com.locat.api.global.exception.DuplicatedException;
-import com.locat.api.global.exception.InvalidParameterException;
+import com.locat.api.global.exception.custom.DuplicatedException;
+import com.locat.api.global.exception.custom.InvalidParameterException;
 import com.locat.api.global.utils.HashingUtils;
-import com.locat.api.infrastructure.repository.user.UserRepository;
+import com.locat.api.global.utils.ValidationUtils;
+import com.locat.api.infra.persistence.user.UserRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -34,7 +35,7 @@ public class UserValidationServiceImpl implements UserValidationService {
 
   @Override
   public void validateNickname(String nickname) {
-    throwIfAny(
+    ValidationUtils.throwIfAny(
         nickname,
         List.of(
             FORBIDDEN_NICKNAME_PATTERN.asMatchPredicate(),
@@ -48,7 +49,7 @@ public class UserValidationServiceImpl implements UserValidationService {
 
   @Override
   public void validateEmail(String email) {
-    throwIfAny(
+    ValidationUtils.throwIfAny(
         email,
         List.of(
             value1 -> !EMAIL_PATTERN.matcher(value1).matches(),
