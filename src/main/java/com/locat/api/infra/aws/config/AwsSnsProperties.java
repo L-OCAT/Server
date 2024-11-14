@@ -28,14 +28,11 @@ public class AwsSnsProperties {
     Map<PlatformType, String> arnEnumMap = new EnumMap<>(PlatformType.class);
     arnEnumMap.put(
         PlatformType.IOS,
-        Objects.requireNonNull(
-            environment.getProperty("service.aws.sns.platform-application-arn.ios"),
-            messageIfNull));
+        Objects.requireNonNull(environment.getProperty("service.aws.sns.ios-arn"), messageIfNull));
     arnEnumMap.put(
         PlatformType.ANDROID,
         Objects.requireNonNull(
-            environment.getProperty("service.aws.sns.platform-application-arn.android"),
-            messageIfNull));
+            environment.getProperty("service.aws.sns.android-arn"), messageIfNull));
     this.platformArnMap = Collections.unmodifiableMap(arnEnumMap);
   }
 

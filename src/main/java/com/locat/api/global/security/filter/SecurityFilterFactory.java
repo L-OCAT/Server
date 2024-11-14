@@ -1,6 +1,6 @@
 package com.locat.api.global.security.filter;
 
-import com.locat.api.global.security.common.SecurityProperties;
+import com.locat.api.global.security.common.ServiceProperties;
 import com.locat.api.global.security.filter.impl.AdminApiAuthorizationFilter;
 import com.locat.api.global.security.filter.impl.JwtAuthenticationFilter;
 import com.locat.api.global.security.filter.impl.PublicApiAccessControlFilter;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class SecurityFilterFactory {
 
-  private final SecurityProperties securityProperties;
+  private final ServiceProperties serviceProperties;
   private final HandlerMethodAnnotationResolver annotationResolver;
   private final LocatAuditorAware auditorAware;
   private final ApplicationEventPublisher eventPublisher;
@@ -24,7 +24,7 @@ public class SecurityFilterFactory {
   private final JwtProvider jwtProvider;
 
   public PublicApiAccessControlFilter publicAccess() {
-    return new PublicApiAccessControlFilter(this.securityProperties, this.annotationResolver);
+    return new PublicApiAccessControlFilter(this.serviceProperties, this.annotationResolver);
   }
 
   public JwtAuthenticationFilter jwtAuth() {

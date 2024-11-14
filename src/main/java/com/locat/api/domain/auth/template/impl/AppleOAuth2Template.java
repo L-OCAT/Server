@@ -6,7 +6,6 @@ import com.locat.api.domain.auth.dto.token.AppleIdToken;
 import com.locat.api.domain.auth.dto.token.OAuth2ProviderJsonWebKey;
 import com.locat.api.domain.auth.entity.OAuth2ProviderToken;
 import com.locat.api.domain.auth.template.AbstractOAuth2Template;
-import com.locat.api.domain.auth.template.OAuth2Properties;
 import com.locat.api.domain.auth.utils.AppleClientSecretProvider;
 import com.locat.api.domain.auth.utils.OpenIdConnectTokenUtils;
 import com.locat.api.domain.user.enums.OAuth2ProviderType;

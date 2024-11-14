@@ -1,7 +1,7 @@
 package com.locat.api.global.security.filter.impl;
 
 import com.locat.api.global.security.annotation.PublicApi;
-import com.locat.api.global.security.common.SecurityProperties;
+import com.locat.api.global.security.common.ServiceProperties;
 import com.locat.api.global.security.filter.AbstractLocatSecurityFilter;
 import com.locat.api.global.web.resolver.HandlerMethodAnnotationResolver;
 import jakarta.servlet.FilterChain;
@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PublicApiAccessControlFilter extends AbstractLocatSecurityFilter {
 
-  private final SecurityProperties securityProperties;
+  private final ServiceProperties serviceProperties;
   private final HandlerMethodAnnotationResolver annotationResolver;
 
   @Override
@@ -59,9 +59,9 @@ public class PublicApiAccessControlFilter extends AbstractLocatSecurityFilter {
     Optional<String> requestedHeader = this.extractHeader(request, publicApi.keyHeader());
     return switch (publicApi.keyValidation()) {
       case REQUIRED ->
-          requestedHeader.isPresent() && this.securityProperties.isKeyValid(requestedHeader.get());
+          requestedHeader.isPresent() && this.serviceProperties.isKeyValid(requestedHeader.get());
       case OPTIONAL ->
-          requestedHeader.isEmpty() || this.securityProperties.isKeyValid(requestedHeader.get());
+          requestedHeader.isEmpty() || this.serviceProperties.isKeyValid(requestedHeader.get());
       case NONE ->
           throw new IllegalStateException(
               "If access level is PROTECTED, key validation must be REQUIRED or OPTIONAL");

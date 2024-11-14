@@ -1,4 +1,4 @@
-package com.locat.api.domain.auth.template;
+package com.locat.api.domain.auth.template.impl;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

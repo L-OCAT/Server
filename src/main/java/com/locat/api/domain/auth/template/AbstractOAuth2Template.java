@@ -3,6 +3,7 @@ package com.locat.api.domain.auth.template;
 import static com.locat.api.global.security.jwt.impl.JwtProviderImpl.BEARER_PREFIX;
 
 import com.locat.api.domain.auth.entity.OAuth2ProviderToken;
+import com.locat.api.domain.auth.template.impl.OAuth2Properties;
 import com.locat.api.global.exception.ApiExceptionType;
 import com.locat.api.global.exception.custom.NoSuchEntityException;
 import com.locat.api.infra.redis.OAuth2ProviderTokenRepository;
