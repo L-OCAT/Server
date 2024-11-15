@@ -1,4 +1,4 @@
-package com.locat.api.global.persistence;
+package com.locat.api.global.persistence.converter;
 
 import com.locat.api.global.exception.custom.InternalProcessingException;
 import com.locat.api.global.utils.RandomGenerator;
@@ -52,11 +52,9 @@ public class StringColumnEncryptionConverter implements AttributeConverter<Strin
       return null;
     }
     try {
-      Cipher cipher = Cipher.getInstance(ENCRYPTION_TRANSFORM);
       final byte[] initialVector = RandomGenerator.generateRandomBytes(INITIAL_VECTOR_LENGTH);
-      final GCMParameterSpec gcmParameterSpec = new GCMParameterSpec(128, initialVector);
-      cipher.init(Cipher.ENCRYPT_MODE, this.secretKeySpec, gcmParameterSpec);
 
+      Cipher cipher = initCipher(Cipher.ENCRYPT_MODE, this.secretKeySpec, initialVector);
       byte[] encryptedData = cipher.doFinal(attribute.getBytes(DEFAULT_ENCODING));
       byte[] encryptedWithIv =
           ByteBuffer.allocate(initialVector.length + encryptedData.length)
@@ -87,7 +85,6 @@ public class StringColumnEncryptionConverter implements AttributeConverter<Strin
       return null;
     }
     try {
-      Cipher cipher = Cipher.getInstance(ENCRYPTION_TRANSFORM);
       byte[] decodedData = Base64.decode(dbData);
       ByteBuffer byteBuffer = ByteBuffer.wrap(decodedData);
 
@@ -97,13 +94,30 @@ public class StringColumnEncryptionConverter implements AttributeConverter<Strin
       byte[] encryptedData = new byte[byteBuffer.remaining()];
       byteBuffer.get(encryptedData);
 
-      final GCMParameterSpec gcmParameterSpec = new GCMParameterSpec(128, initialVector);
-      cipher.init(Cipher.DECRYPT_MODE, this.secretKeySpec, gcmParameterSpec);
-
+      Cipher cipher = initCipher(Cipher.DECRYPT_MODE, this.secretKeySpec, initialVector);
       byte[] decryptedData = cipher.doFinal(encryptedData);
       return new String(decryptedData, DEFAULT_ENCODING);
     } catch (GeneralSecurityException e) {
       throw new InternalProcessingException("Failed to decrypt data.", e);
+    }
+  }
+
+  /**
+   * AES/GCM 알고리즘을 초기화합니다.
+   *
+   * @param mode 암호화 또는 복호화 모드
+   * @param secretKeySpec AES 알고리즘을 위한 SecretKeySpec
+   * @param iv 초기화 벡터
+   * @return 초기화된 Cipher 객체
+   */
+  private static Cipher initCipher(final int mode, SecretKeySpec secretKeySpec, final byte[] iv) {
+    try {
+      Cipher cipher = Cipher.getInstance(ENCRYPTION_TRANSFORM);
+      final GCMParameterSpec gcmParameterSpec = new GCMParameterSpec(128, iv);
+      cipher.init(mode, secretKeySpec, gcmParameterSpec);
+      return cipher;
+    } catch (GeneralSecurityException e) {
+      throw new InternalProcessingException("Failed to initialize cipher.", e);
     }
   }
 

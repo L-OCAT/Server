@@ -1,6 +1,5 @@
-package com.locat.api.global.web.validation;
+package com.locat.api.domain.geo.base.validation;
 
-import com.locat.api.domain.geo.base.validation.LostItemRegisterRequestValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 import java.lang.annotation.*;

@@ -1,7 +1,6 @@
 package com.locat.api.domain.geo.base.validation;
 
 import com.locat.api.domain.geo.lost.dto.request.LostItemRegisterRequest;
-import com.locat.api.global.web.validation.LostItemValidation;
 import jakarta.validation.ConstraintValidatorContext;
 import java.util.Objects;
 import java.util.regex.Pattern;

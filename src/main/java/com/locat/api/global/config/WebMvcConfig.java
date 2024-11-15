@@ -1,6 +1,6 @@
 package com.locat.api.global.config;
 
-import com.locat.api.global.web.resolver.GeoItemSearchArgumentResolver;
+import com.locat.api.domain.geo.base.resolver.GeoItemSearchArgumentResolver;
 import java.util.List;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
