@@ -1,7 +1,7 @@
 package com.locat.api.infra.persistence.user;
 
-import com.locat.api.domain.user.dto.AdminUserSearchCriteria;
-import com.locat.api.domain.user.dto.UserInfoDto;
+import com.locat.api.domain.user.dto.criteria.AdminUserSearchCriteria;
+import com.locat.api.domain.user.dto.internal.UserInfoDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

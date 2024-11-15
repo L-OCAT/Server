@@ -1,8 +1,8 @@
 package com.locat.api.domain.user.service;
 
-import com.locat.api.domain.user.dto.AdminUserSearchCriteria;
-import com.locat.api.domain.user.dto.UserInfoDto;
-import com.locat.api.domain.user.dto.UserInfoUpdateDto;
+import com.locat.api.domain.user.dto.criteria.AdminUserSearchCriteria;
+import com.locat.api.domain.user.dto.internal.UserInfoDto;
+import com.locat.api.domain.user.dto.internal.UserInfoUpdateDto;
 import com.locat.api.domain.user.entity.User;
 import com.locat.api.global.exception.custom.NoSuchEntityException;
 import java.util.Optional;

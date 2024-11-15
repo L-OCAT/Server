@@ -21,7 +21,7 @@ public class CategoryController {
   @GetMapping
   public ResponseEntity<BaseResponse<List<CategoryInfoResponse>>> findAll() {
     List<CategoryInfoResponse> categoryInfoResponses =
-        this.categoryService.findAll().stream().map(CategoryInfoResponse::toResponse).toList();
+        this.categoryService.findAll().stream().map(CategoryInfoResponse::from).toList();
     return ResponseEntity.ok(BaseResponse.of(categoryInfoResponses));
   }
 }

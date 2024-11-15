@@ -1,5 +1,6 @@
 package com.locat.api.domain.geo.base.validation;
 
+import com.locat.api.domain.geo.base.validation.impl.FoundItemRegisterRequestValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 import java.lang.annotation.*;

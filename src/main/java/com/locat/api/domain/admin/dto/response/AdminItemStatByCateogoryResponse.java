@@ -1,6 +1,6 @@
 package com.locat.api.domain.admin.dto.response;
 
-import com.locat.api.domain.admin.dto.AdminItemStatByCategoryDto;
+import com.locat.api.domain.admin.dto.internal.AdminItemStatByCategoryDto;
 import com.locat.api.domain.geo.base.entity.GeoItem;
 import java.util.List;
 

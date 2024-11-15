@@ -13,7 +13,10 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class ExceptionLoggingAdvice {
 
-  @AfterThrowing(pointcut = "execution(* com.locat.api..*.*(..))", throwing = "ex")
+  @AfterThrowing(
+      pointcut =
+          "execution(* com.locat.api..*.*(..)) && !@within(org.springframework.boot.context.properties.ConfigurationProperties)",
+      throwing = "ex")
   public void logAfterThrowing(JoinPoint joinPoint, Throwable ex) {
     this.doLogExceptionInternal(joinPoint, ex);
   }

@@ -1,6 +1,6 @@
 package com.locat.api.infra.persistence.geo.found.impl;
 
-import com.locat.api.domain.geo.base.dto.GeoItemSearchCriteria;
+import com.locat.api.domain.geo.base.dto.criteria.GeoItemSearchCriteria;
 import com.locat.api.domain.geo.base.utils.GeoUtils;
 import com.locat.api.domain.geo.found.entity.FoundItem;
 import com.locat.api.domain.geo.found.entity.QFoundItem;

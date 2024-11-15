@@ -2,9 +2,11 @@ package com.locat.api.global.utils;
 
 import com.locat.api.global.exception.LocatApiException;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 public final class ValidationUtils {
 
@@ -65,5 +67,15 @@ public final class ValidationUtils {
     for (int i = 0; i < predicates.size(); i++) {
       throwIf(value, predicates.get(i), exceptionSuppliers.get(i));
     }
+  }
+
+  /**
+   * 주어진 값 중에 null인 값이 하나라도 존재하는지 검사한다.
+   *
+   * @param objects 검사할 값들
+   * @return 하나라도 null인 값이 존재할 경우 true
+   */
+  public static boolean isAnyNull(Object... objects) {
+    return Stream.of(objects).anyMatch(Objects::isNull);
   }
 }

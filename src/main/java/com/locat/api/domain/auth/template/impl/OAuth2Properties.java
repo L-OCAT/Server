@@ -21,7 +21,7 @@ public record OAuth2Properties(Kakao kakao, Apple apple) {
   @SuppressWarnings("unused") // AdminKey 관련 상수는 추후 사용될 수 있으므로 "unused" 경고 무시
   public record Kakao(String adminKey, String clientId, String clientSecret, String redirectUri) {
 
-    public static final String ADMIN_KEY_PREFIX = "KakaoAK";
+    public static final String ADMIN_KEY_PREFIX = "KakaoAK ";
 
     public static final String GRANT_TYPE = "authorization_code";
 

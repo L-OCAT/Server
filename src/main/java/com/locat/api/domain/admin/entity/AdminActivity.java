@@ -6,6 +6,7 @@ import com.locat.api.global.persistence.converter.StringColumnEncryptionConverte
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import java.io.Serial;
 import lombok.*;
 
 @Entity
@@ -15,6 +16,8 @@ import lombok.*;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AdminActivity extends BaseEntity {
+
+  @Serial private static final long serialVersionUID = 2024111401L;
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

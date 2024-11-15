@@ -1,10 +1,11 @@
 package com.locat.api.domain.terms.entity;
 
 import com.locat.api.domain.common.entity.BaseEntity;
-import com.locat.api.domain.terms.dto.TermsUpsertDto;
+import com.locat.api.domain.terms.dto.internal.TermsUpsertDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import java.io.Serial;
 import lombok.*;
 
 @Entity
@@ -20,6 +21,8 @@ import lombok.*;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Terms extends BaseEntity {
+
+  @Serial private static final long serialVersionUID = 2024111401L;
 
   @Transient private static final double INITIAL_VERSION = 1.0;
   @Transient private static final double VERSION_INCREMENT = 0.1;

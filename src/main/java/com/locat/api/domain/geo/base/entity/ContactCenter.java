@@ -4,6 +4,7 @@ import com.locat.api.domain.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import java.io.Serial;
 import lombok.*;
 
 @Entity
@@ -13,6 +14,8 @@ import lombok.*;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ContactCenter extends BaseEntity {
+
+  @Serial private static final long serialVersionUID = 2024100901L;
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

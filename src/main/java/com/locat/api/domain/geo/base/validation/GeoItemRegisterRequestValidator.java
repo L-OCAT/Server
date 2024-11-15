@@ -23,6 +23,9 @@ public abstract class GeoItemRegisterRequestValidator<A extends Annotation, T>
   protected static final String COORDINATES_CONSTRAINT_VIOLATION_MESSAGE =
       "Coordinates(lat or lng) must be valid";
 
+  /** 좌표 값이 대한민국 범위를 벗어난 경우 커스텀 메시지 */
+  protected static final String COORDINATES_OUT_OF_KOREA_MESSAGE = "Coordinates must be in Korea";
+
   /** 색상 코드 ID가 없는 경우 커스텀 메시지 */
   protected static final String COLOR_CODE_ID_NOT_FOUND_MESSAGE = "ColorCode ID must be provided";
 
@@ -44,6 +47,10 @@ public abstract class GeoItemRegisterRequestValidator<A extends Annotation, T>
           context, COORDINATES_CONSTRAINT_VIOLATION_MESSAGE, "lat or lng");
       return false;
     }
+    if (!this.validateCoordinatesInKorea(request)) {
+      super.setCustomViolationMessage(context, COORDINATES_OUT_OF_KOREA_MESSAGE, "lat or lng");
+      return false;
+    }
     if (!this.validateColorCodesExist(request)) {
       super.setCustomViolationMessage(context, COLOR_CODE_ID_NOT_FOUND_MESSAGE, "colorIds");
       return false;
@@ -58,6 +65,9 @@ public abstract class GeoItemRegisterRequestValidator<A extends Annotation, T>
 
   /** 좌표 유효성 검사 */
   protected abstract boolean validateCoordinates(T request);
+
+  /** 좌표 값이 서비스 지역(대한민국) 내 인지 유효성 검사 */
+  protected abstract boolean validateCoordinatesInKorea(T request);
 
   /** 색상 코드 ID가 없는 경우 유효성 검사 */
   protected abstract boolean validateColorCodesExist(T request);

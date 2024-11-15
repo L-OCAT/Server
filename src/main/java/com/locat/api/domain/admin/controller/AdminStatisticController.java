@@ -1,7 +1,7 @@
 package com.locat.api.domain.admin.controller;
 
-import com.locat.api.domain.admin.dto.AdminUserFoundItemStatDto;
-import com.locat.api.domain.admin.dto.AdminUserLostItemStatDto;
+import com.locat.api.domain.admin.dto.internal.AdminUserFoundItemStatDto;
+import com.locat.api.domain.admin.dto.internal.AdminUserLostItemStatDto;
 import com.locat.api.domain.admin.dto.response.*;
 import com.locat.api.domain.admin.service.AdminStatisticService;
 import com.locat.api.domain.common.dto.BaseResponse;

@@ -1,6 +1,6 @@
 package com.locat.api.domain.user.service.impl;
 
-import com.locat.api.domain.user.dto.EndpointRegisterDto;
+import com.locat.api.domain.user.dto.internal.EndpointRegisterDto;
 import com.locat.api.domain.user.entity.User;
 import com.locat.api.domain.user.entity.association.UserEndpoint;
 import com.locat.api.domain.user.service.PlatformEndpointService;

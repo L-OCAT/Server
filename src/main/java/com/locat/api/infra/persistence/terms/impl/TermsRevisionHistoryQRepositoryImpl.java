@@ -1,6 +1,6 @@
 package com.locat.api.infra.persistence.terms.impl;
 
-import com.locat.api.domain.terms.dto.TermsRevisionCompactHistoryDto;
+import com.locat.api.domain.terms.dto.internal.TermsRevisionCompactHistoryDto;
 import com.locat.api.domain.terms.entity.QTermsRevisionHistory;
 import com.locat.api.domain.terms.entity.TermsType;
 import com.locat.api.infra.persistence.terms.TermsRevisionHistoryQRepository;

@@ -3,7 +3,7 @@ package com.locat.api.domain.user.service.impl;
 import com.locat.api.domain.terms.entity.Terms;
 import com.locat.api.domain.terms.entity.TermsType;
 import com.locat.api.domain.terms.service.TermsService;
-import com.locat.api.domain.user.dto.UserRegisterDto;
+import com.locat.api.domain.user.dto.internal.UserRegisterDto;
 import com.locat.api.domain.user.entity.User;
 import com.locat.api.domain.user.entity.association.UserTermsAgreement;
 import com.locat.api.domain.user.service.UserTermsService;

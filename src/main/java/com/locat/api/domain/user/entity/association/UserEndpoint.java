@@ -1,10 +1,11 @@
 package com.locat.api.domain.user.entity.association;
 
 import com.locat.api.domain.common.entity.SecuredBaseEntity;
-import com.locat.api.domain.user.dto.EndpointRegisterDto;
+import com.locat.api.domain.user.dto.internal.EndpointRegisterDto;
 import com.locat.api.domain.user.entity.User;
 import com.locat.api.domain.user.enums.PlatformType;
 import jakarta.persistence.*;
+import java.io.Serial;
 import lombok.*;
 
 @Entity
@@ -14,6 +15,8 @@ import lombok.*;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserEndpoint extends SecuredBaseEntity {
+
+  @Serial private static final long serialVersionUID = 2024100901L;
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

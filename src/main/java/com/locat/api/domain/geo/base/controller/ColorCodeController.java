@@ -20,7 +20,7 @@ public class ColorCodeController {
   @GetMapping
   public ResponseEntity<BaseResponse<List<ColorCodeResponse>>> findAll() {
     List<ColorCodeResponse> responses =
-        this.colorCodeService.findAll().stream().map(ColorCodeResponse::toResponse).toList();
+        this.colorCodeService.findAll().stream().map(ColorCodeResponse::from).toList();
     return ResponseEntity.ok(BaseResponse.of(responses));
   }
 }

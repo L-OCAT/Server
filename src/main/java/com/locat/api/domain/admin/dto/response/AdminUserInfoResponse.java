@@ -1,6 +1,6 @@
 package com.locat.api.domain.admin.dto.response;
 
-import com.locat.api.domain.user.dto.UserInfoDto;
+import com.locat.api.domain.user.dto.internal.UserInfoDto;
 
 /**
  * 관리자 사용자 조회 응답 DTO

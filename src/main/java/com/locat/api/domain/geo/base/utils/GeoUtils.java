@@ -11,6 +11,9 @@ public final class GeoUtils {
   /** WGS 84 좌표계 SRID */
   private static final int SRID_WGS_84 = 4326;
 
+  /** 대한민국 경계 좌표 */
+  private static final Polygon KOREA_BOUNDARY;
+
   private static final GeometryFactory GEOMETRY_FACTORY;
 
   private GeoUtils() {
@@ -20,6 +23,15 @@ public final class GeoUtils {
   static {
     PrecisionModel precisionModel = new PrecisionModel(PrecisionModel.FLOATING);
     GEOMETRY_FACTORY = new GeometryFactory(precisionModel, SRID_WGS_84);
+    KOREA_BOUNDARY =
+        GEOMETRY_FACTORY.createPolygon(
+            new Coordinate[] {
+              new Coordinate(124.0, 33.0),
+              new Coordinate(131.0, 33.0),
+              new Coordinate(131.0, 38.0),
+              new Coordinate(124.0, 38.0),
+              new Coordinate(124.0, 33.0)
+            });
   }
 
   /**
@@ -42,6 +54,28 @@ public final class GeoUtils {
    */
   public static Point toPoint(Coordinate coordinate) {
     return GEOMETRY_FACTORY.createPoint(coordinate);
+  }
+
+  /**
+   * 주어진 좌표점이 대한민국 영토 내에 위치하는지 확인합니다.
+   *
+   * @param point 확인할 좌표점
+   * @return 대한민국 영역 내에 있으면 true, 그렇지 않으면 false
+   */
+  public static boolean isInKorea(Point point) {
+    return KOREA_BOUNDARY.contains(point);
+  }
+
+  /**
+   * 주어진 위도, 경도가 대한민국 영토 내에 위치하는지 확인합니다.
+   *
+   * @param lat 위도
+   * @param lng 경도
+   * @return 대한민국 영역 내에 있으면 true, 그렇지 않으면 false
+   * @apiNote {@link #isInKorea(Point)} 메서드에 위임합니다.
+   */
+  public static boolean isInKorea(double lat, double lng) {
+    return isInKorea(toPoint(lat, lng));
   }
 
   /**

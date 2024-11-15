@@ -2,6 +2,8 @@ package com.locat.api.domain.geo.found.service.impl;
 
 import com.locat.api.domain.geo.base.entity.Category;
 import com.locat.api.domain.geo.base.entity.ColorCode;
+import com.locat.api.domain.geo.base.entity.GeoItemType;
+import com.locat.api.domain.geo.base.event.GeoItemCreatedEvent;
 import com.locat.api.domain.geo.base.service.CategoryService;
 import com.locat.api.domain.geo.base.service.ColorCodeService;
 import com.locat.api.domain.geo.found.dto.FoundItemRegisterDto;
@@ -19,6 +21,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.geo.GeoPage;
 import org.springframework.stereotype.Service;
@@ -34,6 +37,7 @@ public class FoundItemServiceImpl implements FoundItemService {
 
   private final FoundItemRepository foundItemRepository;
   private final GeoItemQRepository<FoundItem> foundItemQRepository;
+  private final ApplicationEventPublisher eventPublisher;
   private final UserService userService;
   private final CategoryService categoryService;
   private final ColorCodeService colorCodeService;
@@ -51,7 +55,7 @@ public class FoundItemServiceImpl implements FoundItemService {
   @Transactional(readOnly = true)
   public GeoPage<FoundItem> findAllByCondition(
       Long userId, FoundItemSearchDto searchDto, Pageable pageable) {
-    return this.foundItemQRepository.findByCondition(userId, searchDto, pageable);
+    return this.foundItemQRepository.findAllByCriteria(userId, searchDto, pageable);
   }
 
   @Override
@@ -75,9 +79,12 @@ public class FoundItemServiceImpl implements FoundItemService {
     if (foundItemImage != null) {
       imageUrl = this.s3Client.upload(FOUND_ITEM_IMAGE_DIRECTORY, foundItemImage);
     }
-    return this.foundItemRepository
-        .save(FoundItem.of(user, category, colorCodes, registerDto, imageUrl))
-        .getId();
+
+    FoundItem foundItem =
+        this.foundItemRepository.save(
+            FoundItem.of(user, category, colorCodes, registerDto, imageUrl));
+    this.eventPublisher.publishEvent(GeoItemCreatedEvent.of(GeoItemType.FOUND, foundItem));
+    return foundItem.getId();
   }
 
   private Category fetchCategoryById(final Long categoryId) {

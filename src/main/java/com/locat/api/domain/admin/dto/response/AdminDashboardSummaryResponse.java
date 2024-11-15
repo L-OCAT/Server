@@ -1,6 +1,6 @@
 package com.locat.api.domain.admin.dto.response;
 
-import com.locat.api.domain.admin.dto.AdminDashboardSummaryDto;
+import com.locat.api.domain.admin.dto.internal.AdminDashboardSummaryDto;
 
 /**
  * 관리자용 대시보드 서비스 통계 정보 응답 DTO

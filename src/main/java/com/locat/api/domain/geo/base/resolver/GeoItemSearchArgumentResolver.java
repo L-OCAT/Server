@@ -1,6 +1,6 @@
 package com.locat.api.domain.geo.base.resolver;
 
-import com.locat.api.domain.geo.base.dto.GeoItemSearchCriteria;
+import com.locat.api.domain.geo.base.dto.criteria.GeoItemSearchCriteria;
 import com.locat.api.domain.geo.base.utils.GeoUtils;
 import com.locat.api.domain.geo.found.dto.FoundItemSearchDto;
 import com.locat.api.domain.geo.lost.dto.LostItemSearchDto;
@@ -19,18 +19,18 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @Slf4j
 public class GeoItemSearchArgumentResolver implements HandlerMethodArgumentResolver {
 
-  private static final Class<?> SUPPORTED_CLASS = GeoItemSearchCriteria.class;
   private static final String LOST_ITEM_URI = "/v1/items/losts";
   private static final String FOUND_ITEM_URI = "/v1/items/founds";
 
   /**
    * {@link GeoItemSearchCriteria}를 상속(구현)한 클래스인지 확인
+   *
    * @param parameter 조건을 확인 할 {@link MethodParameter} 객체
    * @return {@link GeoItemSearchCriteria}를 상속(구현)한 클래스인지 여부
    */
   @Override
   public boolean supportsParameter(MethodParameter parameter) {
-    return SUPPORTED_CLASS.isAssignableFrom(parameter.getParameterType());
+    return parameter.getParameterType().isAssignableFrom(GeoItemSearchCriteria.class);
   }
 
   @Override

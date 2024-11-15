@@ -10,7 +10,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 
 @Configuration
-@EnableRedisRepositories(basePackages = "com.locat.api")
+@EnableRedisRepositories(basePackages = "com.locat.api.infra.redis")
 @RequiredArgsConstructor
 public class RedisConfig {
 

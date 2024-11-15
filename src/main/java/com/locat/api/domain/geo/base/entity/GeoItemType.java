@@ -8,14 +8,12 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum GeoItemType {
-  LOSTS("losts"),
-  FOUNDS("founds");
-
-  private final String value;
+  LOST,
+  FOUND;
 
   public static GeoItemType fromValue(String value) {
     return Arrays.stream(GeoItemType.values())
-        .filter(v -> v.getValue().equals(value))
+        .filter(v -> v.name().equalsIgnoreCase(value))
         .findFirst()
         .orElseThrow(
             () -> new InvalidParameterException("No matching GeoItemType found. value: " + value));

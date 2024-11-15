@@ -1,7 +1,7 @@
 package com.locat.api.domain.terms.controller;
 
 import com.locat.api.domain.common.dto.BaseResponse;
-import com.locat.api.domain.terms.dto.*;
+import com.locat.api.domain.terms.dto.internal.TermsUpsertDto;
 import com.locat.api.domain.terms.dto.request.TermsUpsertRequest;
 import com.locat.api.domain.terms.dto.response.TermsResponse;
 import com.locat.api.domain.terms.dto.response.TermsRevisionCompactHistoryResponse;

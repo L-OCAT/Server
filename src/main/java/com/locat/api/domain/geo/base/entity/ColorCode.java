@@ -2,6 +2,7 @@ package com.locat.api.domain.geo.base.entity;
 
 import com.locat.api.domain.common.entity.BaseEntity;
 import jakarta.persistence.*;
+import java.io.Serial;
 import lombok.*;
 
 @Entity
@@ -11,6 +12,8 @@ import lombok.*;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ColorCode extends BaseEntity {
+
+  @Serial private static final long serialVersionUID = 2024100901L;
 
   private static final String NAME_OTHERS = "기타";
 

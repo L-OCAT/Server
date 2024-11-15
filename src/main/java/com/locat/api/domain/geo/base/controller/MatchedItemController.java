@@ -24,8 +24,8 @@ public class MatchedItemController {
     final GeoItemType geoItemType = GeoItemType.fromValue(type);
     final long itemCount =
         switch (geoItemType) {
-          case LOSTS -> this.matchedItemService.countMatchedFoundItems(id);
-          case FOUNDS -> this.matchedItemService.countMatchedLostItems(id);
+          case LOST -> this.matchedItemService.countMatchedFoundItems(id);
+          case FOUND -> this.matchedItemService.countMatchedLostItems(id);
         };
     return ResponseEntity.ok(BaseResponse.of(itemCount));
   }

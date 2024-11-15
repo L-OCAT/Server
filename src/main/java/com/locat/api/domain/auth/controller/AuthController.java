@@ -1,6 +1,6 @@
 package com.locat.api.domain.auth.controller;
 
-import com.locat.api.domain.auth.dto.AdminLoginDto;
+import com.locat.api.domain.auth.dto.internal.AdminLoginDto;
 import com.locat.api.domain.auth.dto.request.AdminLoginRequest;
 import com.locat.api.domain.auth.dto.request.EmailVerificationRequest;
 import com.locat.api.domain.auth.dto.request.TokenIssueRequest;

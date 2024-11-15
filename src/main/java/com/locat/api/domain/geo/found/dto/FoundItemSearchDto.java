@@ -1,6 +1,6 @@
 package com.locat.api.domain.geo.found.dto;
 
-import com.locat.api.domain.geo.base.dto.GeoItemSearchCriteria;
+import com.locat.api.domain.geo.base.dto.criteria.GeoItemSearchCriteria;
 import com.locat.api.domain.geo.base.utils.GeoUtils;
 import lombok.Builder;
 import org.locationtech.jts.geom.Point;

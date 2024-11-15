@@ -14,6 +14,7 @@ import com.locat.api.global.utils.HashingUtils;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import java.io.Serial;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +43,8 @@ import org.springframework.security.access.AccessDeniedException;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends BaseEntity {
+
+  @Serial private static final long serialVersionUID = 2024111401L;
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -160,14 +163,6 @@ public class User extends BaseEntity {
   public boolean isTrustedDevice(String deviceId) {
     return this.adminDeviceIds.stream()
         .anyMatch(device -> device.getDeviceId().equals(deviceId) && device.isTrusted());
-  }
-
-  public void addTrustedDevice(String deviceId, boolean isTrusted) {
-    this.adminDeviceIds.add(AdminDeviceId.of(this, deviceId, isTrusted));
-  }
-
-  public void removeTrustedDevice(String deviceId) {
-    this.adminDeviceIds.removeIf(device -> device.getDeviceId().equals(deviceId));
   }
 
   public String getDeletedAt() {

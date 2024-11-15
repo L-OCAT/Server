@@ -1,6 +1,6 @@
 package com.locat.api.domain.user.service;
 
-import com.locat.api.domain.user.dto.EndpointRegisterDto;
+import com.locat.api.domain.user.dto.internal.EndpointRegisterDto;
 import com.locat.api.domain.user.entity.association.UserEndpoint;
 import java.util.List;
 

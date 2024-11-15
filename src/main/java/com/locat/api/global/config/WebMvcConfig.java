@@ -11,8 +11,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableWebMvc
 public class WebMvcConfig implements WebMvcConfigurer {
 
+  private static final List<HandlerMethodArgumentResolver> CUSTOM_ARGUMENT_RESOLVERS =
+      List.of(new GeoItemSearchArgumentResolver());
+
   @Override
   public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-    resolvers.add(new GeoItemSearchArgumentResolver());
+    resolvers.addAll(CUSTOM_ARGUMENT_RESOLVERS);
   }
 }
