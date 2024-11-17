@@ -1,7 +1,7 @@
 package com.locat.api.domain.geo.base.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.locat.api.domain.geo.base.dto.CategoryInfoDto;
+import com.locat.api.domain.geo.base.dto.internal.CategoryInfoDto;
 
 /**
  * 카테고리 정보 응답 DTO
@@ -14,7 +14,7 @@ import com.locat.api.domain.geo.base.dto.CategoryInfoDto;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record CategoryInfoResponse(Long id, String name, Long parentId, String parentName) {
 
-  public static CategoryInfoResponse toResponse(CategoryInfoDto dto) {
+  public static CategoryInfoResponse from(CategoryInfoDto dto) {
     return new CategoryInfoResponse(
         dto.categoryId(), dto.categoryName(), dto.parentCategoryId(), dto.parentCategoryName());
   }

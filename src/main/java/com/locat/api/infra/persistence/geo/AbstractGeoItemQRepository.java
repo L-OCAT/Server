@@ -1,6 +1,6 @@
 package com.locat.api.infra.persistence.geo;
 
-import com.locat.api.domain.geo.base.dto.GeoItemSearchCriteria;
+import com.locat.api.domain.geo.base.dto.criteria.GeoItemSearchCriteria;
 import com.locat.api.domain.geo.base.entity.GeoItem;
 import com.locat.api.global.exception.custom.InvalidParameterException;
 import com.locat.api.global.utils.ValidationUtils;
@@ -19,6 +19,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.geo.*;
 import org.springframework.transaction.annotation.Transactional;
 
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public abstract class AbstractGeoItemQRepository<T extends GeoItem>
     implements GeoItemQRepository<T> {
@@ -37,8 +38,8 @@ public abstract class AbstractGeoItemQRepository<T extends GeoItem>
    * @param pageable 페이징 정보
    * @return {@link GeoPage}로 래핑된 검색 결과
    */
-  @Transactional(readOnly = true)
-  public GeoPage<T> findByCondition(
+  @Override
+  public GeoPage<T> findAllByCriteria(
       final Long userId, GeoItemSearchCriteria searchCriteria, final Pageable pageable) {
     NumberExpression<Double> distance = this.createDistanceExpression(searchCriteria);
     GeoResults<T> geoResults =

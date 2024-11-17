@@ -1,6 +1,6 @@
 package com.locat.api.domain.auth.utils;
 
-import com.locat.api.domain.auth.template.OAuth2Properties;
+import com.locat.api.domain.auth.template.impl.OAuth2Properties;
 import com.locat.api.global.exception.ApiExceptionType;
 import com.locat.api.global.security.exception.AuthenticationException;
 import io.jsonwebtoken.JwsHeader;

@@ -1,6 +1,6 @@
 package com.locat.api.domain.geo.found.dto.request;
 
-import com.locat.api.global.web.validation.FoundItemValidation;
+import com.locat.api.domain.geo.base.validation.FoundItemValidation;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import java.util.Set;

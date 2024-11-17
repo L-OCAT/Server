@@ -4,7 +4,6 @@ import com.locat.api.domain.auth.dto.OAuth2ProviderTokenDto;
 import com.locat.api.domain.auth.dto.OAuth2UserInfo;
 import com.locat.api.domain.auth.entity.OAuth2ProviderToken;
 import com.locat.api.domain.auth.template.AbstractOAuth2Template;
-import com.locat.api.domain.auth.template.OAuth2Properties;
 import com.locat.api.domain.user.enums.OAuth2ProviderType;
 import com.locat.api.infra.client.http.KakaoOAuth2Client;
 import com.locat.api.infra.client.http.KakaoUserClient;

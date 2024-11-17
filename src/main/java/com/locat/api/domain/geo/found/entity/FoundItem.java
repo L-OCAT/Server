@@ -6,6 +6,7 @@ import com.locat.api.domain.geo.base.entity.GeoItem;
 import com.locat.api.domain.geo.found.dto.FoundItemRegisterDto;
 import com.locat.api.domain.user.entity.User;
 import jakarta.persistence.*;
+import java.io.Serial;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -26,10 +27,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class FoundItem extends GeoItem {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "id", columnDefinition = "int UNSIGNED not null")
-  private Long id;
+  @Serial private static final long serialVersionUID = 2024111401L;
 
   @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(

@@ -53,9 +53,5 @@ public record AwsProperties(
    * @param iosArn iOS ARN
    * @param androidArn Android ARN
    */
-  public record Sns(String topicArn, String iosArn, String androidArn) {
-
-    /** SNS에서 사용할 기본 프로토콜 */
-    public static final String DEFAULT_SNS_PROTOCOL = "application";
-  }
+  public record Sns(String topicArn, String iosArn, String androidArn) {}
 }

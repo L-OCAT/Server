@@ -3,6 +3,7 @@ package com.locat.api.domain.user.entity.association;
 import com.locat.api.domain.common.entity.BaseEntity;
 import com.locat.api.domain.user.entity.User;
 import jakarta.persistence.*;
+import java.io.Serial;
 import lombok.*;
 
 @Entity
@@ -18,6 +19,8 @@ import lombok.*;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AdminDeviceId extends BaseEntity {
+
+  @Serial private static final long serialVersionUID = 2024111401L;
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

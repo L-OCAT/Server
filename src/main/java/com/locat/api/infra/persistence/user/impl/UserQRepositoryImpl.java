@@ -1,7 +1,7 @@
 package com.locat.api.infra.persistence.user.impl;
 
-import com.locat.api.domain.user.dto.AdminUserSearchCriteria;
-import com.locat.api.domain.user.dto.UserInfoDto;
+import com.locat.api.domain.user.dto.criteria.AdminUserSearchCriteria;
+import com.locat.api.domain.user.dto.internal.UserInfoDto;
 import com.locat.api.domain.user.entity.QUser;
 import com.locat.api.global.utils.HashingUtils;
 import com.locat.api.global.utils.QueryUtils;

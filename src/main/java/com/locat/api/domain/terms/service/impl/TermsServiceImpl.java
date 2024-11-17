@@ -1,6 +1,6 @@
 package com.locat.api.domain.terms.service.impl;
 
-import com.locat.api.domain.terms.dto.TermsUpsertDto;
+import com.locat.api.domain.terms.dto.internal.TermsUpsertDto;
 import com.locat.api.domain.terms.entity.Terms;
 import com.locat.api.domain.terms.entity.TermsRevisionHistory;
 import com.locat.api.domain.terms.entity.TermsType;

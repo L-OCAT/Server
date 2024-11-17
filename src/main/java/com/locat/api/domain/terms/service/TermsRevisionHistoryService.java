@@ -1,6 +1,6 @@
 package com.locat.api.domain.terms.service;
 
-import com.locat.api.domain.terms.dto.TermsRevisionCompactHistoryDto;
+import com.locat.api.domain.terms.dto.internal.TermsRevisionCompactHistoryDto;
 import com.locat.api.domain.terms.entity.TermsRevisionHistory;
 import com.locat.api.domain.terms.entity.TermsType;
 import java.util.List;

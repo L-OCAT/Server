@@ -10,7 +10,6 @@ import com.locat.api.infra.aws.sns.LocatSnsClient;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.sns.SnsClient;
 import software.amazon.awssdk.services.sns.model.*;
@@ -22,9 +21,6 @@ public class LocatSnsClientImpl extends AbstractLocatAwsClient implements LocatS
 
   private final SnsClient snsClient;
   private final UserEndpointService userEndpointService;
-
-  @Value("${service.aws.sns.topic-arn}")
-  private String topicArn;
 
   public LocatSnsClientImpl(
       AwsProperties awsProperties, SnsClient snsClient, UserEndpointService userEndpointService) {
@@ -38,7 +34,7 @@ public class LocatSnsClientImpl extends AbstractLocatAwsClient implements LocatS
     try {
       PublishRequest request =
           PublishRequest.builder()
-              .topicArn(this.topicArn)
+              .topicArn(this.awsProperties.sns().topicArn())
               .subject(subject)
               .message(message)
               .build();

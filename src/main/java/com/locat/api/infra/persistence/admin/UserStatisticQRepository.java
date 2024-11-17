@@ -1,6 +1,6 @@
 package com.locat.api.infra.persistence.admin;
 
-import com.locat.api.domain.admin.dto.AdminUserStatDto;
+import com.locat.api.domain.admin.dto.internal.AdminUserStatDto;
 import com.locat.api.domain.user.entity.User;
 
 public interface UserStatisticQRepository {

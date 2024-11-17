@@ -2,6 +2,8 @@ package com.locat.api.domain.geo.lost.service.impl;
 
 import com.locat.api.domain.geo.base.entity.Category;
 import com.locat.api.domain.geo.base.entity.ColorCode;
+import com.locat.api.domain.geo.base.entity.GeoItemType;
+import com.locat.api.domain.geo.base.event.GeoItemCreatedEvent;
 import com.locat.api.domain.geo.base.service.CategoryService;
 import com.locat.api.domain.geo.base.service.ColorCodeService;
 import com.locat.api.domain.geo.lost.dto.LostItemRegisterDto;
@@ -19,6 +21,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.geo.GeoPage;
 import org.springframework.stereotype.Service;
@@ -34,6 +37,7 @@ public class LostItemServiceImpl implements LostItemService {
 
   private final LostItemRepository lostItemRepository;
   private final GeoItemQRepository<LostItem> lostItemQRepository;
+  private final ApplicationEventPublisher eventPublisher;
   private final UserService userService;
   private final CategoryService categoryService;
   private final ColorCodeService colorCodeService;
@@ -51,7 +55,7 @@ public class LostItemServiceImpl implements LostItemService {
   @Transactional(readOnly = true)
   public GeoPage<LostItem> findAllByCondition(
       Long userId, LostItemSearchDto searchDto, Pageable pageable) {
-    return this.lostItemQRepository.findByCondition(userId, searchDto, pageable);
+    return this.lostItemQRepository.findAllByCriteria(userId, searchDto, pageable);
   }
 
   @Override
@@ -74,9 +78,11 @@ public class LostItemServiceImpl implements LostItemService {
     if (lostItemImage != null) {
       imageUrl = this.s3Client.upload(LOST_ITEM_IMAGE_DIRECTORY, lostItemImage);
     }
-    return this.lostItemRepository
-        .save(LostItem.of(user, category, colorCodes, registerDto, imageUrl))
-        .getId();
+    LostItem lostItem =
+        this.lostItemRepository.save(
+            LostItem.of(user, category, colorCodes, registerDto, imageUrl));
+    this.eventPublisher.publishEvent(GeoItemCreatedEvent.of(GeoItemType.LOST, lostItem));
+    return lostItem.getId();
   }
 
   private Category fetchCategoryById(final Long categoryId) {

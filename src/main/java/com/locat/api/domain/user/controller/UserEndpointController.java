@@ -1,7 +1,7 @@
 package com.locat.api.domain.user.controller;
 
 import com.locat.api.domain.common.dto.BaseResponse;
-import com.locat.api.domain.user.dto.EndpointRegisterDto;
+import com.locat.api.domain.user.dto.internal.EndpointRegisterDto;
 import com.locat.api.domain.user.dto.request.EndpointRegisterRequest;
 import com.locat.api.domain.user.service.UserEndpointService;
 import com.locat.api.global.security.userdetails.LocatUserDetails;

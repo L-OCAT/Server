@@ -24,6 +24,11 @@ import org.locationtech.jts.geom.Point;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class GeoItem extends SecuredBaseEntity {
 
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id", columnDefinition = "int UNSIGNED not null")
+  private Long id;
+
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
       name = "user_id",
@@ -33,7 +38,7 @@ public abstract class GeoItem extends SecuredBaseEntity {
       foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
   protected User user;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "category_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
   protected Category category;
 

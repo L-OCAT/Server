@@ -2,9 +2,9 @@ package com.locat.api.domain.user.controller;
 
 import com.locat.api.domain.admin.dto.response.AdminUserInfoResponse;
 import com.locat.api.domain.common.dto.BaseResponse;
-import com.locat.api.domain.user.dto.AdminUserSearchCriteria;
-import com.locat.api.domain.user.dto.UserInfoUpdateDto;
-import com.locat.api.domain.user.dto.UserRegisterDto;
+import com.locat.api.domain.user.dto.criteria.AdminUserSearchCriteria;
+import com.locat.api.domain.user.dto.internal.UserInfoUpdateDto;
+import com.locat.api.domain.user.dto.internal.UserRegisterDto;
 import com.locat.api.domain.user.dto.request.UserInfoUpdateRequest;
 import com.locat.api.domain.user.dto.request.UserRegisterRequest;
 import com.locat.api.domain.user.dto.request.UserWithDrawalRequest;

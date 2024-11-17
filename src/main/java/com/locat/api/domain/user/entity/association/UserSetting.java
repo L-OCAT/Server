@@ -5,6 +5,7 @@ import com.locat.api.domain.setting.AppSetting;
 import com.locat.api.domain.user.entity.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import java.io.Serial;
 import lombok.*;
 
 @Entity
@@ -20,6 +21,9 @@ import lombok.*;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserSetting extends SecuredBaseEntity {
+
+  @Serial private static final long serialVersionUID = 2024081401L;
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id", columnDefinition = "int UNSIGNED not null")

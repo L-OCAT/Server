@@ -1,6 +1,6 @@
 package com.locat.api.domain.admin.dto.response;
 
-import com.locat.api.domain.admin.dto.AdminUserStatDto;
+import com.locat.api.domain.admin.dto.internal.AdminUserStatDto;
 import java.util.List;
 import java.util.Objects;
 import lombok.Builder;

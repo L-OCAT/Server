@@ -1,6 +1,6 @@
 package com.locat.api.domain.admin.dto.response;
 
-import com.locat.api.domain.admin.dto.AdminUserLostItemStatDto;
+import com.locat.api.domain.admin.dto.internal.AdminUserLostItemStatDto;
 
 public record AdminUserLostItemStatResponse(
     Long id, String name, String imageUrl, String categoryName, String status, String createdAt) {

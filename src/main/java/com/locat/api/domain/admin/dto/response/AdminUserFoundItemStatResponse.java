@@ -1,6 +1,6 @@
 package com.locat.api.domain.admin.dto.response;
 
-import com.locat.api.domain.admin.dto.AdminUserFoundItemStatDto;
+import com.locat.api.domain.admin.dto.internal.AdminUserFoundItemStatDto;
 
 public record AdminUserFoundItemStatResponse(
     Long id, String name, String imageUrl, String categoryName, String status, String createdAt) {

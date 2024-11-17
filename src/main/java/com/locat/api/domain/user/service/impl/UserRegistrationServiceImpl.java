@@ -4,7 +4,7 @@ import com.locat.api.domain.auth.dto.OAuth2UserInfo;
 import com.locat.api.domain.auth.entity.OAuth2ProviderToken;
 import com.locat.api.domain.auth.template.OAuth2Template;
 import com.locat.api.domain.auth.template.OAuth2TemplateFactory;
-import com.locat.api.domain.user.dto.UserRegisterDto;
+import com.locat.api.domain.user.dto.internal.UserRegisterDto;
 import com.locat.api.domain.user.entity.User;
 import com.locat.api.domain.user.enums.UserInfoValidationType;
 import com.locat.api.domain.user.service.*;

@@ -1,6 +1,6 @@
 package com.locat.api.domain.admin.service.impl;
 
-import com.locat.api.domain.admin.dto.*;
+import com.locat.api.domain.admin.dto.internal.*;
 import com.locat.api.domain.admin.service.AdminStatisticService;
 import com.locat.api.domain.geo.found.service.FoundItemService;
 import com.locat.api.domain.geo.lost.service.LostItemService;

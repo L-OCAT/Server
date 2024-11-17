@@ -1,6 +1,6 @@
 package com.locat.api.infra.persistence.admin.impl;
 
-import com.locat.api.domain.admin.dto.AdminUserStatDto;
+import com.locat.api.domain.admin.dto.internal.AdminUserStatDto;
 import com.locat.api.domain.geo.found.entity.QFoundItem;
 import com.locat.api.domain.geo.lost.entity.QLostItem;
 import com.locat.api.domain.terms.entity.QTerms;

@@ -8,7 +8,7 @@ import org.springframework.http.MediaType;
 public class KakaoOAuth2ClientConfig {
 
   @Bean
-  public RequestInterceptor requestInterceptor() {
+  public RequestInterceptor kakaoOAuthRequestInterceptor() {
     return request ->
         request.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE);
   }

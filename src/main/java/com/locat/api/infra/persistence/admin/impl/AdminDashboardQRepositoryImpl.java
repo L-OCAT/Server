@@ -1,9 +1,9 @@
 package com.locat.api.infra.persistence.admin.impl;
 
-import com.locat.api.domain.admin.dto.AdminDashboardSummaryDto;
-import com.locat.api.domain.admin.dto.AdminItemStatByCategoryDto;
-import com.locat.api.domain.admin.dto.AdminMonthlyItemStatDto;
-import com.locat.api.domain.admin.dto.inner.MonthlyGeoItemStatistics;
+import com.locat.api.domain.admin.dto.internal.AdminDashboardSummaryDto;
+import com.locat.api.domain.admin.dto.internal.AdminItemStatByCategoryDto;
+import com.locat.api.domain.admin.dto.internal.AdminMonthlyItemStatDto;
+import com.locat.api.domain.admin.dto.internal.MonthlyGeoItemStatistics;
 import com.locat.api.domain.geo.base.entity.QCategory;
 import com.locat.api.domain.geo.found.entity.QFoundItem;
 import com.locat.api.domain.geo.lost.entity.QLostItem;

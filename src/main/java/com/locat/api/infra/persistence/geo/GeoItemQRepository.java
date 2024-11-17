@@ -1,6 +1,6 @@
 package com.locat.api.infra.persistence.geo;
 
-import com.locat.api.domain.geo.base.dto.GeoItemSearchCriteria;
+import com.locat.api.domain.geo.base.dto.criteria.GeoItemSearchCriteria;
 import com.locat.api.domain.geo.base.entity.GeoItem;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.geo.GeoPage;
@@ -18,8 +18,8 @@ public interface GeoItemQRepository<T extends GeoItem> {
    * @param userId 사용자 ID
    * @param searchCriteria 검색 조건
    * @param pageable 페이징 정보
-   * @return {@link GeoPage}
+   * @return {@link GeoPage} of {@link T}
    */
-  GeoPage<T> findByCondition(
+  GeoPage<T> findAllByCriteria(
       final Long userId, GeoItemSearchCriteria searchCriteria, final Pageable pageable);
 }

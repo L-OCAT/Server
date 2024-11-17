@@ -4,6 +4,7 @@ import com.locat.api.domain.common.entity.SecuredBaseEntity;
 import com.locat.api.domain.terms.entity.Terms;
 import com.locat.api.domain.user.entity.User;
 import jakarta.persistence.*;
+import java.io.Serial;
 import lombok.*;
 
 @Entity
@@ -19,6 +20,8 @@ import lombok.*;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserTermsAgreement extends SecuredBaseEntity {
+
+  @Serial private static final long serialVersionUID = 2024111401L;
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

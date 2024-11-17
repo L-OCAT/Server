@@ -1,7 +1,7 @@
 package com.locat.api.domain.admin.dto.response;
 
-import com.locat.api.domain.admin.dto.AdminMonthlyItemStatDto;
-import com.locat.api.domain.admin.dto.inner.MonthlyGeoItemStatistics;
+import com.locat.api.domain.admin.dto.internal.AdminMonthlyItemStatDto;
+import com.locat.api.domain.admin.dto.internal.MonthlyGeoItemStatistics;
 import com.locat.api.domain.geo.base.entity.GeoItem;
 import java.util.List;
 import java.util.Map;

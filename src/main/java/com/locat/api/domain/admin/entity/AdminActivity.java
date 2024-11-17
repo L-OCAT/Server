@@ -2,10 +2,11 @@ package com.locat.api.domain.admin.entity;
 
 import com.locat.api.domain.common.entity.BaseEntity;
 import com.locat.api.global.event.AdminAuditEvent;
-import com.locat.api.global.persistance.StringColumnEncryptionConverter;
+import com.locat.api.global.persistence.converter.StringColumnEncryptionConverter;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import java.io.Serial;
 import lombok.*;
 
 @Entity
@@ -15,6 +16,8 @@ import lombok.*;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AdminActivity extends BaseEntity {
+
+  @Serial private static final long serialVersionUID = 2024111401L;
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

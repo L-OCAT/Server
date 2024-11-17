@@ -6,7 +6,7 @@ import static org.mockito.Mockito.*;
 import com.locat.api.global.security.annotation.PublicApi;
 import com.locat.api.global.security.common.AccessLevel;
 import com.locat.api.global.security.common.KeyValidation;
-import com.locat.api.global.security.common.SecurityProperties;
+import com.locat.api.global.security.common.ServiceProperties;
 import com.locat.api.global.security.filter.impl.PublicApiAccessControlFilter;
 import com.locat.api.global.web.resolver.HandlerMethodAnnotationResolver;
 import jakarta.servlet.FilterChain;
@@ -24,7 +24,7 @@ class PublicApiAccessControlFilterTest {
 
   @InjectMocks PublicApiAccessControlFilter filter;
 
-  @Mock SecurityProperties securityProperties;
+  @Mock ServiceProperties serviceProperties;
 
   @Mock HandlerMethodAnnotationResolver annotationResolver;
 
@@ -108,7 +108,7 @@ class PublicApiAccessControlFilterTest {
     when(request.getHeader("Locat-Api-Key")).thenReturn(testCase.apiKey);
 
     if (testCase.apiKey != null) {
-      when(this.securityProperties.isKeyValid(testCase.apiKey)).thenReturn(testCase.keyValid);
+      when(this.serviceProperties.isKeyValid(testCase.apiKey)).thenReturn(testCase.keyValid);
     }
 
     // When

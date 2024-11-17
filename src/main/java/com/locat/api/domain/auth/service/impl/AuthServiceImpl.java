@@ -1,6 +1,6 @@
 package com.locat.api.domain.auth.service.impl;
 
-import com.locat.api.domain.auth.dto.AdminLoginDto;
+import com.locat.api.domain.auth.dto.internal.AdminLoginDto;
 import com.locat.api.domain.auth.dto.response.AdminLoginResponse;
 import com.locat.api.domain.auth.entity.VerificationCode;
 import com.locat.api.domain.auth.exception.EmailAlreadySentException;

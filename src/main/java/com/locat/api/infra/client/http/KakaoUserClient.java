@@ -1,6 +1,6 @@
 package com.locat.api.infra.client.http;
 
-import com.locat.api.domain.auth.dto.KakaoUserInfoDto;
+import com.locat.api.domain.auth.dto.internal.KakaoUserInfoDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.GetMapping;

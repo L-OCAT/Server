@@ -1,6 +1,6 @@
 package com.locat.api.domain.terms.dto.response;
 
-import com.locat.api.domain.terms.dto.TermsRevisionCompactHistoryDto;
+import com.locat.api.domain.terms.dto.internal.TermsRevisionCompactHistoryDto;
 
 /**
  * 약관 개정 이력 응답 DTO

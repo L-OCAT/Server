@@ -1,9 +1,9 @@
 package com.locat.api.domain.user.service.impl;
 
 import com.locat.api.domain.auth.template.OAuth2TemplateFactory;
-import com.locat.api.domain.user.dto.AdminUserSearchCriteria;
-import com.locat.api.domain.user.dto.UserInfoDto;
-import com.locat.api.domain.user.dto.UserInfoUpdateDto;
+import com.locat.api.domain.user.dto.criteria.AdminUserSearchCriteria;
+import com.locat.api.domain.user.dto.internal.UserInfoDto;
+import com.locat.api.domain.user.dto.internal.UserInfoUpdateDto;
 import com.locat.api.domain.user.entity.User;
 import com.locat.api.domain.user.service.UserService;
 import com.locat.api.domain.user.service.UserValidationService;
