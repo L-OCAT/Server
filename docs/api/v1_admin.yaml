@@ -1,0 +1,152 @@
+openapi: 3.0.0
+info:
+  title: Admin API
+  description: 관리자용 API를 정의하는 문서입니다.
+  version: 0.0.1
+servers:
+  - url: https://api.locat.kr
+    description: Production
+paths:
+  /v1/items:
+    get:
+      description: GeoItem(분실/습득물) 목록 조회
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: itemType
+          in: query
+          description: "아이템 타입(LOST, FOUND) / 전체 검색 시 미입력"
+          required: false
+          schema:
+            type: string
+            enum: [ LOST, FOUND ]
+            example: "LOST"
+        - name: itemName
+          in: query
+          description: "아이템 이름"
+          required: false
+          schema:
+            type: string
+            example: "체크카드"
+        - name: categoryId
+          in: query
+          description: "검색할 카테고리 ID / 상위 카테고리로 입력 시, 하위 카테고리도 검색"
+          required: false
+          schema:
+            type: number
+            example: 5
+        - name: region1
+          in: query
+          description: "검색할 지역(광역시/도)"
+          required: false
+          schema:
+            type: string
+            example: "서울특별시"
+        - name: region2
+          in: query
+          description: "검색할 지역(시/군/구)"
+          required: false
+          schema:
+            type: string
+            example: "강남구"
+        - name: region3
+          in: query
+          description: "검색할 지역(읍/면/동)"
+          required: false
+          schema:
+            type: string
+            example: "역삼동"
+        - name: page
+          in: query
+          description: "페이지 번호(1부터 시작) / 기본값: 1"
+          required: false
+          schema:
+            type: integer
+            example: 1
+        - name: size
+          in: query
+          description: "페이지 크기 / 기본값: 10"
+          required: false
+          schema:
+            type: integer
+            example: 10
+        - name: sort
+          in: query
+          description: "정렬 기준({정렬할 필드},{방향}) / 기본 정렬: 등록일 내림차순"
+          required: false
+          example: "createdAt,desc"
+      responses:
+components:
+  responses:
+    GeoItemAdminSearchResponse:
+      description: "GeoItem(분실/습득물) 목록 조회 응답"
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "schemas.yaml#/components/schemas/BaseResponse"
+              - type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/GeoItemAdminSearchResponse"
+  schemas:
+    GeoItemAdminSearchResponse:
+      description: "GeoItem(분실/습득물) 목록 조회 응답 스키마"
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1
+          description: "아이템 ID"
+        type:
+          type: string
+          example: "LOST"
+          description: "아이템 타입(LOST, FOUND)"
+        name:
+          type: string
+          example: "체크카드"
+          description: "아이템 이름"
+        categoryPath:
+          type: string
+          example: "지갑 > 카드지갑"
+          description: "카테고리 경로"
+        createdAt:
+          type: string
+          format: date-time
+          example: "2024-08-01T00:00:00"
+          description: "등록일"
+        lat:
+          type: number
+          example: 37.504
+          description: "위도"
+        lng:
+          type: number
+          example: 127.051
+          description: "경도"
+        region1:
+          type: string
+          example: "서울특별시"
+          description: "광역시/도"
+        region2:
+          type: string
+          example: "강남구"
+          description: "시/군/구"
+        region3:
+          type: string
+          example: "역삼동"
+          description: "읍/면/동"
+        roadAddress:
+          type: string
+          example: "서울특별시 강남구 테헤란로 427"
+          description: "도로명 주소(Nullable)"
+        buildingName:
+          type: string
+          example: "A빌딩"
+          description: "건물명(Nullable)"
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

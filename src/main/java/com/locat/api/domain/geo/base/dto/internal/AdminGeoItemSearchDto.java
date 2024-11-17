@@ -8,7 +8,7 @@ public record AdminGeoItemSearchDto(
     Long itemId,
     GeoItemType geoItemType,
     String itemName,
-    String categoryName,
+    String categoryPath,
     LocalDateTime createdAt,
     BigDecimal latitude,
     BigDecimal longitude,

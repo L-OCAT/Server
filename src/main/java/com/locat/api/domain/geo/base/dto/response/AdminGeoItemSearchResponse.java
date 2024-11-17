@@ -10,7 +10,7 @@ import lombok.Builder;
  * @param id 아이템 ID
  * @param type 구분(분실물/습득물)
  * @param name 등록된 이름
- * @param categoryName 카테고리 이름("전자기기 > 휴대폰" 포맷)
+ * @param categoryPath 카테고리 이름("전자기기 > 휴대폰" 포맷)
  * @param createdAt 등록일
  * @param lat 위도
  * @param lng 경도
@@ -25,7 +25,7 @@ public record AdminGeoItemSearchResponse(
     long id,
     String type,
     String name,
-    String categoryName,
+    String categoryPath,
     String createdAt,
     double lat,
     double lng,
@@ -40,7 +40,7 @@ public record AdminGeoItemSearchResponse(
         .id(searchDto.itemId())
         .type(searchDto.geoItemType().name())
         .name(searchDto.itemName())
-        .categoryName(searchDto.categoryName())
+        .categoryPath(searchDto.categoryPath())
         .createdAt(searchDto.createdAt().toString())
         .lat(searchDto.latitude().doubleValue())
         .lng(searchDto.longitude().doubleValue())
