@@ -3,7 +3,7 @@ package com.locat.api.domain.geo.lost.entity;
 import com.locat.api.domain.geo.base.entity.Category;
 import com.locat.api.domain.geo.base.entity.ColorCode;
 import com.locat.api.domain.geo.base.entity.GeoItem;
-import com.locat.api.domain.geo.lost.dto.LostItemRegisterDto;
+import com.locat.api.domain.geo.lost.dto.internal.LostItemRegisterDto;
 import com.locat.api.domain.user.entity.User;
 import jakarta.persistence.*;
 import java.io.Serial;

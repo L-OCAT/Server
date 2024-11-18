@@ -1,4 +1,4 @@
-package com.locat.api.domain.geo.lost.dto;
+package com.locat.api.domain.geo.lost.dto.internal;
 
 import com.locat.api.domain.geo.base.utils.GeoUtils;
 import com.locat.api.domain.geo.lost.dto.request.LostItemRegisterRequest;

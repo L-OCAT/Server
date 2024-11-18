@@ -13,22 +13,22 @@ import org.springframework.data.geo.GeoResult;
  * @param colors 색상명 (최대 2개)
  * @param name 분실물 이름
  * @param description 분실물 설명
- * @param lng 경도(lng)
- * @param lat 위도(lat)
+ * @param lng 경도(longitude)
+ * @param lat 위도(latitude)
  * @param distance 기준 좌표로부터 거리 (단위: 미터)
  * @param imageUrl 이미지 URL
  * @param lostAt 분실 일시
  */
 @Builder
 public record LostItemLocationResponse(
-    Long id,
+    long id,
     String category,
     Set<String> colors,
     String name,
     String description,
-    Double lng,
-    Double lat,
-    Double distance,
+    double lng,
+    double lat,
+    double distance,
     String imageUrl,
     String lostAt) {
 

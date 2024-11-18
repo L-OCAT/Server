@@ -1,8 +1,8 @@
 package com.locat.api.domain.geo.found.controller;
 
 import com.locat.api.domain.common.dto.BaseResponse;
-import com.locat.api.domain.geo.found.dto.FoundItemRegisterDto;
-import com.locat.api.domain.geo.found.dto.FoundItemSearchDto;
+import com.locat.api.domain.geo.found.dto.internal.FoundItemRegisterDto;
+import com.locat.api.domain.geo.found.dto.internal.FoundItemSearchDto;
 import com.locat.api.domain.geo.found.dto.request.FoundItemRegisterRequest;
 import com.locat.api.domain.geo.found.dto.response.FoundItemDetailResponse;
 import com.locat.api.domain.geo.found.dto.response.FoundItemLocationResponse;

@@ -29,10 +29,10 @@ public interface AdminStatisticService {
   List<AdminItemStatByCategoryDto> getStatByCategory();
 
   /**
-   * 일반 사용자의 통계 정보 조회
+   * 사용자의 활동 통계 정보 조회
    *
    * @param userId 조회할 사용자 ID
-   * @return 사용자 통계 정보
+   * @return 사용자 활동 통계 정보
    * @throws NoSuchEntityException 주어진 ID에 해당하는 사용자가 없는 경우
    */
   AdminUserStatDto getEndUserStat(Long userId);

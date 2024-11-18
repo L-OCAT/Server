@@ -1,7 +1,7 @@
 package com.locat.api.domain.geo.lost.service;
 
-import com.locat.api.domain.geo.lost.dto.LostItemRegisterDto;
-import com.locat.api.domain.geo.lost.dto.LostItemSearchDto;
+import com.locat.api.domain.geo.lost.dto.internal.LostItemRegisterDto;
+import com.locat.api.domain.geo.lost.dto.internal.LostItemSearchDto;
 import com.locat.api.domain.geo.lost.entity.LostItem;
 import com.locat.api.domain.user.entity.User;
 import com.locat.api.global.exception.custom.NoSuchEntityException;
@@ -34,6 +34,12 @@ public interface LostItemService {
   GeoPage<LostItem> findAllByCondition(
       final Long userId, LostItemSearchDto searchDto, Pageable pageable);
 
+  /**
+   * 사용자가 가장 최근에 등록한 분실물 목록 조회
+   *
+   * @param user 조회 대상 사용자
+   * @return 사용자가 등록한 분실물 목록 (최대 10개)
+   */
   List<LostItem> findTop10ByEndUser(User user);
 
   /**

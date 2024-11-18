@@ -10,6 +10,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  */
 @ConfigurationProperties(prefix = "security.oauth2.client")
 public record OAuth2Properties(Kakao kakao, Apple apple) {
+
   /**
    * Kakao OAuth2 Properties
    *

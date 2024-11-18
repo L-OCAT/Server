@@ -2,8 +2,8 @@ package com.locat.api.domain.geo.base.resolver;
 
 import com.locat.api.domain.geo.base.dto.criteria.GeoItemSearchCriteria;
 import com.locat.api.domain.geo.base.utils.GeoUtils;
-import com.locat.api.domain.geo.found.dto.FoundItemSearchDto;
-import com.locat.api.domain.geo.lost.dto.LostItemSearchDto;
+import com.locat.api.domain.geo.found.dto.internal.FoundItemSearchDto;
+import com.locat.api.domain.geo.lost.dto.internal.LostItemSearchDto;
 import com.locat.api.global.exception.custom.InvalidParameterException;
 import com.locat.api.global.utils.RequestUtils;
 import jakarta.servlet.http.HttpServletRequest;

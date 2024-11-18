@@ -1,7 +1,7 @@
 package com.locat.api.domain.geo.found.service;
 
-import com.locat.api.domain.geo.found.dto.FoundItemRegisterDto;
-import com.locat.api.domain.geo.found.dto.FoundItemSearchDto;
+import com.locat.api.domain.geo.found.dto.internal.FoundItemRegisterDto;
+import com.locat.api.domain.geo.found.dto.internal.FoundItemSearchDto;
 import com.locat.api.domain.geo.found.entity.FoundItem;
 import com.locat.api.domain.user.entity.User;
 import java.util.List;
@@ -34,7 +34,7 @@ public interface FoundItemService {
   /**
    * 사용자가 등록한 습득물 목록을 조회합니다.
    *
-   * @param user 목록을 조회할 사용자
+   * @param user 조회 대상 사용자
    * @return 사용자가 등록한 습득물 목록 (최대 10개)
    */
   List<FoundItem> findTop10ByEndUser(User user);

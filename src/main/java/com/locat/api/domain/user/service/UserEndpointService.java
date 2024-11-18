@@ -14,5 +14,11 @@ public interface UserEndpointService {
    */
   void register(final Long userId, EndpointRegisterDto registerDto);
 
+  /**
+   * 사용자 ID로 사용자의 endpoint 목록을 조회합니다.
+   *
+   * @param userId 사용자 ID
+   * @return 사용자의 endpoint 목록
+   */
   List<UserEndpoint> findUserEndpointsByUserId(Long userId);
 }

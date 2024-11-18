@@ -3,6 +3,7 @@ package com.locat.api.domain.faq.entity;
 import com.locat.api.domain.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
+import java.io.Serial;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,6 +17,8 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class FAQ extends BaseEntity {
+
+  @Serial private static final long serialVersionUID = 2024091301L;
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

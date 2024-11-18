@@ -22,16 +22,16 @@ import org.springframework.data.geo.GeoResult;
  */
 @Builder
 public record FoundItemLocationResponse(
-    Long id,
+    long id,
     String category,
     Set<String> colors,
     String name,
     String description,
     String custodyLocation,
     String imageUrl,
-    Double lng,
-    Double lat,
-    Double distance,
+    double lng,
+    double lat,
+    double distance,
     String foundAt) {
 
   public static FoundItemLocationResponse fromEntity(GeoResult<FoundItem> foundItemGeoResult) {

@@ -14,19 +14,23 @@ import lombok.Builder;
  * @param description 습득물 설명
  * @param custodyLocation 보관 장소
  * @param imageUrl 이미지 URL
+ * @param lat 위도(latitude)
+ * @param lng 경도(longitude)
  * @param foundAt 습득 일시
  * @param createdAt 등록 일시
  * @param updatedAt 수정 일시
  */
 @Builder
 public record FoundItemDetailResponse(
-    Long id,
+    long id,
     String category,
     Set<String> colors,
     String name,
     String description,
     String custodyLocation,
     String imageUrl,
+    double lat,
+    double lng,
     String foundAt,
     String createdAt,
     String updatedAt) {
@@ -40,6 +44,8 @@ public record FoundItemDetailResponse(
         .description(foundItem.getDescription())
         .custodyLocation(foundItem.getCustodyLocation())
         .imageUrl(foundItem.getImageUrl())
+        .lat(foundItem.getLocation().getY())
+        .lng(foundItem.getLocation().getX())
         .foundAt(foundItem.getFoundAt().toString())
         .createdAt(foundItem.getCreatedAt().toString())
         .updatedAt(foundItem.getUpdatedAt().toString())

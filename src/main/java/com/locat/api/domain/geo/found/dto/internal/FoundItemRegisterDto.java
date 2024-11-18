@@ -1,4 +1,4 @@
-package com.locat.api.domain.geo.found.dto;
+package com.locat.api.domain.geo.found.dto.internal;
 
 import com.locat.api.domain.geo.base.utils.GeoUtils;
 import com.locat.api.domain.geo.found.dto.request.FoundItemRegisterRequest;

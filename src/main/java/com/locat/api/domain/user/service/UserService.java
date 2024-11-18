@@ -11,6 +11,12 @@ import org.springframework.data.domain.Pageable;
 
 public interface UserService {
 
+  /**
+   * 사용자 정보 저장
+   *
+   * @param user 사용자 정보
+   * @return 저장된 사용자 정보
+   */
   User save(final User user);
 
   /**

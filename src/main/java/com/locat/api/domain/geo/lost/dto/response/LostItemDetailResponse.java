@@ -15,10 +15,15 @@ import lombok.Builder;
  * @param isWillingToPayGratuity 보상금 지급 여부
  * @param gratuity 보상금 비율
  * @param imageUrl 이미지 URL
+ * @param lat 위도(latitude)
+ * @param lng 경도(longitude)
+ * @param lostAt 분실 일시
+ * @param createdAt 등록 일시
+ * @param updatedAt 수정 일시
  */
 @Builder
 public record LostItemDetailResponse(
-    Long id,
+    long id,
     String category,
     Set<String> colors,
     String name,
@@ -26,6 +31,8 @@ public record LostItemDetailResponse(
     Boolean isWillingToPayGratuity,
     Integer gratuity,
     String imageUrl,
+    double lat,
+    double lng,
     String lostAt,
     String createdAt,
     String updatedAt) {
@@ -39,6 +46,8 @@ public record LostItemDetailResponse(
         .isWillingToPayGratuity(lostItem.getIsWillingToPayGratuity())
         .gratuity(lostItem.getGratuity())
         .imageUrl(lostItem.getImageUrl())
+        .lat(lostItem.getLocation().getY())
+        .lng(lostItem.getLocation().getX())
         .lostAt(lostItem.getLostAt().toString())
         .createdAt(lostItem.getCreatedAt().toString())
         .updatedAt(lostItem.getUpdatedAt().toString())

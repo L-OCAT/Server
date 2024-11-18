@@ -3,7 +3,7 @@ package com.locat.api.domain.geo.found.entity;
 import com.locat.api.domain.geo.base.entity.Category;
 import com.locat.api.domain.geo.base.entity.ColorCode;
 import com.locat.api.domain.geo.base.entity.GeoItem;
-import com.locat.api.domain.geo.found.dto.FoundItemRegisterDto;
+import com.locat.api.domain.geo.found.dto.internal.FoundItemRegisterDto;
 import com.locat.api.domain.user.entity.User;
 import jakarta.persistence.*;
 import java.io.Serial;

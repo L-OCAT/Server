@@ -1,8 +1,8 @@
 package com.locat.api.domain.geo.lost.controller;
 
 import com.locat.api.domain.common.dto.BaseResponse;
-import com.locat.api.domain.geo.lost.dto.LostItemRegisterDto;
-import com.locat.api.domain.geo.lost.dto.LostItemSearchDto;
+import com.locat.api.domain.geo.lost.dto.internal.LostItemRegisterDto;
+import com.locat.api.domain.geo.lost.dto.internal.LostItemSearchDto;
 import com.locat.api.domain.geo.lost.dto.request.LostItemRegisterRequest;
 import com.locat.api.domain.geo.lost.dto.response.LostItemDetailResponse;
 import com.locat.api.domain.geo.lost.dto.response.LostItemLocationResponse;
