@@ -10,8 +10,11 @@ import com.locat.api.domain.user.enums.UserInfoValidationType;
 import com.locat.api.domain.user.service.*;
 import com.locat.api.global.exception.ApiExceptionType;
 import com.locat.api.global.exception.custom.DuplicatedException;
+import com.locat.api.global.utils.RandomGenerator;
 import com.locat.api.global.utils.ValidationUtils;
+import com.locat.api.infra.aws.s3.LocatS3Client;
 import com.locat.api.infra.redis.OAuth2ProviderTokenRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,6 +26,8 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserRegistrationServiceImpl implements UserRegistrationService {
 
+  private static final String PROFILE_IMAGES_DIRECTORY = "users/profiles";
+
   private final UserService userService;
   private final UserTermsService userTermsService;
   private final UserSettingService userSettingService;
@@ -30,6 +35,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
   private final OAuth2TemplateFactory oAuth2TemplateFactory;
   private final OAuth2ProviderTokenRepository providerTokenRepository;
   private final PasswordEncoder passwordEncoder;
+  private final LocatS3Client s3Client;
 
   @Value("${service.admin.temp-password}")
   private String tempPassword;
@@ -41,9 +47,13 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
 
     OAuth2ProviderToken token = this.findTokenById(userRegisterDto.oAuthId());
     OAuth2UserInfo userInfo = this.fetchUserInfo(token);
+    String profileImage = this.getRandomProfileImage();
     final User user =
         User.of(
-            userRegisterDto.nickname(), this.passwordEncoder.encode(this.tempPassword), userInfo);
+            profileImage,
+            userRegisterDto.nickname(),
+            this.passwordEncoder.encode(this.tempPassword),
+            userInfo);
 
     this.userService.save(user);
     this.userSettingService.registerDefaultSettings(user);
@@ -67,5 +77,14 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     return this.providerTokenRepository
         .findById(oAuthId)
         .orElseThrow(() -> new IllegalArgumentException("OAuth2ProviderToken not found"));
+  }
+
+  private String getRandomProfileImage() {
+    List<String> availableProfileImages = this.s3Client.getListObjects(PROFILE_IMAGES_DIRECTORY);
+    if (availableProfileImages.isEmpty()) {
+      return null;
+    }
+    final int imageIndex = RandomGenerator.nextInt(availableProfileImages.size());
+    return availableProfileImages.get(imageIndex);
   }
 }

@@ -52,7 +52,7 @@ public class StringColumnEncryptionConverter implements AttributeConverter<Strin
       return null;
     }
     try {
-      final byte[] initialVector = RandomGenerator.generateRandomBytes(INITIAL_VECTOR_LENGTH);
+      final byte[] initialVector = RandomGenerator.nextBytes(INITIAL_VECTOR_LENGTH);
 
       Cipher cipher = initCipher(Cipher.ENCRYPT_MODE, this.secretKeySpec, initialVector);
       byte[] encryptedData = cipher.doFinal(attribute.getBytes(DEFAULT_ENCODING));
