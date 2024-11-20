@@ -109,11 +109,13 @@ public class User extends BaseEntity {
   @OneToMany(mappedBy = "adminUser", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<AdminDeviceId> adminDeviceIds = new ArrayList<>();
 
-  public static User of(String nickname, String tempPassword, OAuth2UserInfo userInfo) {
+  public static User of(
+      String profileImage, String nickname, String tempPassword, OAuth2UserInfo userInfo) {
     return builder()
         .oauthId(userInfo.getId())
         .oauthType(userInfo.getProvider())
         .nickname(nickname)
+        .profileImage(profileImage)
         .email(userInfo.getEmail())
         .emailHash(HashingUtils.hash(userInfo.getEmail()))
         .password(tempPassword)

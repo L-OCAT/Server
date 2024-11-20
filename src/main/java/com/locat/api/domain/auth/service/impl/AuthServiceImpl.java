@@ -76,7 +76,7 @@ public class AuthServiceImpl implements AuthService {
   @Override
   public void sendVerificationEmail(final String email) {
     this.checkIfEmailIsAlreadySent(email);
-    final String verificationCode = RandomGenerator.generateRandomCode(VERIFICATION_CODE_LENGTH);
+    final String verificationCode = RandomGenerator.nextCode(VERIFICATION_CODE_LENGTH);
     this.verificationCodeRepository.save(
         VerificationCode.of(email, verificationCode, VERIFICATION_CODE_EXPIRATION.toSeconds()));
     this.sesClient.send(

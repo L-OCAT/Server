@@ -17,7 +17,7 @@ import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.access.AccessDeniedException;
 
-class EndUserEntityTest {
+class UserEntityTest {
 
   private static final String EMAIL = "user@example.com";
   private static final String OAUTH_ID = "512351278326";
@@ -72,7 +72,7 @@ class EndUserEntityTest {
     OAuth2UserInfo mockUserInfoDto = TestDataFactory.create(OAUTH_ID, EMAIL);
 
     // When
-    User createdUser = User.of(NICKNAME, "temp1234", mockUserInfoDto);
+    User createdUser = User.of(PROFILE_IMAGE, NICKNAME, "temp1234", mockUserInfoDto);
 
     // Then
     assertThat(createdUser).isNotNull();

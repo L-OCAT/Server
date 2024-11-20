@@ -17,7 +17,7 @@ class RandomCodeGeneratorTest {
     final int requiredLength = 6;
 
     // When
-    final String generatedCode = RandomGenerator.generateRandomCode(requiredLength);
+    final String generatedCode = RandomGenerator.nextCode(requiredLength);
 
     // Then
     assertThat(generatedCode).hasSize(requiredLength);
@@ -31,7 +31,7 @@ class RandomCodeGeneratorTest {
     final int requiredLength = 16;
 
     // When
-    final byte[] generatedBytes = RandomGenerator.generateRandomBytes(requiredLength);
+    final byte[] generatedBytes = RandomGenerator.nextBytes(requiredLength);
 
     // Then
     assertThat(generatedBytes).hasSize(requiredLength);
