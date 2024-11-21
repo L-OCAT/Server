@@ -1,6 +1,6 @@
 package com.locat.api.domain.auth.utils;
 
-import com.locat.api.domain.auth.dto.token.AppleIdToken;
+import com.locat.api.domain.auth.dto.internal.AppleUserInfo;
 import com.locat.api.global.exception.ApiExceptionType;
 import com.locat.api.global.security.exception.AuthenticationException;
 import com.locat.api.global.security.exception.TokenException;
@@ -28,9 +28,9 @@ public final class OpenIdConnectTokenUtils {
     // Utility class
   }
 
-  public static AppleIdToken parse(String idToken, String modulus, String exponent) {
+  public static AppleUserInfo parse(String idToken, String modulus, String exponent) {
     Claims body = parseTokenClaims(idToken, modulus, exponent).getBody();
-    return AppleIdToken.fromJwt(body);
+    return AppleUserInfo.fromJwt(body);
   }
 
   public static String parseKeyIdHeader(

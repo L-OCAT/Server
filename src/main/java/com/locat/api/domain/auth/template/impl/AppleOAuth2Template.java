@@ -1,9 +1,9 @@
 package com.locat.api.domain.auth.template.impl;
 
-import com.locat.api.domain.auth.dto.OAuth2ProviderTokenDto;
-import com.locat.api.domain.auth.dto.OAuth2UserInfo;
-import com.locat.api.domain.auth.dto.token.AppleIdToken;
+import com.locat.api.domain.auth.dto.internal.AppleUserInfo;
+import com.locat.api.domain.auth.dto.internal.OAuth2UserInfo;
 import com.locat.api.domain.auth.dto.token.OAuth2ProviderJsonWebKey;
+import com.locat.api.domain.auth.dto.token.OAuth2ProviderTokenDto;
 import com.locat.api.domain.auth.entity.OAuth2ProviderToken;
 import com.locat.api.domain.auth.template.AbstractOAuth2Template;
 import com.locat.api.domain.auth.utils.AppleClientSecretProvider;
@@ -43,7 +43,7 @@ public class AppleOAuth2Template extends AbstractOAuth2Template {
             null);
     final String idToken = appleOAuth2TokenDto.getIdToken();
     OAuth2ProviderJsonWebKey jsonWebKey = this.getMatchingJsonWebKey(idToken);
-    AppleIdToken parsedIdToken =
+    AppleUserInfo parsedIdToken =
         OpenIdConnectTokenUtils.parse(idToken, jsonWebKey.n(), jsonWebKey.e());
     return this.providerTokenRepository.save(
         OAuth2ProviderToken.from(

@@ -1,6 +1,6 @@
 package com.locat.api.domain.auth.entity;
 
-import com.locat.api.domain.auth.dto.OAuth2ProviderTokenDto;
+import com.locat.api.domain.auth.dto.token.OAuth2ProviderTokenDto;
 import com.locat.api.domain.user.enums.OAuth2ProviderType;
 import jakarta.persistence.Id;
 import lombok.Builder;

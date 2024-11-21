@@ -3,7 +3,7 @@ package com.locat.api.unit.entity;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
-import com.locat.api.domain.auth.dto.OAuth2UserInfo;
+import com.locat.api.domain.auth.dto.internal.OAuth2UserInfo;
 import com.locat.api.domain.user.entity.User;
 import com.locat.api.domain.user.enums.OAuth2ProviderType;
 import com.locat.api.domain.user.enums.StatusType;

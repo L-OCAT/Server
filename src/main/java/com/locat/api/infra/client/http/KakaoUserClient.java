@@ -1,6 +1,6 @@
 package com.locat.api.infra.client.http;
 
-import com.locat.api.domain.auth.dto.internal.KakaoUserInfoDto;
+import com.locat.api.domain.auth.dto.internal.KakaoUserInfo;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +17,7 @@ public interface KakaoUserClient {
    * @return 사용자 정보
    */
   @GetMapping("/v2/user/me")
-  KakaoUserInfoDto getUserInfo(@RequestHeader(HttpHeaders.AUTHORIZATION) String accessToken);
+  KakaoUserInfo getUserInfo(@RequestHeader(HttpHeaders.AUTHORIZATION) String accessToken);
 
   /**
    * 사용자 연결 해제

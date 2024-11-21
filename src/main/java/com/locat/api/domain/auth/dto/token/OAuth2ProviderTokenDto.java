@@ -1,7 +1,7 @@
-package com.locat.api.domain.auth.dto;
+package com.locat.api.domain.auth.dto.token;
 
 /** OAuth2 Provider별 응답을 담는 인터페이스 */
-public interface OAuth2ProviderTokenDto {
+public sealed interface OAuth2ProviderTokenDto permits AppleOAuth2TokenDto, KakaoOAuth2TokenDto {
 
   /**
    * OAuth2 제공자가 발급한 접근 토큰(access token)을 반환한다.

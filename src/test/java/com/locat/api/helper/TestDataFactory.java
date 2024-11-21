@@ -1,14 +1,14 @@
 package com.locat.api.helper;
 
-import com.locat.api.domain.auth.dto.internal.KakaoUserInfoDto;
+import com.locat.api.domain.auth.dto.internal.KakaoUserInfo;
 import com.locat.api.domain.geo.found.dto.internal.FoundItemRegisterDto;
 
 public final class TestDataFactory {
 
   private TestDataFactory() {}
 
-  public static KakaoUserInfoDto create(String id, String email) {
-    return new KakaoUserInfoDto(id, new KakaoUserInfoDto.KakaoAccount(true, true, true, email));
+  public static KakaoUserInfo create(String id, String email) {
+    return new KakaoUserInfo(id, new KakaoUserInfo.KakaoAccount(true, true, true, email));
   }
 
   public static FoundItemRegisterDto create(

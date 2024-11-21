@@ -1,9 +1,9 @@
-package com.locat.api.domain.auth.dto;
+package com.locat.api.domain.auth.dto.internal;
 
 import com.locat.api.domain.user.enums.OAuth2ProviderType;
 
 /** OAuth2 제공자(Apple, Kakao 등)로부터 받은 사용자 정보를 표준화하는 인터페이스 */
-public interface OAuth2UserInfo {
+public sealed interface OAuth2UserInfo permits AppleUserInfo, KakaoUserInfo {
 
   /**
    * 각 제공자가 발급 & 관리하는 사용자 고유 ID을 반환합니다.

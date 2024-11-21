@@ -1,7 +1,6 @@
-package com.locat.api.domain.auth.dto.token;
+package com.locat.api.domain.auth.dto.internal;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.locat.api.domain.auth.dto.OAuth2UserInfo;
 import com.locat.api.domain.user.enums.OAuth2ProviderType;
 import io.jsonwebtoken.Claims;
 import lombok.Builder;
@@ -18,7 +17,7 @@ import lombok.Builder;
  * @param emailVerified 이메일 주소 확인 여부
  */
 @Builder
-public record AppleIdToken(
+public record AppleUserInfo(
     @JsonProperty("iss") String issuer,
     @JsonProperty("sub") String subject,
     @JsonProperty("aud") String audience,
@@ -43,8 +42,8 @@ public record AppleIdToken(
     return OAuth2ProviderType.APPLE;
   }
 
-  public static AppleIdToken fromJwt(Claims body) {
-    return AppleIdToken.builder()
+  public static AppleUserInfo fromJwt(Claims body) {
+    return AppleUserInfo.builder()
         .issuer(body.getIssuer())
         .subject(body.getSubject())
         .audience(body.getAudience())

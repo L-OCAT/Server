@@ -1,6 +1,6 @@
 package com.locat.api.domain.auth.template;
 
-import com.locat.api.domain.auth.dto.OAuth2UserInfo;
+import com.locat.api.domain.auth.dto.internal.OAuth2UserInfo;
 import com.locat.api.domain.auth.entity.OAuth2ProviderToken;
 import com.locat.api.global.exception.custom.NoSuchEntityException;
 

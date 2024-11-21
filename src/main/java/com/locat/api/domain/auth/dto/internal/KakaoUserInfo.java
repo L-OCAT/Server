@@ -3,7 +3,6 @@ package com.locat.api.domain.auth.dto.internal;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import com.locat.api.domain.auth.dto.OAuth2UserInfo;
 import com.locat.api.domain.user.enums.OAuth2ProviderType;
 
 /**
@@ -12,7 +11,7 @@ import com.locat.api.domain.user.enums.OAuth2ProviderType;
  * @param id 회원번호(카카오에서 발급하는 고유 ID)
  * @param kakaoAccount 카카오 계정 정보
  */
-public record KakaoUserInfoDto(String id, @JsonProperty("kakao_account") KakaoAccount kakaoAccount)
+public record KakaoUserInfo(String id, @JsonProperty("kakao_account") KakaoAccount kakaoAccount)
     implements OAuth2UserInfo {
 
   @Override
