@@ -78,7 +78,9 @@ dependencies {
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.mockito:mockito-junit-jupiter")
     testImplementation("org.assertj:assertj-core")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.boot:spring-boot-starter-test") {
+        exclude(group = "junit", module = "junit")
+    }
     testImplementation("org.springframework.security:spring-security-test")
     // Test Containers
     testImplementation("org.springframework.boot:spring-boot-testcontainers")
@@ -110,7 +112,7 @@ tasks.withType<Test> {
     }
     maxParallelForks = (Runtime.getRuntime().availableProcessors() / 2)
         .coerceAtLeast(1)
-        .coerceAtMost(6)
+        .coerceAtMost(4)
 }
 
 tasks.jacocoTestReport {

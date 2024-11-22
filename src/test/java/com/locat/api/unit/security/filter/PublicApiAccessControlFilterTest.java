@@ -1,6 +1,7 @@
-package com.locat.api.unit.security;
+package com.locat.api.unit.security.filter;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 import com.locat.api.global.security.annotation.PublicApi;
@@ -22,10 +23,10 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 class PublicApiAccessControlFilterTest {
 
+  private static final String PUBLIC_API_AUTHORIZED = "SECURITY_PUBLIC_API_AUTHORIZED";
+
   @InjectMocks PublicApiAccessControlFilter filter;
-
   @Mock ServiceProperties serviceProperties;
-
   @Mock HandlerMethodAnnotationResolver annotationResolver;
 
   @BeforeEach
@@ -41,7 +42,7 @@ class PublicApiAccessControlFilterTest {
     HttpServletResponse response = mock(HttpServletResponse.class);
     FilterChain filterChain = mock(FilterChain.class);
 
-    when(annotationResolver.find(request, PublicApi.class)).thenReturn(Optional.empty());
+    given(annotationResolver.find(request, PublicApi.class)).willReturn(Optional.empty());
 
     // when
     ReflectionTestUtils.invokeMethod(
@@ -49,7 +50,7 @@ class PublicApiAccessControlFilterTest {
 
     // then
     verify(filterChain).doFilter(request, response);
-    verify(request).getAttribute("PUBLIC_API_AUTHORIZED");
+    verify(request, never()).getAttribute(PUBLIC_API_AUTHORIZED);
   }
 
   @TestFactory
@@ -101,14 +102,15 @@ class PublicApiAccessControlFilterTest {
     FilterChain filterChain = mock(FilterChain.class);
     PublicApi publicApi = mock(PublicApi.class);
 
-    when(this.annotationResolver.find(request, PublicApi.class)).thenReturn(Optional.of(publicApi));
-    when(publicApi.accessLevel()).thenReturn(testCase.accessLevel);
-    when(publicApi.keyValidation()).thenReturn(testCase.keyValidation);
-    when(publicApi.keyHeader()).thenReturn("Locat-Api-Key");
-    when(request.getHeader("Locat-Api-Key")).thenReturn(testCase.apiKey);
+    given(this.annotationResolver.find(request, PublicApi.class))
+        .willReturn(Optional.of(publicApi));
+    given(publicApi.accessLevel()).willReturn(testCase.accessLevel);
+    given(publicApi.keyValidation()).willReturn(testCase.keyValidation);
+    given(publicApi.keyHeader()).willReturn("Locat-Api-Key");
+    given(request.getHeader("Locat-Api-Key")).willReturn(testCase.apiKey);
 
     if (testCase.apiKey != null) {
-      when(this.serviceProperties.isKeyValid(testCase.apiKey)).thenReturn(testCase.keyValid);
+      given(this.serviceProperties.isKeyValid(testCase.apiKey)).willReturn(testCase.keyValid);
     }
 
     // When
@@ -118,9 +120,9 @@ class PublicApiAccessControlFilterTest {
     // Then
     verify(filterChain).doFilter(request, response);
     if (testCase.expectedAuthorized) {
-      verify(request).setAttribute("PUBLIC_API_AUTHORIZED", true);
+      verify(request).setAttribute(PUBLIC_API_AUTHORIZED, true);
     } else {
-      verify(request).getAttribute("PUBLIC_API_AUTHORIZED");
+      verify(request, never()).getAttribute(PUBLIC_API_AUTHORIZED);
     }
   }
 
@@ -133,9 +135,10 @@ class PublicApiAccessControlFilterTest {
     FilterChain filterChain = mock(FilterChain.class);
     PublicApi publicApi = mock(PublicApi.class);
 
-    when(this.annotationResolver.find(request, PublicApi.class)).thenReturn(Optional.of(publicApi));
-    when(publicApi.accessLevel()).thenReturn(AccessLevel.PROTECTED);
-    when(publicApi.keyValidation()).thenReturn(KeyValidation.NONE);
+    given(this.annotationResolver.find(request, PublicApi.class))
+        .willReturn(Optional.of(publicApi));
+    given(publicApi.accessLevel()).willReturn(AccessLevel.PROTECTED);
+    given(publicApi.keyValidation()).willReturn(KeyValidation.NONE);
 
     // When & Then
     assertThatThrownBy(

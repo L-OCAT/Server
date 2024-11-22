@@ -99,4 +99,16 @@ class ValidationUtilsTest {
                     List.of(RuntimeException::new))) // size: 1
         .isExactlyInstanceOf(IllegalArgumentException.class);
   }
+
+  @Test
+  @DisplayName("주어진 값 중에 null인 값이 하나라도 존재하는지 검사한다.")
+  void testHasNullValue() {
+    // Given
+    String value1 = "value";
+    String value2 = null;
+
+    // When & Then
+    assertThat(ValidationUtils.isAnyNull(value1, value2)).isTrue();
+    assertThat(ValidationUtils.isAnyNull(value1)).isFalse();
+  }
 }

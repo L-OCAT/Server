@@ -1,6 +1,7 @@
 package com.locat.api.unit.advice;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 import com.locat.api.domain.common.misc.WebhookRequest;
@@ -47,9 +48,9 @@ class AdminNotifireAdviceTest {
     // Given
     MethodSignature signature = mock(MethodSignature.class);
     this.setupJoinPoint(signature, "true");
+    given(LocatSpelParser.evaluateExpression(anyString(), any(), any())).willReturn(true);
 
     // When
-    when(LocatSpelParser.evaluateExpression(anyString(), any(), any())).thenReturn(true);
     this.adminNotifierAdvice.handleNotification(this.joinPoint, this.requireAdminNotification);
 
     // Then
@@ -65,9 +66,9 @@ class AdminNotifireAdviceTest {
     // Given
     MethodSignature signature = mock(MethodSignature.class);
     this.setupJoinPoint(signature, "false");
+    given(LocatSpelParser.evaluateExpression(anyString(), any(), any())).willReturn(false);
 
     // When
-    when(LocatSpelParser.evaluateExpression(anyString(), any(), any())).thenReturn(false);
     this.adminNotifierAdvice.handleNotification(this.joinPoint, this.requireAdminNotification);
 
     // Then
@@ -75,9 +76,9 @@ class AdminNotifireAdviceTest {
   }
 
   private void setupJoinPoint(MethodSignature signature, String condition) throws Throwable {
-    when(this.joinPoint.getSignature()).thenReturn(signature);
-    when(this.requireAdminNotification.message()).thenReturn("TestMessage");
-    when(this.requireAdminNotification.condition()).thenReturn(condition);
-    when(this.joinPoint.proceed()).thenReturn("TestResult");
+    given(this.joinPoint.getSignature()).willReturn(signature);
+    given(this.requireAdminNotification.message()).willReturn("TestMessage");
+    given(this.requireAdminNotification.condition()).willReturn(condition);
+    given(this.joinPoint.proceed()).willReturn("TestResult");
   }
 }

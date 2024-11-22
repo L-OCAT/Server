@@ -1,4 +1,4 @@
-package com.locat.api.unit.file;
+package com.locat.api.unit.aws.file;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;

@@ -52,6 +52,6 @@ class DateUtilsTest {
     List<String> labels = DateUtils.createMonthLabels(baseMonth, monthCount, TEST_FORMATTER);
 
     // Then
-    assertThat(labels).hasSize(3).containsExactly("11월", "12월", "01월");
+    assertThat(labels).hasSize(3).containsExactly("2025-01", "2024-11", "2024-12");
   }
 }

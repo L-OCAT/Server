@@ -1,8 +1,10 @@
-package com.locat.api.unit.jwt;
+package com.locat.api.unit.security.jwt;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.mockito.Mockito.*;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
 
 import com.locat.api.domain.user.entity.User;
 import com.locat.api.global.security.exception.TokenException;
@@ -48,8 +50,8 @@ class JwtProviderTest {
     ReflectionTestUtils.setField(this.jwtProvider, "secretKey", TEST_SECRET_KEY, String.class);
     ReflectionTestUtils.setField(this.jwtProvider, "serviceUrl", TEST_SERVICE_URL, String.class);
     ReflectionTestUtils.setField(this.jwtProvider, "key", createKey(), Key.class);
-    when(this.clock.instant()).thenReturn(Instant.now());
-    when(this.clock.getZone()).thenReturn(ZoneId.of("Asia/Seoul"));
+    given(this.clock.instant()).willReturn(Instant.now());
+    given(this.clock.getZone()).willReturn(ZoneId.of("Asia/Seoul"));
   }
 
   @Test
@@ -63,12 +65,12 @@ class JwtProviderTest {
     mockStatic(LocatUserDetailsImpl.class)
         .when(() -> LocatUserDetailsImpl.from(user))
         .thenReturn(userDetails);
-    when(this.userDetailsService.createAuthentication(userDetails)).thenReturn(authentication);
-    when(authentication.getPrincipal()).thenReturn(userDetails);
-    when(userDetails.getUser()).thenReturn(user);
-    when(user.getNickname()).thenReturn("test");
-    when(authentication.getName()).thenReturn(userEmail);
-    when(this.userDetailsService.extractAuthority(authentication)).thenReturn("SOME_ROLE");
+    given(this.userDetailsService.createAuthentication(userDetails)).willReturn(authentication);
+    given(authentication.getPrincipal()).willReturn(userDetails);
+    given(userDetails.getUser()).willReturn(user);
+    given(user.getNickname()).willReturn("test");
+    given(authentication.getName()).willReturn(userEmail);
+    given(this.userDetailsService.extractAuthority(authentication)).willReturn("SOME_ROLE");
 
     // When
     LocatTokenDto tokenDto = this.jwtProvider.create(user);
@@ -100,7 +102,7 @@ class JwtProviderTest {
     // Given
     this.request = mock(HttpServletRequest.class);
     String bearerToken = JwtProviderImpl.BEARER_PREFIX.concat("validToken");
-    when(this.request.getHeader(HttpHeaders.AUTHORIZATION)).thenReturn(bearerToken);
+    given(this.request.getHeader(HttpHeaders.AUTHORIZATION)).willReturn(bearerToken);
 
     // When
     String token = this.jwtProvider.resolve(this.request);
@@ -115,7 +117,7 @@ class JwtProviderTest {
     // Given
     this.request = mock(HttpServletRequest.class);
     String invalidToken = "InvalidBearerToken";
-    when(this.request.getHeader(HttpHeaders.AUTHORIZATION)).thenReturn(invalidToken);
+    given(this.request.getHeader(HttpHeaders.AUTHORIZATION)).willReturn(invalidToken);
 
     // When
     String token = this.jwtProvider.resolve(this.request);

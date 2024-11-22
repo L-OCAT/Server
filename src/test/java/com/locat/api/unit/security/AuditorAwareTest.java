@@ -1,7 +1,7 @@
 package com.locat.api.unit.security;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.BDDMockito.given;
 
 import com.locat.api.global.security.handler.LocatAuditorAware;
 import com.locat.api.global.security.userdetails.LocatUserDetails;
@@ -36,11 +36,11 @@ class AuditorAwareTest {
   void whenAuthenticatedShouldReturnUserId() {
     // Given
     Long userId = 123L;
-    when(this.securityContext.getAuthentication()).thenReturn(this.authentication);
-    when(this.authentication.isAuthenticated()).thenReturn(true);
-    when(this.authentication.getPrincipal()).thenReturn(this.locatUserDetails);
-    when(this.authentication.getName()).thenReturn(TEST_USER_NAME);
-    when(this.locatUserDetails.getId()).thenReturn(userId);
+    given(this.securityContext.getAuthentication()).willReturn(this.authentication);
+    given(this.authentication.isAuthenticated()).willReturn(true);
+    given(this.authentication.getPrincipal()).willReturn(this.locatUserDetails);
+    given(this.authentication.getName()).willReturn(TEST_USER_NAME);
+    given(this.locatUserDetails.getId()).willReturn(userId);
 
     // When
     Optional<Long> currentAuditor = this.auditorAware.getCurrentAuditor();
@@ -55,8 +55,8 @@ class AuditorAwareTest {
   @DisplayName("인증되지 않은 사용자[익명 사용자]라면, Optional.empty()를 반환해야 한다.")
   void whenNotAuthenticatedShouldReturnEmpty() {
     // Given
-    when(this.securityContext.getAuthentication()).thenReturn(this.authentication);
-    when(this.authentication.isAuthenticated()).thenReturn(false);
+    given(this.securityContext.getAuthentication()).willReturn(this.authentication);
+    given(this.authentication.isAuthenticated()).willReturn(false);
 
     // When
     Optional<Long> currentAuditor = this.auditorAware.getCurrentAuditor();
@@ -71,7 +71,7 @@ class AuditorAwareTest {
   @DisplayName("인증 정보가 없는 경우, Optional.empty()를 반환해야 한다.")
   void whenNoAuthenticationShouldReturnEmpty() {
     // Given
-    when(this.securityContext.getAuthentication()).thenReturn(null);
+    given(this.securityContext.getAuthentication()).willReturn(null);
 
     // When
     Optional<Long> currentAuditor = this.auditorAware.getCurrentAuditor();

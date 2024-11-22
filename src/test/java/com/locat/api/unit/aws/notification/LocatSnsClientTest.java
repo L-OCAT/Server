@@ -1,4 +1,4 @@
-package com.locat.api.unit.notification;
+package com.locat.api.unit.aws.notification;
 
 import static com.locat.api.global.exception.ApiExceptionType.*;
 import static org.assertj.core.api.Assertions.*;
@@ -6,34 +6,30 @@ import static org.mockito.Mockito.*;
 
 import com.locat.api.domain.user.entity.association.UserEndpoint;
 import com.locat.api.domain.user.service.UserEndpointService;
+import com.locat.api.infra.aws.config.AwsProperties;
 import com.locat.api.infra.aws.exception.NotificationException;
 import com.locat.api.infra.aws.sns.impl.LocatSnsClientImpl;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.util.ReflectionTestUtils;
+import org.mockito.MockitoAnnotations;
 import software.amazon.awssdk.services.sns.SnsClient;
 import software.amazon.awssdk.services.sns.model.PublishRequest;
 import software.amazon.awssdk.services.sns.model.PublishResponse;
 import software.amazon.awssdk.services.sns.model.SnsException;
 
-@ExtendWith(MockitoExtension.class)
 class LocatSnsClientTest {
 
+  @InjectMocks private LocatSnsClientImpl notificationService;
   @Mock private SnsClient snsClient;
-
+  @Mock private AwsProperties awsProperties;
   @Mock private UserEndpointService userEndpointService;
-
   @Mock private UserEndpoint userEndpoint1;
   @Mock private UserEndpoint userEndpoint2;
-
-  @InjectMocks private LocatSnsClientImpl notificationService;
 
   private static final String TEST_TOPIC_ARN = "arn:aws:sns::region:account:test-topic-arn";
   private static final String TEST_SUBJECT = "Test Subject";
@@ -44,8 +40,10 @@ class LocatSnsClientTest {
 
   @BeforeEach
   void setUp() {
-    ReflectionTestUtils.setField(
-        this.notificationService, "topicArn", TEST_TOPIC_ARN, String.class);
+    MockitoAnnotations.openMocks(this);
+    AwsProperties.Sns sns = mock(AwsProperties.Sns.class);
+    when(this.awsProperties.sns()).thenReturn(sns);
+    when(sns.topicArn()).thenReturn(TEST_TOPIC_ARN);
   }
 
   @Test

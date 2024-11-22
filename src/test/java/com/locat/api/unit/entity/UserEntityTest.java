@@ -79,7 +79,7 @@ class UserEntityTest {
     assertThat(createdUser.getEmail()).isEqualTo(EMAIL);
     assertThat(createdUser.getEmailHash()).isEqualTo(HashingUtils.hash(EMAIL));
     assertThat(createdUser.getNickname()).isEqualTo(NICKNAME);
-    assertThat(createdUser.getProfileImage()).isNull();
+    assertThat(createdUser.getProfileImage()).isEqualTo(PROFILE_IMAGE);
     assertThat(createdUser.getUserType()).isEqualTo(UserType.USER);
     assertThat(createdUser.getStatusType()).isEqualTo(StatusType.ACTIVE);
     assertThat(createdUser.getOauthId()).isEqualTo(OAUTH_ID);

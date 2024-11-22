@@ -36,4 +36,17 @@ class RandomCodeGeneratorTest {
     // Then
     assertThat(generatedBytes).hasSize(requiredLength);
   }
+
+  @Test
+  @DisplayName("주어진 범위 내에서 랜덤 정수를 생성한다.")
+  void testGenerateInt() {
+    // Given
+    final int bound = 10;
+
+    // When
+    final int generatedInt = RandomGenerator.nextInt(bound);
+
+    // Then
+    assertThat(generatedInt).isNotNegative().isLessThan(bound);
+  }
 }

@@ -1,4 +1,4 @@
-package com.locat.api.unit.mail;
+package com.locat.api.unit.aws.mail;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 

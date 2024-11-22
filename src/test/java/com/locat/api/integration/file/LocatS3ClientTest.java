@@ -5,6 +5,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+import com.locat.api.infra.aws.config.AwsProperties;
 import com.locat.api.infra.aws.exception.FileOperationException;
 import com.locat.api.infra.aws.s3.impl.LocatS3ClientImpl;
 import java.util.stream.Stream;
@@ -14,7 +15,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.testcontainers.containers.localstack.LocalStackContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -34,15 +34,16 @@ class LocatS3ClientTest {
       new LocalStackContainer(DockerImageName.parse("localstack/localstack:latest"))
           .withServices(LocalStackContainer.Service.S3);
 
-  @Mock private S3Client s3Client;
-
   @InjectMocks private LocatS3ClientImpl fileService;
+  @Mock private S3Client s3Client;
+  @Mock private AwsProperties awsProperties;
 
   @BeforeEach
   void init() {
-    ReflectionTestUtils.setField(
-        this.fileService, "bucketUrl", "http://localhost:4566", String.class);
-    ReflectionTestUtils.setField(this.fileService, "bucketName", "test-bucket", String.class);
+    AwsProperties.S3 s3 = mock(AwsProperties.S3.class);
+    when(this.awsProperties.s3()).thenReturn(s3);
+    when(s3.bucket()).thenReturn("test-bucket");
+    when(s3.url()).thenReturn("http://localhost:4566");
   }
 
   @TestFactory

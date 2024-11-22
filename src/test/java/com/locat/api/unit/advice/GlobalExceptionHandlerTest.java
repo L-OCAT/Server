@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -44,6 +45,41 @@ class GlobalExceptionHandlerTest {
     // Then
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     assertThat(response.getBody()).isEqualTo(ErrorResponse.fromException(exception));
+  }
+
+  @Test
+  @DisplayName("HttpMessageNotReadableException 처리하여 400 상태 코드와 오류 응답을 반환한다.")
+  void handleBadRequestException() {
+    // Given
+    HttpMessageNotReadableException exception = mock(HttpMessageNotReadableException.class);
+    when(exception.getMessage()).thenReturn("error message");
+
+    // When
+    ResponseEntity<ErrorResponse> response =
+        ReflectionTestUtils.invokeMethod(
+            this.exceptionHandler, "handleBadRequestException", exception);
+
+    // Then
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    assertThat(response.getBody().message()).contains("Bad Request");
+    assertThat(response.getBody().data().message()).contains("error message");
+  }
+
+  @Test
+  @DisplayName("IllegalArgumentException 처리하여 400 상태 코드와 오류 응답을 반환한다.")
+  void handleIllegalArgumentException() {
+    // Given
+    IllegalArgumentException exception = new IllegalArgumentException("error message");
+
+    // When
+    ResponseEntity<ErrorResponse> response =
+        ReflectionTestUtils.invokeMethod(
+            this.exceptionHandler, "handleBadRequestException", exception);
+
+    // Then
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    assertThat(response.getBody().message()).contains("Bad Request");
+    assertThat(response.getBody().data().message()).contains("error message");
   }
 
   @Test

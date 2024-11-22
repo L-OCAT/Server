@@ -1,10 +1,10 @@
-package com.locat.api.unit.mail;
+package com.locat.api.unit.aws.mail;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
+import com.locat.api.infra.aws.config.AwsProperties;
 import com.locat.api.infra.aws.exception.MailOperationException;
 import com.locat.api.infra.aws.ses.impl.LocatSesClientImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.test.util.ReflectionTestUtils;
 import software.amazon.awssdk.services.ses.SesClient;
 import software.amazon.awssdk.services.ses.model.SendEmailRequest;
 import software.amazon.awssdk.services.ses.model.SesException;
@@ -23,12 +22,15 @@ class LocatSesClientTest {
   private static final String TEST_FROM_EMAIL = "test@locat.kr";
 
   @InjectMocks private LocatSesClientImpl mailService;
+  @Mock private AwsProperties awsProperties;
   @Mock private SesClient sesClient;
 
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this);
-    ReflectionTestUtils.setField(this.mailService, "fromEmail", TEST_FROM_EMAIL, String.class);
+    AwsProperties.Ses ses = mock(AwsProperties.Ses.class);
+    when(awsProperties.ses()).thenReturn(ses);
+    when(ses.from()).thenReturn(TEST_FROM_EMAIL);
   }
 
   @Test
