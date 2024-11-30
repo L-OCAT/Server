@@ -1,4 +1,4 @@
-package com.locat.api.unit.user;
+package com.locat.api.unit.user.service;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -31,6 +31,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.Page;
 
 class UserServiceTest {
 
@@ -116,6 +117,19 @@ class UserServiceTest {
 
     // Then
     assertAll(() -> assertThat(result1).isPresent(), () -> assertThat(result2).isEmpty());
+  }
+
+  @Test
+  @DisplayName("사용자 목록을 조회할 수 있다.")
+  void shouldFindAllUsers() {
+    // Given
+    given(this.userQRepository.findAllByCriteria(any(), any())).willReturn(Page.empty());
+
+    // When
+    this.service.findAll(null, null);
+
+    // Then
+    verify(this.userQRepository).findAllByCriteria(any(), any());
   }
 
   @Test

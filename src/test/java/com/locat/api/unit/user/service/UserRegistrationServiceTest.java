@@ -1,4 +1,4 @@
-package com.locat.api.unit.user;
+package com.locat.api.unit.user.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

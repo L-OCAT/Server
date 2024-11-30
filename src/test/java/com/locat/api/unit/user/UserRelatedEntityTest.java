@@ -1,4 +1,4 @@
-package com.locat.api.unit.entity;
+package com.locat.api.unit.user;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -6,7 +6,7 @@ import com.locat.api.domain.user.entity.association.UserWithdrawalLog;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class EndUserRelatedEntityTest {
+class UserRelatedEntityTest {
 
   @Test
   @DisplayName("UserWithdrawalLog Entity 생성 테스트")

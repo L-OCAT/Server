@@ -1,4 +1,4 @@
-package com.locat.api.unit.entity;
+package com.locat.api.unit.user;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
@@ -10,6 +10,7 @@ import com.locat.api.domain.user.enums.StatusType;
 import com.locat.api.domain.user.enums.UserType;
 import com.locat.api.global.utils.HashingUtils;
 import com.locat.api.helper.TestDataFactory;
+import java.util.ArrayList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,6 +22,7 @@ class UserEntityTest {
 
   private static final String EMAIL = "user@example.com";
   private static final String OAUTH_ID = "512351278326";
+  private static final String PASSWORD = "temp1234";
   private static final OAuth2ProviderType OAUTH_TYPE = OAuth2ProviderType.KAKAO;
   private static final String NICKNAME = "user123";
   private static final String PROFILE_IMAGE = "profile.jpg";
@@ -36,12 +38,14 @@ class UserEntityTest {
         User.builder()
             .email(EMAIL)
             .emailHash(HashingUtils.hash(EMAIL))
+            .password(PASSWORD)
             .oauthId(OAUTH_ID)
             .oauthType(OAUTH_TYPE)
             .nickname(NICKNAME)
             .profileImage(PROFILE_IMAGE)
             .userType(USER_TYPE)
             .statusType(STATUS_TYPE)
+            .adminDeviceIds(new ArrayList<>())
             .build();
   }
 
@@ -53,6 +57,7 @@ class UserEntityTest {
     assertThat(this.user.getId()).isNull(); // auto incremented
     assertThat(this.user.getEmail()).isEqualTo(EMAIL);
     assertThat(this.user.getEmailHash()).isEqualTo(HashingUtils.hash(EMAIL));
+    assertThat(this.user.getPassword()).isNotNull();
     assertThat(this.user.getNickname()).isEqualTo(NICKNAME);
     assertThat(this.user.getProfileImage()).isEqualTo(PROFILE_IMAGE);
     assertThat(this.user.getUserType()).isEqualTo(USER_TYPE);
@@ -62,6 +67,10 @@ class UserEntityTest {
     assertThat(this.user.getUserSettings()).isNullOrEmpty();
     assertThat(this.user.getTermsAgreements()).isNullOrEmpty();
     assertThat(this.user.getUserEndpoints()).isNullOrEmpty();
+    assertThat(this.user.getAdminDeviceIds()).isNullOrEmpty();
+    assertThat(this.user.getCreatedAt()).isNull(); // EntityListeners로 자동 생성
+    assertThat(this.user.getUpdatedAt()).isNull();
+    assertThat(this.user.getUpdatedBy()).isNull();
     assertThat(this.user.getDeletedAt()).isNull();
   }
 
@@ -78,6 +87,8 @@ class UserEntityTest {
     assertThat(createdUser).isNotNull();
     assertThat(createdUser.getEmail()).isEqualTo(EMAIL);
     assertThat(createdUser.getEmailHash()).isEqualTo(HashingUtils.hash(EMAIL));
+    assertThat(createdUser.getPassword()).isNotNull();
+    assertThat(createdUser.isPasswordExpired()).isTrue();
     assertThat(createdUser.getNickname()).isEqualTo(NICKNAME);
     assertThat(createdUser.getProfileImage()).isEqualTo(PROFILE_IMAGE);
     assertThat(createdUser.getUserType()).isEqualTo(UserType.USER);
@@ -107,6 +118,54 @@ class UserEntityTest {
   }
 
   @Test
+  @DisplayName("사용자 유형을 변경해야 한다.")
+  void testPromote() {
+    // Given
+    UserType newType = UserType.SUPER_ADMIN;
+
+    // When
+    this.user.promote(newType);
+
+    // Then
+    assertThat(this.user.getUserType()).isEqualTo(newType);
+  }
+
+  @Test
+  @DisplayName("사용자의 현재 유형에 따라, 관리자 여부를 확인해야 한다.")
+  void testIsAdmin() {
+    // Given
+    this.user.promote(UserType.ADMIN);
+
+    // When & Then
+    assertThat(this.user.isAdmin()).isTrue();
+    assertThat(this.user.isSuperAdmin()).isFalse();
+  }
+
+  @Test
+  @DisplayName("사용자 비밀번호를 재설정해야한다.")
+  void testResetPassword() {
+    // Given
+    String newPassword = "newPassword1234"; // Production에서는 PasswordEncoder를 사용하여 암호화 해야 함
+
+    // When
+    this.user.resetPassword(newPassword);
+
+    // Then
+    assertThat(this.user.getPassword()).isEqualTo(newPassword);
+    assertThat(this.user.isPasswordExpired()).isFalse();
+  }
+
+  @Test
+  @DisplayName("디바이스 ID가 신뢰할 수 있는 디바이스인지 확인해야 한다.")
+  void testIsTrustedDevice() {
+    // Given
+    String deviceId = "device123";
+
+    // When & Then
+    assertThat(this.user.isTrustedDevice(deviceId)).isFalse();
+  }
+
+  @Test
   @DisplayName("null이 주어지면, User 객체의 필드 값을 업데이트하지 않아야 한다.")
   void testUpdateWithNull() {
     // Given & When
@@ -130,7 +189,7 @@ class UserEntityTest {
   }
 
   @Test
-  @DisplayName("User가 활성화 상태일 때 status 관련 메서드 테스트")
+  @DisplayName("사용자가 활성화 상태라면, 상태 관련 메서드 호출 시 예외가 발생하지 않아야 한다.")
   void testIfUserActivated() {
     // When & Then
     assertThat(this.user.isActivated()).isTrue();
@@ -138,7 +197,7 @@ class UserEntityTest {
   }
 
   @Test
-  @DisplayName("User가 비활성화 상태일 때 status 관련 메서드 테스트")
+  @DisplayName("사용자가 비활성화 상태라면, 상태 관련 메서드 호출 시 예외가 발생해야 한다.")
   void testIfUserNotActivated() {
     // Given
     this.user.updateStatus(StatusType.INACTIVE);
