@@ -73,6 +73,7 @@ public class GeoItemAdminQRepositoryImpl implements GeoItemAdminQRepository {
           .select(
               Projections.constructor(
                   AdminGeoItemSearchQueryResult.class,
+                  qGeoItemAddress.id,
                   selectByType(qLostItem.id, qFoundItem.id),
                   qGeoItemAddress.itemType,
                   selectByType(qLostItem.name, qFoundItem.name),

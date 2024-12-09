@@ -23,6 +23,7 @@ import lombok.Builder;
 @Builder
 public record AdminGeoItemSearchResponse(
     long id,
+    long itemId,
     String type,
     String name,
     String categoryPath,
@@ -37,7 +38,8 @@ public record AdminGeoItemSearchResponse(
 
   public static AdminGeoItemSearchResponse from(AdminGeoItemSearchDto searchDto) {
     return AdminGeoItemSearchResponse.builder()
-        .id(searchDto.itemId())
+        .id(searchDto.id())
+        .itemId(searchDto.itemId())
         .type(searchDto.geoItemType().name())
         .name(searchDto.itemName())
         .categoryPath(searchDto.categoryPath())

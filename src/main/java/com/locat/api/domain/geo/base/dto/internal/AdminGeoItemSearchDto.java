@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 /**
  * 관리자 GeoItem 검색 DTO
  *
+ * @param id 전체 ID
  * @param itemId 아이템 ID
  * @param geoItemType 아이템 타입
  * @param itemName 이름
@@ -21,6 +22,7 @@ import java.time.LocalDateTime;
  * @param buildingName 건물명
  */
 public record AdminGeoItemSearchDto(
+    Long id,
     Long itemId,
     GeoItemType geoItemType,
     String itemName,
@@ -37,6 +39,7 @@ public record AdminGeoItemSearchDto(
   public static AdminGeoItemSearchDto of(
       AdminGeoItemSearchQueryResult queryResult, CategoryInfoDto categoryInfoDto) {
     return new AdminGeoItemSearchDto(
+        queryResult.id(),
         queryResult.itemId(),
         queryResult.geoItemType(),
         queryResult.itemName(),

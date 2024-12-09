@@ -22,6 +22,7 @@ import java.time.LocalDateTime;
  * @param buildingName 건물명
  */
 public record AdminGeoItemSearchQueryResult(
+    Long id,
     Long itemId,
     GeoItemType geoItemType,
     String itemName,
