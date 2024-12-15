@@ -28,4 +28,6 @@ public interface GeoItemAddressService {
    */
   Page<AdminGeoItemSearchDto> findAllByAdminCriteria(
       GeoItemAdminSearchCriteria searchCriteria, Pageable pageable);
+
+  GeoItemDetailResponse getGeoItemDetail(Long id);
 }

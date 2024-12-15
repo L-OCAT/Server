@@ -6,6 +6,7 @@ import com.locat.api.domain.geo.base.dto.internal.AdminGeoItemSearchQueryResult;
 import com.locat.api.domain.geo.base.dto.internal.CategoryInfoDto;
 import com.locat.api.domain.geo.base.dto.kakao.AddressDocument;
 import com.locat.api.domain.geo.base.dto.kakao.AddressResponse;
+import com.locat.api.domain.geo.base.dto.response.GeoItemDetailResponse;
 import com.locat.api.domain.geo.base.entity.GeoItem;
 import com.locat.api.domain.geo.base.entity.GeoItemAddress;
 import com.locat.api.domain.geo.base.event.GeoItemCreatedEvent;
@@ -63,6 +64,18 @@ public class GeoItemAddressServiceImpl implements GeoItemAddressService {
     return this.geoItemAdminQRepository
         .findAllByAdminCriteria(searchCriteria, pageable)
         .map(this::mapToDto);
+  }
+
+  @Override
+  public GeoItemDetailResponse getGeoItemDetail(Long index) {
+    GeoItemAddress geoItemAddress = this.geoItemAddressRepository.findById(index)
+            .orElseThrow(() -> new NotFoundException("GeoItem not found by id: " + index));
+
+    GeoItemDetailResponse
+    String itemType = geoItemAddress.getItemType().name();
+    if ("FOUND".equalsIgnoreCase(itemType)) {
+      return
+    }
   }
 
   private AdminGeoItemSearchDto mapToDto(AdminGeoItemSearchQueryResult queryResult) {

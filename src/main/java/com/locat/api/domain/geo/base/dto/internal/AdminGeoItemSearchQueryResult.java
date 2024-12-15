@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 /**
  * 관리자 GeoItem 검색 쿼리 결과 DTO
  *
+ * @param id 전체 ID
  * @param itemId 조회된 아이템 ID
  * @param geoItemType 아이템 타입(분실물/습득물)
  * @param itemName 이름
