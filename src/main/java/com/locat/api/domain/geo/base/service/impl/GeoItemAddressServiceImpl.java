@@ -1,5 +1,7 @@
 package com.locat.api.domain.geo.base.service.impl;
 
+import static com.locat.api.global.exception.ApiExceptionType.*;
+
 import com.locat.api.domain.geo.base.dto.criteria.GeoItemAdminSearchCriteria;
 import com.locat.api.domain.geo.base.dto.internal.AdminGeoItemSearchDto;
 import com.locat.api.domain.geo.base.dto.internal.AdminGeoItemSearchQueryResult;
@@ -9,7 +11,6 @@ import com.locat.api.domain.geo.base.dto.kakao.AddressResponse;
 import com.locat.api.domain.geo.base.dto.response.GeoItemDetailResponse;
 import com.locat.api.domain.geo.base.entity.GeoItem;
 import com.locat.api.domain.geo.base.entity.GeoItemAddress;
-import com.locat.api.domain.geo.base.entity.GeoItemType;
 import com.locat.api.domain.geo.base.event.GeoItemCreatedEvent;
 import com.locat.api.domain.geo.base.service.CategoryService;
 import com.locat.api.domain.geo.base.service.GeoItemAddressService;
@@ -17,7 +18,6 @@ import com.locat.api.domain.geo.found.entity.FoundItem;
 import com.locat.api.domain.geo.found.service.FoundItemService;
 import com.locat.api.domain.geo.lost.entity.LostItem;
 import com.locat.api.domain.geo.lost.service.LostItemService;
-import com.locat.api.global.exception.ApiExceptionType;
 import com.locat.api.global.exception.custom.InternalProcessingException;
 import com.locat.api.global.exception.custom.InvalidParameterException;
 import com.locat.api.global.exception.custom.NoSuchEntityException;
@@ -34,9 +34,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-
-import static com.locat.api.domain.geo.base.entity.GeoItemType.*;
-import static com.locat.api.global.exception.ApiExceptionType.*;
 
 @Service
 @Transactional
@@ -80,7 +77,9 @@ public class GeoItemAddressServiceImpl implements GeoItemAddressService {
 
   @Override
   public GeoItemDetailResponse getGeoItemDetail(Long id) {
-    GeoItemAddress geoItemAddress = this.geoItemAddressRepository.findById(id)
+    GeoItemAddress geoItemAddress =
+        this.geoItemAddressRepository
+            .findById(id)
             .orElseThrow(() -> new NoSuchEntityException(NOT_FOUND_GEO_ITEM_ADDRESS));
 
     Long itemId = geoItemAddress.getItemId();

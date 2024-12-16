@@ -45,7 +45,7 @@ public class GeoItemController {
   @AdminApi
   @GetMapping("/{id}")
   public ResponseEntity<BaseResponse<GeoItemDetailResponse>> getGeoItemDetail(
-          @PathVariable Long id) {
+      @PathVariable Long id) {
     GeoItemDetailResponse response = this.geoItemAddressService.getGeoItemDetail(id);
     return ResponseEntity.ok(BaseResponse.of(response));
   }
