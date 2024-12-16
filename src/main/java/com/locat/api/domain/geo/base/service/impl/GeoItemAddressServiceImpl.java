@@ -9,11 +9,18 @@ import com.locat.api.domain.geo.base.dto.kakao.AddressResponse;
 import com.locat.api.domain.geo.base.dto.response.GeoItemDetailResponse;
 import com.locat.api.domain.geo.base.entity.GeoItem;
 import com.locat.api.domain.geo.base.entity.GeoItemAddress;
+import com.locat.api.domain.geo.base.entity.GeoItemType;
 import com.locat.api.domain.geo.base.event.GeoItemCreatedEvent;
 import com.locat.api.domain.geo.base.service.CategoryService;
 import com.locat.api.domain.geo.base.service.GeoItemAddressService;
+import com.locat.api.domain.geo.found.entity.FoundItem;
+import com.locat.api.domain.geo.found.service.FoundItemService;
+import com.locat.api.domain.geo.lost.entity.LostItem;
+import com.locat.api.domain.geo.lost.service.LostItemService;
+import com.locat.api.global.exception.ApiExceptionType;
 import com.locat.api.global.exception.custom.InternalProcessingException;
 import com.locat.api.global.exception.custom.InvalidParameterException;
+import com.locat.api.global.exception.custom.NoSuchEntityException;
 import com.locat.api.global.utils.ValidationUtils;
 import com.locat.api.infra.client.http.KakaoGeoClient;
 import com.locat.api.infra.persistence.geo.GeoItemAddressRepository;
@@ -28,6 +35,9 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import static com.locat.api.domain.geo.base.entity.GeoItemType.*;
+import static com.locat.api.global.exception.ApiExceptionType.*;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -35,6 +45,8 @@ public class GeoItemAddressServiceImpl implements GeoItemAddressService {
 
   private final GeoItemAddressRepository geoItemAddressRepository;
   private final GeoItemAdminQRepository geoItemAdminQRepository;
+  private final LostItemService lostItemService;
+  private final FoundItemService foundItemService;
   private final CategoryService categoryService;
   private final KakaoGeoClient kakaoGeoClient;
 
@@ -67,15 +79,22 @@ public class GeoItemAddressServiceImpl implements GeoItemAddressService {
   }
 
   @Override
-  public GeoItemDetailResponse getGeoItemDetail(Long index) {
-    GeoItemAddress geoItemAddress = this.geoItemAddressRepository.findById(index)
-            .orElseThrow(() -> new NotFoundException("GeoItem not found by id: " + index));
+  public GeoItemDetailResponse getGeoItemDetail(Long id) {
+    GeoItemAddress geoItemAddress = this.geoItemAddressRepository.findById(id)
+            .orElseThrow(() -> new NoSuchEntityException(NOT_FOUND_GEO_ITEM_ADDRESS));
 
-    GeoItemDetailResponse
-    String itemType = geoItemAddress.getItemType().name();
-    if ("FOUND".equalsIgnoreCase(itemType)) {
-      return
-    }
+    Long itemId = geoItemAddress.getItemId();
+
+    return switch (geoItemAddress.getItemType()) {
+      case LOST -> {
+        LostItem lostItem = this.lostItemService.findById(itemId);
+        yield GeoItemDetailResponse.from(lostItem, geoItemAddress);
+      }
+      case FOUND -> {
+        FoundItem foundItem = this.foundItemService.findById(itemId);
+        yield GeoItemDetailResponse.from(foundItem, geoItemAddress);
+      }
+    };
   }
 
   private AdminGeoItemSearchDto mapToDto(AdminGeoItemSearchQueryResult queryResult) {

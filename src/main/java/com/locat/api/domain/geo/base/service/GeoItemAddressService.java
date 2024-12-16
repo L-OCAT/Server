@@ -2,6 +2,7 @@ package com.locat.api.domain.geo.base.service;
 
 import com.locat.api.domain.geo.base.dto.criteria.GeoItemAdminSearchCriteria;
 import com.locat.api.domain.geo.base.dto.internal.AdminGeoItemSearchDto;
+import com.locat.api.domain.geo.base.dto.response.GeoItemDetailResponse;
 import com.locat.api.domain.geo.base.entity.GeoItemAddress;
 import com.locat.api.global.exception.custom.InternalProcessingException;
 import com.locat.api.global.exception.custom.InvalidParameterException;

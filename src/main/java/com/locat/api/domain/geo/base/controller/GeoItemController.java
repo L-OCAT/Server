@@ -3,6 +3,7 @@ package com.locat.api.domain.geo.base.controller;
 import com.locat.api.domain.common.dto.BaseResponse;
 import com.locat.api.domain.geo.base.dto.criteria.GeoItemAdminSearchCriteria;
 import com.locat.api.domain.geo.base.dto.response.AdminGeoItemSearchResponse;
+import com.locat.api.domain.geo.base.dto.response.GeoItemDetailResponse;
 import com.locat.api.domain.geo.base.service.GeoItemAddressService;
 import com.locat.api.global.security.annotation.AdminApi;
 import java.time.LocalDate;
@@ -35,17 +36,17 @@ public class GeoItemController {
         GeoItemAdminSearchCriteria.of(
             itemType, itemName, region1, region2, region3, categoryId, from, to);
     Page<AdminGeoItemSearchResponse> response =
-        geoItemAddressService
+        this.geoItemAddressService
             .findAllByAdminCriteria(searchCriteria, pageable)
             .map(AdminGeoItemSearchResponse::from);
     return ResponseEntity.ok(BaseResponse.of(response));
   }
 
   @AdminApi
-  @GetMapping("/{index}")
+  @GetMapping("/{id}")
   public ResponseEntity<BaseResponse<GeoItemDetailResponse>> getGeoItemDetail(
-          @PathVariable Long index) {
-    GeoItemDetailResponse response = geoItemAddressService.getGeoItemDetail(index);
+          @PathVariable Long id) {
+    GeoItemDetailResponse response = this.geoItemAddressService.getGeoItemDetail(id);
     return ResponseEntity.ok(BaseResponse.of(response));
   }
 }
