@@ -13,29 +13,28 @@ class VerificationTokenTest {
   private static final String EMAIL = "user@example.com";
   private static final String CODE = "123456";
   private static final Long TIME_TO_LIVE = 300L;
-
   private VerificationCode verificationCode;
 
   @BeforeEach
   void setUp() {
     // Given
-    verificationCode =
+    this.verificationCode =
         VerificationCode.builder().email(EMAIL).code(CODE).timeToLive(TIME_TO_LIVE).build();
   }
 
   @Test
-  @DisplayName("VerificationCode Builder Test")
+  @DisplayName("Builder로 VerificationCode 객체를 생성할 수 있다.")
   void testVerificationCodeBuilder() {
     // When & Then
     assertAll(
-        () -> assertThat(verificationCode).isNotNull(),
-        () -> assertThat(verificationCode.getEmail()).isEqualTo(EMAIL),
-        () -> assertThat(verificationCode.getCode()).isEqualTo(CODE),
-        () -> assertThat(verificationCode.getTimeToLive()).isEqualTo(TIME_TO_LIVE));
+        () -> assertThat(this.verificationCode).isNotNull(),
+        () -> assertThat(this.verificationCode.getEmail()).isEqualTo(EMAIL),
+        () -> assertThat(this.verificationCode.getCode()).isEqualTo(CODE),
+        () -> assertThat(this.verificationCode.getTimeToLive()).isEqualTo(TIME_TO_LIVE));
   }
 
   @Test
-  @DisplayName("VerificationCode of() Method Test")
+  @DisplayName("of() 메서드로 VerificationCode 객체를 생성할 수 있다.")
   void testOfMethod() {
     // Given
     String anotherEmail = "another@example.com";

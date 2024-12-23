@@ -119,6 +119,7 @@ public class User extends BaseEntity {
         .email(userInfo.getEmail())
         .emailHash(HashingUtils.hash(userInfo.getEmail()))
         .password(tempPassword)
+        .isPasswordExpired(true)
         .userType(UserType.USER)
         .statusType(StatusType.ACTIVE)
         .build();
