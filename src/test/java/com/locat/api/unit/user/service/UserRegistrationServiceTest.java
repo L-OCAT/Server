@@ -17,7 +17,6 @@ import com.locat.api.domain.user.entity.User;
 import com.locat.api.domain.user.enums.OAuth2ProviderType;
 import com.locat.api.domain.user.enums.UserInfoValidationType;
 import com.locat.api.domain.user.service.UserService;
-import com.locat.api.domain.user.service.UserSettingService;
 import com.locat.api.domain.user.service.UserTermsService;
 import com.locat.api.domain.user.service.UserValidationService;
 import com.locat.api.domain.user.service.impl.UserRegistrationServiceImpl;
