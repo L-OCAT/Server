@@ -10,7 +10,7 @@ import com.locat.api.domain.user.enums.OAuth2ProviderType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class OAuth2ProviderTokenTest {
+final class OAuth2ProviderTokenTest {
 
   private static final String ID = "108726732";
   private static final OAuth2ProviderType PROVIDER_TYPE = OAuth2ProviderType.KAKAO;

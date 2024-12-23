@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 
-class FoundItemEntityTest {
+final class FoundItemEntityTest {
 
   private static final String CUSTODY_LOCATION = "종로구청";
   private static final String ITEM_NAME = "iPhone 16 Pro Max";

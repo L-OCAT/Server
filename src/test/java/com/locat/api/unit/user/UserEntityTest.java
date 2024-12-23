@@ -64,7 +64,6 @@ class UserEntityTest {
     assertThat(this.user.getStatusType()).isEqualTo(STATUS_TYPE);
     assertThat(this.user.getOauthId()).isEqualTo(OAUTH_ID);
     assertThat(this.user.getOauthType()).isEqualTo(OAUTH_TYPE);
-    assertThat(this.user.getUserSettings()).isNullOrEmpty();
     assertThat(this.user.getTermsAgreements()).isNullOrEmpty();
     assertThat(this.user.getUserEndpoints()).isNullOrEmpty();
     assertThat(this.user.getAdminDeviceIds()).isNullOrEmpty();
@@ -95,7 +94,6 @@ class UserEntityTest {
     assertThat(createdUser.getStatusType()).isEqualTo(StatusType.ACTIVE);
     assertThat(createdUser.getOauthId()).isEqualTo(OAUTH_ID);
     assertThat(createdUser.getOauthType()).isEqualTo(OAUTH_TYPE);
-    assertThat(createdUser.getUserSettings()).isNullOrEmpty();
     assertThat(createdUser.getTermsAgreements()).isNullOrEmpty();
     assertThat(createdUser.getUserEndpoints()).isNullOrEmpty();
     assertThat(createdUser.getDeletedAt()).isNull();

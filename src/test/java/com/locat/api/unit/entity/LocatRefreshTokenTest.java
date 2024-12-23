@@ -9,7 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class LocatRefreshTokenTest {
+final class LocatRefreshTokenTest {
 
   private static final Long ID = 1L;
   private static final String EMAIL = "test@locat.kr";

@@ -8,7 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class VerificationTokenTest {
+final class VerificationTokenTest {
 
   private static final String EMAIL = "user@example.com";
   private static final String CODE = "123456";

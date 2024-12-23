@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 
-class LostItemEntityTest {
+final class LostItemEntityTest {
 
   private static final String ITEM_NAME = "iPhone 16 Pro Max";
   private static final String DESCRIPTION = "투명 케이스, 데저트 티타늄 색상입니다.";

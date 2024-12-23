@@ -43,7 +43,6 @@ class UserRegistrationServiceTest {
   @InjectMocks private UserRegistrationServiceImpl service;
   @Mock private UserService userService;
   @Mock private UserTermsService userTermsService;
-  @Mock private UserSettingService userSettingService;
   @Mock private UserValidationService userValidationService;
   @Mock private OAuth2TemplateFactory oAuth2TemplateFactory;
   @Mock private OAuth2ProviderTokenRepository providerTokenRepository;
@@ -75,9 +74,8 @@ class UserRegistrationServiceTest {
     // Then
     assertThat(user).isNotNull();
     verify(this.userService, times(1)).save(user);
-    verify(this.userSettingService, times(1)).registerDefaultSettings(user);
     verify(this.userTermsService, times(1)).register(user, USER_REGISTER_DTO);
-    verifyNoMoreInteractions(this.userService, this.userSettingService, this.userTermsService);
+    verifyNoMoreInteractions(this.userService, this.userTermsService);
   }
 
   private void stubbingOAuths(
@@ -105,7 +103,6 @@ class UserRegistrationServiceTest {
         .isExactlyInstanceOf(DuplicatedException.class);
     verifyNoInteractions(
         this.userService,
-        this.userSettingService,
         this.userTermsService,
         this.passwordEncoder,
         this.providerTokenRepository,
@@ -125,11 +122,7 @@ class UserRegistrationServiceTest {
     assertThatThrownBy(() -> this.service.register(USER_REGISTER_DTO))
         .isExactlyInstanceOf(IllegalArgumentException.class);
     verifyNoInteractions(
-        this.userService,
-        this.userSettingService,
-        this.userTermsService,
-        this.passwordEncoder,
-        this.s3Client);
+        this.userService, this.userTermsService, this.passwordEncoder, this.s3Client);
   }
 
   @Test
