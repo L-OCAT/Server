@@ -16,9 +16,6 @@ public abstract class LocatConstraintValidator<A extends Annotation, T>
    */
   protected void setCustomViolationMessage(
       ConstraintValidatorContext context, final String message, final String fieldName) {
-    if (context == null) {
-      return;
-    }
     context.disableDefaultConstraintViolation();
     context
         .buildConstraintViolationWithTemplate(message)

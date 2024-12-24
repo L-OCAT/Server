@@ -14,6 +14,7 @@ import com.locat.api.global.security.userdetails.LocatUserDetails;
 import com.locat.api.global.security.userdetails.LocatUserDetailsService;
 import com.locat.api.global.security.userdetails.impl.LocatUserDetailsImpl;
 import com.locat.api.infra.redis.LocatRefreshTokenRepository;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
 import java.security.Key;
@@ -92,8 +93,9 @@ class JwtProviderTest {
 
     // When & Then
     assertThatCode(() -> this.jwtProvider.parse(invalidToken))
-        .isInstanceOf(TokenException.class)
-        .hasMessage("Unauthorized: Invalid JWT (expired or not matched)");
+        .isExactlyInstanceOf(TokenException.class)
+        .hasMessage("Unauthorized: Invalid JWT (expired or not matched)")
+        .hasRootCauseInstanceOf(JwtException.class);
   }
 
   @Test
