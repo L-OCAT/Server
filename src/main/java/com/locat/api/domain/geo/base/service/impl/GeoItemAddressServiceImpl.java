@@ -83,17 +83,28 @@ public class GeoItemAddressServiceImpl implements GeoItemAddressService {
             .orElseThrow(() -> new NoSuchEntityException(NOT_FOUND_GEO_ITEM_ADDRESS));
 
     Long itemId = geoItemAddress.getItemId();
+    Long categoryId = null;
+    GeoItem geoItem = null;
 
-    return switch (geoItemAddress.getItemType()) {
+    switch (geoItemAddress.getItemType()) {
       case LOST -> {
         LostItem lostItem = this.lostItemService.findById(itemId);
-        yield GeoItemDetailResponse.from(lostItem, geoItemAddress);
+        categoryId = lostItem.getCategoryId();
+        geoItem = lostItem;
       }
       case FOUND -> {
         FoundItem foundItem = this.foundItemService.findById(itemId);
-        yield GeoItemDetailResponse.from(foundItem, geoItemAddress);
+        categoryId = foundItem.getCategoryId();
+        geoItem = foundItem;
       }
     };
+
+    CategoryInfoDto categoryInfoDto =
+        this.categoryService
+            .findInfoById(categoryId)
+            .orElseThrow(() -> new InternalProcessingException("Failed to fetch category info."));
+
+    return GeoItemDetailResponse.from(geoItem, geoItemAddress, categoryInfoDto);
   }
 
   private AdminGeoItemSearchDto mapToDto(AdminGeoItemSearchQueryResult queryResult) {

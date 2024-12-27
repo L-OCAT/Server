@@ -1,5 +1,6 @@
 package com.locat.api.domain.geo.base.dto.response;
 
+import com.locat.api.domain.geo.base.dto.internal.CategoryInfoDto;
 import com.locat.api.domain.geo.base.entity.GeoItem;
 import com.locat.api.domain.geo.base.entity.GeoItemAddress;
 import com.locat.api.domain.geo.found.entity.FoundItem;
@@ -25,6 +26,7 @@ import lombok.Builder;
  * @param region3 지역3(읍/면/동)
  * @param roadAddress 도로명주소(Nullable)
  * @param buildingName 건물명(Nullable)
+ * @param categoryPath 카테고리 경로
  * @param createdAt 등록일
  */
 @Builder
@@ -44,9 +46,11 @@ public record GeoItemDetailResponse(
     String region3,
     @Nullable String roadAddress,
     @Nullable String buildingName,
+    String categoryPath,
     LocalDateTime createdAt) {
 
-  public static GeoItemDetailResponse from(GeoItem geoItem, GeoItemAddress geoItemAddress) {
+  public static GeoItemDetailResponse from(
+          GeoItem geoItem, GeoItemAddress geoItemAddress, CategoryInfoDto categoryInfoDto) {
     return GeoItemDetailResponse.builder()
         .id(geoItemAddress.getId())
         .itemId(geoItem.getId())
@@ -69,6 +73,7 @@ public record GeoItemDetailResponse(
         .region3(geoItemAddress.getRegion3())
         .roadAddress(geoItemAddress.getRoadAddress())
         .buildingName(geoItemAddress.getBuildingName())
+        .categoryPath(categoryInfoDto.toCategoryPath())
         .createdAt(geoItem.getCreatedAt())
         .build();
   }
