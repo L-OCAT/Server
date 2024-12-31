@@ -1,8 +1,6 @@
 package com.locat.api.domain.geo.base.dto.kakao;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
 /**
  * 주소 정보 DTO
@@ -10,8 +8,8 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
  * @param roadAddress 도로명 주소
  * @param address 지번 주소
  */
-@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public record AddressDocument(RoadAddress roadAddress, Address address) {
+public record AddressDocument(
+    @JsonProperty("road_address") RoadAddress roadAddress, Address address) {
 
   /**
    * 지번 주소 정보
@@ -31,7 +29,8 @@ public record AddressDocument(RoadAddress roadAddress, Address address) {
       @JsonProperty("region_3depth_name") String region3depthName,
       @JsonProperty("mountain_yn") String mountainYn,
       @JsonProperty("main_address_no") String mainAddressNo,
-      @JsonProperty("sub_address_no") String subAddressNo) {}
+      @JsonProperty("sub_address_no") String subAddressNo,
+      @JsonProperty("zip_code") String zipCode) {}
 
   /**
    * 도로명 주소 정보
