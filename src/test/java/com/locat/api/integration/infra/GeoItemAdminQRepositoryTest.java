@@ -39,13 +39,13 @@ class GeoItemAdminQRepositoryTest extends AbstractIntegrationTest {
             GeoItemType.FOUND.name(), null, null, null, null, null, null, null);
     var criteria4 =
         GeoItemAdminSearchCriteria.of(
-            GeoItemType.FOUND.name(), null, "서울", "강남구", null, null, null, null);
+            GeoItemType.FOUND.name(), "에어팟", "서울", "강남구", null, null, null, null);
     var criteria5 =
         GeoItemAdminSearchCriteria.of(
             GeoItemType.LOST.name(), null, null, null, null, null, null, null);
     var criteria6 =
         GeoItemAdminSearchCriteria.of(
-            GeoItemType.LOST.name(), null, "서울", "종로구", null, null, null, null);
+            GeoItemType.LOST.name(), "기후동행", "서울", "종로구", null, null, null, null);
 
     // When
     var result1 = this.repository.findAllByAdminCriteria(criteria1, pageable);

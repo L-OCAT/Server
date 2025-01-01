@@ -13,6 +13,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.geo.GeoPage;
 
 class GeoItemQRepositoryTest extends AbstractIntegrationTest {
@@ -25,16 +26,20 @@ class GeoItemQRepositoryTest extends AbstractIntegrationTest {
   void findAllLostItemsByCriteria() {
     // Given
     var userId = 4L;
-    var searchCriteria =
+    var pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "lostAt"));
+    var criteria1 =
         LostItemSearchDto.fromRequest(false, GeoUtils.toPoint(37.572165, 127.016735), 50.0);
-    var pageable = PageRequest.of(0, 10);
+    var criteria2 =
+        LostItemSearchDto.fromRequest(true, GeoUtils.toPoint(37.572165, 127.016735), 50.0);
 
     // When
-    GeoPage<LostItem> geoResults =
-        this.lostItemRepository.findAllByCriteria(userId, searchCriteria, pageable);
+    GeoPage<LostItem> result1 =
+        this.lostItemRepository.findAllByCriteria(userId, criteria1, pageable);
+    GeoPage<LostItem> result2 =
+        this.lostItemRepository.findAllByCriteria(userId, criteria2, pageable);
 
     // Then
-    assertThat(geoResults)
+    assertThat(result1)
         .isNotNull()
         .isNotEmpty()
         .allSatisfy(
@@ -44,6 +49,17 @@ class GeoItemQRepositoryTest extends AbstractIntegrationTest {
               assertThat(lostItem.getId()).isNotNull();
               assertThat(lostItem.getName()).isNotNull();
             });
+    assertThat(result2)
+        .isNotNull()
+        .isNotEmpty()
+        .allSatisfy(
+            result -> {
+              var lostItem = result.getContent();
+              assertThat(lostItem).isNotNull().isExactlyInstanceOf(LostItem.class);
+              assertThat(lostItem.getId()).isNotNull();
+              assertThat(lostItem.getName()).isNotNull();
+              assertThat(lostItem.getCreatedBy()).isEqualTo(userId);
+            });
   }
 
   @Test
@@ -51,16 +67,20 @@ class GeoItemQRepositoryTest extends AbstractIntegrationTest {
   void findAllFoundItemsByCriteria() {
     // Given
     var userId = 4L;
-    var searchCriteria =
+    var pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "foundAt"));
+    var criteria1 =
         FoundItemSearchDto.fromRequest(false, GeoUtils.toPoint(37.507339, 127.053768), 50.0);
-    var pageable = PageRequest.of(0, 10);
+    var criteria2 =
+        FoundItemSearchDto.fromRequest(true, GeoUtils.toPoint(37.507339, 127.053768), 50.0);
 
     // When
-    GeoPage<FoundItem> geoResults =
-        this.foundItemRepository.findAllByCriteria(userId, searchCriteria, pageable);
+    GeoPage<FoundItem> result1 =
+        this.foundItemRepository.findAllByCriteria(userId, criteria1, pageable);
+    GeoPage<FoundItem> result2 =
+        this.foundItemRepository.findAllByCriteria(userId, criteria2, pageable);
 
     // Then
-    assertThat(geoResults)
+    assertThat(result1)
         .isNotNull()
         .isNotEmpty()
         .allSatisfy(
@@ -69,6 +89,17 @@ class GeoItemQRepositoryTest extends AbstractIntegrationTest {
               assertThat(foundItem).isNotNull().isExactlyInstanceOf(FoundItem.class);
               assertThat(foundItem.getId()).isNotNull();
               assertThat(foundItem.getName()).isNotNull();
+            });
+    assertThat(result2)
+        .isNotNull()
+        .isNotEmpty()
+        .allSatisfy(
+            result -> {
+              var foundItem = result.getContent();
+              assertThat(foundItem).isNotNull().isExactlyInstanceOf(FoundItem.class);
+              assertThat(foundItem.getId()).isNotNull();
+              assertThat(foundItem.getName()).isNotNull();
+              assertThat(foundItem.getCreatedBy()).isEqualTo(userId);
             });
   }
 }
