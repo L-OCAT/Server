@@ -18,14 +18,14 @@ public class UserValidationController {
   private final UserValidationService userValidationService;
 
   @GetMapping("/email")
-  public ResponseEntity<BaseResponse<Boolean>> validateEmail(@RequestParam @Email String email) {
+  public ResponseEntity<BaseResponse<Void>> validateEmail(@RequestParam @Email String email) {
     final boolean result = this.userValidationService.isExists(email, UserInfoValidationType.EMAIL);
     HttpStatus httpStatus = this.getHttpStatus(result);
     return ResponseEntity.status(httpStatus).build();
   }
 
   @GetMapping("/nickname")
-  public ResponseEntity<BaseResponse<Boolean>> validateNickname(
+  public ResponseEntity<BaseResponse<Void>> validateNickname(
       @RequestParam @NotEmpty String nickname) {
     final boolean result =
         this.userValidationService.isExists(nickname, UserInfoValidationType.NICKNAME);

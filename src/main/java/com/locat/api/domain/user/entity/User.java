@@ -4,7 +4,6 @@ import com.locat.api.domain.auth.dto.internal.OAuth2UserInfo;
 import com.locat.api.domain.common.entity.BaseEntity;
 import com.locat.api.domain.user.entity.association.AdminDeviceId;
 import com.locat.api.domain.user.entity.association.UserEndpoint;
-import com.locat.api.domain.user.entity.association.UserSetting;
 import com.locat.api.domain.user.entity.association.UserTermsAgreement;
 import com.locat.api.domain.user.enums.OAuth2ProviderType;
 import com.locat.api.domain.user.enums.StatusType;
@@ -87,9 +86,6 @@ public class User extends BaseEntity {
   protected UserType userType;
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<UserSetting> userSettings = new ArrayList<>();
-
-  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<UserTermsAgreement> termsAgreements = new ArrayList<>();
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -119,6 +115,7 @@ public class User extends BaseEntity {
         .email(userInfo.getEmail())
         .emailHash(HashingUtils.hash(userInfo.getEmail()))
         .password(tempPassword)
+        .isPasswordExpired(true)
         .userType(UserType.USER)
         .statusType(StatusType.ACTIVE)
         .build();

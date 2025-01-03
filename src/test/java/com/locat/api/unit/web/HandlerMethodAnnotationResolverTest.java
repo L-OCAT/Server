@@ -2,8 +2,8 @@ package com.locat.api.unit.web;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import com.locat.api.global.web.resolver.HandlerMethodAnnotationResolver;
 import jakarta.servlet.http.HttpServletRequest;
@@ -42,8 +42,8 @@ class HandlerMethodAnnotationResolverTest {
     HandlerMethod handlerMethod =
         new HandlerMethod(controller, TestController.class.getDeclaredMethod("annotatedMethod"));
     HandlerExecutionChain chain = mock(HandlerExecutionChain.class);
-    when(this.handlerMapping.getHandler(any(HttpServletRequest.class))).thenReturn(chain);
-    when(chain.getHandler()).thenReturn(handlerMethod);
+    given(this.handlerMapping.getHandler(any(HttpServletRequest.class))).willReturn(chain);
+    given(chain.getHandler()).willReturn(handlerMethod);
 
     // When
     Optional<TestAnnotation> result = this.annotationResolver.find(request, TestAnnotation.class);
@@ -63,8 +63,8 @@ class HandlerMethodAnnotationResolverTest {
             controller, TestClassWithAnnotation.class.getDeclaredMethod("nonAnnotatedMethod"));
     HandlerExecutionChain chain = mock(HandlerExecutionChain.class);
 
-    when(chain.getHandler()).thenReturn(handlerMethod);
-    when(this.handlerMapping.getHandler(any(HttpServletRequest.class))).thenReturn(chain);
+    given(chain.getHandler()).willReturn(handlerMethod);
+    given(this.handlerMapping.getHandler(any(HttpServletRequest.class))).willReturn(chain);
 
     // When
     Optional<TestAnnotation> result = this.annotationResolver.find(request, TestAnnotation.class);
@@ -78,8 +78,8 @@ class HandlerMethodAnnotationResolverTest {
   void shouldReturnEmptyWhenExceptionOccurs() throws Exception {
     // Given
     HttpServletRequest request = mock(HttpServletRequest.class);
-    when(this.handlerMapping.getHandler(any(HttpServletRequest.class)))
-        .thenThrow(new RuntimeException("Exception!"));
+    given(this.handlerMapping.getHandler(any(HttpServletRequest.class)))
+        .willThrow(new RuntimeException("Exception!"));
 
     // When
     Optional<TestAnnotation> result = this.annotationResolver.find(request, TestAnnotation.class);

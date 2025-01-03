@@ -1,32 +1,30 @@
 package com.locat.api.integration.file;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
+import com.locat.api.infra.aws.config.AwsProperties;
 import com.locat.api.infra.aws.exception.FileOperationException;
 import com.locat.api.infra.aws.s3.impl.LocatS3ClientImpl;
+import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.MockitoAnnotations;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.testcontainers.containers.localstack.LocalStackContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
-import software.amazon.awssdk.services.s3.model.PutObjectRequest;
-import software.amazon.awssdk.services.s3.model.S3Exception;
+import software.amazon.awssdk.services.s3.model.*;
 
 @Testcontainers
-@ExtendWith(MockitoExtension.class)
 class LocatS3ClientTest {
 
   @Container
@@ -34,15 +32,17 @@ class LocatS3ClientTest {
       new LocalStackContainer(DockerImageName.parse("localstack/localstack:latest"))
           .withServices(LocalStackContainer.Service.S3);
 
-  @Mock private S3Client s3Client;
-
   @InjectMocks private LocatS3ClientImpl fileService;
+  @Mock private S3Client s3Client;
+  @Mock private AwsProperties awsProperties;
 
   @BeforeEach
   void init() {
-    ReflectionTestUtils.setField(
-        this.fileService, "bucketUrl", "http://localhost:4566", String.class);
-    ReflectionTestUtils.setField(this.fileService, "bucketName", "test-bucket", String.class);
+    MockitoAnnotations.openMocks(this);
+    AwsProperties.S3 s3 = mock(AwsProperties.S3.class);
+    given(this.awsProperties.s3()).willReturn(s3);
+    given(s3.bucket()).willReturn("test-bucket");
+    given(s3.url()).willReturn("http://localhost:4566");
   }
 
   @TestFactory
@@ -60,6 +60,7 @@ class LocatS3ClientTest {
         this.testDeleteValidFile(),
         this.testUploadInvalidFormatFile(invalidFormatFile),
         this.testUploadTooLargeFile(tooLargeFile),
+        this.testGetListObjects(),
         this.testS3Exception(validFile));
   }
 
@@ -104,6 +105,33 @@ class LocatS3ClientTest {
           // When & Then
           assertThatThrownBy(() -> this.fileService.upload("test-directory", file))
               .isExactlyInstanceOf(FileOperationException.class);
+        });
+  }
+
+  private DynamicTest testGetListObjects() {
+    return DynamicTest.dynamicTest(
+        "S3에서 파일 목록을 조회하면 성공적으로 반환되어야 한다.",
+        () -> {
+          // Given
+          ListObjectsV2Response mockResponse =
+              ListObjectsV2Response.builder()
+                  .contents(
+                      List.of(
+                          S3Object.builder().key("test-directory/file1.jpg").build(),
+                          S3Object.builder().key("test-directory/file2.jpg").build()))
+                  .build();
+
+          given(s3Client.listObjectsV2(any(ListObjectsV2Request.class))).willReturn(mockResponse);
+
+          // When
+          List<String> result = fileService.getListObjects("test-directory");
+
+          // Then
+          assertThat(result)
+              .isNotEmpty()
+              .containsExactly(
+                  "http://localhost:4566/test-directory/file1.jpg",
+                  "http://localhost:4566/test-directory/file2.jpg");
         });
   }
 

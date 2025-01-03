@@ -45,6 +45,22 @@ class GeoUtilsTest {
     assertThat(result).isFalse();
   }
 
+  @Test
+  @DisplayName("주어진 좌표가 대한민국 영토 내에 위치하는지 적절히 판단해야 한다.")
+  void testIsInKorea() {
+    // Given
+    Point inKorea = GeoUtils.toPoint(37.5665, 126.9780); // 서울시청
+    Point outKorea = GeoUtils.toPoint(37.7749, -122.4194); // 샌프란시스코
+
+    // When
+    boolean result1 = GeoUtils.isInKorea(inKorea);
+    boolean result2 = GeoUtils.isInKorea(outKorea);
+
+    // Then
+    assertThat(result1).isTrue();
+    assertThat(result2).isFalse();
+  }
+
   @ParameterizedTest
   @CsvSource({
     "37.5665, 126.9780, 37.5665, 126.9780, 0.0", // 같은 좌표

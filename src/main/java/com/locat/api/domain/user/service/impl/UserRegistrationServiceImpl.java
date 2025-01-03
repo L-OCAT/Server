@@ -30,7 +30,6 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
 
   private final UserService userService;
   private final UserTermsService userTermsService;
-  private final UserSettingService userSettingService;
   private final UserValidationService userValidationService;
   private final OAuth2TemplateFactory oAuth2TemplateFactory;
   private final OAuth2ProviderTokenRepository providerTokenRepository;
@@ -56,7 +55,6 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
             userInfo);
 
     this.userService.save(user);
-    this.userSettingService.registerDefaultSettings(user);
     this.userTermsService.register(user, userRegisterDto);
     return user;
   }
