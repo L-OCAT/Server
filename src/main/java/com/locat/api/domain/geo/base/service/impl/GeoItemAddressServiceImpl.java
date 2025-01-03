@@ -97,7 +97,8 @@ public class GeoItemAddressServiceImpl implements GeoItemAddressService {
         categoryId = foundItem.getCategoryId();
         geoItem = foundItem;
       }
-    };
+    }
+    ;
 
     CategoryInfoDto categoryInfoDto =
         this.categoryService

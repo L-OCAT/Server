@@ -1,6 +1,8 @@
 package com.locat.api.domain.geo.lost.entity;
 
-public enum LostItemStatusType {
+import com.locat.api.domain.geo.base.entity.GeoItemStatusType;
+
+public enum LostItemStatusType implements GeoItemStatusType {
   /** 등록됨 */
   REGISTERED,
   /** 주인이 찾음 */

@@ -58,7 +58,9 @@ public abstract class GeoItem extends SecuredBaseEntity {
     return this.category.getId();
   }
 
-  protected abstract boolean isMatchable();
+  public abstract boolean isMatchable();
 
-  protected abstract Set<String> getColorNames();
+  public abstract Set<String> getColorNames();
+
+  public abstract GeoItemStatusType getStatusType();
 }
