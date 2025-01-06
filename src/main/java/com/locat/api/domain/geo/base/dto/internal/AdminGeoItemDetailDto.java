@@ -2,8 +2,7 @@ package com.locat.api.domain.geo.base.dto.internal;
 
 import com.locat.api.domain.geo.base.entity.GeoItem;
 import com.locat.api.domain.geo.base.entity.GeoItemAddress;
-import com.locat.api.domain.geo.found.entity.FoundItem;
-import com.locat.api.domain.geo.lost.entity.LostItem;
+
 import java.time.LocalDateTime;
 import java.util.Set;
 import lombok.Builder;
@@ -58,14 +57,8 @@ public record AdminGeoItemDetailDto(
         .itemType(geoItemAddress.getItemType().name())
         .itemName(geoItem.getName())
         .imageUrl(geoItem.getImageUrl())
-        .status(
-            geoItem instanceof FoundItem foundItem
-                ? foundItem.getStatusType().name()
-                : geoItem instanceof LostItem lostItem ? lostItem.getStatusType().name() : null)
-        .colorNames(
-            geoItem instanceof FoundItem foundItem
-                ? foundItem.getColorNames()
-                : geoItem instanceof LostItem lostItem ? lostItem.getColorNames() : null)
+        .status(geoItem.getStatusType().name())
+        .colorNames(geoItem.getColorNames())
         .lat(geoItemAddress.getLatitude().doubleValue())
         .lng(geoItemAddress.getLongitude().doubleValue())
         .region1(geoItemAddress.getRegion1())

@@ -1,6 +1,8 @@
 package com.locat.api.domain.geo.found.entity;
 
-public enum FoundItemStatusType {
+import com.locat.api.domain.geo.base.entity.GeoItemStatusType;
+
+public enum FoundItemStatusType implements GeoItemStatusType {
   /** 등록됨 */
   REGISTERED,
   /** 분실물과 매칭됨 */
