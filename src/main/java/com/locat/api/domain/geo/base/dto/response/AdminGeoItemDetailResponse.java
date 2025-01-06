@@ -1,11 +1,6 @@
 package com.locat.api.domain.geo.base.dto.response;
 
 import com.locat.api.domain.geo.base.dto.internal.AdminGeoItemDetailDto;
-import com.locat.api.domain.geo.base.dto.internal.CategoryInfoDto;
-import com.locat.api.domain.geo.base.entity.GeoItem;
-import com.locat.api.domain.geo.base.entity.GeoItemAddress;
-import com.locat.api.domain.geo.found.entity.FoundItem;
-import com.locat.api.domain.geo.lost.entity.LostItem;
 import jakarta.annotation.Nullable;
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -54,23 +49,23 @@ public record AdminGeoItemDetailResponse(
 
   public static AdminGeoItemDetailResponse from(AdminGeoItemDetailDto dto) {
     return AdminGeoItemDetailResponse.builder()
-            .id(dto.id())
-            .itemId(dto.itemId())
-            .username(dto.username())
-            .itemType(dto.itemType())
-            .itemName(dto.itemName())
-            .imageUrl(dto.imageUrl())
-            .status(dto.status())
-            .colorNames(dto.colorNames())
-            .lat(dto.lat())
-            .lng(dto.lng())
-            .region1(dto.region1())
-            .region2(dto.region2())
-            .region3(dto.region3())
-            .roadAddress(dto.roadAddress())
-            .buildingName(dto.buildingName())
-            .categoryPath(dto.categoryPath())
-            .createdAt(dto.createdAt())
-            .build();
+        .id(dto.id())
+        .itemId(dto.itemId())
+        .username(dto.username())
+        .itemType(dto.itemType())
+        .itemName(dto.itemName())
+        .imageUrl(dto.imageUrl())
+        .status(dto.status())
+        .colorNames(dto.colorNames())
+        .lat(dto.lat())
+        .lng(dto.lng())
+        .region1(dto.region1())
+        .region2(dto.region2())
+        .region3(dto.region3())
+        .roadAddress(dto.roadAddress())
+        .buildingName(dto.buildingName())
+        .categoryPath(dto.categoryPath())
+        .createdAt(dto.createdAt())
+        .build();
   }
 }

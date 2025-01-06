@@ -3,10 +3,10 @@ package com.locat.api.domain.geo.base.service.impl;
 import static com.locat.api.global.exception.ApiExceptionType.*;
 
 import com.locat.api.domain.geo.base.dto.criteria.GeoItemAdminSearchCriteria;
+import com.locat.api.domain.geo.base.dto.internal.AdminGeoItemDetailDto;
 import com.locat.api.domain.geo.base.dto.internal.AdminGeoItemSearchDto;
 import com.locat.api.domain.geo.base.dto.internal.AdminGeoItemSearchQueryResult;
 import com.locat.api.domain.geo.base.dto.internal.CategoryInfoDto;
-import com.locat.api.domain.geo.base.dto.internal.AdminGeoItemDetailDto;
 import com.locat.api.domain.geo.base.dto.kakao.AddressDocument;
 import com.locat.api.domain.geo.base.dto.kakao.AddressResponse;
 import com.locat.api.domain.geo.base.entity.GeoItem;
@@ -76,6 +76,7 @@ public class GeoItemAddressServiceImpl implements GeoItemAddressService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public AdminGeoItemDetailDto getGeoItemDetail(Long id) {
     GeoItemAddress geoItemAddress =
         this.geoItemAddressRepository
@@ -97,22 +98,22 @@ public class GeoItemAddressServiceImpl implements GeoItemAddressService {
         categoryId = foundItem.getCategoryId();
         geoItem = foundItem;
       }
-    };
+    }
 
-    CategoryInfoDto categoryInfoDto =
-        this.categoryService
-            .findInfoById(categoryId)
-            .orElseThrow(() -> new InternalProcessingException("Failed to fetch category info."));
+    CategoryInfoDto categoryInfoDto = getCategoryInfoDto(categoryId);
 
     return AdminGeoItemDetailDto.of(geoItem, geoItemAddress, categoryInfoDto);
   }
 
+  private CategoryInfoDto getCategoryInfoDto(Long categoryId) {
+    return this.categoryService
+        .findInfoById(categoryId)
+        .orElseThrow(() -> new InternalProcessingException("Failed to fetch category info."));
+  }
+
   private AdminGeoItemSearchDto mapToDto(AdminGeoItemSearchQueryResult queryResult) {
     final long categoryId = queryResult.categoryId();
-    CategoryInfoDto categoryInfo =
-        this.categoryService
-            .findInfoById(categoryId)
-            .orElseThrow(() -> new InternalProcessingException("Failed to fetch category info."));
+    CategoryInfoDto categoryInfo = getCategoryInfoDto(categoryId);
     return AdminGeoItemSearchDto.of(queryResult, categoryInfo);
   }
 
