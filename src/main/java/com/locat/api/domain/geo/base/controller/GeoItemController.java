@@ -2,6 +2,8 @@ package com.locat.api.domain.geo.base.controller;
 
 import com.locat.api.domain.common.dto.BaseResponse;
 import com.locat.api.domain.geo.base.dto.criteria.GeoItemAdminSearchCriteria;
+import com.locat.api.domain.geo.base.dto.internal.AdminGeoItemDetailDto;
+import com.locat.api.domain.geo.base.dto.response.AdminGeoItemDetailResponse;
 import com.locat.api.domain.geo.base.dto.response.AdminGeoItemSearchResponse;
 import com.locat.api.domain.geo.base.service.GeoItemAddressService;
 import com.locat.api.global.security.annotation.AdminApi;
@@ -10,10 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -38,9 +37,18 @@ public class GeoItemController {
         GeoItemAdminSearchCriteria.of(
             itemType, itemName, region1, region2, region3, categoryId, from, to);
     Page<AdminGeoItemSearchResponse> response =
-        geoItemAddressService
+        this.geoItemAddressService
             .findAllByAdminCriteria(searchCriteria, pageable)
             .map(AdminGeoItemSearchResponse::from);
+    return ResponseEntity.ok(BaseResponse.of(response));
+  }
+
+  @AdminApi
+  @GetMapping("/{id}")
+  public ResponseEntity<BaseResponse<AdminGeoItemDetailResponse>> getGeoItemDetail(
+      @PathVariable Long id) {
+    AdminGeoItemDetailDto dto = this.geoItemAddressService.getGeoItemDetail(id);
+    AdminGeoItemDetailResponse response = AdminGeoItemDetailResponse.from(dto);
     return ResponseEntity.ok(BaseResponse.of(response));
   }
 }

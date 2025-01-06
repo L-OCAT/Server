@@ -1,6 +1,9 @@
 package com.locat.api.domain.geo.base.service.impl;
 
+import static com.locat.api.global.exception.ApiExceptionType.*;
+
 import com.locat.api.domain.geo.base.dto.criteria.GeoItemAdminSearchCriteria;
+import com.locat.api.domain.geo.base.dto.internal.AdminGeoItemDetailDto;
 import com.locat.api.domain.geo.base.dto.internal.AdminGeoItemSearchDto;
 import com.locat.api.domain.geo.base.dto.internal.AdminGeoItemSearchQueryResult;
 import com.locat.api.domain.geo.base.dto.internal.CategoryInfoDto;
@@ -8,11 +11,17 @@ import com.locat.api.domain.geo.base.dto.kakao.AddressDocument;
 import com.locat.api.domain.geo.base.dto.kakao.AddressResponse;
 import com.locat.api.domain.geo.base.entity.GeoItem;
 import com.locat.api.domain.geo.base.entity.GeoItemAddress;
+import com.locat.api.domain.geo.base.entity.GeoItemType;
 import com.locat.api.domain.geo.base.event.GeoItemCreatedEvent;
 import com.locat.api.domain.geo.base.service.CategoryService;
 import com.locat.api.domain.geo.base.service.GeoItemAddressService;
+import com.locat.api.domain.geo.found.entity.FoundItem;
+import com.locat.api.domain.geo.found.service.FoundItemService;
+import com.locat.api.domain.geo.lost.entity.LostItem;
+import com.locat.api.domain.geo.lost.service.LostItemService;
 import com.locat.api.global.exception.custom.InternalProcessingException;
 import com.locat.api.global.exception.custom.InvalidParameterException;
+import com.locat.api.global.exception.custom.NoSuchEntityException;
 import com.locat.api.global.utils.ValidationUtils;
 import com.locat.api.infra.client.http.KakaoGeoClient;
 import com.locat.api.infra.persistence.geo.GeoItemAddressRepository;
@@ -34,6 +43,8 @@ public class GeoItemAddressServiceImpl implements GeoItemAddressService {
 
   private final GeoItemAddressRepository geoItemAddressRepository;
   private final GeoItemAdminQRepository geoItemAdminQRepository;
+  private final LostItemService lostItemService;
+  private final FoundItemService foundItemService;
   private final CategoryService categoryService;
   private final KakaoGeoClient kakaoGeoClient;
 
@@ -65,12 +76,38 @@ public class GeoItemAddressServiceImpl implements GeoItemAddressService {
         .map(this::mapToDto);
   }
 
+  @Override
+  @Transactional(readOnly = true)
+  public AdminGeoItemDetailDto getGeoItemDetail(Long id) {
+    GeoItemAddress geoItemAddress =
+        this.geoItemAddressRepository
+            .findById(id)
+            .orElseThrow(() -> new NoSuchEntityException(NOT_FOUND_GEO_ITEM_ADDRESS));
+
+    Long itemId = geoItemAddress.getItemId();
+    GeoItem geoItem = this.findGeoItemByType(geoItemAddress.getItemType(), itemId);
+
+    CategoryInfoDto categoryInfoDto = getCategoryInfoDto(geoItem.getCategoryId());
+
+    return AdminGeoItemDetailDto.of(geoItem, geoItemAddress, categoryInfoDto);
+  }
+
+  private GeoItem findGeoItemByType(GeoItemType itemType, Long itemId) {
+    return switch (itemType) {
+      case LOST -> this.lostItemService.findById(itemId);
+      case FOUND -> this.foundItemService.findById(itemId);
+    };
+  }
+
+  private CategoryInfoDto getCategoryInfoDto(Long categoryId) {
+    return this.categoryService
+        .findInfoById(categoryId)
+        .orElseThrow(() -> new InternalProcessingException("Failed to fetch category info."));
+  }
+
   private AdminGeoItemSearchDto mapToDto(AdminGeoItemSearchQueryResult queryResult) {
     final long categoryId = queryResult.categoryId();
-    CategoryInfoDto categoryInfo =
-        this.categoryService
-            .findInfoById(categoryId)
-            .orElseThrow(() -> new InternalProcessingException("Failed to fetch category info."));
+    CategoryInfoDto categoryInfo = getCategoryInfoDto(categoryId);
     return AdminGeoItemSearchDto.of(queryResult, categoryInfo);
   }
 

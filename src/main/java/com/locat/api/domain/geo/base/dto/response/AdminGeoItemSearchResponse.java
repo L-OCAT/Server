@@ -7,7 +7,8 @@ import lombok.Builder;
 /**
  * 관리자 GeoItem 검색 결과 DTO
  *
- * @param id 아이템 ID
+ * @param id 전체 ID
+ * @param itemId 아이템 ID
  * @param type 구분(분실물/습득물)
  * @param name 등록된 이름
  * @param categoryPath 카테고리 이름("전자기기 > 휴대폰" 포맷)

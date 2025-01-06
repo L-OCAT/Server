@@ -1,10 +1,12 @@
 package com.locat.api.domain.geo.base.service;
 
 import com.locat.api.domain.geo.base.dto.criteria.GeoItemAdminSearchCriteria;
+import com.locat.api.domain.geo.base.dto.internal.AdminGeoItemDetailDto;
 import com.locat.api.domain.geo.base.dto.internal.AdminGeoItemSearchDto;
 import com.locat.api.domain.geo.base.entity.GeoItemAddress;
 import com.locat.api.global.exception.custom.InternalProcessingException;
 import com.locat.api.global.exception.custom.InvalidParameterException;
+import com.locat.api.global.exception.custom.NoSuchEntityException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -28,4 +30,14 @@ public interface GeoItemAddressService {
    */
   Page<AdminGeoItemSearchDto> findAllByAdminCriteria(
       GeoItemAdminSearchCriteria searchCriteria, Pageable pageable);
+
+  /**
+   * 관리자 페이지용 분실/습득물 상세 정보
+   *
+   * @param id 분실/습득물 전체 id
+   * @return 해당하는 분실/습득물의 상세 정보
+   * @throws NoSuchEntityException 해당 분실/습득물이 없는 경우
+   * @throws InternalProcessingException 처리 중 문제가 발생한 경우
+   */
+  AdminGeoItemDetailDto getGeoItemDetail(Long id);
 }
