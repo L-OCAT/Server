@@ -11,6 +11,7 @@ import com.locat.api.domain.geo.base.dto.kakao.AddressDocument;
 import com.locat.api.domain.geo.base.dto.kakao.AddressResponse;
 import com.locat.api.domain.geo.base.entity.GeoItem;
 import com.locat.api.domain.geo.base.entity.GeoItemAddress;
+import com.locat.api.domain.geo.base.entity.GeoItemType;
 import com.locat.api.domain.geo.base.event.GeoItemCreatedEvent;
 import com.locat.api.domain.geo.base.service.CategoryService;
 import com.locat.api.domain.geo.base.service.GeoItemAddressService;
@@ -84,25 +85,18 @@ public class GeoItemAddressServiceImpl implements GeoItemAddressService {
             .orElseThrow(() -> new NoSuchEntityException(NOT_FOUND_GEO_ITEM_ADDRESS));
 
     Long itemId = geoItemAddress.getItemId();
-    Long categoryId = null;
-    GeoItem geoItem = null;
+    GeoItem geoItem = this.findGeoItemByType(geoItemAddress.getItemType(), itemId);
 
-    switch (geoItemAddress.getItemType()) {
-      case LOST -> {
-        LostItem lostItem = this.lostItemService.findById(itemId);
-        categoryId = lostItem.getCategoryId();
-        geoItem = lostItem;
-      }
-      case FOUND -> {
-        FoundItem foundItem = this.foundItemService.findById(itemId);
-        categoryId = foundItem.getCategoryId();
-        geoItem = foundItem;
-      }
-    }
-
-    CategoryInfoDto categoryInfoDto = getCategoryInfoDto(categoryId);
+    CategoryInfoDto categoryInfoDto = getCategoryInfoDto(geoItem.getCategoryId());
 
     return AdminGeoItemDetailDto.of(geoItem, geoItemAddress, categoryInfoDto);
+  }
+
+  private GeoItem findGeoItemByType(GeoItemType itemType, Long itemId) {
+    return switch (itemType) {
+      case LOST -> this.lostItemService.findById(itemId);
+      case FOUND -> this.foundItemService.findById(itemId);
+    };
   }
 
   private CategoryInfoDto getCategoryInfoDto(Long categoryId) {
