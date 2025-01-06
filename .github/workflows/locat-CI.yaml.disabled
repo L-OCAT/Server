@@ -1,0 +1,86 @@
+name: LOCAT CI
+
+on:
+  pull_request:
+    branches: [ "main", "develop" ]
+    types: [ opened, reopened, synchronize, ready_for_review ]
+
+concurrency:
+  group: locat-ci
+  cancel-in-progress: true
+
+jobs:
+  LOCAT-CI:
+    runs-on: ubuntu-latest
+    permissions: write-all
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set-up Test Environment
+        run: |
+          docker run -d --name LOCAT-Redis -p 6379:6379 redis:7.0.10
+
+      - name: Set-up Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Set-up Gradle
+        uses: gradle/actions/setup-gradle@v3.5.0
+
+      - name: Set Gradlew permission
+        run: chmod +x ./gradlew
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Set properties for CI
+        run: |
+          cat <<EOF > ./src/test/resources/application-test.yaml
+          ${{ secrets.APPLICATION_INTEGRATION }}
+          EOF
+          cat <<EOF > ./src/main/resources/application-develop.yaml
+          ${{ secrets.APPLICATION_DEVELOP }}
+          EOF
+          cat <<EOF > ./src/main/resources/application-prod.yaml
+          ${{ secrets.APPLICATION_PROD }}
+          EOF
+
+      - name: Build & Test with Gradle
+        run: ./gradlew clean build --info
+
+      - name: Notify Discord on Test Failure
+        if: failure()
+        uses: Ilshidur/action-discord@master
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.WEBHOOK_URL }}
+        with:
+          args: "⚠️ Tests failed in the CI pipeline! (Link: ${{ github.event.pull_request.html_url }})"
+
+      - name: Comment on PR with Jacoco Report
+        uses: madrapps/jacoco-report@v1.7.1
+        if: success()
+        with:
+          paths: ${{ github.workspace }}/build/reports/jacoco/xml/jacocoTestReport.xml
+          token: ${{ secrets.GITHUB_TOKEN }}
+          title: "⭐Test Coverage Report"
+          update-comment: true
+          skip-if-no-changes: false
+          min-coverage-overall: '70'
+
+      - name: Upload Jacoco Report
+        uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: jacoco-coverage-report-${{ github.run_number }}
+          path: ${{ github.workspace }}/build/reports/jacoco/html

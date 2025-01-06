@@ -57,7 +57,17 @@ out/
 ### Querydsl ###
 src/generated/
 
+### OpenAPI ###
+docs/**/schemas.yaml
 
 ### Properties ###
 **/main/resources/certificates
-**/main/resources/application-*.yaml
+
+### Local Development ###
+docker-compose.yaml
+
+### Misc ###
+.DS_Store
+._.DS_Store
+**/.DS_Store
+**/._.DS_Store

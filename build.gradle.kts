@@ -3,16 +3,34 @@ plugins {
     id("org.springframework.boot") version "3.3.0"
     id("io.spring.dependency-management") version "1.1.5"
     id("com.diffplug.spotless") version "6.25.0"
+    id("org.flywaydb.flyway") version "10.15.0"
+    id("jacoco")
 }
 
 group = "com.locat"
-version = "0.0.1-SNAPSHOT"
+version = "1.0.0"
 
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)
     }
 }
+
+jacoco {
+    toolVersion = "0.8.11"
+}
+
+dependencyManagement {
+    imports {
+        mavenBom("org.springframework.cloud:spring-cloud-dependencies:2023.0.1")
+    }
+}
+
+val queryDSLVersion by extra("5.1.0")
+val jjwtVersion by extra("0.11.5")
+val j2htmlVersion by extra("1.6.0")
+val flywayDBVersion by extra("10.15.0")
+val hibernateSpatialVersion by extra("6.6.1.Final")
 
 repositories {
     mavenCentral()
@@ -24,44 +42,56 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-//    implementation("org.springframework.boot:spring-boot-starter-data-redis")
-    implementation(platform("software.amazon.awssdk:bom:2.21.0"))
-    implementation("software.amazon.awssdk:dynamodb-enhanced")
+    implementation("org.springframework.boot:spring-boot-starter-data-redis")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-cache")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
-    implementation("org.springframework.boot:spring-boot-starter-mail")
+    implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
     implementation("org.springframework.boot:spring-boot-configuration-processor")
-    implementation("org.projectlombok:lombok")
+    implementation("org.hibernate.orm:hibernate-spatial:$hibernateSpatialVersion")
+    implementation("io.jsonwebtoken:jjwt-api:$jjwtVersion")
+    implementation("io.jsonwebtoken:jjwt-impl:$jjwtVersion")
+    implementation("io.jsonwebtoken:jjwt-jackson:$jjwtVersion")
     runtimeOnly("com.mysql:mysql-connector-j")
-    developmentOnly("org.springframework.boot:spring-boot-devtools")
-
+    // AWS SDK
+    implementation(platform("software.amazon.awssdk:bom:2.24.0"))
+    implementation("software.amazon.awssdk:s3")
+    implementation("software.amazon.awssdk:ses")
+    implementation("software.amazon.awssdk:sns")
+    // Lombok
+    implementation("org.projectlombok:lombok")
+    annotationProcessor("org.projectlombok:lombok")
+    // QueryDSL
+    implementation("com.querydsl:querydsl-jpa:$queryDSLVersion:jakarta")
+    annotationProcessor("com.querydsl:querydsl-apt:$queryDSLVersion:jakarta")
+    annotationProcessor("jakarta.persistence:jakarta.persistence-api")
+    annotationProcessor("jakarta.annotation:jakarta.annotation-api")
+    // Mail HTML Template
+    implementation("com.j2html:j2html:$j2htmlVersion")
+    // DataBase Schema Migration
+    implementation("org.flywaydb:flyway-mysql:$flywayDBVersion")
+    implementation("org.flywaydb:flyway-core:$flywayDBVersion")
     // Local Development
-    runtimeOnly("org.springframework.boot:spring-boot-docker-compose")
-
+    developmentOnly("org.springframework.boot:spring-boot-devtools")
     // Testing
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.mockito:mockito-junit-jupiter")
     testImplementation("org.assertj:assertj-core")
-    testImplementation("org.testcontainers:mysql")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.boot:spring-boot-starter-test") {
+        exclude(group = "junit", module = "junit")
+    }
     testImplementation("org.springframework.security:spring-security-test")
+    // Test Containers
     testImplementation("org.springframework.boot:spring-boot-testcontainers")
+    testImplementation("org.testcontainers:mysql")
+    testImplementation("org.testcontainers:localstack")
 }
 
 spotless {
     java {
-        importOrder(
-            "java|javax|jakarta",
-            "org.springframework",
-            "lombok",
-            "com.locat",
-            "",
-            "org.junit|org.mockito",
-            "\\#",
-            "\\#org.junit|org.assertj"
-        )
+        googleJavaFormat()
+            .formatJavadoc(true)
         endWithNewline()
         formatAnnotations()
         removeUnusedImports()
@@ -69,10 +99,53 @@ spotless {
     }
 }
 
-tasks.withType<Test> {
-    useJUnitPlatform()
-    reports.html.required.set(false)
-    reports.junitXml.required.set(false)
-    maxParallelForks = (Runtime.getRuntime().availableProcessors() / 2).coerceAtLeast(1)
+tasks.jar {
+    isEnabled = false
 }
 
+tasks.withType<Test> {
+    useJUnitPlatform()
+    finalizedBy(tasks.jacocoTestReport, tasks.jacocoTestCoverageVerification)
+    reports {
+        html.required.set(false)
+        junitXml.required.set(false)
+    }
+    maxParallelForks = (Runtime.getRuntime().availableProcessors() / 2)
+        .coerceAtLeast(1)
+        .coerceAtMost(4)
+}
+
+tasks.jacocoTestReport {
+    dependsOn(tasks.test)
+    reports {
+        xml.required = true
+        html.required = true
+        csv.required = false
+        xml.outputLocation.set(layout.buildDirectory.file("reports/jacoco/xml/jacocoTestReport.xml"))
+        html.outputLocation.set(layout.buildDirectory.dir("reports/jacoco/html"))
+    }
+    classDirectories.setFrom(
+        files(classDirectories.files.map {
+            fileTree(it).matching {
+                include("com/locat/api/**")
+            }
+        })
+    )
+}
+
+tasks.jacocoTestCoverageVerification {
+    dependsOn(tasks.jacocoTestReport)
+    violationRules {
+        rule {
+            enabled = true
+            isFailOnViolation = true
+            includes = listOf("com.locat.api.**")
+            element = "BUNDLE"
+            limit {
+                counter = "LINE"
+                value = "COVEREDRATIO"
+                minimum = BigDecimal(0.7)
+            }
+        }
+    }
+}

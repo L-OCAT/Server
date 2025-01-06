@@ -1,0 +1,21 @@
+name: PR Reminder
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 8 * * *' # KST 17시(UTC 8시)에 실행
+
+jobs:
+  pr-reminder:
+    runs-on: ubuntu-latest
+    permissions: read-all
+
+    steps:
+      - name: Run PR reminder
+        uses: SeongHo5/pr-reminder@v2.1
+        with:
+          platform: discord
+          webhook-url: ${{ secrets.WEBHOOK_URL }}
+          remind-time: 24
+          skip-on-weekend: true
+          timezone: 'Asia/Seoul'
