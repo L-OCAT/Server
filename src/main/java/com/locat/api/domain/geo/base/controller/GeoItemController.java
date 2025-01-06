@@ -2,8 +2,9 @@ package com.locat.api.domain.geo.base.controller;
 
 import com.locat.api.domain.common.dto.BaseResponse;
 import com.locat.api.domain.geo.base.dto.criteria.GeoItemAdminSearchCriteria;
+import com.locat.api.domain.geo.base.dto.internal.AdminGeoItemDetailDto;
 import com.locat.api.domain.geo.base.dto.response.AdminGeoItemSearchResponse;
-import com.locat.api.domain.geo.base.dto.response.GeoItemDetailResponse;
+import com.locat.api.domain.geo.base.dto.response.AdminGeoItemDetailResponse;
 import com.locat.api.domain.geo.base.service.GeoItemAddressService;
 import com.locat.api.global.security.annotation.AdminApi;
 import java.time.LocalDate;
@@ -44,9 +45,10 @@ public class GeoItemController {
 
   @AdminApi
   @GetMapping("/{id}")
-  public ResponseEntity<BaseResponse<GeoItemDetailResponse>> getGeoItemDetail(
+  public ResponseEntity<BaseResponse<AdminGeoItemDetailResponse>> getGeoItemDetail(
       @PathVariable Long id) {
-    GeoItemDetailResponse response = this.geoItemAddressService.getGeoItemDetail(id);
+    AdminGeoItemDetailDto dto = this.geoItemAddressService.getGeoItemDetail(id);
+    AdminGeoItemDetailResponse response = AdminGeoItemDetailResponse.from(dto);
     return ResponseEntity.ok(BaseResponse.of(response));
   }
 }

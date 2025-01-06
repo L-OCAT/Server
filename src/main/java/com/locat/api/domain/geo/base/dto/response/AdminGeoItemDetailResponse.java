@@ -1,5 +1,6 @@
 package com.locat.api.domain.geo.base.dto.response;
 
+import com.locat.api.domain.geo.base.dto.internal.AdminGeoItemDetailDto;
 import com.locat.api.domain.geo.base.dto.internal.CategoryInfoDto;
 import com.locat.api.domain.geo.base.entity.GeoItem;
 import com.locat.api.domain.geo.base.entity.GeoItemAddress;
@@ -11,6 +12,8 @@ import java.util.Set;
 import lombok.Builder;
 
 /**
+ * Admin Item 상세보기 페이지 응답 DTO
+ *
  * @param id 전체 Id
  * @param itemId 아이템 id
  * @param username 작성자 닉네임
@@ -30,7 +33,7 @@ import lombok.Builder;
  * @param createdAt 등록일
  */
 @Builder
-public record GeoItemDetailResponse(
+public record AdminGeoItemDetailResponse(
     Long id,
     Long itemId,
     String username,
@@ -49,32 +52,25 @@ public record GeoItemDetailResponse(
     String categoryPath,
     LocalDateTime createdAt) {
 
-  public static GeoItemDetailResponse from(
-          GeoItem geoItem, GeoItemAddress geoItemAddress, CategoryInfoDto categoryInfoDto) {
-    return GeoItemDetailResponse.builder()
-        .id(geoItemAddress.getId())
-        .itemId(geoItem.getId())
-        .username(geoItem.getUser().getNickname())
-        .itemType(geoItemAddress.getItemType().name())
-        .itemName(geoItem.getName())
-        .imageUrl(geoItem.getImageUrl())
-        .status(
-            geoItem instanceof FoundItem foundItem
-                ? foundItem.getStatusType().name()
-                : geoItem instanceof LostItem lostItem ? lostItem.getStatusType().name() : null)
-        .colorNames(
-            geoItem instanceof FoundItem foundItem
-                ? foundItem.getColorNames()
-                : geoItem instanceof LostItem lostItem ? lostItem.getColorNames() : null)
-        .lat(geoItemAddress.getLatitude().doubleValue())
-        .lng(geoItemAddress.getLongitude().doubleValue())
-        .region1(geoItemAddress.getRegion1())
-        .region2(geoItemAddress.getRegion2())
-        .region3(geoItemAddress.getRegion3())
-        .roadAddress(geoItemAddress.getRoadAddress())
-        .buildingName(geoItemAddress.getBuildingName())
-        .categoryPath(categoryInfoDto.toCategoryPath())
-        .createdAt(geoItem.getCreatedAt())
-        .build();
+  public static AdminGeoItemDetailResponse from(AdminGeoItemDetailDto dto) {
+    return AdminGeoItemDetailResponse.builder()
+            .id(dto.id())
+            .itemId(dto.itemId())
+            .username(dto.username())
+            .itemType(dto.itemType())
+            .itemName(dto.itemName())
+            .imageUrl(dto.imageUrl())
+            .status(dto.status())
+            .colorNames(dto.colorNames())
+            .lat(dto.lat())
+            .lng(dto.lng())
+            .region1(dto.region1())
+            .region2(dto.region2())
+            .region3(dto.region3())
+            .roadAddress(dto.roadAddress())
+            .buildingName(dto.buildingName())
+            .categoryPath(dto.categoryPath())
+            .createdAt(dto.createdAt())
+            .build();
   }
 }

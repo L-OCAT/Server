@@ -6,9 +6,9 @@ import com.locat.api.domain.geo.base.dto.criteria.GeoItemAdminSearchCriteria;
 import com.locat.api.domain.geo.base.dto.internal.AdminGeoItemSearchDto;
 import com.locat.api.domain.geo.base.dto.internal.AdminGeoItemSearchQueryResult;
 import com.locat.api.domain.geo.base.dto.internal.CategoryInfoDto;
+import com.locat.api.domain.geo.base.dto.internal.AdminGeoItemDetailDto;
 import com.locat.api.domain.geo.base.dto.kakao.AddressDocument;
 import com.locat.api.domain.geo.base.dto.kakao.AddressResponse;
-import com.locat.api.domain.geo.base.dto.response.GeoItemDetailResponse;
 import com.locat.api.domain.geo.base.entity.GeoItem;
 import com.locat.api.domain.geo.base.entity.GeoItemAddress;
 import com.locat.api.domain.geo.base.event.GeoItemCreatedEvent;
@@ -76,7 +76,7 @@ public class GeoItemAddressServiceImpl implements GeoItemAddressService {
   }
 
   @Override
-  public GeoItemDetailResponse getGeoItemDetail(Long id) {
+  public AdminGeoItemDetailDto getGeoItemDetail(Long id) {
     GeoItemAddress geoItemAddress =
         this.geoItemAddressRepository
             .findById(id)
@@ -104,7 +104,7 @@ public class GeoItemAddressServiceImpl implements GeoItemAddressService {
             .findInfoById(categoryId)
             .orElseThrow(() -> new InternalProcessingException("Failed to fetch category info."));
 
-    return GeoItemDetailResponse.from(geoItem, geoItemAddress, categoryInfoDto);
+    return AdminGeoItemDetailDto.of(geoItem, geoItemAddress, categoryInfoDto);
   }
 
   private AdminGeoItemSearchDto mapToDto(AdminGeoItemSearchQueryResult queryResult) {
