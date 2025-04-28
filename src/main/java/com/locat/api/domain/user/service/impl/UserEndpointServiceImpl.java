@@ -1,7 +1,6 @@
 package com.locat.api.domain.user.service.impl;
 
 import com.locat.api.domain.user.dto.internal.EndpointRegisterDto;
-import com.locat.api.domain.user.entity.User;
 import com.locat.api.domain.user.entity.association.UserEndpoint;
 import com.locat.api.domain.user.service.PlatformEndpointService;
 import com.locat.api.domain.user.service.UserEndpointService;
@@ -25,19 +24,19 @@ public class UserEndpointServiceImpl implements UserEndpointService {
 
   @Override
   public void register(Long userId, EndpointRegisterDto registerDto) {
-    User user =
+    final var user =
         this.userService
             .findById(userId)
             .orElseThrow(() -> new NoSuchEntityException(ApiExceptionType.NOT_FOUND_USER));
-    List<UserEndpoint> userEndpoints = this.findUserEndpointsByUserId(userId);
+    final var userEndpoints = this.findUserEndpointsByUserId(userId);
 
     if (this.isEndpointExists(registerDto, userEndpoints)) {
       return;
     }
 
-    String endpointArn =
+    final var endpointArn =
         this.platformEndpointService.create(registerDto.deviceToken(), registerDto.platformType());
-    String subscriptionArn = this.platformEndpointService.subscribeToTopic(endpointArn);
+    final var subscriptionArn = this.platformEndpointService.subscribeToTopic(endpointArn);
 
     this.userEndpointRepository.save(
         UserEndpoint.of(user, endpointArn, subscriptionArn, registerDto));

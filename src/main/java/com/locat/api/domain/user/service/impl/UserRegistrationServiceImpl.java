@@ -46,10 +46,10 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
 
     OAuth2ProviderToken token = this.findTokenById(userRegisterDto.oAuthId());
     OAuth2UserInfo userInfo = this.fetchUserInfo(token);
-    String profileImage = this.getRandomProfileImage();
+    //  String profileImage = this.getRandomProfileImage();  S3 bucket deleted.
     final User user =
         User.of(
-            profileImage,
+            null,
             userRegisterDto.nickname(),
             this.passwordEncoder.encode(this.tempPassword),
             userInfo);

@@ -25,7 +25,7 @@ public class UserTermsServiceImpl implements UserTermsService {
 
   @Override
   public void register(User user, UserRegisterDto registerDto) {
-    List<UserTermsAgreement> userTermsAgreements = this.createUserTermsAgreement(user, registerDto);
+    final var userTermsAgreements = this.createUserTermsAgreement(user, registerDto);
     this.userTermsAgreementRepository.saveAll(userTermsAgreements);
   }
 
@@ -33,19 +33,19 @@ public class UserTermsServiceImpl implements UserTermsService {
       User user, UserRegisterDto registerDto) {
     List<UserTermsAgreement> userTermsAgreements = new ArrayList<>();
     List<Terms> latestTermsList = this.termsService.findAll();
-    if (Boolean.TRUE.equals(registerDto.isTermsOfServiceAgreed())) {
+    if (registerDto.isTermsOfServiceAgreed()) {
       Terms terms = this.getTermsByType(TermsType.TERMS_OF_SERVICE, latestTermsList);
       userTermsAgreements.add(UserTermsAgreement.of(user, terms));
     }
-    if (Boolean.TRUE.equals(registerDto.isPrivacyPolicyAgreed())) {
+    if (registerDto.isPrivacyPolicyAgreed()) {
       Terms terms = this.getTermsByType(TermsType.PRIVACY_POLICY, latestTermsList);
       userTermsAgreements.add(UserTermsAgreement.of(user, terms));
     }
-    if (Boolean.TRUE.equals(registerDto.isLocationPolicyAgreed())) {
+    if (registerDto.isLocationPolicyAgreed()) {
       Terms terms = this.getTermsByType(TermsType.LOCATION_POLICY, latestTermsList);
       userTermsAgreements.add(UserTermsAgreement.of(user, terms));
     }
-    if (Boolean.TRUE.equals(registerDto.isMarketingPolicyAgreed())) {
+    if (registerDto.isMarketingPolicyAgreed()) {
       Terms terms = this.getTermsByType(TermsType.MARKETING_POLICY, latestTermsList);
       userTermsAgreements.add(UserTermsAgreement.of(user, terms));
     }

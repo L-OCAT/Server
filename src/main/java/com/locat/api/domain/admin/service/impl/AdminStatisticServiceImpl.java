@@ -43,13 +43,13 @@ public class AdminStatisticServiceImpl implements AdminStatisticService {
 
   @Override
   public AdminUserStatDto getEndUserStat(Long userId) {
-    User user = this.findUser(userId);
+    final var user = this.findUser(userId);
     return this.userStatisticQRepository.getUserStat(user);
   }
 
   @Override
   public List<AdminUserFoundItemStatDto> getUserFoundItemStat(Long userId) {
-    User user = this.findUser(userId);
+    final var user = this.findUser(userId);
     return this.foundItemService.findTop10ByEndUser(user).stream()
         .map(AdminUserFoundItemStatDto::fromEntity)
         .toList();
@@ -57,7 +57,7 @@ public class AdminStatisticServiceImpl implements AdminStatisticService {
 
   @Override
   public List<AdminUserLostItemStatDto> getUserLostItemStat(Long userId) {
-    User user = this.findUser(userId);
+    final var user = this.findUser(userId);
     return this.lostItemService.findTop10ByEndUser(user).stream()
         .map(AdminUserLostItemStatDto::fromEntity)
         .toList();

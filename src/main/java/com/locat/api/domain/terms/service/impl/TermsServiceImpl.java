@@ -23,7 +23,7 @@ public class TermsServiceImpl implements TermsService {
 
   @Override
   public void upsert(TermsUpsertDto upsertDto) {
-    Terms terms =
+    final var terms =
         this.termsRepository
             .findByType(upsertDto.type())
             .map(exsting -> exsting.update(upsertDto))

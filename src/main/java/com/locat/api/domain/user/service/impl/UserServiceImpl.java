@@ -63,7 +63,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public User update(Long id, UserInfoUpdateDto infoUpdateDto) {
-    final User user =
+    final var user =
         this.findById(id)
             .orElseThrow(() -> new NoSuchEntityException(ApiExceptionType.NOT_FOUND_USER));
     this.validateRequestFields(user, infoUpdateDto);
@@ -86,7 +86,7 @@ public class UserServiceImpl implements UserService {
   }
 
   private void processOAuthWithdrawal(User user) {
-    final String oauthId = user.getOauthId();
+    final var oauthId = user.getOauthId();
     this.oAuth2TemplateFactory.getById(oauthId).withdrawal(oauthId);
   }
 

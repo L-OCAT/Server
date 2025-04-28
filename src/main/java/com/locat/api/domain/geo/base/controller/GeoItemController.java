@@ -33,10 +33,10 @@ public class GeoItemController {
       @RequestParam(required = false) LocalDate from,
       @RequestParam(required = false) LocalDate to,
       Pageable pageable) {
-    GeoItemAdminSearchCriteria searchCriteria =
+    var searchCriteria =
         GeoItemAdminSearchCriteria.of(
             itemType, itemName, region1, region2, region3, categoryId, from, to);
-    Page<AdminGeoItemSearchResponse> response =
+    var response =
         this.geoItemAddressService
             .findAllByAdminCriteria(searchCriteria, pageable)
             .map(AdminGeoItemSearchResponse::from);
@@ -48,7 +48,7 @@ public class GeoItemController {
   public ResponseEntity<BaseResponse<AdminGeoItemDetailResponse>> getGeoItemDetail(
       @PathVariable Long id) {
     AdminGeoItemDetailDto dto = this.geoItemAddressService.getGeoItemDetail(id);
-    AdminGeoItemDetailResponse response = AdminGeoItemDetailResponse.from(dto);
+    var response = AdminGeoItemDetailResponse.from(dto);
     return ResponseEntity.ok(BaseResponse.of(response));
   }
 }

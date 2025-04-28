@@ -1,6 +1,6 @@
 package com.locat.api.domain.geo.base.service.impl;
 
-import static com.locat.api.global.exception.ApiExceptionType.*;
+import static com.locat.api.global.exception.ApiExceptionType.NOT_FOUND_GEO_ITEM_ADDRESS;
 
 import com.locat.api.domain.geo.base.dto.criteria.GeoItemAdminSearchCriteria;
 import com.locat.api.domain.geo.base.dto.internal.AdminGeoItemDetailDto;
@@ -15,9 +15,7 @@ import com.locat.api.domain.geo.base.entity.GeoItemType;
 import com.locat.api.domain.geo.base.event.GeoItemCreatedEvent;
 import com.locat.api.domain.geo.base.service.CategoryService;
 import com.locat.api.domain.geo.base.service.GeoItemAddressService;
-import com.locat.api.domain.geo.found.entity.FoundItem;
 import com.locat.api.domain.geo.found.service.FoundItemService;
-import com.locat.api.domain.geo.lost.entity.LostItem;
 import com.locat.api.domain.geo.lost.service.LostItemService;
 import com.locat.api.global.exception.custom.InternalProcessingException;
 import com.locat.api.global.exception.custom.InvalidParameterException;
@@ -27,7 +25,6 @@ import com.locat.api.infra.client.http.KakaoGeoClient;
 import com.locat.api.infra.persistence.geo.GeoItemAddressRepository;
 import com.locat.api.infra.persistence.geo.GeoItemAdminQRepository;
 import lombok.RequiredArgsConstructor;
-import org.locationtech.jts.geom.Point;
 import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -56,9 +53,9 @@ public class GeoItemAddressServiceImpl implements GeoItemAddressService {
   @Transactional(propagation = Propagation.MANDATORY)
   @EventListener(value = GeoItemCreatedEvent.class)
   public void handleGeoItemCreatedEvent(GeoItemCreatedEvent event) {
-    GeoItem geoItem = event.geoItem();
-    Point point = geoItem.getLocation();
-    AddressResponse addressResponse = this.kakaoGeoClient.getAddress(point.getX(), point.getY());
+    var geoItem = event.geoItem();
+    var point = geoItem.getLocation();
+    var addressResponse = this.kakaoGeoClient.getAddress(point.getX(), point.getY());
 
     this.validateGeocodingResponse(addressResponse);
 
@@ -79,15 +76,15 @@ public class GeoItemAddressServiceImpl implements GeoItemAddressService {
   @Override
   @Transactional(readOnly = true)
   public AdminGeoItemDetailDto getGeoItemDetail(Long id) {
-    GeoItemAddress geoItemAddress =
+    var geoItemAddress =
         this.geoItemAddressRepository
             .findById(id)
             .orElseThrow(() -> new NoSuchEntityException(NOT_FOUND_GEO_ITEM_ADDRESS));
 
     Long itemId = geoItemAddress.getItemId();
-    GeoItem geoItem = this.findGeoItemByType(geoItemAddress.getItemType(), itemId);
+    var geoItem = this.findGeoItemByType(geoItemAddress.getItemType(), itemId);
 
-    CategoryInfoDto categoryInfoDto = getCategoryInfoDto(geoItem.getCategoryId());
+    var categoryInfoDto = this.getCategoryInfoDto(geoItem.getCategoryId());
 
     return AdminGeoItemDetailDto.of(geoItem, geoItemAddress, categoryInfoDto);
   }
@@ -107,7 +104,7 @@ public class GeoItemAddressServiceImpl implements GeoItemAddressService {
 
   private AdminGeoItemSearchDto mapToDto(AdminGeoItemSearchQueryResult queryResult) {
     final long categoryId = queryResult.categoryId();
-    CategoryInfoDto categoryInfo = getCategoryInfoDto(categoryId);
+    CategoryInfoDto categoryInfo = this.getCategoryInfoDto(categoryId);
     return AdminGeoItemSearchDto.of(queryResult, categoryInfo);
   }
 

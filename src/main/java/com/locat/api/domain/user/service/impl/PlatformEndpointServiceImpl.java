@@ -23,7 +23,7 @@ public class PlatformEndpointServiceImpl implements PlatformEndpointService {
   public String create(String token, PlatformType platformType) {
     String platformApplicationArn = this.snsProperties.getPlatformArn(platformType);
     try {
-      CreatePlatformEndpointRequest request =
+      final var request =
           CreatePlatformEndpointRequest.builder()
               .token(token)
               .platformApplicationArn(platformApplicationArn)
@@ -37,7 +37,7 @@ public class PlatformEndpointServiceImpl implements PlatformEndpointService {
   @Override
   public String subscribeToTopic(String endpointArn) {
     try {
-      SubscribeRequest subscribeRequest =
+      final var subscribeRequest =
           SubscribeRequest.builder()
               .protocol(DEFAULT_SNS_PROTOCOL)
               .endpoint(endpointArn)

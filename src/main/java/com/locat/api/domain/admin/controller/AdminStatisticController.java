@@ -1,7 +1,5 @@
 package com.locat.api.domain.admin.controller;
 
-import com.locat.api.domain.admin.dto.internal.AdminUserFoundItemStatDto;
-import com.locat.api.domain.admin.dto.internal.AdminUserLostItemStatDto;
 import com.locat.api.domain.admin.dto.response.*;
 import com.locat.api.domain.admin.service.AdminStatisticService;
 import com.locat.api.domain.common.dto.BaseResponse;
@@ -24,37 +22,34 @@ public class AdminStatisticController {
 
   @GetMapping("/dashboard/summary")
   public ResponseEntity<BaseResponse<AdminDashboardSummaryResponse>> getServiceSummary() {
-    AdminDashboardSummaryResponse summary =
-        AdminDashboardSummaryResponse.from(this.adminStatisticService.getSummary());
+    final var summary = AdminDashboardSummaryResponse.from(this.adminStatisticService.getSummary());
     return ResponseEntity.ok(BaseResponse.of(summary));
   }
 
   @GetMapping("/dashboard/items/monthly")
   public ResponseEntity<BaseResponse<AdminMontlyItemStatResponse>> getMonthlyItemStat() {
-    AdminMontlyItemStatResponse summary =
+    final var summary =
         AdminMontlyItemStatResponse.from(this.adminStatisticService.getMonthlyItemStat());
     return ResponseEntity.ok(BaseResponse.of(summary));
   }
 
   @GetMapping("/dashboard/items/by-categories")
   public ResponseEntity<BaseResponse<AdminItemStatByCateogoryResponse>> getItemSummaryByCategory() {
-    AdminItemStatByCateogoryResponse summary =
+    final var summary =
         AdminItemStatByCateogoryResponse.from(this.adminStatisticService.getStatByCategory());
     return ResponseEntity.ok(BaseResponse.of(summary));
   }
 
   @GetMapping("/users/{id}")
   public ResponseEntity<BaseResponse<AdminUserStatResponse>> getUserStat(@PathVariable Long id) {
-    AdminUserStatResponse userStat =
-        AdminUserStatResponse.from(this.adminStatisticService.getEndUserStat(id));
+    final var userStat = AdminUserStatResponse.from(this.adminStatisticService.getEndUserStat(id));
     return ResponseEntity.ok(BaseResponse.of(userStat));
   }
 
   @GetMapping("/users/{id}/founds")
   public ResponseEntity<BaseResponse<List<AdminUserFoundItemStatResponse>>> getUserFoundItemStat(
       @PathVariable Long id) {
-    List<AdminUserFoundItemStatDto> foundItemStat =
-        this.adminStatisticService.getUserFoundItemStat(id);
+    final var foundItemStat = this.adminStatisticService.getUserFoundItemStat(id);
     return ResponseEntity.ok(
         BaseResponse.of(foundItemStat.stream().map(AdminUserFoundItemStatResponse::from).toList()));
   }
@@ -62,8 +57,7 @@ public class AdminStatisticController {
   @GetMapping("/users/{id}/losts")
   public ResponseEntity<BaseResponse<List<AdminUserLostItemStatResponse>>> getUserLostItemStat(
       @PathVariable Long id) {
-    List<AdminUserLostItemStatDto> lostItemStat =
-        this.adminStatisticService.getUserLostItemStat(id);
+    final var lostItemStat = this.adminStatisticService.getUserLostItemStat(id);
     return ResponseEntity.ok(
         BaseResponse.of(lostItemStat.stream().map(AdminUserLostItemStatResponse::from).toList()));
   }

@@ -18,7 +18,6 @@ import com.locat.api.infra.aws.s3.LocatS3Client;
 import com.locat.api.infra.persistence.geo.GeoItemQRepository;
 import com.locat.api.infra.persistence.geo.lost.LostItemRepository;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
@@ -66,19 +65,19 @@ public class LostItemServiceImpl implements LostItemService {
 
   @Override
   public Long register(Long userId, LostItemRegisterDto registerDto, MultipartFile lostItemImage) {
-    final User user =
+    final var user =
         this.userService
             .findById(userId)
             .orElseThrow(() -> new NoSuchEntityException(ApiExceptionType.NOT_FOUND_USER));
-    final Category category = this.fetchCategoryById(registerDto.categoryId());
-    final Set<ColorCode> colorCodes =
+    final var category = this.fetchCategoryById(registerDto.categoryId());
+    final var colorCodes =
         registerDto.colorIds().stream().map(this::fetchColorCodeById).collect(Collectors.toSet());
     String imageUrl = null;
 
     if (lostItemImage != null) {
       imageUrl = this.s3Client.upload(LOST_ITEM_IMAGE_DIRECTORY, lostItemImage);
     }
-    LostItem lostItem =
+    final var lostItem =
         this.lostItemRepository.save(
             LostItem.of(user, category, colorCodes, registerDto, imageUrl));
     this.eventPublisher.publishEvent(GeoItemCreatedEvent.of(GeoItemType.LOST, lostItem));

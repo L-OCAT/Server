@@ -20,7 +20,7 @@ public class LocatUserDetailsServiceImpl implements LocatUserDetailsService {
 
   @Override
   public UserDetails loadUserByUsername(String username) {
-    User user =
+    final var user =
         this.userService
             .findByEmail(username)
             .filter(User::isActivated)

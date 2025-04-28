@@ -42,8 +42,7 @@ public class LostItemController {
   @GetMapping("/{id}")
   public ResponseEntity<BaseResponse<LostItemDetailResponse>> getLostItem(
       @PathVariable final Long id) {
-    LostItemDetailResponse response =
-        LostItemDetailResponse.fromEntity(this.lostItemService.findById(id));
+    final var response = LostItemDetailResponse.fromEntity(this.lostItemService.findById(id));
     return ResponseEntity.ok(BaseResponse.of(response));
   }
 
@@ -54,7 +53,7 @@ public class LostItemController {
       @RequestPart("request") @Valid LostItemRegisterRequest request,
       @RequestPart(name = "image", required = false) MultipartFile image) {
     final long userId = userDetails.getId();
-    final String lostItemId =
+    final var lostItemId =
         this.lostItemService.register(userId, LostItemRegisterDto.from(request), image).toString();
     return ResponseEntity.created(URI.create("/v1/losts/".concat(lostItemId))).build();
   }

@@ -1,8 +1,6 @@
 package com.locat.api.domain.auth.dto.internal;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.locat.api.domain.user.enums.OAuth2ProviderType;
 
 /**
@@ -11,7 +9,10 @@ import com.locat.api.domain.user.enums.OAuth2ProviderType;
  * @param id 회원번호(카카오에서 발급하는 고유 ID)
  * @param kakaoAccount 카카오 계정 정보
  */
-public record KakaoUserInfo(String id, @JsonProperty("kakao_account") KakaoAccount kakaoAccount)
+public record KakaoUserInfo(
+    String id,
+    @JsonProperty("connected_at") String connectedAt,
+    @JsonProperty("kakao_account") KakaoAccount kakaoAccount)
     implements OAuth2UserInfo {
 
   @Override
@@ -37,7 +38,10 @@ public record KakaoUserInfo(String id, @JsonProperty("kakao_account") KakaoAccou
    * @param isEmailVerified 이메일 인증 여부
    * @param email 사용자 이메일
    */
-  @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
   public record KakaoAccount(
-      Boolean hasEmail, Boolean isEmailValid, Boolean isEmailVerified, String email) {}
+      @JsonProperty("has_email") Boolean hasEmail,
+      @JsonProperty("email_needs_agreement") Boolean emailNeedsAgreement,
+      @JsonProperty("is_email_valid") Boolean isEmailValid,
+      @JsonProperty("is_email_verified") Boolean isEmailVerified,
+      String email) {}
 }

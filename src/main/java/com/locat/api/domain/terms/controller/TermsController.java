@@ -5,7 +5,6 @@ import com.locat.api.domain.terms.dto.internal.TermsUpsertDto;
 import com.locat.api.domain.terms.dto.request.TermsUpsertRequest;
 import com.locat.api.domain.terms.dto.response.TermsResponse;
 import com.locat.api.domain.terms.dto.response.TermsRevisionCompactHistoryResponse;
-import com.locat.api.domain.terms.entity.Terms;
 import com.locat.api.domain.terms.entity.TermsType;
 import com.locat.api.domain.terms.service.TermsRevisionHistoryService;
 import com.locat.api.domain.terms.service.TermsService;
@@ -37,25 +36,25 @@ public class TermsController {
 
   @GetMapping
   public ResponseEntity<BaseResponse<List<TermsResponse>>> findAll() {
-    List<TermsResponse> response =
+    final var response =
         this.termsService.findAll().stream().map(TermsResponse::toCompact).toList();
     return ResponseEntity.ok(BaseResponse.of(response));
   }
 
   @GetMapping("/{type}")
   public ResponseEntity<BaseResponse<TermsResponse>> findByType(@PathVariable final String type) {
-    Terms terms =
+    final var terms =
         this.termsService
             .findByType(TermsType.fromValue(type))
             .orElseThrow(() -> new NoSuchEntityException(ApiExceptionType.NOT_FOUND_TERMS));
-    TermsResponse response = TermsResponse.toDetailed(terms);
+    final var response = TermsResponse.toDetailed(terms);
     return ResponseEntity.ok(BaseResponse.of(response));
   }
 
   @GetMapping("/{type}/revisions")
   public ResponseEntity<BaseResponse<List<TermsRevisionCompactHistoryResponse>>>
       findRevisionHistoriesByType(@PathVariable final String type) {
-    List<TermsRevisionCompactHistoryResponse> response =
+    final var response =
         this.revisionHistoryService.findCompactHistoriesByType(TermsType.fromValue(type)).stream()
             .map(TermsRevisionCompactHistoryResponse::from)
             .toList();
@@ -65,7 +64,7 @@ public class TermsController {
   @GetMapping("/{type}/revisions/{version}")
   public ResponseEntity<BaseResponse<TermsResponse>> findRevisionByTypeAndVersion(
       @PathVariable final String type, @PathVariable final Double version) {
-    TermsResponse response =
+    final var response =
         this.revisionHistoryService
             .findByTypeAndVersion(TermsType.fromValue(type), version)
             .map(TermsResponse::toDetailed)

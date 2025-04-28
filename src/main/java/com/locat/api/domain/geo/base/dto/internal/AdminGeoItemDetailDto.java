@@ -2,7 +2,6 @@ package com.locat.api.domain.geo.base.dto.internal;
 
 import com.locat.api.domain.geo.base.entity.GeoItem;
 import com.locat.api.domain.geo.base.entity.GeoItemAddress;
-
 import java.time.LocalDateTime;
 import java.util.Set;
 import lombok.Builder;

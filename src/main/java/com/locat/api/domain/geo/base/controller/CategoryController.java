@@ -20,7 +20,7 @@ public class CategoryController {
   /** 전체 카테고리 조회 */
   @GetMapping
   public ResponseEntity<BaseResponse<List<CategoryInfoResponse>>> findAll() {
-    List<CategoryInfoResponse> categoryInfoResponses =
+    final var categoryInfoResponses =
         this.categoryService.findAll().stream().map(CategoryInfoResponse::from).toList();
     return ResponseEntity.ok(BaseResponse.of(categoryInfoResponses));
   }

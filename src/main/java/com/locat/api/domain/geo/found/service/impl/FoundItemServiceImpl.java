@@ -18,7 +18,6 @@ import com.locat.api.infra.aws.s3.LocatS3Client;
 import com.locat.api.infra.persistence.geo.GeoItemQRepository;
 import com.locat.api.infra.persistence.geo.found.FoundItemRepository;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
@@ -67,12 +66,12 @@ public class FoundItemServiceImpl implements FoundItemService {
   @Override
   public Long register(
       Long userId, FoundItemRegisterDto registerDto, MultipartFile foundItemImage) {
-    User user =
+    final var user =
         this.userService
             .findById(userId)
             .orElseThrow(() -> new NoSuchEntityException(ApiExceptionType.NOT_FOUND_USER));
-    final Category category = this.fetchCategoryById(registerDto.categoryId());
-    final Set<ColorCode> colorCodes =
+    final var category = this.fetchCategoryById(registerDto.categoryId());
+    final var colorCodes =
         registerDto.colorIds().stream().map(this::fetchColorCodeById).collect(Collectors.toSet());
 
     String imageUrl = null;
@@ -80,7 +79,7 @@ public class FoundItemServiceImpl implements FoundItemService {
       imageUrl = this.s3Client.upload(FOUND_ITEM_IMAGE_DIRECTORY, foundItemImage);
     }
 
-    FoundItem foundItem =
+    final var foundItem =
         this.foundItemRepository.save(
             FoundItem.of(user, category, colorCodes, registerDto, imageUrl));
     this.eventPublisher.publishEvent(GeoItemCreatedEvent.of(GeoItemType.FOUND, foundItem));
